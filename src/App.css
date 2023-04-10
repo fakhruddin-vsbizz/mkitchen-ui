@@ -36,3 +36,7 @@
     transform: rotate(360deg);
   }
 }
+
+.ubuntu-font-class {
+  font-family: 'Ubuntu Mono';
+}
