@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Row, Col, List, Tag, Divider, Calendar, Card, Button, AutoComplete, Modal, Tooltip, Input } from 'antd'
+import { Row, Col, List, Tag, Divider, Calendar, Card, Button, AutoComplete, Modal, Tooltip, Input, Select } from 'antd'
 import { InfoCircleOutlined } from '@ant-design/icons';
 const Accounts = () => {
 
@@ -98,23 +98,34 @@ const Accounts = () => {
                 />
                 </Col>
                 <Col xs={24} xl={20} style={{ padding:'5%' }}>
-                    <label style={{ fontSize: '300%' }} className='dongle-font-class'>Account Management</label>
-                    <Divider style={{ backgroundColor: '#000'}}></Divider>
+                    
                     <Row>
                         <Col xs={12} xl={12}>
-                            <label style={{ fontSize: '200%' }} className='dongle-font-class'>Mohalla Accounts</label>
+                            <label style={{ fontSize: '300%' }} className='dongle-font-class'>Account Management</label>
                         </Col>
                         <Col xs={12} xl={12}>
-                            <Button onClick={showNMModal}>Add New Mohalla</Button>
+                            <Button onClick={showNMModal}>Add New MK User</Button>
                         </Col>
                     </Row>
+
 
                     <Modal title="New Mohalla user" open={newMohallaPopup} onOk={handleNMOk} onCancel={handleNMCancel}>
                     <p>Add new account</p>
                         <table style={{ width:'100%' }}>
                             <tr>
+                                <td>Select User type:</td>
                                 <td>
-                                    Name of the new Mohalla:
+                                <Select
+                                    defaultValue={0}
+                                    style={{ width: 120 }}
+                                    block
+                                    options={[{ value: 0, label: 'Mohalla Admin' },{ value: 1, label: 'Procurement Inventory' },{ value: 2, label: 'Cooking' }]}
+                                />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Name of the user:
                                 </td>
                                 <td>
                                     <Input
@@ -124,7 +135,7 @@ const Accounts = () => {
                             </tr>
                             <tr>
                                 <td>
-                                    Email of the mohalla user
+                                    Email of the user
                                 </td>
                                 <td>
                                     <Input
@@ -151,12 +162,16 @@ const Accounts = () => {
                             <tr>
                                 <td colSpan={2}>
                                     <br/>
-                                    <Button type='primary' block>Create new Mohalla Account</Button>
+                                    <Button type='primary' block>Create new MK Account</Button>
                                 </td>
                             </tr>
                         </table>
                     </Modal>
-                    
+
+
+                    <Divider style={{ backgroundColor: '#000'}}></Divider>
+                    <label style={{ fontSize: '200%' }} className='dongle-font-class'>Mohalla Accounts</label>
+
                     <br/><br/><br/>
                     <List
                         grid={{
@@ -229,7 +244,15 @@ const Accounts = () => {
                     </Modal>
                     <Divider style={{ backgroundColor: '#000'}}></Divider>
                     <label style={{ fontSize: '200%' }} className='dongle-font-class'>Cooking Department</label>
-                    <br/><br/><br/>
+                    <br/>
+                    Select user: &nbsp;&nbsp;&nbsp;
+                    <Select
+                        defaultValue={0}
+                        style={{ width: 120 }}
+                        block
+                        options={[{ value: 0, label: 'Hatim' },{ value: 1, label: 'Atif' },{ value: 2, label: 'Somesh' }]}
+                    />
+                    <br/><br/>
                     <Card
                         bordered={true}
                         style={{
@@ -293,7 +316,15 @@ const Accounts = () => {
                     </Card>
                     <Divider style={{ backgroundColor: '#000'}}></Divider>
                     <label style={{ fontSize: '200%' }} className='dongle-font-class'>P&I Department</label>
-                    <br/><br/><br/>
+                    <br/>
+                    Select user: &nbsp;&nbsp;&nbsp;
+                    <Select
+                        defaultValue={0}
+                        style={{ width: 120 }}
+                        block
+                        options={[{ value: 0, label: 'Hatim' },{ value: 1, label: 'Atif' },{ value: 2, label: 'Somesh' }]}
+                    />
+                    <br/><br/>
                     <Card
                         bordered={true}
                         style={{
