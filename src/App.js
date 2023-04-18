@@ -1,16 +1,18 @@
 import logo from './logo.svg';
 import './App.css';
+
+import { Route, Routes } from "react-router-dom"
 import Login from './auth/Login';
+import Menu from './admin/menu_ui/Menu';
+import Accounts from './admin/account_management/Accounts';
 
 function App() {
   return (
-    <div>
-      <center>
-        <div style={{ padding:'10px', marginTop:'10%' }}>
-          <Login/>
-        </div>
-      </center>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/admin/menu" element={<Menu />} />
+      <Route path="/admin/accounts" element={<Accounts />} />
+    </Routes>
   );
 }
 
