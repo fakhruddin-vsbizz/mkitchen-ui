@@ -1,13 +1,18 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Row, Col, Image, Divider, Radio, Card, Input, Button } from "antd";
 
 import logo from "../res/img/logo.png";
 import axios from "axios";
+import AuthContext from "../components/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setUserEmail] = useState("");
   const [password, setUserPassword] = useState("");
   const [error, setError] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const options = [
     {
@@ -31,13 +36,36 @@ const Login = () => {
         email,
         password,
       });
-
       setUserEmail("");
       setUserPassword("");
-      console.log(response.data.accessToken);
+
+      console.log(response);
+
+      const userType = response.data.user.usertype;
+      const userEmail = response.data.user.email;
+
+      // convert expiration time to a Date object
+
+      const expirationTime = new Date(
+        new Date().getTime() + response.data.expiresIn * 1000
+      );
+
+      authCtx.login(response.data.accessToken, expirationTime.toISOString());
+
+      //setting the user type using context
+      authCtx.setUserRoleType(userType, userEmail);
+
+      console.log(expirationTime);
+      console.log(authCtx.userEmail);
+      console.log(authCtx.userType);
+
+      navigate("/adduser");
     } catch (error) {
       console.error(error);
       console.log(error.message);
+
+      setUserEmail("");
+      setUserPassword("");
       setError(true);
     }
   };
@@ -84,6 +112,7 @@ const Login = () => {
                 <td>Email:</td>
                 <td>
                   <Input
+                    value={email}
                     onChange={(e) => setUserEmail(e.target.value)}
                     placeholder="your email here...."
                     allowClear
@@ -94,6 +123,7 @@ const Login = () => {
                 <td>Password:</td>
                 <td>
                   <Input.Password
+                    value={password}
                     onChange={(e) => setUserPassword(e.target.value)}
                     placeholder="input password"
                   />
