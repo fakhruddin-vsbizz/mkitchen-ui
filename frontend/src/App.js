@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/admin/menu" element={<Menu />} />
-        <Route path="/adduser" element={<Accounts />} />
+        <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
       </Routes>
     </AuthContextProvider>

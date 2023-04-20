@@ -110,7 +110,7 @@ const Accounts = () => {
   const updateMohallAdminEmail = async () => {
     try {
       if (selectedMohallaUser && newEmailMohalla) {
-        const data = await fetch("http://localhost:5001/adduser", {
+        const data = await fetch("http://localhost:5001/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -139,7 +139,7 @@ const Accounts = () => {
     try {
       if (selectedCookingUser && newEmailCooking) {
         console.log("inside2");
-        const data = await fetch("http://localhost:5001/adduser", {
+        const data = await fetch("http://localhost:5001/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -165,7 +165,7 @@ const Accounts = () => {
   const updatePandIEmail = async () => {
     try {
       if (selectedPandIUser && newEmailPandI) {
-        const data = await fetch("http://localhost:5001/adduser", {
+        const data = await fetch("http://localhost:5001/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -201,7 +201,7 @@ const Accounts = () => {
   const updateUserPasswordMohalla = async (usertype) => {
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
-        const data = await fetch("http://localhost:5001/adduser", {
+        const data = await fetch("http://localhost:5001/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -238,7 +238,7 @@ const Accounts = () => {
         let demoName =
           usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
 
-        const data = await fetch("http://localhost:5001/adduser", {
+        const data = await fetch("http://localhost:5001/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -267,7 +267,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getMohallas = async () => {
-      const data = await fetch("http://localhost:5001/adduser", {
+      const data = await fetch("http://localhost:5001/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -283,7 +283,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getCookingUsers = async () => {
-      const data = await fetch("http://localhost:5001/adduser", {
+      const data = await fetch("http://localhost:5001/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -301,7 +301,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getPandIUsers = async () => {
-      const data = await fetch("http://localhost:5001/adduser", {
+      const data = await fetch("http://localhost:5001/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -321,7 +321,7 @@ const Accounts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/adduser", {
+      const response = await axios.post("http://localhost:5001/admin/account_management", {
         usertype,
         username,
         email,
