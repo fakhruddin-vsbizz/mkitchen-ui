@@ -4,48 +4,49 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const createMkUser = expressAsyncHandler(async (req, res) => {
-  const { usertype, username, email, password } = req.body;
+  const { usertype, username, email, password, action } = req.body;
 
-  if (!usertype || !email || !password || !username) {
-    res.status(400);
-    throw new Error("All fields are mendatory");
+  if (action === "create_mk") {
+    if (!usertype || !email || !password || !username) {
+      res.status(400);
+      throw new Error("All fields are mendatory");
+    }
+
+    const userAvailable = await MKUser.findOne({ email });
+
+    if (userAvailable) {
+      res.status(400);
+      throw new Error("User Already Register");
+    }
+
+    //Hash Password using bcrypt
+    const hashPassword = await bcrypt.hash(password, 10);
+    console.log("hash password: ", hashPassword);
+
+    const user = await MKUser.create({
+      usertype,
+      username,
+      email,
+      password: hashPassword,
+    });
+
+    console.log("user created: ", user);
+
+    if (user) {
+      res.status(201).json({ _id: user.id, email: user.email });
+    } else {
+      res.status(400);
+      throw new Error("Error creating the user");
+    }
+    res.json({ message: "Register user" });
   }
-
-  const userAvailable = await MKUser.findOne({ email });
-
-  if (userAvailable) {
-    res.status(400);
-    throw new Error("User Already Register");
+  if (action === "get_user") {
+    const user = await MKUser.find({ usertype: usertype });
+    if (user) {
+      res.json(user);
+    }
   }
-
-  //Hash Password using bcrypt
-  const hashPassword = await bcrypt.hash(password, 10);
-  console.log("hash password: ", hashPassword);
-
-  const user = await MKUser.create({
-    usertype,
-    username,
-    email,
-    password: hashPassword,
-  });
-
-  console.log("user created: ", user);
-
-  if (user) {
-    res.status(201).json({ _id: user.id, email: user.email });
-  } else {
-    res.status(400);
-    throw new Error("Error creating the user");
-  }
-  res.json({ message: "Register user" });
 });
-
-const getMkUser = expressAsyncHandler(async (req, res) => {
-  const user = await MKUser.find();
-
-  res.json(user);
-});
-
 
 const loginUser = expressAsyncHandler(async (req, res) => {
   const { email, password } = req.body;
@@ -68,14 +69,49 @@ const loginUser = expressAsyncHandler(async (req, res) => {
       },
       process.env.ACCESS_TOKEN_SECRET,
       {
-        expiresIn: "1m",
+        expiresIn: "7d",
       }
     );
-    res.status(200).json({ accessToken });
+    res.status(200).json({ accessToken, expiresIn: 604800, user: user });
   } else {
     res.status(401);
     throw new Error("User does not exist or password is incorrect");
   }
 });
 
-module.exports = { createMkUser, getMkUser, loginUser };
+const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
+  const { username, usertype, action, email, password } = req.body;
+
+  const user = await MKUser.findOne({ username, usertype });
+  console.log(username, usertype, action, email, password);
+
+  if (user && action === "update_email") {
+    const updateUser = await MKUser.findByIdAndUpdate(
+      { _id: Object(user._id) },
+      { $set: { email: email } },
+      { new: true }
+    );
+    if (updateUser) {
+      res.json({ message: "user email updated successfully" });
+    }
+  }
+
+  if (user && action === "update_password") {
+    const hashPassword = await bcrypt.hash(password, 10);
+    const updateUser = await MKUser.findByIdAndUpdate(
+      { _id: Object(user._id) },
+      { $set: { password: hashPassword } },
+      { new: true }
+    );
+    if (updateUser) {
+      res.json({ message: "user password updated successfully" });
+    }
+  }
+  res.json({ message: "user email Not updated" });
+});
+
+module.exports = {
+  createMkUser,
+  loginUser,
+  updateUserBasedOnNameAndType,
+};

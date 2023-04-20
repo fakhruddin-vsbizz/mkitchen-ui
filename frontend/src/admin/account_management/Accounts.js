@@ -27,25 +27,47 @@ const Accounts = () => {
   const [error, setError] = useState(false);
 
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
-
-  const mohalla_accounts = [
-    { mohalla_name: "Fakhri Hills", is_active: true },
-    { mohalla_name: "Brahma Avenue", is_active: true },
-    { mohalla_name: "Natasha Enclave", is_active: false },
-    { mohalla_name: "Badhshah Nagar", is_active: false },
-  ];
+  const [visible, setVisible] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newMohallaPopup, setNewMohallaPopup] = useState(false);
   const [mohallaUsers, setMohallaUsers] = useState();
+  const [cookingDepartmentUser, setcCookingDepartmentUser] = useState();
+  const [pandiDepartmentUser, setpandiDepartmentUser] = useState();
+
+  //resetting new email and passwords state
+  const [selectedCookingUser, setSelectedCookingUser] = useState();
+  const [selectedPandIUser, setSelectedPandIUser] = useState();
+  const [selectedMohallaUser, setSelectedMohallaUser] = useState();
+
+  //update cooking/pandi/mohalla email state
+  const [newEmailCooking, setNewEmailCooking] = useState();
+  const [newEmailPandI, setNewEmailPandI] = useState();
+  const [newEmailMohalla, setNewEmailMohalla] = useState();
+
+  //update mohalla passwords state
+  const [newPasswordMohalla, setNewpasswordMohalla] = useState("");
+  const [newConfirmpasswordMohalla, setNewConfirmpasswordMohalla] =
+    useState("");
+
+  //update cooking passwords state
+  const [newpassword, setNewpassword] = useState("");
+  const [newconfirmpassword, setNewConfirmpassword] = useState("");
+
+  //update p and i passwords state
+  const [newpasswordPandI, setNewpasswordPandI] = useState("");
+  const [newconfirmpasswordPandI, setNewConfirmpasswordPandI] = useState("");
 
   const handleUserTypeChange = (value) => {
     console.log("n");
     setUserType(value);
   };
-  const showModal = () => {
+  const showModal = (data) => {
+    setSelectedMohallaUser(data);
     setIsModalOpen(true);
   };
+
+  console.log(selectedMohallaUser);
 
   const showNMModal = () => {
     setNewMohallaPopup(true);
@@ -53,6 +75,7 @@ const Accounts = () => {
 
   const handleOk = () => {
     setIsModalOpen(false);
+    setVisible(false); // show the popup
   };
 
   const handleNMOk = () => {
@@ -65,6 +88,8 @@ const Accounts = () => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+    setVisible(false); // show the popup
+
     setUserEmail("");
     setUserPassword("");
     setUserName("");
@@ -80,24 +105,218 @@ const Accounts = () => {
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
+  /*******************update email****************************** */
 
-  console.log(usertype);
-  console.log(username);
+  const updateMohallAdminEmail = async () => {
+    try {
+      if (selectedMohallaUser && newEmailMohalla) {
+        const data = await fetch("http://localhost:5001/adduser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedMohallaUser,
+            email: newEmailMohalla,
+            usertype: "Mohalla Admin",
+            action: "update_email",
+          }),
+        });
+        if (data) {
+          console.log(data.json().then((data) => console.log(data)));
+          setNewEmailMohalla("");
+          setIsModalOpen(false);
+          setVisible(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const updateCookingDepartmentEmail = async () => {
+    console.log("inside 1");
 
-  console.log(password);
-  console.log(email);
+    try {
+      if (selectedCookingUser && newEmailCooking) {
+        console.log("inside2");
+        const data = await fetch("http://localhost:5001/adduser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedCookingUser,
+            email: newEmailCooking,
+            usertype: "Cooking",
+            action: "update_email",
+          }),
+        });
+        if (data) {
+          console.log(data.json().then((data) => console.log(data)));
+          setNewEmailCooking("");
+          setVisible(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updatePandIEmail = async () => {
+    try {
+      if (selectedPandIUser && newEmailPandI) {
+        const data = await fetch("http://localhost:5001/adduser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedPandIUser,
+            email: newEmailPandI,
+            usertype: "Procurement Inventory",
+            action: "update_email",
+          }),
+        });
+        if (data) {
+          console.log(data.json().then((data) => console.log(data)));
+          setNewEmailPandI("");
+          setVisible(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  //////////////////////update password//////////////////////////////
+
+  useEffect(() => {
+    if (newconfirmpassword !== newpassword) {
+      setError(true);
+    }
+    if (newconfirmpassword === newpassword) {
+      setError(false);
+    }
+  }, [newconfirmpassword, newpassword]);
+
+  const updateUserPasswordMohalla = async (usertype) => {
+    try {
+      if (selectedMohallaUser && newConfirmpasswordMohalla) {
+        const data = await fetch("http://localhost:5001/adduser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedMohallaUser,
+            usertype: usertype,
+            password: newConfirmpasswordMohalla,
+            action: "update_password",
+          }),
+        });
+        if (data) {
+          console.log(data.json().then((data) => console.log(data)));
+          setNewpasswordMohalla("");
+          setNewConfirmpasswordMohalla("");
+          setIsModalOpen(false);
+          setVisible(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateUserPassword = async (usertype) => {
+    try {
+      if (
+        (selectedCookingUser || selectedPandIUser) &&
+        (newconfirmpassword || newconfirmpasswordPandI) &&
+        !error
+      ) {
+        let demoPass =
+          usertype === "Cooking" ? newconfirmpassword : newconfirmpasswordPandI;
+        let demoName =
+          usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
+
+        const data = await fetch("http://localhost:5001/adduser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: demoName,
+            usertype: usertype,
+            password: demoPass,
+            action: "update_password",
+          }),
+        });
+        if (data) {
+          console.log(data.json().then((data) => console.log(data)));
+          setNewConfirmpassword("");
+          setNewpassword("");
+          setNewpasswordPandI("");
+          setNewConfirmpasswordPandI("");
+          setVisible(true);
+          setError(false);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     const getMohallas = async () => {
-      const data = await fetch("http://localhost:5001/adduser");
+      const data = await fetch("http://localhost:5001/adduser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usertype: "Mohalla Admin", action: "get_user" }),
+      });
       if (data) {
         console.log(data.json().then((data) => setMohallaUsers(data)));
       }
     };
     getMohallas();
-  }, []);
+  }, [newMohallaPopup]);
 
-  console.log(mohallaUsers);
+  useEffect(() => {
+    const getCookingUsers = async () => {
+      const data = await fetch("http://localhost:5001/adduser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usertype: "Cooking", action: "get_user" }),
+      });
+      if (data) {
+        console.log(
+          data.json().then((data) => setcCookingDepartmentUser(data))
+        );
+      }
+    };
+    getCookingUsers();
+  }, [newMohallaPopup]);
+
+  useEffect(() => {
+    const getPandIUsers = async () => {
+      const data = await fetch("http://localhost:5001/adduser", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype: "Procurement Inventory",
+          action: "get_user",
+        }),
+      });
+      if (data) {
+        console.log(data.json().then((data) => setpandiDepartmentUser(data)));
+      }
+    };
+    getPandIUsers();
+  }, [newMohallaPopup]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -107,6 +326,7 @@ const Accounts = () => {
         username,
         email,
         password,
+        action: "create_mk",
       });
 
       setUserEmail("");
@@ -135,7 +355,7 @@ const Accounts = () => {
   ];
 
   const [foodItems, setFoodItems] = useState([]);
-
+  console.log(selectedCookingUser);
   const addFoodItem = () => {
     setFoodItems([
       ...foodItems,
@@ -280,7 +500,11 @@ const Accounts = () => {
                   )}
                   <br />
                   <br />
-                  <Button size="small" type="primary" onClick={showModal}>
+                  <Button
+                    size="small"
+                    type="primary"
+                    onClick={() => showModal(item.username)}
+                  >
                     Manage Account
                   </Button>
                 </Card>
@@ -298,6 +522,8 @@ const Accounts = () => {
               <tr>
                 <td>
                   <Input
+                    value={newEmailMohalla}
+                    onChange={(e) => setNewEmailMohalla(e.target.value)}
                     placeholder="Enter your username"
                     suffix={
                       <Tooltip title="Change only in case needed.">
@@ -309,7 +535,11 @@ const Accounts = () => {
                   />
                 </td>
                 <td>
-                  <Button type="primary" danger>
+                  <Button
+                    onClick={updateMohallAdminEmail}
+                    type="primary"
+                    danger
+                  >
                     Change Email
                   </Button>
                 </td>
@@ -321,19 +551,34 @@ const Accounts = () => {
               <tr>
                 <td>New Password</td>
                 <td>
-                  <Input.Password placeholder="New password to be set" />
+                  <Input.Password
+                    value={newPasswordMohalla}
+                    onChange={(e) => setNewpasswordMohalla(e.target.value)}
+                    placeholder="New password to be set"
+                  />
                 </td>
               </tr>
               <tr>
                 <td>Confirm Password</td>
                 <td>
-                  <Input.Password placeholder="Confirm new password" />
+                  <Input.Password
+                    value={newConfirmpasswordMohalla}
+                    onChange={(e) =>
+                      setNewConfirmpasswordMohalla(e.target.value)
+                    }
+                    placeholder="Confirm new password"
+                  />
                 </td>
               </tr>
               <tr>
                 <td colSpan={2}>
                   <br />
-                  <Button type="primary" block danger>
+                  <Button
+                    onClick={() => updateUserPasswordMohalla("Mohalla Admin")}
+                    type="primary"
+                    block
+                    danger
+                  >
                     Change Password
                   </Button>
                 </td>
@@ -344,18 +589,35 @@ const Accounts = () => {
           <label style={{ fontSize: "200%" }} className="dongle-font-class">
             Cooking Department
           </label>
+          <Modal
+            visible={visible}
+            onOk={handleOk}
+            onCancel={handleOk}
+            footer={[
+              <Button key="ok" type="primary" onClick={handleOk}>
+                OK
+              </Button>,
+            ]}
+          >
+            <div style={{ textAlign: "center" }}>
+              <h2 style={{ color: "#52c41a" }}>Success!</h2>
+              <p>User Detail Updated Successfully.</p>
+            </div>
+          </Modal>
           <br />
           Select user: &nbsp;&nbsp;&nbsp;
-          <Select
-            defaultValue={0}
-            style={{ width: 120 }}
-            block
-            options={[
-              { value: 0, label: "Hatim" },
-              { value: 1, label: "Atif" },
-              { value: 2, label: "Somesh" },
-            ]}
-          />
+          {cookingDepartmentUser && (
+            <Select
+              defaultValue={"select user"}
+              style={{ width: 120 }}
+              block
+              options={cookingDepartmentUser.map((item) => ({
+                value: item.username,
+                label: item.username,
+              }))}
+              onChange={(value) => setSelectedCookingUser(value)}
+            />
+          )}
           <br />
           <br />
           <Card
@@ -371,7 +633,9 @@ const Accounts = () => {
               <tr>
                 <td>
                   <Input
-                    placeholder="Enter your username"
+                    value={newEmailCooking}
+                    onChange={(e) => setNewEmailCooking(e.target.value)}
+                    placeholder="Enter new email"
                     suffix={
                       <Tooltip title="Change only in case needed.">
                         <InfoCircleOutlined
@@ -382,7 +646,11 @@ const Accounts = () => {
                   />
                 </td>
                 <td>
-                  <Button type="primary" danger>
+                  <Button
+                    onClick={updateCookingDepartmentEmail}
+                    type="primary"
+                    danger
+                  >
                     Change Email
                   </Button>
                 </td>
@@ -403,20 +671,43 @@ const Accounts = () => {
               <tr>
                 <td>New Password</td>
                 <td>
-                  <Input.Password placeholder="New password to be set" />
+                  <Input.Password
+                    value={newpassword}
+                    onChange={(e) => setNewpassword(e.target.value)}
+                    placeholder="New password to be set"
+                  />
                 </td>
               </tr>
               <tr>
                 <td>Confirm Password</td>
                 <td>
-                  <Input.Password placeholder="Confirm new password" />
+                  <Input.Password
+                    value={newconfirmpassword}
+                    onChange={(e) => setNewConfirmpassword(e.target.value)}
+                    placeholder="Confirm new password"
+                  />
                 </td>
               </tr>
+              {error && (
+                <tr>
+                  <h2
+                    style={{
+                      color: "red",
+                    }}
+                  >
+                    password dont match
+                  </h2>
+                </tr>
+              )}
               <tr>
                 <td></td>
                 <td>
                   <br />
-                  <Button type="primary" danger>
+                  <Button
+                    onClick={() => updateUserPassword("Cooking")}
+                    type="primary"
+                    danger
+                  >
                     Change Password
                   </Button>
                 </td>
@@ -429,16 +720,18 @@ const Accounts = () => {
           </label>
           <br />
           Select user: &nbsp;&nbsp;&nbsp;
-          <Select
-            defaultValue={0}
-            style={{ width: 120 }}
-            block
-            options={[
-              { value: 0, label: "Hatim" },
-              { value: 1, label: "Atif" },
-              { value: 2, label: "Somesh" },
-            ]}
-          />
+          {pandiDepartmentUser && (
+            <Select
+              defaultValue={"select user"}
+              style={{ width: 120 }}
+              block
+              options={pandiDepartmentUser.map((item) => ({
+                value: item.username,
+                label: item.username,
+              }))}
+              onChange={(value) => setSelectedPandIUser(value)}
+            />
+          )}
           <br />
           <br />
           <Card
@@ -454,6 +747,8 @@ const Accounts = () => {
               <tr>
                 <td>
                   <Input
+                    value={newEmailPandI}
+                    onChange={(e) => setNewEmailPandI(e.target.value)}
                     placeholder="Enter your username"
                     suffix={
                       <Tooltip title="Change only in case needed.">
@@ -465,7 +760,7 @@ const Accounts = () => {
                   />
                 </td>
                 <td>
-                  <Button type="primary" danger>
+                  <Button onClick={updatePandIEmail} type="primary" danger>
                     Change Email
                   </Button>
                 </td>
@@ -486,20 +781,32 @@ const Accounts = () => {
               <tr>
                 <td>New Password</td>
                 <td>
-                  <Input.Password placeholder="New password to be set" />
+                  <Input.Password
+                    value={newpasswordPandI}
+                    onChange={(e) => setNewpasswordPandI(e.target.value)}
+                    placeholder="New password to be set"
+                  />
                 </td>
               </tr>
               <tr>
                 <td>Confirm Password</td>
                 <td>
-                  <Input.Password placeholder="Confirm new password" />
+                  <Input.Password
+                    value={newconfirmpasswordPandI}
+                    onChange={(e) => setNewConfirmpasswordPandI(e.target.value)}
+                    placeholder="Confirm new password"
+                  />
                 </td>
               </tr>
               <tr>
                 <td></td>
                 <td>
                   <br />
-                  <Button type="primary" danger>
+                  <Button
+                    onClick={() => updateUserPassword("Procurement Inventory")}
+                    type="primary"
+                    danger
+                  >
                     Change Password
                   </Button>
                 </td>

@@ -16,7 +16,7 @@ app.use("/adduser", require("./routes/mkUserRoutes"));
 app.use("/login", require("./routes/loginRoute"));
 app.use("/operation_pipeline", require("./routes/operationPipeLineRoute"));
 
-app.use("/menu", require("./routes/menuFoodRoute"));
+app.use("/admin/menu", require("./routes/menuFoodRoute"));
 app.use("/ingridient", require("./routes/inventoryItemsRoute"));
 app.use("/fooditem", require("./routes/foodItemRoute"));
 
