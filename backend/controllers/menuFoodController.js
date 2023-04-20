@@ -21,10 +21,22 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     reason_for_undelivered,
     mohalla_wise_ashkhaas,
     add_type,
+
+    //food id req data
+    selected_food,
   } = req.body;
 
   if (add_type === "add_menu") {
     console.log("adding menu");
+    console.log(
+      food_list,
+      total_ashkhaas,
+      module,
+      date_of_cooking,
+      client_name,
+      jaman_coming,
+      reason_for_undelivered
+    );
     const foodMenu = await FoodMenu.create({
       food_list,
       total_ashkhaas,
@@ -74,6 +86,13 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   if (add_type === "get_food_item") {
     console.log("getItem");
     const foodMenu = await FoodItem.find();
+    res.json(foodMenu);
+  }
+
+  if (add_type === "get_food_item_id") {
+    console.log("getItem id");
+    const foodMenu = await FoodItem.findOne({ name: selected_food });
+    console.log(foodMenu);
     res.json(foodMenu);
   }
 });

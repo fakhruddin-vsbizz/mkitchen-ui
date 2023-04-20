@@ -10,45 +10,41 @@ import {
   Card,
   Button,
   AutoComplete,
+  Modal,
 } from "antd";
 
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
 
   const [dateValue, setDateValue] = useState();
+
+  const [dataAdded, setDataAdded] = useState(false);
+
   const [foodItems, setFoodItems] = useState([]);
+  const [foodItemId, setFoodItemId] = useState();
+
   const [selectedFood, setSelectedFood] = useState("");
+  const [AddedFoodItems, setAddedFoodItems] = useState();
+
+  const [visible, setVisible] = useState(false);
 
   const onSelectDate = (newValue) => {
     const dateObj = new Date(newValue);
     const formattedDate = `${
       dateObj.getMonth() + 1
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-
     setDateValue(formattedDate);
   };
 
-  console.log(dateValue);
-  console.log(selectedFood);
   /*
         REFERENCE FOR BACKEND ENGINEERING
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
-  const options = [
-    { value: "Mutton Biryani" },
-    { value: "Mutton Kebab" },
-    { value: "Moong Dal" },
-    { value: "Dal" },
-    { value: "Chawal" },
-    { value: "Palidu" },
-    { value: "Roti" },
-    { value: "Manda" },
-    { value: "Chicken Gravy" },
-  ];
 
   useEffect(() => {
     const getFoodItems = async () => {
+      console.log("inside");
       const data = await fetch("http://localhost:5001/admin/menu", {
         method: "POST",
         headers: {
@@ -59,23 +55,77 @@ const Menu = () => {
         }),
       });
       if (data) {
-        console.log(data.json().then((data) => console.log(data)));
+        console.log(data.json().then((data) => setAddedFoodItems(data)));
       }
     };
     getFoodItems();
-  }, []);
-
-  const removeFoodItems = (subject) => {
-    var old_food_item_list = foodItems;
-    old_food_item_list.pop(old_food_item_list.indexOf(subject));
-  };
+  }, [dataAdded]);
 
   const addFoodItem = async () => {
-    setFoodItems([
-      ...foodItems,
-      document.getElementById("food-item-selected").value,
-    ]);
+    if (AddedFoodItems.some((item) => item.name === selectedFood)) {
+      console.log("Item exists");
+      //getting the food item id
 
+      const data = await fetch("http://localhost:5001/admin/menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          add_type: "get_food_item_id",
+          selected_food: selectedFood,
+        }),
+      });
+      if (data) {
+        let id = await data.json().then((data) => data._id);
+        console.log(id);
+        const newFoodItem = {
+          food_item_id: id,
+          no_of_deigs: 0,
+          total_weight: 0,
+          food_name: selectedFood,
+        };
+        setFoodItems([...foodItems, newFoodItem]);
+      }
+    } else {
+      try {
+        let list = [];
+        console.log("inside");
+        const data = await fetch("http://localhost:5001/admin/menu", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            mkuser_email: "admin@gmail.com",
+            food_name: selectedFood,
+            ingridient_list: list,
+            usage_counter: 0,
+            add_type: "food_item",
+          }),
+        });
+
+        if (data) {
+          console.log(data);
+          const res = await data.json();
+
+          setDataAdded((prev) => !prev);
+
+          const newFoodItem = {
+            food_item_id: res._id,
+            no_of_deigs: 0,
+            total_weight: 0,
+            food_name: selectedFood,
+          };
+          setFoodItems([...foodItems, newFoodItem]);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const createMenu = async () => {
     try {
       console.log("inside");
       const data = await fetch("http://localhost:5001/admin/menu", {
@@ -84,26 +134,56 @@ const Menu = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mkuser_email: "admin@gmail.com",
-          food_name: selectedFood,
-          ingridient_list: "null",
-          usage_counter: "null",
-          add_type: "food_item",
+          food_list: foodItems,
+          total_ashkhaas: 0,
+          date_of_cooking: dateValue,
+          client_name: "mk admin",
+          jaman_coming: true,
+          reason_for_undelivered: null,
+          mohalla_wise_ashkhaas: "",
+          add_type: "add_menu",
         }),
       });
 
       if (data) {
         console.log(data);
+        setVisible(true);
+        setFoodItemId("");
+        setFoodItems([]);
+
+        const res = await data.json();
       }
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(foodItems);
+  const deleteItem = (item) => {
+    const filteredItems = foodItems.filter(
+      (foodItem) => foodItem.food_item_id !== item.food_item_id
+    );
+    setFoodItems(filteredItems);
+  };
+
+  console.log("food list: ", foodItems);
 
   return (
     <div>
+      <Modal
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={[
+          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+            OK
+          </Button>,
+        ]}
+      >
+        <div style={{ textAlign: "center" }}>
+          <h2 style={{ color: "#52c41a" }}>Success!</h2>
+          <p>Menu Created Successfully</p>
+        </div>
+      </Modal>
       <Row>
         <Col xs={0} xl={4} style={{ padding: "1%" }}>
           <List
@@ -141,21 +221,20 @@ const Menu = () => {
                 <table style={{ width: "100%" }}>
                   <tr>
                     <td>Search menu by name:</td>
-                    <td>
-                      <AutoComplete
-                        id="food-item-selected"
-                        style={{ width: "100%" }}
-                        options={options}
-                        onCha
-                        placeholder="Eg: Roti, Chawal, Daal, etc"
-                        filterOption={(inputValue, option) =>
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                        onChange={(value) => setSelectedFood(value)}
-                      />
-                    </td>
+                    {AddedFoodItems && (
+                      <td>
+                        <AutoComplete
+                          id="food-item-selected"
+                          style={{ width: "100%" }}
+                          value={selectedFood}
+                          options={AddedFoodItems.map((item) => ({
+                            value: item.name,
+                          }))}
+                          onChange={(value) => setSelectedFood(value)}
+                          placeholder="Enter a food item"
+                        />
+                      </td>
+                    )}
                     <td>
                       <Button
                         type="secondary"
@@ -169,6 +248,7 @@ const Menu = () => {
                 </table>
                 <br />
                 <br />
+
                 <List
                   size="small"
                   bordered
@@ -177,11 +257,15 @@ const Menu = () => {
                     <List.Item>
                       <Row style={{ width: "100%" }}>
                         <Col xs={12} xl={12}>
-                          {item}
+                          {item.food_name}
                         </Col>
                         <Col xs={12} xl={12}>
                           <center>
-                            <Button type="secondary" size="small" key={item}>
+                            <Button
+                              type="secondary"
+                              size="small"
+                              onClick={() => deleteItem(item)}
+                            >
                               <i class="fa-solid fa-trash"></i>
                             </Button>
                           </center>
@@ -190,7 +274,11 @@ const Menu = () => {
                     </List.Item>
                   )}
                 />
-                <Button type="primary" style={{ marginTop: "50px" }}>
+                <Button
+                  onClick={createMenu}
+                  type="primary"
+                  style={{ marginTop: "50px" }}
+                >
                   Set The Menu
                 </Button>
               </Card>

@@ -12,7 +12,7 @@ app.use(CORS());
 
 app.use(express.json()); // body parser to parse the request of the client
 
-app.use("/adduser", require("./routes/mkUserRoutes"));
+app.use("/admin/account_management", require("./routes/mkUserRoutes"));
 app.use("/login", require("./routes/loginRoute"));
 app.use("/operation_pipeline", require("./routes/operationPipeLineRoute"));
 

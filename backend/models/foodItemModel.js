@@ -16,7 +16,7 @@ const FoodItems = mongoose.Schema(
       required: true,
     },
     usage_counter: {
-      type: String,
+      type: Number,
       required: true,
     },
   },

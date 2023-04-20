@@ -59,7 +59,7 @@ const Login = () => {
       console.log(authCtx.userEmail);
       console.log(authCtx.userType);
 
-      navigate("/adduser");
+      navigate("/admin/account_management");
     } catch (error) {
       console.error(error);
       console.log(error.message);
