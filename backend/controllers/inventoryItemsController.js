@@ -49,15 +49,16 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
       });
     } else {
       res.status(400);
-      throw new Error("Error creating the delevery review");
+      throw new Error("Error creating the transection log");
     }
   }
   res.json({ message: "Delevery review added" });
 });
 
 const getInventoryItems = expressAsyncHandler(async (req, res) => {
-  const InventoryModel = await InventoryModel.find();
-  res.json(InventoryModel);
+  console.log("hitting");
+  const inventory = await InventoryModel.find();
+  res.json(inventory);
 });
 
 module.exports = { addInventoryItems, getInventoryItems };

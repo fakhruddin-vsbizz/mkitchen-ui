@@ -11,10 +11,10 @@ import SetMenu from './cooking/SetMenu';
 import { AuthContextProvider } from "./components/context/auth-context";
 import Cooking from "./cooking/Cooking";
 import Dispatch from "./cooking/Dispatch";
+import AddIngridientsInventory from "./components/Inventory/AddIngridientsInventory";
 function App() {
   return (
     <AuthContextProvider>
-      {" "}
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/admin/menu" element={<Menu />} />
@@ -22,6 +22,8 @@ function App() {
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
         <Route path="/cooking/ingredients" element={<SetMenu />} />
         <Route path="/cooking/cookfood" element={<Cooking />} />
+        <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} />
+
         <Route path="/cooking/dispatch" element={<Dispatch />} />
       </Routes>
     </AuthContextProvider>

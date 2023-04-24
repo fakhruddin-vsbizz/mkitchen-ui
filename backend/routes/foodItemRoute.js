@@ -1,12 +1,14 @@
 const express = require("express");
 const {
-  addFoodItem,
+  getFoodItemList,
   getFoodItem,
+  updateIngridientList,
 } = require("../controllers/foodItemController");
 
 const router = express.Router();
 
-router.post("/", addFoodItem);
+router.post("/", getFoodItemList);
 router.get("/", getFoodItem);
+router.put("/", updateIngridientList);
 
 module.exports = router;

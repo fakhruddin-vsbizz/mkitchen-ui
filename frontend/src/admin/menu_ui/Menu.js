@@ -11,6 +11,7 @@ import {
   Button,
   AutoComplete,
   Modal,
+  Input,
 } from "antd";
 
 const Menu = () => {
@@ -127,6 +128,7 @@ const Menu = () => {
 
   const createMenu = async () => {
     try {
+      let list = [];
       console.log("inside");
       const data = await fetch("http://localhost:5001/admin/menu", {
         method: "POST",
@@ -140,7 +142,7 @@ const Menu = () => {
           client_name: "mk admin",
           jaman_coming: true,
           reason_for_undelivered: null,
-          mohalla_wise_ashkhaas: "",
+          mohalla_wise_ashkhaas: list,
           add_type: "add_menu",
         }),
       });
@@ -164,8 +166,81 @@ const Menu = () => {
     );
     setFoodItems(filteredItems);
   };
-
   console.log("food list: ", foodItems);
+
+  //test code for ashkash update mohall wisee-----------*TESTING*-----------------
+
+  const [value1, setValue1] = useState("");
+  const [value2, setValue2] = useState("");
+  const [update, setUpdate] = useState(false);
+  const [mohallaAshkash, setMohallaAshkash] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      const data = await fetch("http://localhost:5001/admin/menu", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          add_type: "get_mohalla_ashkash",
+          date: "4/21/2023",
+        }),
+      });
+
+      if (data) {
+        const res = await data.json();
+        console.log(res);
+        if (res) {
+          console.log(res);
+
+          if (res[0].mk_id) {
+            setMohallaAshkash(res);
+          }
+        }
+      }
+    };
+    getData();
+  }, []);
+
+  console.log(mohallaAshkash);
+
+  useEffect(() => {
+    const updateMohallaWiseCount = async () => {
+      if (mohallaAshkash && update)
+        try {
+          console.log("inside");
+          const data = await fetch("http://localhost:5001/admin/menu", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              data: mohallaAshkash,
+              date_of_cooking: "4/21/2023",
+            }),
+          });
+
+          if (data) {
+            const res = await data.json();
+            console.log(data);
+            setUpdate(false);
+          }
+        } catch (error) {
+          console.log(error);
+        }
+    };
+    updateMohallaWiseCount();
+  }, [update, mohallaAshkash]);
+
+  const updateAshkash = async () => {
+    const obj = {
+      mk_id: value1,
+      total_ashkhaas: value2,
+    };
+    setMohallaAshkash([...mohallaAshkash, obj]);
+    setUpdate(true);
+  };
 
   return (
     <div>
@@ -232,6 +307,11 @@ const Menu = () => {
                           }))}
                           onChange={(value) => setSelectedFood(value)}
                           placeholder="Enter a food item"
+                          filterOption={(inputValue, option) =>
+                            option.value
+                              .toUpperCase()
+                              .indexOf(inputValue.toUpperCase()) !== -1
+                          }
                         />
                       </td>
                     )}
@@ -286,9 +366,30 @@ const Menu = () => {
           </Row>
         </Col>
       </Row>
+      <div
+        style={{
+          width: "500px",
+          position: "absolute",
+          margin: "10px",
+          marginBottom: "50px",
+          paddingBottom: "50px",
+        }}
+      >
+        <h4>This is to test the mohall wise ashkash api</h4>
+        <Input
+          placeholder="Enter Email"
+          value={value1}
+          onChange={(e) => setValue1(e.target.value)}
+        />
+        <Input
+          placeholder="Enter Ashkash"
+          value={value2}
+          onChange={(e) => setValue2(e.target.value)}
+        />
+        <Button onClick={updateAshkash}>submit</Button>
+      </div>
     </div>
   );
 };
 
 export default Menu;
-                    
