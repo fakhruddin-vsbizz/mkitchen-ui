@@ -3,30 +3,18 @@ const FoodMenu = require("../models/menuFoodModel");
 const OperationPipeLine = require("../models/operationPipeLineModel");
 
 const addOperationPipeline = expressAsyncHandler(async (req, res) => {
-  const { date, ingridient_list, status } = req.body;
+  const { date, ingridient_list, status, type, menu_id } = req.body;
 
-  //getting the id's for the respective user
-  const menuFood = await FoodMenu.findOne({
-    date_of_cooking: date,
-  });
-
-  if (menuFood) {
-    const operationPipeLine = await OperationPipeLine.create({
-      menu_food_id: menuFood._id,
-      ingridient_list,
-      status,
-    });
-
-    if (operationPipeLine) {
-      res.status(201).json({
-        _id: operationPipeLine.id,
-        review: operationPipeLine.menu_food_id,
-      });
+  if (type === "get_reorder_data") {
+    const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
+    if (pipeline) {
+      res.status(201).json(pipeline);
     } else {
       res.status(400);
-      throw new Error("Error creating the operationPipeLine ");
+      throw new Error("Error getting the pipeline");
     }
   }
+
   res.json({ message: "operationPipeLine  added" });
 });
 

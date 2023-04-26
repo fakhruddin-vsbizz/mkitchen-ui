@@ -144,6 +144,9 @@ const Menu = () => {
           reason_for_undelivered: null,
           mohalla_wise_ashkhaas: list,
           add_type: "add_menu",
+          ingridient_list: list,
+          status: list,
+          reorder_logs: list,
         }),
       });
 
