@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Select, List, Divider, Card, Button, AutoComplete, Input, Switch } from 'antd';
+import { Row, Col, Select, List, Divider, Card, Button, AutoComplete, Input, Tag } from 'antd';
 import { useState } from 'react';
 import { RightSquareFilled } from '@ant-design/icons';
 
@@ -14,24 +14,54 @@ const Dispatch = () => {
 
     const food_item_list = [
         {
-            food: 'Mutton Biryani',
-            ingredient_list:  [],
-            idx:1
+            mohalla_id:0,
+            food_dispatch_log:[
+                {
+                    food: 'Mutton Biryani',
+                    ingredient_list:  [],
+                    idx:1
+                },
+                {
+                    food: 'Mutton Kebab',
+                    ingredient_list:  [],
+                    idx:2
+                },
+                {
+                    food: 'Daal Gosht',
+                    ingredient_list:  [],
+                    idx:3
+                },
+                {
+                    food: 'Jira Masala',
+                    ingredient_list:  [],
+                    idx:4
+                }
+            ]  
         },
         {
-            food: 'Mutton Kebab',
-            ingredient_list:  [],
-            idx:2
-        },
-        {
-            food: 'Daal Gosht',
-            ingredient_list:  [],
-            idx:3
-        },
-        {
-            food: 'Jira Masala',
-            ingredient_list:  [],
-            idx:4
+            mohalla_id:1,
+            food_dispatch_log:[
+                {
+                    food: 'Mutton Biryani',
+                    ingredient_list:  [],
+                    idx:1
+                },
+                {
+                    food: 'Mutton Kebab',
+                    ingredient_list:  [],
+                    idx:2
+                },
+                {
+                    food: 'Daal Gosht',
+                    ingredient_list:  [],
+                    idx:3
+                },
+                {
+                    food: 'Jira Masala',
+                    ingredient_list:  [],
+                    idx:4
+                }
+            ]  
         },
     ];
 
@@ -54,6 +84,14 @@ const Dispatch = () => {
             idx:4
         },
     ];
+    
+
+    const [mohallaID, setMohallaID] = useState(0);
+    const [foodDispatchLog, setFoodDispatchLog] = useState(food_item_list.filter(function(item){
+        return item.mohalla_id === mohallaID;
+    }));
+
+    console.log(food_item_list.filter(function(item){return item.mohalla_id === mohallaID;}))
 
   return (
     <div>
@@ -100,7 +138,48 @@ const Dispatch = () => {
                             />
 
                         </Col>
-                        <Col xs={12} xl={12} style={{ padding:'3%' }}></Col>
+                        <Col xs={12} xl={12} style={{ padding:'3%' }}>
+                            <Card>
+                                <label
+                                    style={{ fontSize: "200%" }}
+                                    className="dongle-font-class"
+                                >
+                                    Select the items
+                                </label>
+                                <hr></hr>
+                                <List
+                                    size="small"
+                                    bordered
+                                    dataSource={foodDispatchLog[0].food_dispatch_log}
+                                    renderItem={(item, index) => (
+                                        <List.Item>
+                                            <Card title={item.food} bordered={false}>
+                                                <Row>
+                                                    <Col xs={12} xl={12}>
+                                                        Number of Daigs:
+                                                        <br/>
+                                                        <Input placeholder='Eg: 2,3,etc'></Input>
+                                                    </Col>
+                                                    <Col xs={12} xl={12}>
+                                                        Total Daig weight:
+                                                        <br/>
+                                                        <Input placeholder='Eg: 2,3,etc'></Input>
+                                                    </Col>
+                                                    <Col xs={12} xl={12}>
+                                                        <Button type='primary'>DISPATCH</Button>
+                                                    </Col>
+                                                    <Col xs={12} xl={12}>
+                                                        Confirm Delivery?
+                                                    <Tag color="gold">PENDING</Tag>
+                                                    </Col>
+                                                </Row>
+                                            </Card>
+                                        </List.Item>
+                                    )}
+                                />
+                                
+                            </Card>
+                        </Col>
                     </Row>
                     
                 </Col>
