@@ -24,6 +24,9 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
 
     //food id req data
     selected_food,
+
+    //mohalla wise ashkash req data
+    date,
   } = req.body;
 
   if (add_type === "add_menu") {
@@ -95,6 +98,11 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     console.log(foodMenu);
     res.json(foodMenu);
   }
+  if (add_type === "get_mohalla_ashkash") {
+    const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
+    console.log(foodMenu);
+    res.json(foodMenu.mohalla_wise_ashkhaas);
+  }
 });
 
 const getFoodMenu = expressAsyncHandler(async (req, res) => {
@@ -106,17 +114,17 @@ const getFoodMenu = expressAsyncHandler(async (req, res) => {
 });
 
 const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
-  const { total_ashkhaas, date_of_cooking } = req.body;
+  const { data, date_of_cooking } = req.body;
 
   const foodMenu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
 
   if (foodMenu) {
     const updatedMenuAskash = await FoodMenu.findByIdAndUpdate(
       { _id: Object(foodMenu._id) },
-      { $set: { total_ashkhaas: total_ashkhaas } },
+      { $set: { mohalla_wise_ashkhaas: data } },
       { new: true }
     );
-    res.json({ total_ashkhaas: updatedMenuAskash.total_ashkhaas });
+    res.json({ users: updatedMenuAskash.mohalla_wise_ashkhaas });
   }
 });
 
