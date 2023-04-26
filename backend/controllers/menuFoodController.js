@@ -2,6 +2,7 @@ const expressAsyncHandler = require("express-async-handler");
 const FoodMenu = require("../models/menuFoodModel");
 const MkUser = require("../models/mkUserModel");
 const FoodItem = require("../models/foodItemModel");
+const OperationPipeLine = require("../models/operationPipeLineModel");
 
 const addFoodMenu = expressAsyncHandler(async (req, res) => {
   const {
@@ -27,6 +28,10 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
 
     //mohalla wise ashkash req data
     date,
+
+    //operation pipeline req data
+    reorder_logs,
+    status,
   } = req.body;
 
   if (add_type === "add_menu") {
@@ -51,15 +56,29 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     });
 
     if (foodMenu) {
-      res
-        .status(201)
-        .json({ _id: foodMenu.id, client_name: foodMenu.client_name });
+      const operationPipeLine = await OperationPipeLine.create({
+        menu_food_id: foodMenu._id,
+        ingridient_list,
+        reorder_logs,
+        status,
+      });
+
+      if (operationPipeLine) {
+        res.status(201).json({
+          _id: operationPipeLine.id,
+          menu_food_id: operationPipeLine.menu_food_id,
+        });
+      } else {
+        res.status(400);
+        throw new Error("Error creating the operationPipeLine ");
+      }
     } else {
       res.status(400);
       throw new Error("Error creating the menu");
     }
     res.json({ message: "menu created " });
   }
+
   if (add_type === "food_item") {
     console.log("adding item");
 
