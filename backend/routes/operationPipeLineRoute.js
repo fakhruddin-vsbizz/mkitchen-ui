@@ -9,6 +9,6 @@ const router = express.Router();
 
 router.post("/", addOperationPipeline);
 router.get("/", getOperationPipeline);
-router.put("/update", updateOperationPipeline);
+router.put("/", updateOperationPipeline);
 
 module.exports = router;

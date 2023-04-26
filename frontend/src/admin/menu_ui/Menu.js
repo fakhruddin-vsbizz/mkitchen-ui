@@ -147,6 +147,7 @@ const Menu = () => {
           ingridient_list: list,
           status: list,
           reorder_logs: list,
+          dispatch: list,
         }),
       });
 
@@ -240,6 +241,7 @@ const Menu = () => {
     const obj = {
       mk_id: value1,
       total_ashkhaas: value2,
+      name: "Mohalla Ujjain",
     };
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);

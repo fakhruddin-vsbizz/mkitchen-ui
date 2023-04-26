@@ -15,6 +15,10 @@ const OperationPipeLine = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed,
       required: false,
     },
+    dispatch: {
+      type: mongoose.Schema.Types.Mixed,
+      required: false,
+    },
     status: {
       type: mongoose.Schema.Types.Mixed,
       required: false,
