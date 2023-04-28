@@ -32,6 +32,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     //operation pipeline req data
     reorder_logs,
     status,
+    dispatch
   } = req.body;
 
   if (add_type === "add_menu") {
@@ -60,6 +61,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
         menu_food_id: foodMenu._id,
         ingridient_list,
         reorder_logs,
+        dispatch,
         status,
       });
 

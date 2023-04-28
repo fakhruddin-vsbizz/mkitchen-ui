@@ -45,6 +45,16 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
     }
   }
 
+  if (type === "get_mohalla_users") {
+    const menuFood = await MenuFood.find({ date_of_cooking: date });
+    if (menuFood) {
+      res.status(201).json(menuFood);
+    } else {
+      res.status(400);
+      throw new Error("Error getting the mohalla users");
+    }
+  }
+
   if (type === "get_user_id") {
     const mkuser = await MkUser.findOne({ username: client_name });
     if (mkuser) {

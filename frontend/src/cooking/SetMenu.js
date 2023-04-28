@@ -116,21 +116,6 @@ const SetMenu = () => {
     getInventory();
   }, []);
 
-  // useEffect(() => {
-  //   if (
-  //     ingredientItems &&
-  //     ingredientItems.length > 0 &&
-  //     updateAshkash !== true
-  //   ) {
-  //     const isUnique = !allIngridients.some(
-  //       (arr) => JSON.stringify(arr) === JSON.stringify(ingredientItems)
-  //     );
-  //     if (isUnique) {
-  //       setAllIngridients((prevArrays) => [...prevArrays, ingredientItems]);
-  //     }
-  //   }
-  // }, [ingredientItems, updateAshkash]);
-
   console.log(inventoryItems);
 
   const addIngredients = () => {
