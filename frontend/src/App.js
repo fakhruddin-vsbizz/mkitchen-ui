@@ -20,6 +20,7 @@ import PostConfirmOps from "./procurement_inventory/current_menu/PostConfirmOps"
 import Vendors from "./procurement_inventory/vendors/Vendors";
 import NewVendor from "./procurement_inventory/vendors/NewVendor";
 import VendorPurchase from "./procurement_inventory/vendors/VendorPurchase";
+import DamagedGoodsList from "./procurement_inventory/damaged_goods/DamagedGoodsList";
 function App() {
   return (
     <AuthContextProvider>
@@ -40,6 +41,7 @@ function App() {
         <Route path="/pai/vendors/" element={<Vendors />} />
         <Route path="/pai/vendors/new" element={<NewVendor />} />
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
+        <Route path="/pai/expiries" element={<DamagedGoodsList />} />
 
       </Routes>
     </AuthContextProvider>
