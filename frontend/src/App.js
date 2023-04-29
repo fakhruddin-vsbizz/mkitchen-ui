@@ -30,7 +30,7 @@ function App() {
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
         <Route path="/cooking/ingredients" element={<SetMenu />} />
         <Route path="/cooking/cookfood" element={<Cooking />} />
-        <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} />
+        {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
         <Route path="/pai/inventory" element={<Inventory />} />
         <Route path="/pai/purchases" element={<Purchases />} />

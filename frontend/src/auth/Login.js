@@ -43,6 +43,7 @@ const Login = () => {
 
       const userType = response.data.user.usertype;
       const userEmail = response.data.user.email;
+      const userId = response.data.user._id;
 
       // convert expiration time to a Date object
 
@@ -53,7 +54,7 @@ const Login = () => {
       authCtx.login(response.data.accessToken, expirationTime.toISOString());
 
       //setting the user type using context
-      authCtx.setUserRoleType(userType, userEmail);
+      authCtx.setUserRoleType(userType, userEmail, userId);
 
       console.log(expirationTime);
       console.log(authCtx.userEmail);

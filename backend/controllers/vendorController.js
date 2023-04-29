@@ -10,6 +10,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
     closing_time,
     email,
     address,
+    mkuser_id,
   } = req.body;
 
   const mkUser = await MkUser.findOne({ email: mkuser_email });

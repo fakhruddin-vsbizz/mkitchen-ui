@@ -30,8 +30,9 @@ const Dispatch = () => {
   const [update, setUpdate] = useState(false);
 
   const [mohallaUserId, setMohallaUserId] = useState();
+  const [viewDispatchedData, setViewDispatchedData] = useState();
 
-  const [dipatchData, setDispatchData] = useState([]);
+  const [finaldipatchData, setFinalDispatchData] = useState([]);
 
   const handleDateChange = (date) => {
     console.log(date);
@@ -43,6 +44,49 @@ const Dispatch = () => {
   };
 
   console.log(selectedDate);
+
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_dispatch_data",
+            menu_id: menuFoodId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            console.log(res.dispatch);
+            if (res.dispatch.length > 0) {
+              setViewDispatchedData(res.dispatch);
+            }
+          }
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId]);
+
+  console.log("dispatched View data: ", viewDispatchedData);
+  console.log("dispatched View data object: ", finaldipatchData);
+
+  useEffect(() => {
+    if (viewDispatchedData) {
+      console.log("inside data");
+      const data = viewDispatchedData.filter(
+        (item) => item.mk_id === mohallaUserId
+      );
+      if (data[0]) {
+        console.log(data[0].dispatch);
+        setFinalDispatchData(data[0].dispatch);
+      }
+    }
+  }, [viewDispatchedData, mohallaUserId]);
 
   useEffect(() => {
     const getFood = async () => {
@@ -108,7 +152,7 @@ const Dispatch = () => {
   console.log("mohalla users: ", getMohallaUsers);
   console.log("menu id: ", menuFoodId);
   console.log("Food list: ", foodList);
-  console.log("Dispatch Data: ", dipatchData);
+
   console.log("mohalla id: ", mohallaUserId);
 
   return (
@@ -204,7 +248,27 @@ const Dispatch = () => {
                             <Col xs={12} xl={12}>
                               Number of Daigs:
                               <br />
+                              <br />
+                              <label style={{ marginTop: "200px" }}>
+                                {finaldipatchData &&
+                                  finaldipatchData
+                                    .filter(
+                                      (batch) =>
+                                        batch.food_item_id === item.food_item_id
+                                    )
+                                    .map((item) => (
+                                      <h3 style={{ color: "green" }}>
+                                        {" "}
+                                        {item.total_weight}{" "}
+                                        <label style={{ color: "red" }}>
+                                          {" "}
+                                          Dispatched
+                                        </label>
+                                      </h3>
+                                    ))}
+                              </label>
                               <Input
+                                style={{ marginTop: "20px" }}
                                 onChange={(e) => setDaigs(e.target.value)}
                                 placeholder="Eg: 2,3,etc"
                               ></Input>
@@ -212,7 +276,26 @@ const Dispatch = () => {
                             <Col xs={12} xl={12}>
                               Total Daig weight:
                               <br />
+                              <br />
+                              <label style={{ paddingTop: "80px" }}>
+                                {finaldipatchData &&
+                                  finaldipatchData
+                                    .filter(
+                                      (batch) =>
+                                        batch.food_item_id === item.food_item_id
+                                    )
+                                    .map((item) => (
+                                      <h3 style={{ color: "green" }}>
+                                        {item.no_of_deigh}
+                                        <label style={{ color: "red" }}>
+                                          {" "}
+                                          Dispatched
+                                        </label>
+                                      </h3>
+                                    ))}
+                              </label>
                               <Input
+                                style={{ marginTop: "20px" }}
                                 onChange={(e) => setTotalWeight(e.target.value)}
                                 placeholder="Eg: 2,3,etc"
                               ></Input>
@@ -245,56 +328,3 @@ const Dispatch = () => {
 };
 
 export default Dispatch;
-
-// const food_item_list = [
-//   {
-//     mohalla_id: 0,
-//     food_dispatch_log: [
-//       {
-//         food: "Mutton Biryani",
-//         ingredient_list: [],
-//         idx: 1,
-//       },
-//       {
-//         food: "Mutton Kebab",
-//         ingredient_list: [],
-//         idx: 2,
-//       },
-//       {
-//         food: "Daal Gosht",
-//         ingredient_list: [],
-//         idx: 3,
-//       },
-//       {
-//         food: "Jira Masala",
-//         ingredient_list: [],
-//         idx: 4,
-//       },
-//     ],
-//   },
-//   {
-//     mohalla_id: 1,
-//     food_dispatch_log: [
-//       {
-//         food: "Mutton Biryani",
-//         ingredient_list: [],
-//         idx: 1,
-//       },
-//       {
-//         food: "Mutton Kebab",
-//         ingredient_list: [],
-//         idx: 2,
-//       },
-//       {
-//         food: "Daal Gosht",
-//         ingredient_list: [],
-//         idx: 3,
-//       },
-//       {
-//         food: "Jira Masala",
-//         ingredient_list: [],
-//         idx: 4,
-//       },
-//     ],
-//   },
-// ];
