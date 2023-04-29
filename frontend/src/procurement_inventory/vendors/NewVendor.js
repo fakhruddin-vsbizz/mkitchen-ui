@@ -181,6 +181,7 @@ const NewVendor = () => {
                         <Col xs={12} xl={12}>
                             <Radio value='Weekdays' style={{ fontSize: '130%' }}>Weekdays</Radio>
                             <br/>
+                            <br/>
                             <Row>                            
                                 <Col xs={12} xl={8}><Checkbox>Monday</Checkbox></Col>
                                 <Col xs={12} xl={8}><Checkbox>Tuesday</Checkbox></Col>
