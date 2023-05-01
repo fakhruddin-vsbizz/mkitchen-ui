@@ -47,37 +47,40 @@ const VerifyVendor = () => {
         {vendor_name:'Badhshah General Store', date_created:'19-06-2021'},
     ];
 
-
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const showNMModal = () => {
-        setNewMohallaPopup(true);
-    };
-
-
-
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleNMOk = () => {
-        setNewMohallaPopup(false);
-    };
-
-
-
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleNMCancel = () => {
-        setNewMohallaPopup(false);
-    };
-
+    const vendorPurchaseList = [
+        {
+          vendor_name:'V.K. General store',
+          created_on: '18-04-2021',
+          opening_time: '9:00',
+          closing_time: '18:30',
+          address: "Kothrud, Pune, Maharashtra",
+          approval_status: true
+        },
+        {
+          vendor_name:'Bohra Stores',
+          created_on: '18-04-2021',
+          opening_time: '9:00',
+          closing_time: '18:30',
+          address: "Kothrud, Pune, Maharashtra",
+          approval_status: false
+        },
+        {
+          vendor_name:'Amul Butter',
+          created_on: '18-04-2021',
+          opening_time: '9:00',
+          closing_time: '18:30',
+          address: "Kothrud, Pune, Maharashtra",
+          approval_status: true
+        },
+        {
+          vendor_name:'Sunflower Oil',
+          created_on: '18-04-2021',
+          opening_time: '9:00',
+          closing_time: '18:30',
+          address: "Kothrud, Pune, Maharashtra",
+          approval_status: false
+        },
+      ]
 
 
   return (
@@ -95,83 +98,41 @@ const VerifyVendor = () => {
                 )}
             />
             </Col>
-            <Col xs={24} xl={20} style={{ padding:'5%' }}>
-                <label style={{ fontSize: '300%' }} className='dongle-font-class'>Verify Suggested Vendors</label>
-                <Divider style={{ backgroundColor: '#000'}}></Divider>
-                <label style={{ fontSize: '200%' }} className='dongle-font-class'>Unverified Vendors</label>
+            <Col xs={24} xl={20} style={{ padding:'2%' }}>
+                <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+                    <Row>
+                        <Col xs={12} xl={12} style={{ fontSize: '200%' }}>Verify Vendors</Col>
+                        <Col xs={12} xl={12}>
+                        </Col>
+                    </Row>
+                </Card>
                 <br/><br/><br/>
-                <List
-                    grid={{
-                    gutter: 16,
-                    xs: 1,
-                    sm: 2,
-                    md: 4,
-                    lg: 4,
-                    xl: 3,
-                    xxl: 3,
-                    }}
-                    dataSource={mohalla_accounts}
+                <Card>
+
+                    <List
+                    style={{ width: '100%' }}
+                    bordered
+                    dataSource={vendorPurchaseList}
                     renderItem={(item) => (
-                    <List.Item>
-                        <Card title={item.vendor_name}>
-                            With system from: {item.date_created}
-                            <br/><br/>
-                            <Button size='small' type='primary' onClick={showModal}>Verify Vendor</Button>
-                        </Card>
-                    </List.Item>
-                    )}
-                />
-                <Modal title="Initiate Verification" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-                    <p>Change Email</p>
-                    <table style={{ width:'100%' }} className='dongle-font-class'>
-                        <tr>
-                            <td>
-                                Address
-                                <br/>
-                                <label style={{ fontSize: '150%' }}>Opp. Sheetal Petrol Pump, Kondhwa</label>
-                            </td>
-                            <td>
-                                Closing time
-                                <br/>
-                                <label style={{ fontSize: '150%' }}>18:30</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                Opening time
-                                <br/>
-                                <label style={{ fontSize: '150%' }}>9:30</label>
-                            </td>
-                            <td>
-                                Availability
-                                <br/>
-                                <label style={{ fontSize: '150%' }}>Everyday</label>
-                            </td>
-                        </tr>
-                    </table>
-                </Modal>
-
-
-                <Divider style={{ backgroundColor: '#000'}}></Divider>
-
-                <label style={{ fontSize: '200%' }} className='dongle-font-class'>All Verified Vendors</label>
-                <br/><br/><br/>
-
-                <Table dataSource={all_verified_vendors}>
-                    
-                    <Column title="Vendor Name" dataIndex="vendor_name" key="age" />
-                    <Column title="Created on" dataIndex="date_created" key="date_created" />
-                    
-                    <Column
-                        title=""
-                        key="action"
-                        render={(_, record) => (
-                            <Space size="middle">
-                                <Button type='primary' danger>Delete Vendor</Button>
-                            </Space>
+                        <List.Item>
+                            <Row style={{ width: '100%', textAlign:'left' }}>
+                                <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.vendor_name}</Col>
+                                <Col xs={8} xl={6}>Shop timings: <br/>{item.opening_time} to {item.closing_time}</Col>
+                                <Col xs={8} xl={6}>Created on: <br/>Rs. {item.created_on}/-</Col>
+                                <Col xs={8} xl={6}>Address: <br/>{item.address}</Col>
+                                <Col xs={8} xl={6}>
+                                    <Tag color={item.approval_status ? 'green' : 'orange'}>
+                                        {item.is_paid ? 'PENDING' : 'VERIFIED'}
+                                    </Tag>
+                                    &nbsp;&nbsp;&nbsp;
+                                    {!item.approval_status ? <Button>MARK VERIFIED</Button> : null}
+                                    
+                                </Col>
+                            </Row>
+                            </List.Item>
                         )}
                     />
-                </Table>
+                </Card>
 
             </Col>
         </Row>

@@ -277,11 +277,26 @@ const SetMenu = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
+        <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
           <Row>
-            <Col xs={12} xl={12}>
-              <DatePicker onChange={handleDateChange} />
+              <Col xs={24} xl={12}>
+                <label style={{ fontSize: '200%' }}>Set Ingredients</label>
+                <br/>
+                Total count: 8000 People
+              </Col>
+              <Col xs={24} xl={12}>
+                Select the date to view ingredients:<br/>
+                <DatePicker onChange={handleDateChange} />
+              </Col>
+          </Row>
+        </Card>
+          <Row>
+            <Col xs={24} xl={12}>
+              
               {/* <Button onClick={handleButtonClick}>Filter</Button> */}
-              <p>
+              
+                <br/>
+              {/* <p>
                 <label
                   style={{ fontSize: "300%" }}
                   className="dongle-font-class"
@@ -296,7 +311,7 @@ const SetMenu = () => {
                 >
                   8000 Ashkhaas
                 </label>
-              </p>
+              </p> */}
               Select Client: &nbsp;&nbsp;&nbsp;
               <Select
                 defaultValue={0}
@@ -315,21 +330,33 @@ const SetMenu = () => {
                   dataSource={getFoodList}
                   renderItem={(item, index) => (
                     <List.Item>
-                      {item.food_name}
-                      <Button
-                        type="ghost"
-                        style={{ marginLeft: "30%" }}
-                        id={"set_index_" + item.index}
-                        onClick={() => setFoodReference(item.food_item_id)}
-                      >
-                        <RightSquareFilled />
+                      <Card style={{ width: '100%' }}>
+                        <Row>
+                          <Col xs={12} xl={12}>
+                            Food Name:
+                            <br/>
+                            <label style={{ fontSize: '125%' }}>{item.food_name}</label>
+                          </Col>
+                          <Col xs={12} xl={12}>
+                          <Button
+                            type="ghost"
+                            style={{ marginLeft: "30%", fontSize:'200%' }}
+                            id={"set_index_" + item.index}
+                            onClick={() => setFoodReference(item.food_item_id)}
+                          >
+                        <i class="fa-solid fa-circle-chevron-right"></i>
                       </Button>
+                          </Col>
+                        </Row>
+                      </Card>
+                      
+                      
                     </List.Item>
                   )}
                 />
               )}
             </Col>
-            <Col xs={12} xl={12} style={{ padding: "3%" }}>
+            <Col xs={24} xl={12} style={{ padding: "3%" }}>
               <Card>
                 <label
                   style={{ fontSize: "200%" }}
