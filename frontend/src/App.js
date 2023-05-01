@@ -21,12 +21,14 @@ import Vendors from "./procurement_inventory/vendors/Vendors";
 import NewVendor from "./procurement_inventory/vendors/NewVendor";
 import VendorPurchase from "./procurement_inventory/vendors/VendorPurchase";
 import DamagedGoodsList from "./procurement_inventory/damaged_goods/DamagedGoodsList";
+import ProcedureLogs from "./admin/procedure_log/ProcedureLogs";
 function App() {
   return (
     <AuthContextProvider>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/admin/menu" element={<Menu />} />
+        <Route path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
         <Route path="/cooking/ingredients" element={<SetMenu />} />

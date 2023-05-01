@@ -4,60 +4,60 @@ import { List, Card, Row, Col, Slider, DatePicker, Tag, Button, Input, InputNumb
 const DamagedGoodsList = () => {
 
     const vendorPurchaseList = [
-        {
-          ingredient_name:'Goat Meat',
-          quantity_ordered: 130,
-          period_post_exipry: 10,
-          period: 'Days',
-          created_on: '24-06-2023'
-        },
-        {
-          ingredient_name:'Cabbage',
-          quantity_ordered: 12,
-          period_post_exipry: 40,
-          period: 'Months',
-          created_on: '24-06-2023'
-        },
-        {
-          ingredient_name:'Amul Butter',
-          quantity_ordered: 25,
-          period_post_exipry: 25,
-          period: 'Months',
-          created_on: '24-06-2023'
-        },
-        {
-          ingredient_name:'Sunflower Oil',
-          quantity_ordered: 1,
-          period_post_exipry: 100,
-          period: 'Years',
-          created_on: '24-06-2023'
-        },
-      ]
+      {
+        ingredient_name:'Goat Meat',
+        quantity_ordered: 130,
+        period_post_exipry: 10,
+        period: 'Days',
+        created_on: '24-06-2023'
+      },
+      {
+        ingredient_name:'Cabbage',
+        quantity_ordered: 12,
+        period_post_exipry: 40,
+        period: 'Months',
+        created_on: '24-06-2023'
+      },
+      {
+        ingredient_name:'Amul Butter',
+        quantity_ordered: 25,
+        period_post_exipry: 25,
+        period: 'Months',
+        created_on: '24-06-2023'
+      },
+      {
+        ingredient_name:'Sunflower Oil',
+        quantity_ordered: 1,
+        period_post_exipry: 100,
+        period: 'Years',
+        created_on: '24-06-2023'
+      },
+    ]
     
-      const [inputValue, setInputValue] = useState(1);
-      const [days, setDays] = useState(1);
-    
-      const onChange = (newValue) => {
-        setInputValue(newValue);
-      };
+    const [inputValue, setInputValue] = useState(1);
+    const [days, setDays] = useState(1);
+  
+    const onChange = (newValue) => {
+      setInputValue(newValue);
+    };
 
-      const onChangeDayValue = (newValue) => {
-        setDays(newValue);
-      };
+    const onChangeDayValue = (newValue) => {
+      setDays(newValue);
+    };
 
-      const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-        const showModal = () => {
-            setIsModalOpen(true);
-        };
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
 
-        const handleOk = () => {
-            setIsModalOpen(false);
-        };
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
 
-        const handleCancel = () => {
-            setIsModalOpen(false);
-        };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
 
 
   return (
@@ -157,7 +157,7 @@ const DamagedGoodsList = () => {
                     <Button type='primary'>KEEP IN INVENTORY</Button>
                 </Col>
                 <Col xs={12} xl={12}>
-                <Button type='primary' danger>UNSHELF AND REMOVE AMOUNT</Button>
+                  <Button type='primary' danger>UNSHELF AND REMOVE AMOUNT</Button>
                 </Col>
             </Row>
           </Modal>
