@@ -31,8 +31,8 @@ const Dispatch = () => {
 
   const [mohallaUserId, setMohallaUserId] = useState();
   const [viewDispatchedData, setViewDispatchedData] = useState();
-
   const [finaldipatchData, setFinalDispatchData] = useState([]);
+  const [statusOP, setStatusOP] = useState(false);
 
   const handleDateChange = (date) => {
     console.log(date);
@@ -45,6 +45,81 @@ const Dispatch = () => {
 
   console.log(selectedDate);
 
+  //get the dispatch data for mk -user.
+
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId && mohallaUserId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_mohalla_dispatch_data",
+            menu_id: menuFoodId,
+            mk_id: mohallaUserId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          console.log("mohalla user food data: ", res);
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId, mohallaUserId]);
+
+  //updating the dispatch delivery status.
+
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId && mohallaUserId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "update_dispatch_delivery_status",
+            menu_id: menuFoodId,
+            mk_id: mohallaUserId,
+            food_item_id: "6440fb6d4f57047f11926b0f",
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          console.log("mohalla user food updated: ", res);
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId, mohallaUserId]);
+
+  //getting the status from operational pipeline
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_status_op",
+            menu_id: menuFoodId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          console.log("operational pipeline status: ", res);
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId]);
+
+  //getting the dispatched data from the OP
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
@@ -75,6 +150,7 @@ const Dispatch = () => {
   console.log("dispatched View data: ", viewDispatchedData);
   console.log("dispatched View data object: ", finaldipatchData);
 
+  //filtering the dispatched data based on the Mohalla admin
   useEffect(() => {
     if (viewDispatchedData) {
       console.log("inside data");
@@ -134,6 +210,7 @@ const Dispatch = () => {
           total_weight: totalWeight,
           no_of_deigh: daigs,
           mk_id: mohallaUserId,
+          delivery_status: "pending",
         }),
       });
 

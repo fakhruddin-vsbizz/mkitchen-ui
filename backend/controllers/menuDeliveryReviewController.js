@@ -4,12 +4,12 @@ const FoodMenu = require("../models/menuFoodModel");
 const MenuDelivery = require("../models/menuDeliveryReviewModel");
 
 const addDeliveryReview = expressAsyncHandler(async (req, res) => {
-  const { mkuser_email, menu_food_client_name, review, remark } = req.body;
+  const { mkuser_email, date_of_cooking, review, remark } = req.body;
 
   //getting the id's for the respective user
   const mkUser = await MKUser.findOne({ email: mkuser_email });
   const menuFood = await FoodMenu.findOne({
-    client_name: menu_food_client_name,
+    date_of_cooking: date_of_cooking,
   });
 
   if (mkUser && menuFood) {

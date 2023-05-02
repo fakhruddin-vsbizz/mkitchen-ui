@@ -82,8 +82,8 @@ const Menu = () => {
         console.log(id);
         const newFoodItem = {
           food_item_id: id,
-          no_of_deigs: 0,
-          total_weight: 0,
+          // no_of_deigs: 0,
+          // total_weight: 0,
           food_name: selectedFood,
         };
         setFoodItems([...foodItems, newFoodItem]);
@@ -114,8 +114,8 @@ const Menu = () => {
 
           const newFoodItem = {
             food_item_id: res._id,
-            no_of_deigs: 0,
-            total_weight: 0,
+            // no_of_deigs: 0,
+            // total_weight: 0,
             food_name: selectedFood,
           };
           setFoodItems([...foodItems, newFoodItem]);
@@ -145,7 +145,7 @@ const Menu = () => {
           mohalla_wise_ashkhaas: list,
           add_type: "add_menu",
           ingridient_list: list,
-          status: list,
+          status: 0,
           reorder_logs: list,
           dispatch: list,
         }),
@@ -188,7 +188,7 @@ const Menu = () => {
         },
         body: JSON.stringify({
           add_type: "get_mohalla_ashkash",
-          date: "4/21/2023",
+          date: "5/2/2023",
         }),
       });
 
@@ -221,7 +221,7 @@ const Menu = () => {
             },
             body: JSON.stringify({
               data: mohallaAshkash,
-              date_of_cooking: "4/21/2023",
+              date_of_cooking: "5/2/2023",
             }),
           });
 
@@ -241,7 +241,7 @@ const Menu = () => {
     const obj = {
       mk_id: value1,
       total_ashkhaas: value2,
-      name: "Mohalla Ujjain",
+      name: "Mohalla Indore",
     };
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);
