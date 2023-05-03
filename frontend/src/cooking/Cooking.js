@@ -11,6 +11,7 @@ import {
   Input,
   Switch,
   DatePicker,
+  Modal,
 } from "antd";
 import { useState } from "react";
 import axios from "axios";
@@ -23,6 +24,7 @@ const Cooking = () => {
   const [reorderQuantity, setReorderQuantity] = useState();
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const [getFoodList, setGetFoodList] = useState();
 
@@ -159,8 +161,45 @@ const Cooking = () => {
     setUpdate(true);
   };
 
+  const cookingDone = async () => {
+    try {
+      const data = await fetch("http://localhost:5001/operation_pipeline", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "update_operation_pipeline_status",
+          menu_id: menuFoodId,
+        }),
+      });
+
+      if (data) {
+        const res = await data.json();
+        console.log(data);
+        setVisible(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
+      <Modal
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={[
+          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+            OK
+          </Button>,
+        ]}
+      >
+        <div style={{ textAlign: "center" }}>
+          <h2 style={{ color: "#52c41a" }}>Success!</h2>
+          <p>Menu Cooked Successfully</p>
+        </div>
+      </Modal>
       <Row>
         <Col xs={0} xl={4} style={{ padding: "1%" }}>
           <List
@@ -220,10 +259,16 @@ const Cooking = () => {
                       dataSource={ingredientLists[index]}
                       renderItem={(ing, index) => (
                         <List.Item>
-                          <Card>
+                          <Card
+                            style={{
+                              width: "250px",
+                              marginLeft: "50px",
+                            }}
+                          >
                             <u>{ing.ingredient_name}</u>
                             <br />
                             <Input
+                              style={{ width: "150px" }}
                               onChange={(e) =>
                                 handleIngridientReOrder(
                                   ing.inventory_item_id,
@@ -246,15 +291,23 @@ const Cooking = () => {
                       )}
                     />
                   </Col>
-                  <Col xs={2} xl={2} style={{ padding: "2%" }}>
+                  {/* <Col xs={2} xl={2} style={{ padding: "2%" }}>
                     Cooked? &nbsp;&nbsp;&nbsp;
                     <Switch />
-                  </Col>
+                  </Col> */}
                 </Row>
               </List.Item>
             )}
           />
         </Col>
+        <Button
+          block
+          style={{ width: "500px", marginLeft: "300px" }}
+          type="primary"
+          onClick={cookingDone}
+        >
+          MARK COOKING DONE
+        </Button>
       </Row>
     </div>
   );
