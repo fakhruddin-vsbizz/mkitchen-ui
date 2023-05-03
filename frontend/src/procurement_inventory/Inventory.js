@@ -9,6 +9,7 @@ import {
   Card,
   Modal,
   Radio,
+  Tag
 } from "antd";
 
 const Inventory = () => {
@@ -87,25 +88,34 @@ const Inventory = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <label style={{ fontSize: "300%" }} className="dongle-font-class">
-            Inventory
-          </label>
+        <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+            <Row>
+                <Col xs={12} xl={12} style={{ fontSize: '200%' }}>Inventory</Col>
+                <Col xs={12} xl={12}>
+                </Col>
+            </Row>
+        </Card>
           <hr></hr>
           <table style={{ width: "100%" }} cellPadding={20}>
             <tr>
               <td>
+                Filter by ingredients name:<br/>
                 <Input
                   placeholder="Filter by name..."
                   style={{ width: "70%" }}
                 ></Input>
               </td>
               <td>
+                Volume Range: 
                 <Slider min={1} max={10000}></Slider>
               </td>
               <td>
-                <Button type="primary" onClick={(e) => setIsModalOpen(true)}>
-                  + ADD NEW ITEM
-                </Button>
+                <center>
+                  <Button type="primary" onClick={(e) => setIsModalOpen(true)}>
+                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp; Add new ingredient
+                  </Button>
+                </center>
+                
                 <Modal
                   open={isModalOpen}
                   onOk={handleSubmit}
@@ -159,42 +169,43 @@ const Inventory = () => {
           </table>
           <hr></hr>
           {inventoryItems && (
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 4,
-                xxl: 3,
-              }}
-              dataSource={inventoryItems}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card
-                    style={{
-                      backgroundColor:
-                        item.total_quantity < 0 ? "lightpink" : "lightgreen",
-                    }}
-                  >
-                    <label style={{ fontSize: "200%" }}>
-                      {item.ingridient_name}
-                    </label>
-                    <br />
-                    <br />
-                    Expires in:
-                    <br />
-                    <label style={{ fontSize: "150%" }}>
-                      <b>
-                        {item.ingridient_expiry_amount}{" "}
-                        {item.ingridient_expiry_period}
-                      </b>
-                    </label>
-                  </Card>
-                </List.Item>
-              )}
-            />
+            <Card>
+              <List
+                dataSource={inventoryItems}
+                renderItem={(item) => (
+                  <List.Item>
+                    <Row style={{ width: '100%', textAlign:'left' }}>
+                      <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.ingridient_name}</Col>
+                      <Col xs={8} xl={8}>Ingredient Expiry period: <br/>{item.ingridient_expiry_amount} {item.ingridient_expiry_period}</Col>
+                      <Col xs={8} xl={8}>Ingredient total Volume: <br/>1200 KG</Col>
+                      <Col xs={8} xl={8}>
+                          <Button>View Purchases</Button>
+                      </Col>
+                    </Row>
+                    {/* <Card
+                      style={{
+                        backgroundColor:
+                          item.total_quantity < 0 ? "lightpink" : "lightgreen",
+                      }}
+                    >
+                      <label style={{ fontSize: "200%" }}>
+                        {item.ingridient_name}
+                      </label>
+                      <br />
+                      <br />
+                      Expires in:
+                      <br />
+                      <label style={{ fontSize: "150%" }}>
+                        <b>
+                          {item.ingridient_expiry_amount}{" "}
+                          {item.ingridient_expiry_period}
+                        </b>
+                      </label>
+                    </Card> */}
+                  </List.Item>
+                )}
+              />
+            </Card>
           )}
         </Col>
       </Row>
