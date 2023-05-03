@@ -25,6 +25,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   //get status of OP
 
   if (type === "get_status_op") {
+    console.log("in here");
     const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
     if (pipeline) {
       res.status(201).json(pipeline.status);
@@ -173,7 +174,7 @@ const getOperationPipeline = expressAsyncHandler(async (req, res) => {
 });
 
 const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
-  const { type, menu_id, dispatch } = req.body;
+  const { type, menu_id, dispatch, status, inventory_id } = req.body;
 
   const operationId = await OperationPipeLine.findOne({
     menu_food_id: menu_id,
@@ -198,13 +199,25 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
     console.log("inside status updation");
     const updatePipeline = await OperationPipeLine.findByIdAndUpdate(
       { _id: Object(operationId._id) },
-      { $set: { status: 1 } },
+      { $set: { status: status } },
       { new: true }
     );
     if (updatePipeline) {
       console.log("success");
       res.json({ message: "pipeline  updated successfully" });
     }
+  }
+
+  if (type === "update_operation_pipeline_reorder_status") {
+    console.log("id: ", inventory_id);
+    const reorderArr = operationId.reorder_logs;
+    reorderArr.forEach((item, index) => {
+      if (item.inventory_id === inventory_id) {
+        reorderArr[index].reorder_delivery_status = false;
+      }
+    });
+    await operationId.updateOne({ reorder_logs: reorderArr });
+    res.json({ message: "reOrderLog  updated successfully" });
   }
 });
 

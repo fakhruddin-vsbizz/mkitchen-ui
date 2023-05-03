@@ -27,6 +27,7 @@ app.use("/review", require("./routes/menuDeliveryReviewRoute"));
 
 app.use("/vendor", require("./routes/vendorRoutes"));
 app.use("/purchase", require("./routes/purchaseRoutes"));
+app.use("/pai/procurement", require("./routes/procurementRoutes"));
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
