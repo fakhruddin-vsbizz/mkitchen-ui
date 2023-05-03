@@ -11,34 +11,48 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
     vendor_email,
     quantity_loaded,
     rate_per_unit,
+
+    //doc
+    documents,
   } = req.body;
 
-  //getting the id's for the respective user
-  const mkUser = await MKUser.findOne({ email: mkuser_email });
-  const ingridientItem = await InventoryModel.findOne({
-    ingridient_name: ingridient_name,
-  });
+  console.log(documents);
+  // Create an array of write operations to perform in bulk
+  const ops = documents.map((doc) => ({
+    insertOne: { document: doc },
+  }));
 
-  const vendorId = await Vendor.findOne({
-    email: vendor_email,
-  });
-
-  if (mkUser && ingridientItem && vendorId) {
-    const purchase = await Purchase.create({
-      mkuser_id: mkUser._id,
-      inventory_id: ingridientItem._id,
-      vendor_id: vendorId._id,
-      quantity_loaded,
-      rate_per_unit,
+  // Perform the bulk write operation
+  Purchase.bulkWrite(ops)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.error(error);
     });
 
-    if (purchase) {
-      res.status(201).json({ _id: purchase.id, vendor_id: purchase.vendor_id });
-    } else {
-      res.status(400);
-      throw new Error("Error creating the purchase");
-    }
-  }
+  // Create an array of write operations to perform in bulk
+  const updateInventory = documents.map((inventory) => ({
+    updateOne: {
+      filter: { _id: inventory.inventory_id },
+      update: {
+        $inc: {
+          total_volume: inventory.quantity_loaded,
+        },
+      },
+    },
+  }));
+  console.log(updateInventory);
+
+  // Perform the bulk write operation
+  InventoryModel.bulkWrite(updateInventory)
+    .then((result) => {
+      console.log(result);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+
   res.json({ message: "Purchase added" });
 });
 

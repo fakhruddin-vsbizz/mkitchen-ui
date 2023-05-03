@@ -188,7 +188,7 @@ const Menu = () => {
         },
         body: JSON.stringify({
           add_type: "get_mohalla_ashkash",
-          date: "5/2/2023",
+          date: "5/3/2023",
         }),
       });
 
@@ -221,7 +221,7 @@ const Menu = () => {
             },
             body: JSON.stringify({
               data: mohallaAshkash,
-              date_of_cooking: "5/2/2023",
+              date_of_cooking: "5/3/2023",
             }),
           });
 
@@ -240,8 +240,8 @@ const Menu = () => {
   const updateAshkash = async () => {
     const obj = {
       mk_id: value1,
-      total_ashkhaas: value2,
-      name: "Mohalla Indore",
+      total_ashkhaas: +value2,
+      name: "Mohalla Bhopal",
     };
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);

@@ -36,6 +36,7 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
   }
 
   if (type === "get_food_Item") {
+    console.log("touched");
     const menuFood = await MenuFood.find({ date_of_cooking: date });
     if (menuFood) {
       res.status(201).json(menuFood);
@@ -82,7 +83,8 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
 });
 
 const updateIngridientList = expressAsyncHandler(async (req, res) => {
-  const { food_id, type, ingridient_list, menu_id, reorder_logs } = req.body;
+  const { food_id, type, ingridient_list, menu_id, reorder_logs, status } =
+    req.body;
 
   const foodItem = await FoodItem.findOne({ _id: food_id });
   const operationId = await OperationPipeLine.findOne({
@@ -108,7 +110,14 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
       { $set: { ingridient_list: ingridient_list } },
       { new: true }
     );
-    if (updatePipeline) {
+
+    const updatePipelineStatus = await OperationPipeLine.findByIdAndUpdate(
+      { _id: Object(operationId._id) },
+      { $set: { status: status } },
+      { new: true }
+    );
+
+    if (updatePipeline && updatePipelineStatus) {
       console.log("success");
       res.json({ message: "pipeline  updated successfully" });
     }

@@ -56,7 +56,7 @@ const Inventory = () => {
           ingridient_expiry_amount: expiry,
           decommisioned: true,
           total_volume: 0,
-          date: "4/21/2023",
+          date: "5/4/2023",
           quantity_transected: 0,
           latest_rate: 0,
           rate_per_unit: 0,

@@ -20,7 +20,7 @@ const OperationPipeLine = new mongoose.Schema(
       required: false,
     },
     status: {
-      type: Boolean,
+      type: Number,
       required: false,
     },
   },

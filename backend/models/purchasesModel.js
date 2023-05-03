@@ -7,6 +7,10 @@ const purcahsesModel = new mongoose.Schema(
       ref: "MKUser",
       required: true,
     },
+    ingredient_name: {
+      type: String,
+      required: true,
+    },
     inventory_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "inventoryItems",
