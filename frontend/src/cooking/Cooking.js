@@ -11,12 +11,40 @@ import {
   Input,
   Switch,
   DatePicker,
-  Modal,
+  Tag,
+  Modal
 } from "antd";
 import { useState } from "react";
 import axios from "axios";
 
 const Cooking = () => {
+
+  // for viewing re-order statuses
+  const reorder_log_dummy = [
+    {
+      ingredient_name: 'Goat Meat',
+      reorder_quantity: 1200,
+      is_delivered: false
+    },
+    {
+      ingredient_name: 'Cabbage',
+      reorder_quantity: 100,
+      is_delivered: false
+    },
+    {
+      ingredient_name: 'Eggs',
+      reorder_quantity: 250,
+      is_delivered: false
+    },
+    {
+      ingredient_name: 'Everest Chicken Masala',
+      reorder_quantity: 10,
+      is_delivered: false
+    },
+  ]
+
+
+
   const data = ["Set Menu", "Cooking", "Dispatch"];
   const [selectedDate, setSelectedDate] = useState(null);
   const [menuFoodId, setMenuFoodId] = useState();
@@ -209,105 +237,151 @@ const Cooking = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
+        <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+            <Row>
+                <Col xs={12} xl={8}>
+                  <label style={{ fontSize: '200%' }}>Cooking Operation</label>
+                </Col>
+                <Col xs={12} xl={8}>
+                  Select the date:<br/>
+                  <DatePicker onChange={handleDateChange} />
+                </Col>
+                <Col xs={12} xl={8}>
+                  Select the client:<br/>
+                  <Select
+                    defaultValue={0}
+                    style={{ width: "70%" }}
+                    options={[
+                      { value: 0, label: "MK" },
+                      { value: 1, label: "Mohsin Ranapur" },
+                      { value: 2, label: "Shk. Aliasgar Ranapur" },
+                    ]}
+                  />
+                </Col>
+            </Row>
+          </Card>
+          <Divider style={{ backgroundColor: "#000" }}></Divider>
+
           <Row>
-            <Col xs={12} xl={12}>
-              <label style={{ fontSize: "300%" }} className="dongle-font-class">
-                Cooking Operation
-              </label>
-            </Col>
-            <Col xs={12} xl={12}>
-              Select the client:
-              <Select
-                defaultValue={0}
-                style={{ width: "100%" }}
-                options={[
-                  { value: 0, label: "MK" },
-                  { value: 1, label: "Mohsin Ranapur" },
-                  { value: 2, label: "Shk. Aliasgar Ranapur" },
-                ]}
+            <Col xs={24} xl={12}>
+            <List
+              style={{ width: "100%" }}
+              itemLayout="horizontal"
+              dataSource={getFoodList}
+              renderItem={(item, index) => (
+                <List.Item>
+                  <Card style={{ width: '100%' }}>
+                    <Row>
+                      <Col xs={12} xl={6}>
+                        <label style={{ fontSize: '130%' }}><b>{item.food_name}</b></label>
+                      </Col>
+                      <Col xs={12} xl={6}>
+                        <i class="fa-solid fa-circle-check"></i> <label style={{ fontSize: '80%' }}>Ingredients Set</label>
+                      </Col>
+                      <Col xs={12} xl={6}>
+                        <center>
+                          Cooked? &nbsp;&nbsp;&nbsp;
+                          <Switch />
+                        </center>
+                      </Col>
+                    </Row>
+                    <hr></hr>
+                    <Row>
+                      <Col xs={24} xl={24} style={{ padding:'3%' }}>
+                        Here are the required ingredients for the cooking:
+                        <br/>
+                        <List
+                            dataSource={ingredientLists[index]}
+                            renderItem={(ing, index) => (
+                              <List.Item>
+                                <Card>
+                                  <Row>
+                                    <Col xs={12} xl={8}>
+                                      <label style={{ fontSize: '110%' }}><u>{ing.ingredient_name}</u></label>
+                                    </Col>
+                                    <Col xs={12} xl={8}>
+                                      Amount procured:<br/>
+                                      <label style={{ fontSize: '120%' }}>1200 KG</label>
+                                    </Col>
+                                    <Col xs={12} xl={8} style={{ textAlign: 'right' }}>
+                                        You can re-order the items here too if needed:
+                                        <br/>
+                                        <br/>
+                                        <Input
+                                          style={{ width: '50%' }}
+                              onChange={(e) =>
+                                            handleIngridientReOrder(
+                                              ing.inventory_item_id,
+                                              e.target.value
+                                            )
+                                          }
+                                          placeholder="Eg: 1L, 12KG, etc"
+                                        ></Input>
+                                        <Button
+                                          onClick={reorderIngridient}
+                                          size="small"
+                                          type="primary"
+                                        >
+                                          Re-order Item
+                                        </Button>
+                                    </Col>
+                                  </Row>
+                                </Card>
+                              </List.Item>
+                            )}
+                          />
+                        </Col>
+                      </Row>
+                    </Card>
+                  </List.Item>
+                )}
               />
             </Col>
+            <Col xs={12} xl={12}>
+              {getFoodList && 
+                <div>
+                  <label style={{ fontSize: '150%' }}>Reorder Log:</label>
+                  <br/><br/>
+                  <List
+                    bordered
+                    dataSource={reorder_log_dummy}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card style={{ width: '100%' }}>
+                          <Row>
+                            <Col xs={12} xl={8}>
+                              <label style={{ fontSize: '120%' }}>{item.ingredient_name}</label>
+                            </Col>
+                            <Col xs={12} xl={8}>
+                              Amount re-ordered:<br/>
+                              <b>{item.reorder_quantity}</b>
+                            </Col>
+                            <Col xs={12} xl={8}>
+                              Delivery Status: <br/>
+                              {item.is_delivered ? <Tag color='green'>DELIVERED</Tag> : <Tag color='orange'>PENDING</Tag>}
+                            </Col>
+                          </Row>
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                </div>
+              }
+              
+            </Col>
           </Row>
-          <Divider style={{ backgroundColor: "#000" }}></Divider>
-          <DatePicker onChange={handleDateChange} />
-          <List
-            style={{ width: "100&" }}
-            itemLayout="horizontal"
-            dataSource={getFoodList}
-            renderItem={(item, index) => (
-              <List.Item>
-                <Row>
-                  <Col xs={8} xl={8}>
-                    <label
-                      style={{ fontSize: "200%" }}
-                      className="dongle-font-class"
-                    >
-                      {item.food_name}
-                    </label>
-                  </Col>
-                  <Col xs={14} xl={14}>
-                    <List
-                      grid={{
-                        gutter: 16,
-                        xs: 1,
-                        sm: 2,
-                        md: 4,
-                        lg: 4,
-                        xl: 3,
-                        xxl: 3,
-                      }}
-                      dataSource={ingredientLists[index]}
-                      renderItem={(ing, index) => (
-                        <List.Item>
-                          <Card
-                            style={{
-                              width: "250px",
-                              marginLeft: "50px",
-                            }}
-                          >
-                            <u>{ing.ingredient_name}</u>
-                            <br />
-                            <Input
-                              style={{ width: "150px" }}
-                              onChange={(e) =>
-                                handleIngridientReOrder(
-                                  ing.inventory_item_id,
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Eg: 1L, 12KG, etc"
-                            ></Input>
-                            <br />
-                            <br />
-                            <Button
-                              onClick={reorderIngridient}
-                              size="small"
-                              type="primary"
-                            >
-                              Re-order Item
-                            </Button>
-                          </Card>
-                        </List.Item>
-                      )}
-                    />
-                  </Col>
-                  {/* <Col xs={2} xl={2} style={{ padding: "2%" }}>
-                    Cooked? &nbsp;&nbsp;&nbsp;
-                    <Switch />
-                  </Col> */}
-                </Row>
-              </List.Item>
-            )}
-          />
         </Col>
-        <Button
-          block
-          style={{ width: "500px", marginLeft: "300px" }}
-          type="primary"
-          onClick={cookingDone}
-        >
-          MARK COOKING DONE
-        </Button>
+        <Col xs={24} xl={24}>
+          {getFoodList && <Button
+            block
+            style={{ height: '160%', fontSize: '200%' }}
+            type="primary"
+            onClick={cookingDone}
+          >
+            Mark Cooking Done
+          </Button>}
+          <br/>
+        </Col>
       </Row>
     </div>
   );

@@ -277,19 +277,19 @@ const SetMenu = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
-        <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
-          <Row>
-              <Col xs={24} xl={12}>
-                <label style={{ fontSize: '200%' }}>Set Ingredients</label>
-                <br/>
-                Total count: 8000 People
-              </Col>
-              <Col xs={24} xl={12}>
-                Select the date to view ingredients:<br/>
-                <DatePicker onChange={handleDateChange} />
-              </Col>
-          </Row>
-        </Card>
+          <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+            <Row>
+                <Col xs={24} xl={12}>
+                  <label style={{ fontSize: '200%' }}>Set Ingredients</label>
+                  <br/>
+                  Total count: 8000 People
+                </Col>
+                <Col xs={24} xl={12}>
+                  Select the date to view ingredients:<br/>
+                  <DatePicker onChange={handleDateChange} />
+                </Col>
+            </Row>
+          </Card>
           <Row>
             <Col xs={24} xl={12}>
               
@@ -344,8 +344,8 @@ const SetMenu = () => {
                             id={"set_index_" + item.index}
                             onClick={() => setFoodReference(item.food_item_id)}
                           >
-                        <i class="fa-solid fa-circle-chevron-right"></i>
-                      </Button>
+                            <i class="fa-solid fa-circle-chevron-right"></i>
+                          </Button>
                           </Col>
                         </Row>
                       </Card>
