@@ -9,6 +9,7 @@ const ProcedureLogs = () => {
   const [ingridientList, setIngridientList] = useState([]);
 
   useEffect(() => {
+
     const getFood = async () => {
       if (menuFoodId) {
         const data = await fetch("http://localhost:5001/operation_pipeline", {
@@ -25,7 +26,7 @@ const ProcedureLogs = () => {
           const res = await data.json();
           console.log(res);
           if (res) {
-            setIngridientList(res);
+            setIngridientList([...ingridientList, res]);
           }
         }
       }
@@ -77,12 +78,13 @@ const ProcedureLogs = () => {
           const res = await data.json();
           if (res) {
             console.log(res);
-            setReviewData(res);
+            setReviewData([...reviewData, res]);
           }
         }
       }
     };
     getData();
+    
   }, [selectedDate, menuFoodId]);
 
   const mohalla_user_data = [
@@ -223,6 +225,7 @@ const ProcedureLogs = () => {
         </label>
         <br />
         <br />
+        {console.log(reviewData)}
         {reviewData && (
           <List
             bordered
@@ -277,6 +280,7 @@ const ProcedureLogs = () => {
         <br />
         <br />
         <br />
+        {console.log(ingridientList)}
         {ingridientList && (
           <List
             bordered
