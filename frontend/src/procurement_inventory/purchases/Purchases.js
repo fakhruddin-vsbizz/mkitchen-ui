@@ -8,9 +8,9 @@ import {
   DatePicker,
   Slider,
   InputNumber,
-  Button,
+  Button, Divider, Skeleton,
 } from "antd";
-
+import InfiniteScroll from 'react-infinite-scroll-component';
 const Purchases = () => {
   const [purchases, setPurchases] = useState();
 
@@ -33,38 +33,48 @@ const Purchases = () => {
     getPurchases();
   }, []);
 
-  const inventory_grid = [
-    {
-      item_id: 0,
-      item_name: "Chicken Meat",
-      total_quantity: 720,
-      unit: "KG",
-    },
-    {
-      item_id: 1,
-      item_name: "Sunflower Oil",
-      total_quantity: 720,
-      unit: "KG",
-    },
-    {
-      item_id: 2,
-      item_name: "Cabbage",
-      total_quantity: -70,
-      unit: "KG",
-    },
-    {
-      item_id: 3,
-      item_name: "Milk",
-      total_quantity: 720,
-      unit: "L",
-    },
-    {
-      item_id: 4,
-      item_name: "Everest Chicken Masala",
-      total_quantity: 720,
-      unit: "Packets",
-    },
-  ];
+    const inventory_grid = [
+        {
+            item_id:0,
+            item_name:"Chicken Meat",
+            vendor_name: "V.K. General Store",
+            total_quantity:720,
+            unit:'KG',
+            created_on: '12/06/2023'
+        },
+        {
+            item_id:1,
+            item_name:"Sunflower Oil",
+            vendor_name: "Brahma Stores",
+            total_quantity:720,
+            unit:'KG',
+            created_on: '12/06/2023'
+        },
+        {
+            item_id:2,
+            item_name:"Cabbage",
+            vendor_name: "Somnath General Store",
+            total_quantity:-70,
+            unit:'KG',
+            created_on: '12/06/2023'
+        },
+        {
+            item_id:3,
+            item_name:"Milk",
+            vendor_name: "Supermarket Store",
+            total_quantity:720,
+            unit:'L',
+            created_on: '12/06/2023'
+        },
+        {
+            item_id:4,
+            item_name:"Everest Chicken Masala",
+            vendor_name: "V.K. General Store",
+            total_quantity:720,
+            unit:'Packets',
+            created_on: '12/06/2023'
+        }
+    ]
 
   const [amtVal, setAmtVal] = useState(1);
   const [weightVal, setWeightVal] = useState(1);
