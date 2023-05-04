@@ -8,9 +8,9 @@ import {
   DatePicker,
   Slider,
   InputNumber,
-  Button, Divider, Skeleton,
+  // Button, Divider, Skeleton,
 } from "antd";
-import InfiniteScroll from 'react-infinite-scroll-component';
+// import InfiniteScroll from 'react-infinite-scroll-component';
 const Purchases = () => {
   const [purchases, setPurchases] = useState();
 

@@ -26,6 +26,7 @@ const Menu = () => {
 
   const [selectedFood, setSelectedFood] = useState("");
   const [AddedFoodItems, setAddedFoodItems] = useState();
+  const [isMenu, setIsMenu] = useState(false);
 
   const [visible, setVisible] = useState(false);
 
@@ -42,6 +43,39 @@ const Menu = () => {
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
+
+  useEffect(() => {
+    const getFood = async () => {
+      if (dateValue) {
+        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_food_Item",
+            // mkuser_id: getMkUserId,
+            date: dateValue,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            if (res[0]) {
+              console.log(res[0].food_list);
+              setFoodItems(res[0].food_list);
+              setIsMenu(true);
+            } else {
+              console.log("no menu");
+              setIsMenu(false);
+              setFoodItems([]);
+            }
+          }
+        }
+      }
+    };
+    getFood();
+  }, [dateValue]);
 
   useEffect(() => {
     const getFoodItems = async () => {
@@ -359,19 +393,21 @@ const Menu = () => {
                     </List.Item>
                   )}
                 />
-                <Button
-                  onClick={createMenu}
-                  type="primary"
-                  style={{ marginTop: "50px" }}
-                >
-                  Set The Menu
-                </Button>
+                {!isMenu && (
+                  <Button
+                    onClick={createMenu}
+                    type="primary"
+                    style={{ marginTop: "50px" }}
+                  >
+                    Set The Menu
+                  </Button>
+                )}
               </Card>
             </Col>
           </Row>
         </Col>
       </Row>
-      <div
+      {/* <div
         style={{
           width: "500px",
           position: "absolute",
@@ -392,7 +428,7 @@ const Menu = () => {
           onChange={(e) => setValue2(e.target.value)}
         />
         <Button onClick={updateAshkash}>submit</Button>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -22,6 +22,16 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     menu_food_id: menu_id,
   });
 
+  if (type === "get_ingridient_list") {
+    console.log("in here");
+    const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
+    if (pipeline) {
+      res.status(201).json(pipeline.ingridient_list);
+    } else {
+      res.status(400);
+      throw new Error("Error getting the pipeline");
+    }
+  }
   //get status of OP
 
   if (type === "get_status_op") {
