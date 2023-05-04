@@ -347,12 +347,18 @@ const Dispatch = () => {
                               Number of Daigs: <br/>
                               <Input 
                                 placeholder="Eg: 2, 3, 15, etc."
+                                onChange={(e) => setDaigs(e.target.value)}
                                 style={{ fontSize:'140%', width:'70%' }}
                               ></Input>
                             </Col>
                             <Col xs={12} xl={12}>
                               Total Weight (units): <br/>
-                              <Input placeholder="Eg: 2, 3, 15, etc." style={{ fontSize:'140%', width:'70%' }}></Input>
+                              <Input 
+                                placeholder="Eg: 2, 3, 15, etc." 
+                                style={{ fontSize:'140%', width:'70%' }}
+                                onChange={(e) => setTotalWeight(e.target.value)}
+                              >
+                              </Input>
                             </Col>
                             <Col xs={12} xl={12} style={{ padding: '1%' }}>
                             <br/><br/>

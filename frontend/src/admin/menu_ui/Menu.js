@@ -91,6 +91,7 @@ const Menu = () => {
       });
       if (data) {
         console.log(data.json().then((data) => setAddedFoodItems(data)));
+        console.log("=============> FOOD ITEMS", AddedFoodItems)
       }
     };
     getFoodItems();
@@ -113,13 +114,13 @@ const Menu = () => {
       });
       if (data) {
         let id = await data.json().then((data) => data._id);
-        console.log(id);
         const newFoodItem = {
           food_item_id: id,
           // no_of_deigs: 0,
           // total_weight: 0,
           food_name: selectedFood,
         };
+        console.log('FIRST SPREADER');
         setFoodItems([...foodItems, newFoodItem]);
       }
     } else {
@@ -152,6 +153,7 @@ const Menu = () => {
             // total_weight: 0,
             food_name: selectedFood,
           };
+          console.log('SECOND SPREADER');
           setFoodItems([...foodItems, newFoodItem]);
         }
       } catch (error) {
@@ -277,6 +279,7 @@ const Menu = () => {
       total_ashkhaas: +value2,
       name: "Mohalla Bhopal",
     };
+    console.log('THIRD SPREADER');
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);
   };
@@ -307,54 +310,71 @@ const Menu = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "1%" }}>
+          <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
+            <Row>
+              <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
+                Set Day's Menu
+              </Col>
+              <Col xs={12} xl={12} style={{ textAlign: "right" }}>
+              </Col>
+            </Row>
+          </Card>
           <Row>
-            <Col xs={24} xl={12} style={{ padding: "3%" }}>
-              <label style={{ fontSize: "200%" }} className="dongle-font-class">
+            <Col xs={12} xl={12} style={{ padding: "3%" }}>
+              {/* <label style={{ fontSize: "200%" }} className="dongle-font-class">
                 Menu Setting
               </label>
-              <Divider style={{ backgroundColor: "#000" }}></Divider>
-              <Calendar mode="month" onSelect={onSelectDate} />
+              <Divider style={{ backgroundColor: "#000" }}></Divider> */}
+              <Calendar mode="month" onSelect={onSelectDate} fullscreen={false}/>
             </Col>
-            <Col xs={24} xl={12} style={{ padding: "3%" }}>
+            <Col xs={12} xl={12} style={{ padding: "3%" }}>
               <Card
                 bordered={true}
                 style={{ width: "100%", border: "2px solid #FF3003" }}
-                className="dongle-font-class"
+                
               >
-                <label style={{ fontSize: "150%" }}>
-                  Item for 24th April, 2022
-                </label>
-                <Button
-                  type="primary"
-                  size="small"
-                  style={{ marginLeft: "40%" }}
-                >
-                  Add Menu
-                </Button>
+                <Row>
+                  <Col xs={24} xl={12}>
+                    <label style={{ fontSize: "120%" }}>
+                      Item for 24th April, 2022
+                    </label>
+                  </Col>
+                  <Col xs={24} xl={12}>
+                    <Button
+                      type="primary"
+                      size="small"
+                    >
+                      Add Menu
+                    </Button>
+                  </Col>
+                </Row>
+                
+                
+                  
                 <Divider style={{ backgroundColor: "#000" }}></Divider>
-                <table style={{ width: "100%" }}>
-                  <tr>
-                    <td>Search menu by name:</td>
+                <Row>
+                  <Col xs={12} xl={12}>
+                    Search menu by name: <br/>
                     {AddedFoodItems && (
-                      <td>
-                        <AutoComplete
-                          id="food-item-selected"
-                          style={{ width: "100%" }}
-                          value={selectedFood}
-                          options={AddedFoodItems.map((item) => ({
-                            value: item.name,
-                          }))}
-                          onChange={(value) => setSelectedFood(value)}
-                          placeholder="Enter a food item"
-                          filterOption={(inputValue, option) =>
-                            option.value
-                              .toUpperCase()
-                              .indexOf(inputValue.toUpperCase()) !== -1
-                          }
-                        />
-                      </td>
-                    )}
-                    <td>
+                      <AutoComplete
+                        id="food-item-selected"
+                        style={{ width: "100%" }}
+                        value={selectedFood}
+                        options={AddedFoodItems.map((item) => ({
+                          value: item.name,
+                        }))}
+                        onChange={(value) => setSelectedFood(value)}
+                        placeholder="Enter a food item"
+                        filterOption={(inputValue, option) =>
+                          option.value
+                            .toUpperCase()
+                            .indexOf(inputValue.toUpperCase()) !== -1
+                        }
+                      />
+                      )}
+                  </Col>
+                  <Col xs={12} xl={12}>
+                    <center>
                       <Button
                         type="secondary"
                         size="small"
@@ -362,9 +382,10 @@ const Menu = () => {
                       >
                         <i class="fa-solid fa-circle-plus"></i>
                       </Button>
-                    </td>
-                  </tr>
-                </table>
+                    </center>
+                  </Col>
+                </Row>
+                
                 <br />
                 <br />
 
@@ -376,7 +397,8 @@ const Menu = () => {
                     <List.Item>
                       <Row style={{ width: "100%" }}>
                         <Col xs={12} xl={12}>
-                          {item.food_name}
+                          <label style={{ fontSize: '120%' }}>{item.food_name}</label><br/>
+                          Ingredients: Bread, Honey, Sugar, Ghee.
                         </Col>
                         <Col xs={12} xl={12}>
                           <center>
