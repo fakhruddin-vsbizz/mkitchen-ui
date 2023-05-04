@@ -336,11 +336,18 @@ const NewPurchase = () => {
                         onSelect={(id, op) =>
                           handleVendorPerIngridient(op.id, item.ingredient_name)
                         }
-                        placeholder="Eg: Roti, Chawal, Daal, etc"
-                        filterOption={(inputValue, option) =>
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
+                        placeholder="Eg: 2,3,15, etc"
+                      ></Input>
+                    </Col>
+                    <Col xs={12} xl={12}>
+                      <br />
+                      Quantity ordered:{" "}
+                      <Input
+                        onChange={(e) =>
+                          handlequantityPerIngridient(
+                            e.target.value,
+                            item.ingredient_name
+                          )
                         }
                       />
                     )}

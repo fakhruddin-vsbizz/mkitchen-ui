@@ -330,7 +330,7 @@ const Cooking = () => {
                                       <br />
                                       <Input
                                         style={{ width: "50%" }}
-                                                      onChange={(e) =>
+                                        onChange={(e) =>
                                           handleIngridientReOrder(
                                             ing.inventory_item_id,
                                             e.target.value

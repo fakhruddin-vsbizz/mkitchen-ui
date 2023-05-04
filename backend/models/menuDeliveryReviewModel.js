@@ -12,6 +12,10 @@ const menuDeliveryReviewSchema = new mongoose.Schema(
       ref: "MenuFood",
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
     review: {
       type: Number,
       required: true,
