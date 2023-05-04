@@ -12,7 +12,7 @@ import { AuthContextProvider } from "./components/context/auth-context";
 import Cooking from "./cooking/Cooking";
 import Dispatch from "./cooking/Dispatch";
 import AddIngridientsInventory from "./components/Inventory/AddIngridientsInventory";
-import Inventory from "./procurement_inventory/Inventory";
+import Inventory from "./procurement_inventory/inventory/Inventory";
 import Purchases from "./procurement_inventory/purchases/Purchases";
 import NewPurchase from "./procurement_inventory/purchases/NewPurchase";
 import ConfirmIng from "./procurement_inventory/current_menu/ConfirmIng";
@@ -22,6 +22,7 @@ import NewVendor from "./procurement_inventory/vendors/NewVendor";
 import VendorPurchase from "./procurement_inventory/vendors/VendorPurchase";
 import DamagedGoodsList from "./procurement_inventory/damaged_goods/DamagedGoodsList";
 import ProcedureLogs from "./admin/procedure_log/ProcedureLogs";
+import IngredientPurchase from "./procurement_inventory/inventory/IngredientPurchase";
 function App() {
   return (
     <AuthContextProvider>
@@ -36,6 +37,7 @@ function App() {
         {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
         <Route path="/pai/inventory" element={<Inventory />} />
+        <Route path="/pai/inventory/purchases" element={<IngredientPurchase />} />
         <Route path="/pai/purchases" element={<Purchases />} />
         <Route path="/pai/purchases/new" element={<NewPurchase />} />
         <Route path="/pai/procurement/" element={<ConfirmIng />} />

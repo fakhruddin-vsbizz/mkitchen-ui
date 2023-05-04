@@ -182,6 +182,7 @@ const NewPurchase = () => {
           </Col>
         </Row>
       </Card>
+      <center>
       <div
         style={{ width: "80%", padding: "3%" }}
         className="dongle-font-class"
@@ -272,14 +273,17 @@ const NewPurchase = () => {
                     ></Input>
                   </Col>
                 </Row>
-              </Card>
-            </List.Item>
-          )}
-        />
-        <Button onClick={addPurchaseData} type="primary" block>
+
+                </Card>
+              </List.Item>
+            )}
+          />
+        </center>
+        <br/><br/>
+        <Button onClick={addPurchaseData} type="primary" style={{ width: '60%', fontSize: '150%', height: '120%' }} className='dongle-font-class'>
           FINALIZE AND ENTER PURCHASE
         </Button>
-      </div>
+      </div></center>
     </div>
   );
 };
