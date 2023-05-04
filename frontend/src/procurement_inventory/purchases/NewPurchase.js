@@ -187,8 +187,47 @@ const NewPurchase = () => {
         style={{ width: "80%", padding: "3%" }}
         className="dongle-font-class"
       >
-        <label style={{ fontSize: "150%" }}>Select the item</label>
-        &nbsp;&nbsp;&nbsp;
+
+          <table style={{ width: "100%" }} cellPadding={20}>
+            <tr>
+              <td style={{ fontSize: "150%" }}>
+                Select the item:
+              </td>
+              <td>
+                {inventoryItems && <center>
+                  <AutoComplete
+                    id="ingredient-item-selected"
+                    style={{ width: "70%" }}
+                    options={inventoryItems.map((item) => ({
+                      value: item.ingridient_name,
+                      id: item._id,
+                    }))}
+                    onSelect={handleSelect}
+                    placeholder="Eg: Roti, Chawal, Daal, etc"
+                    filterOption={(inputValue, option) =>
+                      option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                  />
+                </center>}
+                
+              </td>
+              <td>
+                <center>
+                  <Button type="primary" onClick={onAddIngredient}>
+                    {" "}
+                    Add to Cart
+                  </Button>
+                </center>
+              </td>
+            </tr>
+          </table>
+
+
+
+
+
+        {/* <label style={{ fontSize: "150%" }}>Select the item</label> */}
+        {/* &nbsp;&nbsp;&nbsp;
         {inventoryItems && (
           <Col xs={18} xl={18}>
             <AutoComplete
@@ -211,7 +250,7 @@ const NewPurchase = () => {
         <Button type="primary" onClick={() => onAddIngredient()}>
           {" "}
           Add to Cart
-        </Button>
+        </Button> */}
         <hr></hr>
         <List
           size="small"
@@ -219,7 +258,66 @@ const NewPurchase = () => {
           dataSource={ingredientForPurchase}
           renderItem={(item) => (
             <List.Item>
-              <Card>
+
+              <Card style={{ width: '100%', textAlign:'left' }}>
+                <Row style={{ width: '100%', textAlign:'left' }}>
+                  <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.ingredient_name}</Col>
+                  <Col xs={8} xl={8}>
+                    Search vendor: 
+                    <br/>
+                    {vendors ? (
+                      <AutoComplete
+                        id="ingredient-item-selected"
+                        style={{ width: "70%" }}
+                        options={vendors.map((item) => ({
+                          value: item.vendor_name,
+                          id: item._id,
+                        }))}
+                        onSelect={(id, op) =>
+                          handleVendorPerIngridient(op.id, item.ingredient_name)
+                        }
+                        placeholder="Eg: Roti, Chawal, Daal, etc"
+                        filterOption={(inputValue, option) =>
+                          option.value
+                            .toUpperCase()
+                            .indexOf(inputValue.toUpperCase()) !== -1
+                        }
+                      />
+                    ) : <label>No vendors till now.</label>}
+                    
+                  </Col>
+                  <Col xs={8} xl={8}>
+                    Price per KG: <br/>Rs. 
+                    <Input
+                      onChange={(e) =>
+                        handlePricePerIngridient(
+                          e.target.value,
+                          item.ingredient_name
+                        )
+                      }
+                      placeholder="Eg: 2,3,15, etc"
+                      style={{ width: '70%' }}
+                    ></Input>-
+                  </Col>
+                  <Col xs={8} xl={8}>Quantity ordered: <br/>
+                    <Input
+                        onChange={(e) =>
+                          handlequantityPerIngridient(
+                            e.target.value,
+                            item.ingredient_name
+                          )
+                        }
+                        placeholder="Eg: 2,3,15, etc"
+                        style={{ width: '70%' }}
+                      ></Input>
+                  </Col>
+                </Row>
+              </Card>
+
+
+
+
+              {/* <Card>
                 <label style={{ fontSize: "160%" }}>
                   {item.ingredient_name}
                 </label>
@@ -274,17 +372,19 @@ const NewPurchase = () => {
                   </Col>
                 </Row>
 
-                </Card>
+                </Card> */}
               </List.Item>
             )}
           />
-        </center>
+        
         <br/><br/>
         <Button onClick={addPurchaseData} type="primary" style={{ width: '60%', fontSize: '150%', height: '120%' }} className='dongle-font-class'>
           FINALIZE AND ENTER PURCHASE
         </Button>
-      </div></center>
+      </div>
+      </center>
     </div>
+    
   );
 };
 

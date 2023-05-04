@@ -28,6 +28,7 @@ const Purchases = () => {
       if (data) {
         const res = await data.json();
         setPurchases(res);
+        console.log("==========> DATA FO REF ====> ",res);
       }
     };
     getPurchases();
@@ -152,19 +153,19 @@ const Purchases = () => {
           <br />
           {purchases && (
             <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 4,
-                xxl: 3,
-              }}
               dataSource={purchases}
               renderItem={(item) => (
                 <List.Item>
-                  <Card>
+                  <Card style={{ width: '100%' }}>
+                    <Row style={{ width: '100%', textAlign:'left' }}>
+                        <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.ingredient_name}</Col>
+                        <Col xs={12} xl={6}>Purchase Quantity: <br/>{item.quantity_loaded} units</Col>
+                        <Col xs={12} xl={6}>Vendor ID: <br/>{item.vendor_id}</Col>
+                        <Col xs={12} xl={6}>Date of purchase: <br/>{item.updatedAt}</Col>
+                        <Col xs={12} xl={6}>Purchase cost: <br/><label style={{ fontSize: '120%' }}><b>Rs. {item.rate_per_unit * item.quantity_loaded}/-</b></label></Col>
+                    </Row>
+                  </Card>
+                  {/* <Card>
                     <label>
                       <b>{item.ingredient_name}</b>
                     </label>
@@ -181,7 +182,7 @@ const Purchases = () => {
                     <label style={{ fontSize: "130%" }}>
                       {item.rate_per_unit}
                     </label>
-                  </Card>
+                  </Card> */}
                 </List.Item>
               )}
             />
