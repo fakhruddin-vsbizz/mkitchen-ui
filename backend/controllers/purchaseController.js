@@ -57,6 +57,7 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
 });
 
 const getPurchase = expressAsyncHandler(async (req, res) => {
+  console.log("hitting");
   const purchase = await Purchase.find();
   res.json(purchase);
 });

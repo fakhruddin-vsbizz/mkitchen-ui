@@ -9,7 +9,6 @@ const ProcedureLogs = () => {
   const [ingridientList, setIngridientList] = useState([]);
 
   useEffect(() => {
-
     const getFood = async () => {
       if (menuFoodId) {
         const data = await fetch("http://localhost:5001/operation_pipeline", {
@@ -84,7 +83,6 @@ const ProcedureLogs = () => {
       }
     };
     getData();
-    
   }, [selectedDate, menuFoodId]);
 
   const mohalla_user_data = [

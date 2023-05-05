@@ -160,8 +160,10 @@ const Dispatch = () => {
       if (data[0]) {
         console.log(data[0].dispatch);
         setFinalDispatchData(data[0].dispatch);
-        console.log("===========================FINAL DISPATCH DATA=================================\n\n", finaldipatchData)
-        
+        console.log(
+          "===========================FINAL DISPATCH DATA=================================\n\n",
+          finaldipatchData
+        );
       }
     }
   }, [viewDispatchedData, mohallaUserId]);
@@ -252,8 +254,6 @@ const Dispatch = () => {
         </div>
       </Modal>
 
-      
-
       <Row>
         <Col xs={0} xl={4} style={{ padding: "1%" }}>
           <List
@@ -263,35 +263,36 @@ const Dispatch = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+          <Card
+            style={{ padding: "1%", border: "1px solid grey" }}
+            bordered={true}
+          >
             <Row>
-                <Col xs={12} xl={8}>
-                  <label style={{ fontSize: '200%' }}>Dispatch</label>
-                </Col>
-                <Col xs={12} xl={8}>
-                  Select the date:<br/>
-                  <DatePicker
-                    onChange={handleDateChange}
-                  />
-                </Col>
-                <Col xs={12} xl={8}>
-                  Select the client:<br/>
-                  <Select
-                    defaultValue={0}
-                    style={{ width: "80%" }}
-                    options={[
-                      { value: 0, label: "MK" },
-                      { value: 1, label: "Mohsin Ranapur" },
-                      { value: 2, label: "Shk. Aliasgar Ranapur" },
-                    ]
-                  }
+              <Col xs={12} xl={8}>
+                <label style={{ fontSize: "200%" }}>Dispatch</label>
+              </Col>
+              <Col xs={12} xl={8}>
+                Select the date:
+                <br />
+                <DatePicker onChange={handleDateChange} />
+              </Col>
+              <Col xs={12} xl={8}>
+                Select the client:
+                <br />
+                <Select
+                  defaultValue={0}
+                  style={{ width: "80%" }}
+                  options={[
+                    { value: 0, label: "MK" },
+                    { value: 1, label: "Mohsin Ranapur" },
+                    { value: 2, label: "Shk. Aliasgar Ranapur" },
+                  ]}
                 />
               </Col>
             </Row>
           </Card>
           <Row>
             <Col xs={24} xl={12}>
-              
               <Divider style={{ backgroundColor: "#000" }}></Divider>
               {getMohallaUsers && (
                 <List
@@ -300,23 +301,23 @@ const Dispatch = () => {
                   dataSource={getMohallaUsers}
                   renderItem={(item, index) => (
                     <List.Item>
-
-
-                      <Card style={{ width: '100%' }}>
+                      <Card style={{ width: "100%" }}>
                         <Row>
                           <Col xs={12} xl={12}>
                             Food Name:
-                            <br/>
-                            <label style={{ fontSize: '125%' }}>{item.name}</label>
+                            <br />
+                            <label style={{ fontSize: "125%" }}>
+                              {item.name}
+                            </label>
                           </Col>
                           <Col xs={12} xl={12}>
-                          <Button
-                            type="ghost"
-                            style={{ marginLeft: "30%", fontSize:'200%' }}
-                            onClick={() => setMohallaDispatchData(item.mk_id)}
-                          >
-                            <i class="fa-solid fa-circle-chevron-right"></i>
-                          </Button>
+                            <Button
+                              type="ghost"
+                              style={{ marginLeft: "30%", fontSize: "200%" }}
+                              onClick={() => setMohallaDispatchData(item.mk_id)}
+                            >
+                              <i class="fa-solid fa-circle-chevron-right"></i>
+                            </Button>
                           </Col>
                         </Row>
                       </Card>
@@ -344,55 +345,72 @@ const Dispatch = () => {
                         <Card title={item.food_name} bordered={false}>
                           <Row>
                             <Col xs={12} xl={12}>
-                              Number of Daigs: <br/>
-                              <Input 
+                              Number of Daigs: <br />
+                              <Input
                                 placeholder="Eg: 2, 3, 15, etc."
                                 onChange={(e) => setDaigs(e.target.value)}
-                                style={{ fontSize:'140%', width:'70%' }}
+                                style={{ fontSize: "140%", width: "70%" }}
                               ></Input>
                             </Col>
                             <Col xs={12} xl={12}>
-                              Total Weight (units): <br/>
-                              <Input 
-                                placeholder="Eg: 2, 3, 15, etc." 
-                                style={{ fontSize:'140%', width:'70%' }}
+                              Total Weight (units): <br />
+                              <Input
+                                placeholder="Eg: 2, 3, 15, etc."
+                                style={{ fontSize: "140%", width: "70%" }}
                                 onChange={(e) => setTotalWeight(e.target.value)}
-                              >
-                              </Input>
+                              ></Input>
                             </Col>
-                            <Col xs={12} xl={12} style={{ padding: '1%' }}>
-                            <br/><br/>
-                            {finaldipatchData &&
-                              finaldipatchData
-                                .filter(
-                                  (batch) =>
-                                    batch.food_item_id === item.food_item_id
-                                )
-                                .map((item) => (
+                            <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                              <br />
+                              <br />
+                              {finaldipatchData &&
+                                finaldipatchData
+                                  .filter(
+                                    (batch) =>
+                                      batch.food_item_id === item.food_item_id
+                                  )
+                                  .map((item) => (
                                     <div>
                                       <Row>
                                         <Col xs={24} xl={12}>
-                                          Number of Daigs: <br/>
-                                          <label style={{ fontSize:'150%' }}>{item.no_of_deigh}</label>
+                                          Number of Daigs: <br />
+                                          <label style={{ fontSize: "150%" }}>
+                                            {item.no_of_deigh}
+                                          </label>
                                         </Col>
                                         <Col xs={24} xl={12}>
-                                          Total Weight: <br/>
-                                          <label style={{ fontSize:'150%' }}>{item.total_weight}</label>
+                                          Total Weight: <br />
+                                          <label style={{ fontSize: "150%" }}>
+                                            {item.total_weight}
+                                          </label>
                                         </Col>
                                       </Row>
                                     </div>
-                                    
-                              ))}
-                              {finaldipatchData && finaldipatchData
-                                .filter(
-                                  (batch) =>
-                                    batch.food_item_id === item.food_item_id
-                                ).length <= 0 ? <Button type="primary" onClick={(e) => dispatchData(item.food_item_id)}>Dispatch Food</Button> : <label><br/><Tag color='green'>DISPATCHED</Tag></label>}
-                              
+                                  ))}
+                              {finaldipatchData &&
+                              finaldipatchData.filter(
+                                (batch) =>
+                                  batch.food_item_id === item.food_item_id
+                              ).length <= 0 ? (
+                                <Button
+                                  type="primary"
+                                  onClick={(e) =>
+                                    dispatchData(item.food_item_id)
+                                  }
+                                >
+                                  Dispatch Food
+                                </Button>
+                              ) : (
+                                <label>
+                                  <br />
+                                  <Tag color="green">DISPATCHED</Tag>
+                                </label>
+                              )}
                             </Col>
-                            <Col xs={12} xl={12} style={{ padding: '1%' }}>
-                              <br/><br/>
-                              Confirm Delivery: <br/>
+                            <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                              <br />
+                              <br />
+                              Confirm Delivery: <br />
                               <Tag color="orange">Pending</Tag>
                             </Col>
                           </Row>

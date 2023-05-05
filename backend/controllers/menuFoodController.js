@@ -140,12 +140,65 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
   const foodMenu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
 
   if (foodMenu) {
-    const updatedMenuAskash = await FoodMenu.findByIdAndUpdate(
-      { _id: Object(foodMenu._id) },
-      { $set: { mohalla_wise_ashkhaas: data } },
-      { new: true }
+    console.log("data: ", data);
+    // const updatedMenuAskash = await FoodMenu.findByIdAndUpdate(
+    //   { _id: Object(foodMenu._id) },
+    //   { $set: { mohalla_wise_ashkhaas: data } },
+    //   { new: true }
+    // );
+
+    const existingMkIds = foodMenu.mohalla_wise_ashkhaas.map(
+      (item) => item.mk_id
     );
-    res.json({ users: updatedMenuAskash.mohalla_wise_ashkhaas });
+    const operations = data.map((item) => {
+      if (existingMkIds.includes(item.mk_id)) {
+        // update existing object in array
+        return {
+          updateOne: {
+            filter: {
+              _id: Object(foodMenu._id),
+              "mohalla_wise_ashkhaas.mk_id": item.mk_id,
+            },
+            update: {
+              $set: {
+                "mohalla_wise_ashkhaas.$.total_ashkhaas": item.total_ashkhaas,
+              },
+            },
+          },
+        };
+      } else {
+        // add new object to array
+        return {
+          updateOne: {
+            filter: { _id: Object(foodMenu._id) },
+            update: {
+              $push: {
+                mohalla_wise_ashkhaas: {
+                  mk_id: item.mk_id,
+                  name: item.name,
+                  total_ashkhaas: item.total_ashkhaas,
+                },
+              },
+            },
+            upsert: true,
+          },
+        };
+      }
+    });
+
+    console.log("op: ", operations);
+
+    // Execute the bulk update operation
+    FoodMenu.bulkWrite(operations)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+
+    console.log("result: ", result);
+    res.status(200).send("Data upserted successfully");
   }
 });
 

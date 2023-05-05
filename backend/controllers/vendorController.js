@@ -11,6 +11,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
     email,
     address,
     mkuser_id,
+    approval_status,
   } = req.body;
 
   const mkUser = await MkUser.findOne({ email: mkuser_email });
@@ -23,6 +24,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
       closing_time,
       email,
       address,
+      approval_status,
     });
 
     if (vendor) {
@@ -40,4 +42,22 @@ const getVendor = expressAsyncHandler(async (req, res) => {
   res.json(vendor);
 });
 
-module.exports = { addVendor, getVendor };
+const updateVendor = expressAsyncHandler(async (req, res) => {
+  const { type, approval_status, vendor_id } = req.body;
+
+  const vendorData = await VendorModel.findOne({ _id: vendor_id });
+
+  if (type === "update_status") {
+    console.log("in here");
+    const updateVendorStatus = await VendorModel.findByIdAndUpdate(
+      { _id: Object(vendorData._id) },
+      { $set: { approval_status: approval_status } },
+      { new: true }
+    );
+    if (updateVendorStatus) {
+      res.json(updateVendorStatus);
+    }
+  }
+});
+
+module.exports = { addVendor, getVendor, updateVendor };

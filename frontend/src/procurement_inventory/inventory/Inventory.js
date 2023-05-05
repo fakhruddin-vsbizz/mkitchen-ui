@@ -9,8 +9,9 @@ import {
   Card,
   Modal,
   Radio,
-  Tag
+  Tag,
 } from "antd";
+import { Link } from "react-router-dom";
 
 const Inventory = () => {
   const data = [
@@ -89,34 +90,40 @@ const Inventory = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "3%" }}>
-        <Card style={{ padding:'1%', border:'1px solid grey' }} bordered={true}>
+          <Card
+            style={{ padding: "1%", border: "1px solid grey" }}
+            bordered={true}
+          >
             <Row>
-                <Col xs={12} xl={12} style={{ fontSize: '200%' }}>Inventory</Col>
-                <Col xs={12} xl={12}>
-                </Col>
+              <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
+                Inventory
+              </Col>
+              <Col xs={12} xl={12}></Col>
             </Row>
-        </Card>
+          </Card>
           <hr></hr>
           <table style={{ width: "100%" }} cellPadding={20}>
             <tr>
               <td>
-                Filter by ingredients name:<br/>
+                Filter by ingredients name:
+                <br />
                 <Input
                   placeholder="Filter by name..."
                   style={{ width: "70%" }}
                 ></Input>
               </td>
               <td>
-                Volume Range: 
+                Volume Range:
                 <Slider min={1} max={10000}></Slider>
               </td>
               <td>
                 <center>
                   <Button type="primary" onClick={(e) => setIsModalOpen(true)}>
-                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp; Add new ingredient
+                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    Add new ingredient
                   </Button>
                 </center>
-                
+
                 <Modal
                   open={isModalOpen}
                   onOk={handleSubmit}
@@ -175,13 +182,42 @@ const Inventory = () => {
                 dataSource={inventoryItems}
                 renderItem={(item) => (
                   <List.Item>
-                    <Row style={{ width: '100%', textAlign:'left' }}>
-                      <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.ingridient_name}</Col>
-                      <Col xs={8} xl={6}>Ingredient Expiry period: <br/>{item.ingridient_expiry_amount} {item.ingridient_expiry_period}</Col>
-                      <Col xs={8} xl={6}>Ingredient total Volume: <br/>{item.total_volume} {item.ingridient_measure_unit}</Col>
-                      <Col xs={8} xl={6}>{item.total_volume < 6 ? <div><i class="fa-solid fa-circle-exclamation"></i> You are short on items <br/><br/><Button style={{ backgroundColor: 'green' }} type='primary'>Restock Ingredient</Button></div> : <div><i class="fa-solid fa-circle-check"></i> SUFFICIENT</div>}</Col>
+                    <Row style={{ width: "100%", textAlign: "left" }}>
+                      <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
+                        {item.ingridient_name}
+                      </Col>
                       <Col xs={8} xl={6}>
-                          <Button>View Purchases</Button>
+                        Ingredient Expiry period: <br />
+                        {item.ingridient_expiry_amount}{" "}
+                        {item.ingridient_expiry_period}
+                      </Col>
+                      <Col xs={8} xl={6}>
+                        Ingredient total Volume: <br />
+                        {item.total_volume} {item.ingridient_measure_unit}
+                      </Col>
+                      <Col xs={8} xl={6}>
+                        {item.total_volume < 6 ? (
+                          <div>
+                            <i class="fa-solid fa-circle-exclamation"></i> You
+                            are short on items <br />
+                            <br />
+                            <Button
+                              style={{ backgroundColor: "green" }}
+                              type="primary"
+                            >
+                              Restock Ingredient
+                            </Button>
+                          </div>
+                        ) : (
+                          <div>
+                            <i class="fa-solid fa-circle-check"></i> SUFFICIENT
+                          </div>
+                        )}
+                      </Col>
+                      <Col xs={8} xl={6}>
+                        <Link to={`/pai/inventory/purchases/${item._id}`}>
+                          View Purchases
+                        </Link>
                       </Col>
                     </Row>
                     {/* <Card
