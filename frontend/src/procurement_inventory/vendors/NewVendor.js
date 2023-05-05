@@ -53,6 +53,7 @@ const NewVendor = () => {
             closing_time: finalClosingTime,
             email: vendorName,
             address: vendorAddress,
+            approval_status: 0,
           }),
         });
 

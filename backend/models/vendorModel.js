@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const vendorModel = new mongoose.Schema(
   {
     mkuser_id: {
@@ -25,6 +24,10 @@ const vendorModel = new mongoose.Schema(
     },
     address: {
       type: String,
+      required: true,
+    },
+    approval_status: {
+      type: Boolean,
       required: true,
     },
   },

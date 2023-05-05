@@ -28,6 +28,8 @@ const Menu = () => {
   const [AddedFoodItems, setAddedFoodItems] = useState();
   const [isMenu, setIsMenu] = useState(false);
 
+  const [ingridientList, setIngridientList] = useState([]);
+
   const [visible, setVisible] = useState(false);
 
   const onSelectDate = (newValue) => {
@@ -43,6 +45,22 @@ const Menu = () => {
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
+
+  useEffect(() => {
+    const getIngridients = async () => {
+      const data = await fetch("http://localhost:5001/cooking/ingredients");
+
+      if (data) {
+        const res = await data.json();
+        if (res) {
+          setIngridientList(res);
+        }
+      }
+    };
+    getIngridients();
+  }, []);
+
+  console.log(ingridientList);
 
   useEffect(() => {
     const getFood = async () => {
@@ -91,7 +109,7 @@ const Menu = () => {
       });
       if (data) {
         console.log(data.json().then((data) => setAddedFoodItems(data)));
-        console.log("=============> FOOD ITEMS", AddedFoodItems)
+        console.log("=============> FOOD ITEMS", AddedFoodItems);
       }
     };
     getFoodItems();
@@ -120,7 +138,7 @@ const Menu = () => {
           // total_weight: 0,
           food_name: selectedFood,
         };
-        console.log('FIRST SPREADER');
+        console.log("FIRST SPREADER");
         setFoodItems([...foodItems, newFoodItem]);
       }
     } else {
@@ -153,7 +171,7 @@ const Menu = () => {
             // total_weight: 0,
             food_name: selectedFood,
           };
-          console.log('SECOND SPREADER');
+          console.log("SECOND SPREADER");
           setFoodItems([...foodItems, newFoodItem]);
         }
       } catch (error) {
@@ -192,13 +210,23 @@ const Menu = () => {
         setVisible(true);
         setFoodItemId("");
         setFoodItems([]);
-
         const res = await data.json();
       }
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log(
+      ingridientList
+        .filter((it) => it.name === "Haldi")
+        .map(
+          (newItem, indexEle) =>
+            newItem.ingridient_list[indexEle].ingredient_name
+        )
+    );
+  }, [ingridientList]);
 
   const deleteItem = (item) => {
     const filteredItems = foodItems.filter(
@@ -279,7 +307,7 @@ const Menu = () => {
       total_ashkhaas: +value2,
       name: "Mohalla Bhopal",
     };
-    console.log('THIRD SPREADER');
+    console.log("THIRD SPREADER");
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);
   };
@@ -310,13 +338,15 @@ const Menu = () => {
           />
         </Col>
         <Col xs={24} xl={20} style={{ padding: "1%" }}>
-          <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
+          <Card
+            style={{ padding: "1%", border: "1px solid grey" }}
+            bordered={true}
+          >
             <Row>
               <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
                 Set Day's Menu
               </Col>
-              <Col xs={12} xl={12} style={{ textAlign: "right" }}>
-              </Col>
+              <Col xs={12} xl={12} style={{ textAlign: "right" }}></Col>
             </Row>
           </Card>
           <Row>
@@ -325,13 +355,16 @@ const Menu = () => {
                 Menu Setting
               </label>
               <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-              <Calendar mode="month" onSelect={onSelectDate} fullscreen={false}/>
+              <Calendar
+                mode="month"
+                onSelect={onSelectDate}
+                fullscreen={false}
+              />
             </Col>
             <Col xs={12} xl={12} style={{ padding: "3%" }}>
               <Card
                 bordered={true}
                 style={{ width: "100%", border: "2px solid #FF3003" }}
-                
               >
                 <Row>
                   <Col xs={24} xl={12}>
@@ -340,21 +373,16 @@ const Menu = () => {
                     </label>
                   </Col>
                   <Col xs={24} xl={12}>
-                    <Button
-                      type="primary"
-                      size="small"
-                    >
+                    <Button type="primary" size="small">
                       Add Menu
                     </Button>
                   </Col>
                 </Row>
-                
-                
-                  
+
                 <Divider style={{ backgroundColor: "#000" }}></Divider>
                 <Row>
                   <Col xs={12} xl={12}>
-                    Search menu by name: <br/>
+                    Search menu by name: <br />
                     {AddedFoodItems && (
                       <AutoComplete
                         id="food-item-selected"
@@ -371,7 +399,7 @@ const Menu = () => {
                             .indexOf(inputValue.toUpperCase()) !== -1
                         }
                       />
-                      )}
+                    )}
                   </Col>
                   <Col xs={12} xl={12}>
                     <center>
@@ -385,7 +413,7 @@ const Menu = () => {
                     </center>
                   </Col>
                 </Row>
-                
+
                 <br />
                 <br />
 
@@ -397,8 +425,27 @@ const Menu = () => {
                     <List.Item>
                       <Row style={{ width: "100%" }}>
                         <Col xs={12} xl={12}>
-                          <label style={{ fontSize: '120%' }}>{item.food_name}</label><br/>
-                          Ingredients: Bread, Honey, Sugar, Ghee.
+                          <label style={{ fontSize: "120%" }}>
+                            {item.food_name}
+                          </label>
+                          <br />
+                          {ingridientList &&
+                            ingridientList
+                              .filter((it) => it.name === item.food_name)
+                              .map((newItem, index) => (
+                                <div key={index}>
+                                  Ingredients:
+                                  {newItem.ingridient_list.map(
+                                    (ing, ingIndex) => (
+                                      <span key={ingIndex}>
+                                        {ing.ingredient_name},{" "}
+                                      </span>
+                                    )
+                                  )}
+                                </div>
+                              ))}
+
+                          {/* Ingredients: Bread, Honey, Sugar, Ghee. */}
                         </Col>
                         <Col xs={12} xl={12}>
                           <center>

@@ -2,11 +2,11 @@ import logo from "./logo.svg";
 import "./App.css";
 
 import { Route, Routes } from "react-router-dom";
-import Login from './auth/Login';
-import Menu from './admin/menu_ui/Menu';
-import Accounts from './admin/account_management/Accounts';
-import VerifyVendor from './admin/vendor_management/VerifyVendor';
-import SetMenu from './cooking/SetMenu';
+import Login from "./auth/Login";
+import Menu from "./admin/menu_ui/Menu";
+import Accounts from "./admin/account_management/Accounts";
+import VerifyVendor from "./admin/vendor_management/VerifyVendor";
+import SetMenu from "./cooking/SetMenu";
 
 import { AuthContextProvider } from "./components/context/auth-context";
 import Cooking from "./cooking/Cooking";
@@ -37,7 +37,10 @@ function App() {
         {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
         <Route path="/pai/inventory" element={<Inventory />} />
-        <Route path="/pai/inventory/purchases" element={<IngredientPurchase />} />
+        <Route
+          path="/pai/inventory/purchases/:id"
+          element={<IngredientPurchase />}
+        />
         <Route path="/pai/purchases" element={<Purchases />} />
         <Route path="/pai/purchases/new" element={<NewPurchase />} />
         <Route path="/pai/procurement/" element={<ConfirmIng />} />
@@ -46,7 +49,6 @@ function App() {
         <Route path="/pai/vendors/new" element={<NewVendor />} />
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
         <Route path="/pai/expiries" element={<DamagedGoodsList />} />
-
       </Routes>
     </AuthContextProvider>
   );
