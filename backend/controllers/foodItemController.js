@@ -91,6 +91,8 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
     menu_food_id: menu_id,
   });
 
+  
+
   if (type === "update_food_ingridient" && foodItem) {
     console.log("update ingridients of food items");
 

@@ -33,7 +33,25 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     reorder_logs,
     status,
     dispatch,
+
+    //get the mohalla wise count
+    menu_id,
   } = req.body;
+
+  if (add_type === "get_total_ashkash_sum") {
+    // Get total ashkash count from food_menu collection
+    console.log("here here===>", menu_id);
+
+    const foodMenu = await FoodMenu.findOne({ _id: menu_id });
+    console.log("menu", foodMenu);
+
+    const totalAshkashCount = foodMenu.mohalla_wise_ashkhaas.reduce(
+      (acc, curr) => acc + curr.total_ashkhaas,
+      0
+    );
+    console.log("total: ", totalAshkashCount);
+    res.json(totalAshkashCount);
+  }
 
   if (add_type === "add_menu") {
     console.log("adding menu");

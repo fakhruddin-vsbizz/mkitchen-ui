@@ -18,38 +18,18 @@ import { useState } from "react";
 import axios from "axios";
 
 const Cooking = () => {
-  // for viewing re-order statuses
-  const reorder_log_dummy = [
-    {
-      ingredient_name: "Goat Meat",
-      reorder_quantity: 1200,
-      is_delivered: false,
-    },
-    {
-      ingredient_name: "Cabbage",
-      reorder_quantity: 100,
-      is_delivered: false,
-    },
-    {
-      ingredient_name: "Eggs",
-      reorder_quantity: 250,
-      is_delivered: false,
-    },
-    {
-      ingredient_name: "Everest Chicken Masala",
-      reorder_quantity: 10,
-      is_delivered: false,
-    },
-  ];
-
   const data = ["Set Menu", "Cooking", "Dispatch"];
   const [selectedDate, setSelectedDate] = useState(null);
   const [menuFoodId, setMenuFoodId] = useState();
   const [inventoryId, setInventoryId] = useState();
   const [reorderQuantity, setReorderQuantity] = useState();
+
+  const [leftOverQuantity, setLeftOverQuantity] = useState();
+
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(false);
   const [visible, setVisible] = useState(false);
+  const [totalAshkashCount, setTotalAshkashCount] = useState();
 
   const [getFoodList, setGetFoodList] = useState();
 
@@ -63,6 +43,34 @@ const Cooking = () => {
   };
 
   console.log(selectedDate);
+
+  useEffect(() => {
+    const getData = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/admin/menu", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            add_type: "get_total_ashkash_sum",
+            menu_id: menuFoodId,
+          }),
+        });
+
+        if (data) {
+          console.log(data);
+          const res = await data.json();
+          if (res) {
+            setTotalAshkashCount(res);
+            console.log(res);
+          }
+        }
+      }
+    };
+    getData();
+  }, [menuFoodId]);
+
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
@@ -116,6 +124,11 @@ const Cooking = () => {
   const handleIngridientReOrder = async (inventoryId, quantity) => {
     setInventoryId(inventoryId);
     setReorderQuantity(quantity);
+  };
+
+  const handleleftOver = async (inventoryId, quantity) => {
+    setInventoryId(inventoryId);
+    setLeftOverQuantity(quantity);
   };
 
   useEffect(() => {
@@ -212,6 +225,32 @@ const Cooking = () => {
       console.log(error);
     }
   };
+
+  const returnIngToInventory = async (inventory_id) => {
+    console.log("inv: ", inventoryId);
+    console.log("leftOverQuantity: ", leftOverQuantity);
+
+    try {
+      const data = await fetch("http://localhost:5001/inventory/addinventory", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "udate_volume",
+          inventory_id: inventory_id,
+          quantity: leftOverQuantity,
+        }),
+      });
+
+      if (data) {
+        const res = await data.json();
+        console.log(data);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <Modal
@@ -269,7 +308,7 @@ const Cooking = () => {
           <Divider style={{ backgroundColor: "#000" }}></Divider>
 
           <Row>
-            <Col xs={24} xl={16} style={{ padding: '2%' }}>
+            <Col xs={24} xl={16} style={{ padding: "2%" }}>
               <List
                 style={{ width: "100%" }}
                 itemLayout="horizontal"
@@ -307,22 +346,32 @@ const Cooking = () => {
                               <List.Item>
                                 <Card>
                                   <Row>
-                                    <Col xs={12} xl={6} style={{ padding: '2%' }}>
+                                    <Col
+                                      xs={12}
+                                      xl={6}
+                                      style={{ padding: "2%" }}
+                                    >
                                       <label style={{ fontSize: "110%" }}>
                                         <u>{ing.ingredient_name}</u>
-                                      </label>
-                                    </Col>
-                                    <Col xs={12} xl={6} style={{ padding: '2%' }}>
-                                      Amount procured:
-                                      <br />
-                                      <label style={{ fontSize: "120%" }}>
-                                        1200 KG
                                       </label>
                                     </Col>
                                     <Col
                                       xs={12}
                                       xl={6}
-                                      style={{ padding: '2%' }}
+                                      style={{ padding: "2%" }}
+                                    >
+                                      Amount procured:
+                                      <br />
+                                      {totalAshkashCount && (
+                                        <label style={{ fontSize: "120%" }}>
+                                          {ing.perAshkash * totalAshkashCount}
+                                        </label>
+                                      )}
+                                    </Col>
+                                    <Col
+                                      xs={12}
+                                      xl={6}
+                                      style={{ padding: "2%" }}
                                     >
                                       You can re-order the items here too if
                                       needed:
@@ -348,15 +397,33 @@ const Cooking = () => {
                                         Re-order Item
                                       </Button>
                                     </Col>
-                                    <Col xs={12} xl={6} style={{ textAlign: "right", padding: '2%' }}>
+                                    <Col
+                                      xs={12}
+                                      xl={6}
+                                      style={{
+                                        textAlign: "right",
+                                        padding: "2%",
+                                      }}
+                                    >
                                       Leftover amount of {ing.ingredient_name}
                                       <br />
                                       <br />
                                       <Input
+                                        onChange={(e) =>
+                                          handleleftOver(
+                                            ing.inventory_item_id,
+                                            e.target.value
+                                          )
+                                        }
                                         style={{ width: "100%" }}
                                         placeholder="Eg: 1L, 12KG, etc"
                                       ></Input>
                                       <Button
+                                        onClick={(e) =>
+                                          returnIngToInventory(
+                                            ing.inventory_item_id
+                                          )
+                                        }
                                         size="small"
                                         type="primary"
                                       >
@@ -375,7 +442,7 @@ const Cooking = () => {
                 )}
               />
             </Col>
-            <Col xs={12} xl={8} style={{ padding: '2%' }}>
+            <Col xs={12} xl={8} style={{ padding: "2%" }}>
               {reorderLogs && (
                 <div>
                   <label style={{ fontSize: "150%" }}>Reorder Log:</label>

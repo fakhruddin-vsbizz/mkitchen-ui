@@ -61,6 +61,15 @@ const Login = () => {
       console.log(authCtx.userType);
 
       navigate("/admin/account_management");
+      if (userType === "Cooking") {
+        navigate("/cooking/ingredients");
+      }
+      if (userType === "Procurement Inventory") {
+        navigate("/pai/inventory");
+      }
+      if (userType === "mk admin") {
+        navigate("/admin/menu");
+      }
     } catch (error) {
       console.error(error);
       console.log(error.message);

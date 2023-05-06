@@ -145,7 +145,7 @@ const Dispatch = () => {
       }
     };
     getFood();
-  }, [menuFoodId]);
+  }, [menuFoodId, visible, mohallaUserId]);
 
   console.log("dispatched View data: ", viewDispatchedData);
   console.log("dispatched View data object: ", finaldipatchData);
@@ -164,9 +164,11 @@ const Dispatch = () => {
           "===========================FINAL DISPATCH DATA=================================\n\n",
           finaldipatchData
         );
+      } else {
+        setFinalDispatchData([]);
       }
     }
-  }, [viewDispatchedData, mohallaUserId]);
+  }, [viewDispatchedData, mohallaUserId, getMohallaUsers]);
 
   useEffect(() => {
     const getFood = async () => {
@@ -199,7 +201,7 @@ const Dispatch = () => {
     setMohallaUserId(mkId);
   };
 
-  const dispatchData = async (food_id) => {
+  const dispatchData = async (food_id, name) => {
     try {
       console.log("inside");
       const data = await fetch("http://localhost:5001/operation_pipeline", {
@@ -214,6 +216,7 @@ const Dispatch = () => {
           total_weight: totalWeight,
           no_of_deigh: daigs,
           mk_id: mohallaUserId,
+          food_name: name,
           delivery_status: "pending",
         }),
       });
@@ -395,7 +398,10 @@ const Dispatch = () => {
                                 <Button
                                   type="primary"
                                   onClick={(e) =>
-                                    dispatchData(item.food_item_id)
+                                    dispatchData(
+                                      item.food_item_id,
+                                      item.food_name
+                                    )
                                   }
                                 >
                                   Dispatch Food
