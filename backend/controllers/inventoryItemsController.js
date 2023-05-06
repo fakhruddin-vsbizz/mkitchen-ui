@@ -61,4 +61,22 @@ const getInventoryItems = expressAsyncHandler(async (req, res) => {
   res.json(inventory);
 });
 
-module.exports = { addInventoryItems, getInventoryItems };
+const updateInventoryItems = expressAsyncHandler(async (req, res) => {
+  const { inventory_id, quantity, type } = req.body;
+  console.log("hitting");
+  const inventory = await InventoryModel.findOne({ _id: inventory_id });
+
+  if (type === "udate_volume") {
+    const updateIngridient = await InventoryModel.findByIdAndUpdate(
+      { _id: Object(inventory._id) },
+      { $set: { total_volume: +inventory.total_volume + +quantity } },
+      { new: true }
+    );
+    if (updateIngridient) {
+      res.json({ message: "ingridient list updated successfully" });
+    }
+  }
+  res.json(inventory);
+});
+
+module.exports = { addInventoryItems, getInventoryItems, updateInventoryItems };

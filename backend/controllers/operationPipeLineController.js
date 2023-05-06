@@ -16,6 +16,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     no_of_deigh,
     mk_id,
     delivery_status,
+    food_name,
   } = req.body;
 
   const operationId = await OperationPipeLine.findOne({
@@ -123,6 +124,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
       total_weight: total_weight,
       no_of_deigh: no_of_deigh,
       delivery_status: delivery_status,
+      food_name: food_name,
     };
 
     if (dispatchArr.length === 0) {
