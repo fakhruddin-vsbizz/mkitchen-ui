@@ -15,6 +15,7 @@ import {
   Tooltip,
   Input,
   Select,
+  Alert
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
 const Accounts = () => {
@@ -378,17 +379,17 @@ const Accounts = () => {
             renderItem={(item) => <List.Item>{item}</List.Item>}
           />
         </Col>
-        <Col xs={24} xl={20} style={{ padding: "5%" }}>
-          <Row>
-            <Col xs={12} xl={12}>
-              <label style={{ fontSize: "300%" }} className="dongle-font-class">
-                Account Management
-              </label>
-            </Col>
-            <Col xs={12} xl={12}>
-              <Button onClick={showNMModal}>Add New MK User</Button>
-            </Col>
-          </Row>
+        <Col xs={24} xl={20} style={{ padding: "1%" }}>
+          <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
+              <Row>
+                <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
+                  Account Management
+                </Col>
+                <Col xs={12} xl={12} style={{ textAlign: "right" }}>
+                  <Button onClick={showNMModal}>Add New MK User</Button>
+                </Col>
+              </Row>
+            </Card>
           <Modal
             title="New Mohalla user"
             open={newMohallaPopup}
@@ -452,13 +453,16 @@ const Accounts = () => {
               </tr> */}
               {error && (
                 <tr>
-                  <h2
-                    style={{
-                      color: "red",
-                    }}
-                  >
-                    User Already Registered
-                  </h2>
+                  <td colSpan={2}>
+                    <br/>
+                    <Alert
+                      message="Validation Error"
+                      description="User already exists. Please try a different user email."
+                      type="error"
+                      closable
+                    />
+                  </td>
+                  
                 </tr>
               )}
               <tr>
@@ -472,45 +476,36 @@ const Accounts = () => {
             </table>
           </Modal>
           <Divider style={{ backgroundColor: "#000" }}></Divider>
-          <label style={{ fontSize: "200%" }} className="dongle-font-class">
-            Mohalla Accounts
+          <label style={{ fontSize: "130%" }}>
+            <b>Mohalla Accounts</b>
           </label>
           <br />
           <br />
           <br />
-          <List
-            grid={{
-              gutter: 16,
-              xs: 1,
-              sm: 2,
-              md: 4,
-              lg: 4,
-              xl: 3,
-              xxl: 3,
-            }}
-            dataSource={mohallaUsers}
-            renderItem={(item) => (
-              <List.Item>
-                <Card title={item.username}>
-                  Status:{" "}
-                  {item.usertype ? (
-                    <Tag color="green">ACITVE</Tag>
-                  ) : (
-                    <Tag color="red">DISABLED</Tag>
-                  )}
-                  <br />
-                  <br />
-                  <Button
-                    size="small"
-                    type="primary"
-                    onClick={() => showModal(item.username)}
-                  >
-                    Manage Account
-                  </Button>
-                </Card>
-              </List.Item>
-            )}
-          />
+          <Card style={{ width: '100%' }}>
+            <List
+              dataSource={mohallaUsers}
+              renderItem={(item) => (
+                <List.Item>
+                  <Row style={{ width: '100%', textAlign:'left' }}>
+                      <Col xs={24} xl={24} style={{ fontSize: '120%' }}><u>{item.username}</u></Col>
+                      <Col xs={8} xl={8}>Verification status: <br/>{item.usertype ? (<Tag color="green">ACITVE</Tag>) : (<Tag color="red">DISABLED</Tag>)}</Col>
+                      <Col xs={8} xl={8}>Management: <br/>
+                        <Button
+                          size="small"
+                          type="primary"
+                          onClick={() => showModal(item.username)}
+                        >
+                          Manage Account
+                        </Button>
+                      </Col>
+                      
+                  </Row>
+                </List.Item>
+              )}
+            />
+          </Card>
+          
           <Modal
             title="Account setting"
             open={isModalOpen}
@@ -586,9 +581,10 @@ const Accounts = () => {
             </table>
           </Modal>
           <Divider style={{ backgroundColor: "#000" }}></Divider>
-          <label style={{ fontSize: "200%" }} className="dongle-font-class">
-            Cooking Department
+          <label style={{ fontSize: "130%" }}>
+            <b>Cooking Department</b>
           </label>
+          <br/>
           <Modal
             visible={visible}
             onOk={handleOk}
@@ -605,214 +601,236 @@ const Accounts = () => {
             </div>
           </Modal>
           <br />
-          Select user: &nbsp;&nbsp;&nbsp;
-          {cookingDepartmentUser && (
-            <Select
-              defaultValue={"select user"}
-              style={{ width: 120 }}
-              block
-              options={cookingDepartmentUser.map((item) => ({
-                value: item.username,
-                label: item.username,
-              }))}
-              onChange={(value) => setSelectedCookingUser(value)}
-            />
-          )}
-          <br />
-          <br />
-          <Card
-            bordered={true}
-            style={{
-              width: "100%",
-            }}
-          >
-            <p>
-              <u>Change Email of Cooking Department</u>
-            </p>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td>
-                  <Input
-                    value={newEmailCooking}
-                    onChange={(e) => setNewEmailCooking(e.target.value)}
-                    placeholder="Enter new email"
-                    suffix={
-                      <Tooltip title="Change only in case needed.">
-                        <InfoCircleOutlined
-                          style={{ color: "rgba(0,0,0,.45)" }}
+          
+          <Row>
+            <Col xs={24} xl={12} style={{ padding: '2%' }}>
+              
+              <Card
+                bordered={true}
+                style={{
+                  width: "100%", height: '100%'
+                }}
+              >
+                Select user: &nbsp;&nbsp;&nbsp;
+                <br/>
+                {cookingDepartmentUser && (
+                  <Select
+                    defaultValue={"select user"}
+                    style={{ width: 120 }}
+                    block
+                    options={cookingDepartmentUser.map((item) => ({
+                      value: item.username,
+                      label: item.username,
+                    }))}
+                    onChange={(value) => setSelectedCookingUser(value)}
+                  />
+                )}
+                <br />
+                <br />
+                <p>
+                  <u>Change Email of Cooking Department</u>
+                </p>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td>
+                      <Input
+                        value={newEmailCooking}
+                        onChange={(e) => setNewEmailCooking(e.target.value)}
+                        placeholder="Enter new email"
+                        suffix={
+                          <Tooltip title="Change only in case needed.">
+                            <InfoCircleOutlined
+                              style={{ color: "rgba(0,0,0,.45)" }}
+                            />
+                          </Tooltip>
+                        }
+                      />
+                    </td>
+                    <td>
+                      <Button
+                        onClick={updateCookingDepartmentEmail}
+                        type="primary"
+                        danger
+                      >
+                        Change Email
+                      </Button>
+                    </td>
+                  </tr>
+                </table>
+              </Card>
+            </Col>
+            <Col xs={24} xl={12} style={{ padding: '2%' }}>
+              <Card
+                bordered={true}
+                style={{
+                  width: "100%", height: '100%'
+                }}
+              >
+                <p>
+                  <u>Reset Password of Cooking Department</u>
+                </p>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td>New Password</td>
+                    <td>
+                      <Input.Password
+                        value={newpassword}
+                        onChange={(e) => setNewpassword(e.target.value)}
+                        placeholder="New password to be set"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Confirm Password</td>
+                    <td>
+                      <Input.Password
+                        value={newconfirmpassword}
+                        onChange={(e) => setNewConfirmpassword(e.target.value)}
+                        placeholder="Confirm new password"
+                      />
+                    </td>
+                  </tr>
+                  {error && (
+                    <tr>
+                      <td colSpan={2}>
+                        <br/>
+                        <Alert
+                          message="Validation Error"
+                          description="Either email is invalid or password do not match. Please try again"
+                          type="error"
+                          closable
                         />
-                      </Tooltip>
-                    }
-                  />
-                </td>
-                <td>
-                  <Button
-                    onClick={updateCookingDepartmentEmail}
-                    type="primary"
-                    danger
-                  >
-                    Change Email
-                  </Button>
-                </td>
-              </tr>
-            </table>
-          </Card>
+                      </td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td></td>
+                    <td>
+                      <br />
+                      <Button
+                        onClick={() => updateUserPassword("Cooking")}
+                        type="primary"
+                        danger
+                      >
+                        Change Password
+                      </Button>
+                    </td>
+                  </tr>
+                </table>
+              </Card>
+            </Col>
+          </Row>
+          
+          
           <br />
-          <Card
-            bordered={true}
-            style={{
-              width: "100%",
-            }}
-          >
-            <p>
-              <u>Reset Password of Cooking Department</u>
-            </p>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td>New Password</td>
-                <td>
-                  <Input.Password
-                    value={newpassword}
-                    onChange={(e) => setNewpassword(e.target.value)}
-                    placeholder="New password to be set"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Confirm Password</td>
-                <td>
-                  <Input.Password
-                    value={newconfirmpassword}
-                    onChange={(e) => setNewConfirmpassword(e.target.value)}
-                    placeholder="Confirm new password"
-                  />
-                </td>
-              </tr>
-              {error && (
-                <tr>
-                  <h2
-                    style={{
-                      color: "red",
-                    }}
-                  >
-                    password dont match
-                  </h2>
-                </tr>
-              )}
-              <tr>
-                <td></td>
-                <td>
-                  <br />
-                  <Button
-                    onClick={() => updateUserPassword("Cooking")}
-                    type="primary"
-                    danger
-                  >
-                    Change Password
-                  </Button>
-                </td>
-              </tr>
-            </table>
-          </Card>
+          
           <Divider style={{ backgroundColor: "#000" }}></Divider>
-          <label style={{ fontSize: "200%" }} className="dongle-font-class">
-            P&I Department
+          <label style={{ fontSize: "130%" }}>
+            <b>P&I Department</b>
           </label>
-          <br />
-          Select user: &nbsp;&nbsp;&nbsp;
-          {pandiDepartmentUser && (
-            <Select
-              defaultValue={"select user"}
-              style={{ width: 120 }}
-              block
-              options={pandiDepartmentUser.map((item) => ({
-                value: item.username,
-                label: item.username,
-              }))}
-              onChange={(value) => setSelectedPandIUser(value)}
-            />
-          )}
-          <br />
-          <br />
-          <Card
-            bordered={true}
-            style={{
-              width: "100%",
-            }}
-          >
-            <p>
-              <u>Change Email of P&I Department</u>
-            </p>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td>
-                  <Input
-                    value={newEmailPandI}
-                    onChange={(e) => setNewEmailPandI(e.target.value)}
-                    placeholder="Enter your username"
-                    suffix={
-                      <Tooltip title="Change only in case needed.">
-                        <InfoCircleOutlined
-                          style={{ color: "rgba(0,0,0,.45)" }}
-                        />
-                      </Tooltip>
-                    }
+          <br/><br/>
+          <Row>
+            <Col xs={24} xl={12} style={{ padding: '2%' }}>
+              <Card
+                bordered={true}
+                style={{
+                  width: "100%",
+                }}
+              >
+                Select user: &nbsp;&nbsp;&nbsp;
+                {pandiDepartmentUser && (
+                  <Select
+                    defaultValue={"select user"}
+                    style={{ width: 120 }}
+                    block
+                    options={pandiDepartmentUser.map((item) => ({
+                      value: item.username,
+                      label: item.username,
+                    }))}
+                    onChange={(value) => setSelectedPandIUser(value)}
                   />
-                </td>
-                <td>
-                  <Button onClick={updatePandIEmail} type="primary" danger>
-                    Change Email
-                  </Button>
-                </td>
-              </tr>
-            </table>
-          </Card>
+                )}
+                <br />
+                <br />
+                <p>
+                  <u>Change Email of P&I Department</u>
+                </p>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td>
+                      <Input
+                        value={newEmailPandI}
+                        onChange={(e) => setNewEmailPandI(e.target.value)}
+                        placeholder="Enter your username"
+                        suffix={
+                          <Tooltip title="Change only in case needed.">
+                            <InfoCircleOutlined
+                              style={{ color: "rgba(0,0,0,.45)" }}
+                            />
+                          </Tooltip>
+                        }
+                      />
+                    </td>
+                    <td>
+                      <Button onClick={updatePandIEmail} type="primary" danger>
+                        Change Email
+                      </Button>
+                    </td>
+                  </tr>
+                </table>
+              </Card>
+            </Col>
+            <Col xs={24} xl={12} style={{ padding: '2%' }}>
+              <Card
+                bordered={true}
+                style={{
+                  width: "100%",
+                }}
+              >
+                <p>
+                  <u>Reset Password of P&I Department</u>
+                </p>
+                <table style={{ width: "100%" }}>
+                  <tr>
+                    <td>New Password</td>
+                    <td>
+                      <Input.Password
+                        value={newpasswordPandI}
+                        onChange={(e) => setNewpasswordPandI(e.target.value)}
+                        placeholder="New password to be set"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>Confirm Password</td>
+                    <td>
+                      <Input.Password
+                        value={newconfirmpasswordPandI}
+                        onChange={(e) => setNewConfirmpasswordPandI(e.target.value)}
+                        placeholder="Confirm new password"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>
+                      <br />
+                      <Button
+                        onClick={() => updateUserPassword("Procurement Inventory")}
+                        type="primary"
+                        danger
+                      >
+                        Change Password
+                      </Button>
+                    </td>
+                  </tr>
+                </table>
+              </Card>
+            </Col>
+          </Row>
+          
           <br />
-          <Card
-            bordered={true}
-            style={{
-              width: "100%",
-            }}
-          >
-            <p>
-              <u>Reset Password of P&I Department</u>
-            </p>
-            <table style={{ width: "100%" }}>
-              <tr>
-                <td>New Password</td>
-                <td>
-                  <Input.Password
-                    value={newpasswordPandI}
-                    onChange={(e) => setNewpasswordPandI(e.target.value)}
-                    placeholder="New password to be set"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td>Confirm Password</td>
-                <td>
-                  <Input.Password
-                    value={newconfirmpasswordPandI}
-                    onChange={(e) => setNewConfirmpasswordPandI(e.target.value)}
-                    placeholder="Confirm new password"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td></td>
-                <td>
-                  <br />
-                  <Button
-                    onClick={() => updateUserPassword("Procurement Inventory")}
-                    type="primary"
-                    danger
-                  >
-                    Change Password
-                  </Button>
-                </td>
-              </tr>
-            </table>
-          </Card>
+          
         </Col>
       </Row>
     </div>

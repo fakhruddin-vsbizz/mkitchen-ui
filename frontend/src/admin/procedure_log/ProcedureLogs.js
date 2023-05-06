@@ -25,7 +25,8 @@ const ProcedureLogs = () => {
           const res = await data.json();
           console.log(res);
           if (res) {
-            setIngridientList([...ingridientList, res]);
+            setIngridientList(res);
+            console.log("==============> ", ingridientList);
           }
         }
       }
@@ -76,8 +77,7 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            console.log(res);
-            setReviewData([...reviewData, res]);
+            setReviewData(res);
           }
         }
       }

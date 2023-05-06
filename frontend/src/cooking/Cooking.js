@@ -269,7 +269,7 @@ const Cooking = () => {
           <Divider style={{ backgroundColor: "#000" }}></Divider>
 
           <Row>
-            <Col xs={24} xl={12}>
+            <Col xs={24} xl={16} style={{ padding: '2%' }}>
               <List
                 style={{ width: "100%" }}
                 itemLayout="horizontal"
@@ -307,12 +307,12 @@ const Cooking = () => {
                               <List.Item>
                                 <Card>
                                   <Row>
-                                    <Col xs={12} xl={8}>
+                                    <Col xs={12} xl={6} style={{ padding: '2%' }}>
                                       <label style={{ fontSize: "110%" }}>
                                         <u>{ing.ingredient_name}</u>
                                       </label>
                                     </Col>
-                                    <Col xs={12} xl={8}>
+                                    <Col xs={12} xl={6} style={{ padding: '2%' }}>
                                       Amount procured:
                                       <br />
                                       <label style={{ fontSize: "120%" }}>
@@ -321,15 +321,15 @@ const Cooking = () => {
                                     </Col>
                                     <Col
                                       xs={12}
-                                      xl={8}
-                                      style={{ textAlign: "right" }}
+                                      xl={6}
+                                      style={{ padding: '2%' }}
                                     >
                                       You can re-order the items here too if
                                       needed:
                                       <br />
                                       <br />
                                       <Input
-                                        style={{ width: "50%" }}
+                                        style={{ width: "100%" }}
                                         onChange={(e) =>
                                           handleIngridientReOrder(
                                             ing.inventory_item_id,
@@ -348,6 +348,21 @@ const Cooking = () => {
                                         Re-order Item
                                       </Button>
                                     </Col>
+                                    <Col xs={12} xl={6} style={{ textAlign: "right", padding: '2%' }}>
+                                      Leftover amount of {ing.ingredient_name}
+                                      <br />
+                                      <br />
+                                      <Input
+                                        style={{ width: "100%" }}
+                                        placeholder="Eg: 1L, 12KG, etc"
+                                      ></Input>
+                                      <Button
+                                        size="small"
+                                        type="primary"
+                                      >
+                                        Return to inventory
+                                      </Button>
+                                    </Col>
                                   </Row>
                                 </Card>
                               </List.Item>
@@ -360,7 +375,7 @@ const Cooking = () => {
                 )}
               />
             </Col>
-            <Col xs={12} xl={12}>
+            <Col xs={12} xl={8} style={{ padding: '2%' }}>
               {reorderLogs && (
                 <div>
                   <label style={{ fontSize: "150%" }}>Reorder Log:</label>
