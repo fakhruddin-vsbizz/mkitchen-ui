@@ -1,9 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
+import "./style.css";
 
 import { Route, Routes } from "react-router-dom";
 import Login from "./auth/Login";
 import Menu from "./admin/menu_ui/Menu";
+import Index from "./admin/Index";
 import Accounts from "./admin/account_management/Accounts";
 import VerifyVendor from "./admin/vendor_management/VerifyVendor";
 import SetMenu from "./cooking/SetMenu";
@@ -27,20 +29,23 @@ function App() {
   return (
     <AuthContextProvider>
       <Routes>
+        {/*  ------------------------------- Admin Route ---------------------------  */}
         <Route path="/login" element={<Login />} />
+        <Route path="/admin" element={<Index />} />
         <Route path="/admin/menu" element={<Menu />} />
         <Route path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
+
+        {/*  ------------------------------- Cooking Route --------------------------  */}
         <Route path="/cooking/ingredients" element={<SetMenu />} />
         <Route path="/cooking/cookfood" element={<Cooking />} />
         {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
+
+        {/*  ------------------------------- P&I Route ------------------------------  */}
         <Route path="/pai/inventory" element={<Inventory />} />
-        <Route
-          path="/pai/inventory/purchases/:id"
-          element={<IngredientPurchase />}
-        />
+        <Route path="/pai/inventory/purchases/:id" element={<IngredientPurchase />} />
         <Route path="/pai/purchases" element={<Purchases />} />
         <Route path="/pai/purchases/new" element={<NewPurchase />} />
         <Route path="/pai/procurement/" element={<ConfirmIng />} />

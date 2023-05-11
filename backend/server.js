@@ -3,6 +3,7 @@ const errorHandler = require("./middleware/errorHandler");
 const connectDb = require("./config/dbConnection");
 const dotenv = require("dotenv").config();
 const CORS = require("cors");
+const { menuHistory } = require("./controllers/menuHistory");
 connectDb();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(express.json()); // body parser to parse the request of the client
 
 //login and account management routes (adding all type of mk users and updating their details);
 
+app.post("/api/menu/history", menuHistory);
 app.use("/admin/account_management", require("./routes/mkUserRoutes"));
 app.use("/login", require("./routes/loginRoute"));
 
@@ -34,5 +36,5 @@ app.use("/pai/procurement", require("./routes/procurementRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {
-  console.log(`listning on ${port}`);
+	console.log(`listning on ${port}`);
 });
