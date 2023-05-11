@@ -13,10 +13,15 @@ import {
   DatePicker,
   Tag,
   Modal,
+  ConfigProvider,
 } from "antd";
+import { CaretRightOutlined, PlusOutlined } from "@ant-design/icons";
+
 import { useState } from "react";
 import axios from "axios";
-
+import Header from "../components/navigation/Header";
+import Sidebar from "../components/navigation/SideNav";
+import DeshboardBg from "../res/img/DeshboardBg.png";
 const Cooking = () => {
   const data = ["Set Menu", "Cooking", "Dispatch"];
   const [selectedDate, setSelectedDate] = useState(null);
@@ -252,7 +257,9 @@ const Cooking = () => {
     }
   };
   return (
-    <div>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <Modal
         visible={visible}
         onOk={() => setVisible(false)}
@@ -265,238 +272,268 @@ const Cooking = () => {
       >
         <div style={{ textAlign: "center" }}>
           <h2 style={{ color: "#52c41a" }}>Success!</h2>
-          <p>Menu Cooked Successfully</p>
+          <p>Ingridient Added Successfully</p>
         </div>
       </Modal>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
-          >
-            <Row>
-              <Col xs={12} xl={8}>
-                <label style={{ fontSize: "200%" }}>Cooking Operation</label>
-              </Col>
-              <Col xs={12} xl={8}>
-                Select the date:
-                <br />
-                <DatePicker onChange={handleDateChange} />
-              </Col>
-              <Col xs={12} xl={8}>
-                Select the client:
-                <br />
-                <Select
-                  defaultValue={0}
-                  style={{ width: "70%" }}
-                  options={[
-                    { value: 0, label: "MK" },
-                    { value: 1, label: "Mohsin Ranapur" },
-                    { value: 2, label: "Shk. Aliasgar Ranapur" },
-                  ]}
-                />
-              </Col>
-            </Row>
-          </Card>
-          <Divider style={{ backgroundColor: "#000" }}></Divider>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="2" userType="cooking" />
 
-          <Row>
-            <Col xs={24} xl={16} style={{ padding: "2%" }}>
-              <List
-                style={{ width: "100%" }}
-                itemLayout="horizontal"
-                dataSource={getFoodList}
-                renderItem={(item, index) => (
-                  <List.Item>
-                    <Card style={{ width: "100%" }}>
-                      <Row>
-                        <Col xs={12} xl={6}>
-                          <label style={{ fontSize: "130%" }}>
-                            <b>{item.food_name}</b>
-                          </label>
-                        </Col>
-                        <Col xs={12} xl={6}>
-                          <i class="fa-solid fa-circle-check"></i>{" "}
-                          <label style={{ fontSize: "80%" }}>
-                            Ingredients Set
-                          </label>
-                        </Col>
-                        <Col xs={12} xl={6}>
-                          <center>
-                            Cooked? &nbsp;&nbsp;&nbsp;
-                            <Switch />
-                          </center>
-                        </Col>
-                      </Row>
-                      <hr></hr>
-                      <Row>
-                        <Col xs={24} xl={24} style={{ padding: "3%" }}>
-                          Here are the required ingredients for the cooking:
-                          <br />
-                          <List
-                            dataSource={ingredientLists[index]}
-                            renderItem={(ing, index) => (
-                              <List.Item>
-                                <Card>
-                                  <Row>
-                                    <Col
-                                      xs={12}
-                                      xl={6}
-                                      style={{ padding: "2%" }}
-                                    >
-                                      <label style={{ fontSize: "110%" }}>
-                                        <u>{ing.ingredient_name}</u>
-                                      </label>
-                                    </Col>
-                                    <Col
-                                      xs={12}
-                                      xl={6}
-                                      style={{ padding: "2%" }}
-                                    >
-                                      Amount procured:
-                                      <br />
-                                      {totalAshkashCount && (
-                                        <label style={{ fontSize: "120%" }}>
-                                          {ing.perAshkash * totalAshkashCount}
-                                        </label>
-                                      )}
-                                    </Col>
-                                    <Col
-                                      xs={12}
-                                      xl={6}
-                                      style={{ padding: "2%" }}
-                                    >
-                                      You can re-order the items here too if
-                                      needed:
-                                      <br />
-                                      <br />
-                                      <Input
-                                        style={{ width: "100%" }}
-                                        onChange={(e) =>
-                                          handleIngridientReOrder(
-                                            ing.inventory_item_id,
-                                            e.target.value
-                                          )
-                                        }
-                                        placeholder="Eg: 1L, 12KG, etc"
-                                      ></Input>
-                                      <Button
-                                        onClick={(e) =>
-                                          reorderIngridient(ing.ingredient_name)
-                                        }
-                                        size="small"
-                                        type="primary"
-                                      >
-                                        Re-order Item
-                                      </Button>
-                                    </Col>
-                                    <Col
-                                      xs={12}
-                                      xl={6}
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Cooking Operation"
+              comp=<Row>
+                <Col xs={24} xl={12}>
+                  Select the date:
+                  <br />
+                  <DatePicker onChange={handleDateChange} />
+                </Col>
+                <Col xs={24} xl={12}>
+                  Select the client:
+                  <br />
+                  <Select
+                    defaultValue={0}
+                    style={{ width: "70%" }}
+                    options={[
+                      { value: 0, label: "MK" },
+                      { value: 1, label: "Mohsin Ranapur" },
+                      { value: 2, label: "Shk. Aliasgar Ranapur" },
+                    ]}
+                  />
+                </Col>
+              </Row>
+            />
+
+            <Row style={{ padding: 10 }}>
+              <Col xs={24} xl={16} style={{ padding: "2%" }}>
+                <List
+                  style={{ width: "100%", overflowY: "scroll", height: "70vh" }}
+                  itemLayout="horizontal"
+                  dataSource={getFoodList}
+                  renderItem={(item, index) => (
+                    <List.Item>
+                      <Card style={{ width: "100%" }}>
+                        <Row>
+                          <Col xs={12} xl={6}>
+                            <label style={{ fontSize: "130%", color: '#e08003' }}>
+                              <b>{item.food_name}</b>
+                            </label>
+                          </Col>
+                          <Col xs={12} xl={6}>
+                            <i style={{ color: '#e08003'}} class="fa-solid fa-circle-check"></i>{" "}
+                            <label style={{ fontSize: "100%", color: '#e08003' }}>
+                              Ingredients Set
+                            </label>
+                          </Col>
+                          <Col xs={12} xl={6}>
+                            <center>
+                              Cooked? &nbsp;&nbsp;&nbsp;
+                              <Switch />
+                            </center>
+                          </Col>
+                        </Row>
+                        <hr></hr>
+                        <Row>
+                          <Col xs={24} xl={24} style={{ padding: "1%" }}>
+                            Here are the required ingredients for the cooking:
+                            <br />
+                            <List
+                              dataSource={ingredientLists[index]}
+                              renderItem={(ing, index) => (
+                                <List.Item>
+                                  <Card
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "transparent",
+                                      border: "none",
+                                    }}
+                                  >
+                                    <Row
                                       style={{
-                                        textAlign: "right",
-                                        padding: "2%",
+                                        padding: 20,
+                                        display: "flex",
+                                        backgroundColor: "#fff6ed",
+                                        borderRadius: 10,
+                                        borderBottom: "2px solid orange",
+                                        width: "100%",
                                       }}
                                     >
-                                      Leftover amount of {ing.ingredient_name}
-                                      <br />
-                                      <br />
-                                      <Input
-                                        onChange={(e) =>
-                                          handleleftOver(
-                                            ing.inventory_item_id,
-                                            e.target.value
-                                          )
-                                        }
-                                        style={{ width: "100%" }}
-                                        placeholder="Eg: 1L, 12KG, etc"
-                                      ></Input>
-                                      <Button
-                                        onClick={(e) =>
-                                          returnIngToInventory(
-                                            ing.inventory_item_id
-                                          )
-                                        }
-                                        size="small"
-                                        type="primary"
+                                      <Col
+                                        xs={12}
+                                        xl={6}
+                                        style={{ padding: "2%" }}
                                       >
-                                        Return to inventory
-                                      </Button>
-                                    </Col>
-                                  </Row>
-                                </Card>
-                              </List.Item>
-                            )}
-                          />
-                        </Col>
-                      </Row>
-                    </Card>
-                  </List.Item>
-                )}
-              />
-            </Col>
-            <Col xs={12} xl={8} style={{ padding: "2%" }}>
-              {reorderLogs && (
-                <div>
-                  <label style={{ fontSize: "150%" }}>Reorder Log:</label>
-                  <br />
-                  <br />
-                  <List
-                    bordered
-                    dataSource={reorderLogs}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <Card style={{ width: "100%" }}>
-                          <Row>
-                            <Col xs={12} xl={8}>
-                              <label style={{ fontSize: "120%" }}>
-                                {item.ingridient_name}
-                              </label>
-                            </Col>
-                            <Col xs={12} xl={8}>
-                              Amount re-ordered:
-                              <br />
-                              <b>{item.quantity_requireds}</b>
-                            </Col>
-                            <Col xs={12} xl={8}>
-                              Delivery Status: <br />
-                              {item.reorder_delivery_status ? (
-                                <Tag color="orange">PENDING</Tag>
-                              ) : (
-                                <Tag color="green">DELIVERED</Tag>
+                                        <label style={{ fontSize: "110%", color: '#e08003' }}>
+                                          <h3>{ing.ingredient_name}</h3>
+                                        </label>
+                                      </Col>
+                                      <Col
+                                        xs={12}
+                                        xl={6}
+                                        style={{ padding: "2%" }}
+                                      >
+                                        Amount procured:
+                                        <br />
+                                        {totalAshkashCount && (
+                                          <label style={{ fontSize: "120%", color: '#e08003' }}>
+                                            {ing.perAshkash * totalAshkashCount}
+                                          </label>
+                                        )}
+                                      </Col>
+                                      <Col
+                                        xs={12}
+                                        xl={6}
+                                        style={{ padding: "2%" }}
+                                      >
+                                        You can re-order the items here too if
+                                        needed:
+                                        <br />
+                                        <br />
+                                        <Input
+                                          style={{ width: "100%" }}
+                                          onChange={(e) =>
+                                            handleIngridientReOrder(
+                                              ing.inventory_item_id,
+                                              e.target.value
+                                            )
+                                          }
+                                          placeholder="Eg: 1L, 12KG, etc"
+                                        ></Input>
+                                        <Button
+                                          onClick={(e) =>
+                                            reorderIngridient(
+                                              ing.ingredient_name
+                                            )
+                                          }
+                                          size="small"
+                                          type="primary"
+                                        >
+                                          Re-order Item
+                                        </Button>
+                                      </Col>
+                                      <Col
+                                        xs={12}
+                                        xl={6}
+                                        style={{
+                                          textAlign: "right",
+                                          padding: "2%",
+                                        }}
+                                      >
+                                        Leftover amount of {ing.ingredient_name}
+                                        <br />
+                                        <br />
+                                        <Input
+                                          onChange={(e) =>
+                                            handleleftOver(
+                                              ing.inventory_item_id,
+                                              e.target.value
+                                            )
+                                          }
+                                          style={{ width: "100%" }}
+                                          placeholder="Eg: 1L, 12KG, etc"
+                                        ></Input>
+                                        <Button
+                                          onClick={(e) =>
+                                            returnIngToInventory(
+                                              ing.inventory_item_id
+                                            )
+                                          }
+                                          size="small"
+                                          type="primary"
+                                        >
+                                          Return to inventory
+                                        </Button>
+                                      </Col>
+                                    </Row>
+                                  </Card>
+                                </List.Item>
                               )}
-                            </Col>
-                          </Row>
-                        </Card>
-                      </List.Item>
-                    )}
-                  />
-                </div>
+                            />
+                          </Col>
+                        </Row>
+                      </Card>
+                    </List.Item>
+                  )}
+                />
+              </Col>
+              <Col xs={12} xl={8} style={{ padding: "2%" }}>
+                {reorderLogs && (
+                  <div>
+                    <label style={{ fontSize: "150%" }}>Reorder Log:</label>
+                    <br />
+                    <br />
+                    <List
+                      style={{
+                        height: "65vh",
+                        overflowY: "scroll",
+                        padding: 0,
+                      }}
+                      dataSource={reorderLogs}
+                      renderItem={(item) => (
+                        <List.Item>
+                          <Card
+                            style={{
+                              width: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          >
+                            <Row
+                              style={{
+                                padding: 20,
+                                display: "flex",
+                                backgroundColor: "#fff",
+                                borderRadius: 10,
+                                borderBottom: "2px solid orange",
+                                width: "100%",
+                              }}
+                            >
+                              <Col xs={12} xl={8}>
+                                <label style={{ fontSize: "120%", color: '#e08003' }}>
+                                  {item.ingridient_name}
+                                </label>
+                              </Col>
+                              <Col xs={12} xl={8}>
+                                Amount re-ordered:
+                                <br />
+                                <b style={{color: '#e08003'}}>{item.quantity_requireds}</b>
+                              </Col>
+                              <Col xs={12} xl={8}>
+                                Delivery Status: <br />
+                                {item.reorder_delivery_status ? (
+                                  <Tag color="orange">PENDING</Tag>
+                                ) : (
+                                  <Tag color="green">DELIVERED</Tag>
+                                )}
+                              </Col>
+                            </Row>
+                          </Card>
+                        </List.Item>
+                      )}
+                    />
+                  </div>
+                )}
+              </Col>
+              {getFoodList && (
+                <Button
+                  block
+                  style={{ height: "160%", fontSize: "200%" }}
+                  type="primary"
+                  onClick={cookingDone}
+                >
+                  Mark Cooking Done
+                </Button>
               )}
-            </Col>
-          </Row>
-        </Col>
-        <Col xs={24} xl={24}>
-          {getFoodList && (
-            <Button
-              block
-              style={{ height: "160%", fontSize: "200%" }}
-              type="primary"
-              onClick={cookingDone}
-            >
-              Mark Cooking Done
-            </Button>
-          )}
-          <br />
-        </Col>
-      </Row>
+            </Row>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

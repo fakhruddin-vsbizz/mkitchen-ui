@@ -1,6 +1,9 @@
-import { DatePicker } from "antd";
+import { ConfigProvider, DatePicker, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
 import { Card, List, Row, Col } from "antd";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import SideNav from "../../components/navigation/SideNav";
+import Header from "../../components/navigation/Header";
 
 const ProcedureLogs = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -201,149 +204,181 @@ const ProcedureLogs = () => {
   };
 
   return (
-    <div>
-      <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
-        <Row>
-          <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-            Process Log
-          </Col>
-          <Col xs={12} xl={12} style={{ textAlign: "right" }}>
-            Select date for showing history: &nbsp;&nbsp;&nbsp;
-            <DatePicker onChange={handleDateChange} />
-          </Col>
-        </Row>
-      </Card>
-
-      <br />
-      <br />
-      <br />
-      <Card style={{ width: "85%", marginLeft: "4%" }}>
-        <label style={{ fontSize: "150%" }}>
-          <u>Menu Decision & Delivery</u>
-        </label>
-        <br />
-        <br />
-        {console.log(reviewData)}
-        {reviewData && (
-          <List
-            bordered
-            dataSource={reviewData}
-            renderItem={(item) => (
-              <List.Item>
-                <Card style={{ width: "100%" }}>
-                  <Row>
-                    <Col xs={12} xl={6}>
-                      <label style={{ fontSize: "120%" }}>
-                        <b>{item.username}</b>
-                      </label>
-                    </Col>
-                    {/* <Col xs={12} xl={6}>
-                    Total Daigs:
-                    <br />
-                    <b>{item.total_daig_count}</b>
-                  </Col>
-                  <Col xs={12} xl={6}>
-                    Daigs weight (total):
-                    <br />
-                    <b>{item.total_weight}</b>
-                  </Col> */}
-                    <Col xs={12} xl={6}>
-                      {item.review ? (
-                        <div>
-                          <i class="fa-solid fa-circle-check"></i> Delivered
-                        </div>
-                      ) : (
-                        <div>
-                          <i class="fa-regular fa-clock"></i> Pending
-                        </div>
-                      )}
-                      <hr></hr>
-                      <i class="fa-solid fa-star"></i> &nbsp;&nbsp;&nbsp;{" "}
-                      {item.review}/5
-                      <hr></hr>
-                    </Col>
-                  </Row>
-                </Card>
-              </List.Item>
-            )}
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
+      <div style={{ display: "flex" }}>
+        <SideNav k='2' userType='admin' />
+        <div style={{ width: "100%" }}>
+          <Header
+            title="Process Log"
+            comp=<Row >
+              <Col style={{marginRight: 10, fontSize: 18}}>Select date for showing history: </Col>
+              <Col><DatePicker onChange={handleDateChange} /></Col>
+            </Row>
           />
-        )}
-      </Card>
+          <div style={{ padding: "1%" }}>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: "orange",
+                  colorDanger: "",
+                },
+              }}
+            >
+              <Tabs centered style={{ color: "#E86800",  border: 'none' }}>
+                <Tabs.TabPane style={{border: 'none'}} tab="Mohalla Accounts" key="1">
+                  <Card style={{ width: "90%", marginLeft: "4%" , backgroundColor: 'transparent', border: 'none'}}>
+                    <h2 style={{ color: "#e08003" }}>
+                      Menu Decision & Delivery
+                    </h2>
 
-      <br />
-      <Card style={{ width: "85%", marginLeft: "4%" }}>
-        <label style={{ fontSize: "150%" }}>
-          <u>Ingredients for the menu</u>
-        </label>
-        <br />
-        <br />
-        <br />
-        {console.log(ingridientList)}
-        {ingridientList && (
-          <List
-            bordered
-            dataSource={ingridientList}
-            renderItem={(item) => (
-              <List.Item>
-                <Card style={{ width: "100%" }}>
-                  <Row>
-                    <Col xs={12} xl={6}>
-                      <center>
-                        <label style={{ fontSize: "120%" }}>
-                          {item.ingredient_name}
-                        </label>
-                      </center>
-                    </Col>
-                    <Col xs={12} xl={6}>
-                      <center>
-                        Required Amount:
-                        <br />
-                        <b>
-                          {item.required_amount} {item.unit}
-                        </b>
-                      </center>
-                    </Col>
-                    <Col xs={12} xl={6}>
-                      <center>
-                        Leftover amount:
-                        <br />
-                        <b>
-                          {item.left_item} {item.unit}
-                        </b>
-                      </center>
-                    </Col>
-                    <Col xs={12} xl={6}>
-                      <center>
-                        <label style={{ fontSize: "120%" }}>
-                          Rs. {item.per_unit_price * item.required_amount}/-
-                        </label>
-                      </center>
-                    </Col>
-                  </Row>
-                </Card>
-              </List.Item>
-            )}
-          />
-        )}
-        <Card style={{ width: "100%" }}>
-          <Row>
-            <Col xs={12} xl={6}>
-              <center>
-                <label style={{ fontSize: "150%" }}>
-                  <b>Total</b>
-                </label>
-              </center>
-            </Col>
-            <Col xs={12} xl={6}></Col>
-            <Col xs={12} xl={6}></Col>
-            <Col xs={12} xl={6}>
-              <center>
-                <b style={{ fontSize: "150%" }}>Rs. 60000/-</b>
-              </center>
-            </Col>
-          </Row>
-        </Card>
-      </Card>
+                    {console.log(reviewData)}
+                    {reviewData && (
+                      <List
+                      style={{ width: "100%" }}
+                        dataSource={reviewData}
+                        renderItem={(item) => (
+                          <List.Item  >
+                            <Card style={{ width: "100%", backgroundColor: 'transparent', color: '#e08003' }}>
+                              <Row style={{
+                                  padding: 20,
+                                  display: "flex",
+                                  backgroundColor: "#fff",
+                                  borderRadius: 10,
+                                  borderBottom: "2px solid orange",
+                                  width: "100%",
+                                }}   >
+                                <Col xs={12} xl={12} >
+                                  <label style={{ fontSize: "120%" }}>
+                                    <span>{item.username}</span>
+                                  </label>
+                                </Col>
+   
+                                <Col xs={6} xl={6}>
+                                  {item.review ? (
+                                    <div>
+                                      <i class="fa-solid fa-circle-check"></i>{" "}
+                                      Delivered
+                                    </div>
+                                  ) : (
+                                    <div>
+                                      <i class="fa-regular fa-clock"></i>{" "}
+                                      Pending
+                                    </div>
+                                  )}
+                                 
+                                </Col>
+                                <Col xs={6} xl={6}>
+                                  
+                                  <i class="fa-solid fa-star"></i>{" "}
+                                  &nbsp;&nbsp;&nbsp; {item.review}/5
+                                </Col>
+                              </Row>
+                            </Card>
+                          </List.Item>
+                        )}
+                      />
+                    )}
+                  </Card>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Mohalla Accounts" key="2">
+                  <Card style={{ width: "85%", marginLeft: "4%",  }}>
+                    <h2 style={{ color: "#e08003" }}>
+                      Ingredients for the menu
+                    </h2>
+
+                    {console.log(ingridientList)}
+                    {ingridientList && (
+                      <List
+                        dataSource={ingridientList}
+                        renderItem={(item) => (
+                          <List.Item style={{border: 'none'}}>
+                            <Card style={{ width: "100%", border: 'none' }}>
+                              <Row style={{
+                                  padding: 20,
+                                  display: "flex",
+                                  backgroundColor: "#fff",
+                                  borderRadius: 10,
+                                  borderBottom: "2px solid orange",
+                                  width: "100%",
+                                  color: '#e08003'
+                                }}>
+                                <Col xs={12} xl={6}>
+                                  <center>
+                                    <label style={{ fontSize: "120%" }}>
+                                      {item.ingredient_name}
+                                    </label>
+                                  </center>
+                                </Col>
+                                <Col xs={12} xl={6}>
+                                  <center>
+                                    Required Amount:
+                                    <br />
+                                    <b>
+                                      {item.required_amount} {item.unit}
+                                    </b>
+                                  </center>
+                                </Col>
+                                <Col xs={12} xl={6}>
+                                  <center>
+                                    Leftover amount:
+                                    <br />
+                                    <b>
+                                      {item.left_item} {item.unit}
+                                    </b>
+                                  </center>
+                                </Col>
+                                <Col xs={12} xl={6}>
+                                  <center>
+                                    <label style={{ fontSize: "120%" }}>
+                                      Rs.{" "}
+                                      {item.per_unit_price *
+                                        item.required_amount}
+                                      /-
+                                    </label>
+                                  </center>
+                                </Col>
+                              </Row>
+                            </Card>
+                          </List.Item>
+                        )}
+                      />
+                    )}
+                    <Card style={{ width: "100%", border: 'none' }}>
+                      <Row
+                      style={{
+                        padding: 20,
+                        display: "flex",
+                        backgroundColor: "#fff",
+                        borderRadius: 10,
+                        border: "2px solid orange",
+                        width: "100%",
+                        color: 'orange'
+                      }}>
+                        <Col xs={12} xl={6}>
+                          <center>
+                            <label style={{ fontSize: "150%" }}>
+                              <b>Total</b>
+                            </label>
+                          </center>
+                        </Col>
+                        <Col xs={12} xl={6}></Col>
+                        <Col xs={12} xl={6}></Col>
+                        <Col xs={12} xl={6}>
+                          <center>
+                            <b style={{ fontSize: "150%" }}>Rs. 60000/-</b>
+                          </center>
+                        </Col>
+                      </Row>
+                    </Card>
+                  </Card>
+                </Tabs.TabPane>
+              </Tabs>
+            </ConfigProvider>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

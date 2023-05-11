@@ -1,8 +1,8 @@
 const express = require("express");
 const {
-  addOperationPipeline,
-  getOperationPipeline,
-  updateOperationPipeline,
+	addOperationPipeline,
+	getOperationPipeline,
+	updateOperationPipeline,
 } = require("../controllers/operationPipeLineController");
 
 const router = express.Router();

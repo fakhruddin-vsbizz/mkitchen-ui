@@ -44,3 +44,30 @@
 .dongle-font-class {
   font-family: 'Dongle';
 }
+
+.ant-layout-sider-trigger{
+  background: '#E86800' !important
+}
+
+.header{
+  /* margin: "1%", */
+  padding: "0.3%";
+  padding-left: "3%";
+  /*  borderBottom: "5px solid #E86800",
+  borderRadius: 5, */
+  color: "white";
+  background-color: "orange";
+}
+
+
+.whiteBtn {
+  background-color: 'white';
+  color: 'orange';
+  font-weight: 600
+}
+
+.orangeBtn {
+  background-color: 'orange';
+  color: 'white';
+  font-weight: 600
+}

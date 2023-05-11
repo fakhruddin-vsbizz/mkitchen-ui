@@ -12,12 +12,23 @@ import {
   AutoComplete,
   Modal,
   Input,
+  ConfigProvider,
+  theme,
 } from "antd";
+import Sidebar from "../../components/navigation/SideNav.js";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
 
+import styles from "../admin.module.css";
+import Header from "../../components/navigation/Header.js";
+const { useToken } = theme;
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
 
-  const [dateValue, setDateValue] = useState();
+  const [dateValue, setDateValue] = useState(
+    `${
+      new Date().getMonth() + 1
+    }/${new Date().getDate()}/${new Date().getFullYear()}`
+  );
 
   const [dataAdded, setDataAdded] = useState(false);
 
@@ -46,17 +57,19 @@ const Menu = () => {
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
 
-  useEffect(() => {
-    const getIngridients = async () => {
-      const data = await fetch("http://localhost:5001/cooking/ingredients");
+  const getIngridients = async () => {
+    const data = await fetch("http://localhost:5001/cooking/ingredients");
 
-      if (data) {
-        const res = await data.json();
-        if (res) {
-          setIngridientList(res);
-        }
+    if (data) {
+      console.log(data, "Data");
+      const res = await data.json();
+      if (res) {
+        setIngridientList(res);
       }
-    };
+    }
+  };
+
+  useEffect(() => {
     getIngridients();
   }, []);
 
@@ -312,8 +325,12 @@ const Menu = () => {
     setUpdate(true);
   };
 
+  const { token } = useToken();
+
   return (
-    <div>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <Modal
         visible={visible}
         onOk={() => setVisible(false)}
@@ -329,64 +346,91 @@ const Menu = () => {
           <p>Menu Created Successfully</p>
         </div>
       </Modal>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
+      {/* <Row>
+        <Col xs={0} xl={4} style={{ padding: "1%" }}> */}
+      {/* <List
             bordered
             dataSource={data}
             renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "1%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
-          >
-            <Row>
-              <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-                Set Day's Menu
-              </Col>
-              <Col xs={12} xl={12} style={{ textAlign: "right" }}></Col>
-            </Row>
-          </Card>
+          /> */}
+      {/* </Col> */}
+      <div style={{ display: "flex" }}>
+        <Sidebar k='1' userType='admin' />
+
+        <div>
+          <Header title="Set Today's Menu" />
           <Row>
             <Col xs={12} xl={12} style={{ padding: "3%" }}>
               {/* <label style={{ fontSize: "200%" }} className="dongle-font-class">
                 Menu Setting
               </label>
               <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-              <Calendar
-                mode="month"
-                onSelect={onSelectDate}
-                fullscreen={false}
-              />
+
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: "orange",
+                  },
+                }}
+              >
+                <Calendar
+                  style={{
+                    border: "1px solid lightgray",
+                    backgroundColor: "orange",
+                  }}
+                  mode="month"
+                  onSelect={onSelectDate}
+                  fullscreen={false}
+                />
+              </ConfigProvider>
             </Col>
-            <Col xs={12} xl={12} style={{ padding: "3%" }}>
+            <Col xs={12} xl={12} style={{ padding: "2%" }}>
               <Card
                 bordered={true}
-                style={{ width: "100%", border: "2px solid #FF3003" }}
+                className="w-full"
+                style={{ border: "1px solid lightgray" }}
               >
-                <Row>
+                <Row
+                  style={{
+                    backgroundColor: "orange",
+                    padding: "2%",
+                    color: "white",
+                    borderRadius: 5,
+                  }}
+                >
                   <Col xs={24} xl={12}>
-                    <label style={{ fontSize: "120%" }}>
-                      Item for 24th April, 2022
+                    <label style={{ fontSize: "120%", fontWeight: 600 }}>
+                      Item for {dateValue}
                     </label>
                   </Col>
-                  <Col xs={24} xl={12}>
-                    <Button type="primary" size="small">
+                  {/* <Col xs={24} xl={12}>
+                    <Button
+                      style={{
+                        marginLeft: "60%",
+                        backgroundColor: "white",
+                        color: "orange",
+                        fontWeight: 600,
+                      }}
+                    >
                       Add Menu
                     </Button>
-                  </Col>
+                  </Col> */}
                 </Row>
 
-                <Divider style={{ backgroundColor: "#000" }}></Divider>
-                <Row>
-                  <Col xs={12} xl={12}>
-                    Search menu by name: <br />
+                {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
+                <div
+                  style={{ marginTop: 10, marginBottom: 20, display: "flex" }}
+                >
+                  <div style={{ width: "80%" }}>
+                    <h3>Search menu by name:</h3>
                     {AddedFoodItems && (
                       <AutoComplete
                         id="food-item-selected"
-                        style={{ width: "100%" }}
+                        style={{
+                          width: "100%",
+                          border: "2px solid orange",
+                          borderRadius: 8,
+                        }}
                         value={selectedFood}
                         options={AddedFoodItems.map((item) => ({
                           value: item.name,
@@ -400,82 +444,153 @@ const Menu = () => {
                         }
                       />
                     )}
-                  </Col>
-                  <Col xs={12} xl={12}>
-                    <center>
-                      <Button
-                        type="secondary"
-                        size="small"
-                        onClick={addFoodItem}
-                      >
-                        <i class="fa-solid fa-circle-plus"></i>
-                      </Button>
-                    </center>
-                  </Col>
-                </Row>
-
-                <br />
-                <br />
+                  </div>
+                  <div
+                    style={{
+                      width: "20%",
+                      display: "flex",
+                      alignContent: "center",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      style={{
+                        backgroundColor: "orange",
+                        borderRadius: 50,
+                        color: "white",
+                        fontSize: 26,
+                        height: "auto",
+                      }}
+                      onClick={addFoodItem}
+                    >
+                      <i class="fa-solid fa-plus"></i>
+                    </Button>
+                  </div>
+                </div>
 
                 <List
-                  size="small"
-                  bordered
+                  // size="small"
+                  // bordered
                   dataSource={foodItems}
                   renderItem={(item) => (
-                    <List.Item>
-                      <Row style={{ width: "100%" }}>
-                        <Col xs={12} xl={12}>
-                          <label style={{ fontSize: "120%" }}>
-                            {item.food_name}
-                          </label>
-                          <br />
-                          {ingridientList &&
-                            ingridientList
-                              .filter((it) => it.name === item.food_name)
-                              .map((newItem, index) => (
-                                <div key={index}>
-                                  Ingredients:
-                                  {newItem.ingridient_list.map(
-                                    (ing, ingIndex) => (
-                                      <span key={ingIndex}>
-                                        {ing.ingredient_name},{" "}
-                                      </span>
-                                    )
-                                  )}
-                                </div>
-                              ))}
+                    <div
+                      style={{
+                        marginTop: 10,
+                        marginBottom: 20,
+                        padding: 10,
+                        display: "flex",
+                        backgroundColor: "rgb(255 246 237)",
+                        borderRadius: 10,
+                        borderBottom: "2px solid orange",
+                      }}
+                    >
+                      <div style={{ width: "80%" }}>
+                        <label style={{ fontSize: "120%" }}>
+                          {item.food_name}
+                        </label>
+                        <br />
+                        {ingridientList &&
+                          ingridientList
+                            .filter((it) => it.name === item.food_name)
+                            .map((newItem, index) => (
+                              <div key={index}>
+                                Ingredients:
+                                {newItem.ingridient_list.map(
+                                  (ing, ingIndex) => (
+                                    <span key={ingIndex}>
+                                      {ing.ingredient_name},{" "}
+                                    </span>
+                                  )
+                                )}
+                              </div>
+                            ))}
+                      </div>
+                      <div
+                        style={{
+                          width: "20%",
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Button
+                          style={{
+                            backgroundColor: "#E86800",
+                            borderRadius: 50,
+                            color: "white",
+                            fontSize: 14,
+                            height: "auto",
+                          }}
+                          onClick={() => deleteItem(item)}
+                        >
+                          <i class="fa-solid fa-trash"></i>
+                        </Button>
+                      </div>
+                    </div>
 
-                          {/* Ingredients: Bread, Honey, Sugar, Ghee. */}
-                        </Col>
-                        <Col xs={12} xl={12}>
-                          <center>
-                            <Button
-                              type="secondary"
-                              size="small"
-                              onClick={() => deleteItem(item)}
-                            >
-                              <i class="fa-solid fa-trash"></i>
-                            </Button>
-                          </center>
-                        </Col>
-                      </Row>
-                    </List.Item>
+                    // <List.Item>
+                    //   <Row style={{ width: "100%" ,border: '2px solid orange', borderRadius: 5, padding:10 }}>
+                    //     <Col xs={12} xl={12}>
+                    //       <label style={{ fontSize: "120%" }}>
+                    //         {item.food_name}
+                    //       </label>
+                    //       <br />
+                    //       {ingridientList &&
+                    //         ingridientList
+                    //           .filter((it) => it.name === item.food_name)
+                    //           .map((newItem, index) => (
+                    //             <div key={index}>
+                    //               Ingredients:
+                    //               {newItem.ingridient_list.map(
+                    //                 (ing, ingIndex) => (
+                    //                   <span key={ingIndex}>
+                    //                     {ing.ingredient_name},{" "}
+                    //                   </span>
+                    //                 )
+                    //               )}
+                    //             </div>
+                    //           ))}
+
+                    //       {/* Ingredients: Bread, Honey, Sugar, Ghee. */}
+                    //     </Col>
+                    //     <Col xs={12} xl={12}>
+                    //       <center>
+                    //         <Button
+                    //           type="secondary"
+                    //           size="small"
+                    //           onClick={() => deleteItem(item)}
+                    //         >
+                    //           <i class="fa-solid fa-trash"></i>
+                    //         </Button>
+                    //       </center>
+                    //     </Col>
+                    //   </Row>
+                    // </List.Item>
                   )}
                 />
                 {!isMenu && (
-                  <Button
-                    onClick={createMenu}
-                    type="primary"
-                    style={{ marginTop: "50px" }}
-                  >
-                    Set The Menu
-                  </Button>
+                  <center>
+                    <Button
+                      onClick={createMenu}
+                      style={{
+                        width: "40%",
+                        backgroundColor: "orange",
+                        color: "white",
+                        fontWeight: 600,
+                      }}
+                    >
+                      Set The Menu
+                    </Button>
+                  </center>
                 )}
               </Card>
             </Col>
           </Row>
-        </Col>
-      </Row>
+        </div>
+      </div>
+      {/* </Row> */}
       {/* <div
         style={{
           width: "500px",

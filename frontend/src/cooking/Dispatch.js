@@ -12,15 +12,21 @@ import {
   Tag,
   DatePicker,
   Modal,
+  ConfigProvider,
 } from "antd";
 import { useState } from "react";
-import { RightSquareFilled } from "@ant-design/icons";
+import { CaretRightOutlined, RightSquareFilled } from "@ant-design/icons";
+import Header from "../components/navigation/Header";
+import Sidebar from "../components/navigation/SideNav";
+import DeshboardBg from "../res/img/DeshboardBg.png";
 
 const Dispatch = () => {
   const data = ["Set Menu", "Cooking", "Dispatch"];
   const [visible, setVisible] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(`${
+    new Date().getMonth() + 1
+  }/${new Date().getDate()}/${new Date().getFullYear()}`);
   const [menuFoodId, setMenuFoodId] = useState();
   const [getMohallaUsers, setGetMohallaUsers] = useState();
   const [foodList, setFoodList] = useState();
@@ -28,6 +34,7 @@ const Dispatch = () => {
   const [totalWeight, setTotalWeight] = useState();
   const [foodId, setFoodId] = useState();
   const [update, setUpdate] = useState(false);
+  const [isSelected, setIsSelected] = useState(false)
 
   const [mohallaUserId, setMohallaUserId] = useState();
   const [viewDispatchedData, setViewDispatchedData] = useState();
@@ -40,7 +47,10 @@ const Dispatch = () => {
     const formattedDate = `${
       dateObj.getMonth() + 1
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+    
     setSelectedDate(formattedDate);
+
+    setIsSelected(false)
   };
 
   console.log(selectedDate);
@@ -240,7 +250,9 @@ const Dispatch = () => {
   console.log("mohalla id: ", mohallaUserId);
 
   return (
-    <div>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <Modal
         visible={visible}
         onOk={() => setVisible(false)}
@@ -253,174 +265,219 @@ const Dispatch = () => {
       >
         <div style={{ textAlign: "center" }}>
           <h2 style={{ color: "#52c41a" }}>Success!</h2>
-          <p>Data Dispatched Successfully</p>
+          <p>Ingridient Added Successfully</p>
         </div>
       </Modal>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="3" userType="cooking" />
 
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
-          >
-            <Row>
-              <Col xs={12} xl={8}>
-                <label style={{ fontSize: "200%" }}>Dispatch</label>
-              </Col>
-              <Col xs={12} xl={8}>
-                Select the date:
-                <br />
-                <DatePicker onChange={handleDateChange} />
-              </Col>
-              <Col xs={12} xl={8}>
-                Select the client:
-                <br />
-                <Select
-                  defaultValue={0}
-                  style={{ width: "80%" }}
-                  options={[
-                    { value: 0, label: "MK" },
-                    { value: 1, label: "Mohsin Ranapur" },
-                    { value: 2, label: "Shk. Aliasgar Ranapur" },
-                  ]}
-                />
-              </Col>
-            </Row>
-          </Card>
-          <Row>
-            <Col xs={24} xl={12}>
-              <Divider style={{ backgroundColor: "#000" }}></Divider>
-              {getMohallaUsers && (
-                <List
-                  style={{ width: "100&" }}
-                  itemLayout="horizontal"
-                  dataSource={getMohallaUsers}
-                  renderItem={(item, index) => (
-                    <List.Item>
-                      <Card style={{ width: "100%" }}>
-                        <Row>
-                          <Col xs={12} xl={12}>
-                            Food Name:
-                            <br />
-                            <label style={{ fontSize: "125%" }}>
-                              {item.name}
-                            </label>
-                          </Col>
-                          <Col xs={12} xl={12}>
-                            <Button
-                              type="ghost"
-                              style={{ marginLeft: "30%", fontSize: "200%" }}
-                              onClick={() => setMohallaDispatchData(item.mk_id)}
-                            >
-                              <i class="fa-solid fa-circle-chevron-right"></i>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </List.Item>
-                  )}
-                />
-              )}
-            </Col>
-            <Col xs={24} xl={12} style={{ padding: "3%" }}>
-              <Card>
-                <label
-                  style={{ fontSize: "200%" }}
-                  className="dongle-font-class"
-                >
-                  Select the items
-                </label>
-                <hr></hr>
-                {foodList && (
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Dispatch"
+              comp=<Row>
+                <Col xs={24} xl={12}>
+                  Select the date:
+                  <br />
+                  <DatePicker onChange={handleDateChange} />
+                </Col>
+                <Col xs={24} xl={12}>
+                  Select the client:
+                  <br />
+                  <Select
+                    defaultValue={0}
+                    style={{ width: "70%" }}
+                    options={[
+                      { value: 0, label: "MK" },
+                      { value: 1, label: "Mohsin Ranapur" },
+                      { value: 2, label: "Shk. Aliasgar Ranapur" },
+                    ]}
+                  />
+                </Col>
+              </Row>
+            />
+
+            <Row style={{ padding: 10 }}>
+              <Col xs={24} xl={12}>
+                {getMohallaUsers && (
                   <List
-                    size="small"
-                    bordered
-                    dataSource={foodList}
+                    style={{ width: "100&" }}
+                    itemLayout="horizontal"
+                    dataSource={getMohallaUsers}
                     renderItem={(item, index) => (
                       <List.Item>
-                        <Card title={item.food_name} bordered={false}>
-                          <Row>
-                            <Col xs={12} xl={12}>
-                              Number of Daigs: <br />
-                              <Input
-                                placeholder="Eg: 2, 3, 15, etc."
-                                onChange={(e) => setDaigs(e.target.value)}
-                                style={{ fontSize: "140%", width: "70%" }}
-                              ></Input>
+                        <Card
+                          style={{
+                            width: "100%",
+                            backgroundColor: "transparent",
+                            border: "none",
+                          }}
+                        >
+                          <Row
+                            style={{
+                              padding: 20,
+                              display: "flex",
+                              backgroundColor: "#fff",
+                              borderRadius: 10,
+                              borderBottom: "2px solid orange",
+                              width: "100%",
+                            }}
+                          >
+                            <Col xs={16} xl={16}>
+                              Food Name:
+                              <br />
+                              <label style={{ fontSize: "125%" }}>
+                                {item.name}
+                              </label>
                             </Col>
-                            <Col xs={12} xl={12}>
-                              Total Weight (units): <br />
-                              <Input
-                                placeholder="Eg: 2, 3, 15, etc."
-                                style={{ fontSize: "140%", width: "70%" }}
-                                onChange={(e) => setTotalWeight(e.target.value)}
-                              ></Input>
-                            </Col>
-                            <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                              <br />
-                              <br />
-                              {finaldipatchData &&
-                                finaldipatchData
-                                  .filter(
-                                    (batch) =>
-                                      batch.food_item_id === item.food_item_id
-                                  )
-                                  .map((item) => (
-                                    <div>
-                                      <Row>
-                                        <Col xs={24} xl={12}>
-                                          Number of Daigs: <br />
-                                          <label style={{ fontSize: "150%" }}>
-                                            {item.no_of_deigh}
-                                          </label>
-                                        </Col>
-                                        <Col xs={24} xl={12}>
-                                          Total Weight: <br />
-                                          <label style={{ fontSize: "150%" }}>
-                                            {item.total_weight}
-                                          </label>
-                                        </Col>
-                                      </Row>
-                                    </div>
-                                  ))}
-                              {finaldipatchData &&
-                              finaldipatchData.filter(
-                                (batch) =>
-                                  batch.food_item_id === item.food_item_id
-                              ).length <= 0 ? (
-                                <Button
-                                  type="primary"
-                                  onClick={(e) =>
-                                    dispatchData(
-                                      item.food_item_id,
-                                      item.food_name
-                                    )
-                                  }
-                                >
-                                  Dispatch Food
-                                </Button>
-                              ) : (
-                                <label>
-                                  <br />
-                                  <Tag color="green">DISPATCHED</Tag>
-                                </label>
-                              )}
-                            </Col>
-                            <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                              <br />
-                              <br />
-                              Confirm Delivery: <br />
-                              <Tag color="orange">Pending</Tag>
+                            <Col xs={8} xl={8}>
+                              <Button
+                                type="primary"
+                                id={"set_index_" + item.index}
+                                onClick={() =>
+                                  {setMohallaDispatchData(item.mk_id)
+                                  setIsSelected(true)}
+                                }
+                                shape="circle"
+                                icon={<CaretRightOutlined />}
+                                size="large"
+                              />
                             </Col>
                           </Row>
-                          {/* <Row>
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </Col>
+              <Col xs={24} xl={12}>
+              {isSelected ? (
+                <Card style={{backgroundColor: 'transparent'}} >
+                  {/* <label
+                    style={{ fontSize: "200%" }}
+                    className="dongle-font-class"
+                  >
+                    Select the items
+                  </label>
+        */}
+                    <List
+                      size="small"
+                      style={{
+                        width: "100%",
+                        padding: 5,
+                        height: "60vh",
+                        overflowY: "scroll",
+                        overflowX: "hidden",
+                        // backgroundColor: '#fff6ed'
+                      }}
+                      dataSource={foodList}
+                      renderItem={(item, index) => (
+                        <List.Item style={{
+                          margin: 5,
+                          padding: 0,
+                          display: "flex",
+                          backgroundColor: "#fff",
+                          borderRadius: 10,
+                          borderBottom: "2px solid orange",
+                          width: "98%",
+                        }}>
+                          <Card title={item.food_name} style={{
+                              width: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }} bordered={false}>
+                            <Row >
+                              {
+                                finaldipatchData &&
+                                finaldipatchData.filter(
+                                  (batch) =>
+                                    batch.food_item_id === item.food_item_id
+                                ).length <= 0 ? (<>
+                                <Col xs={12} xl={12}>
+                                Number of Daigs: <br />
+                                <Input
+                                  placeholder="Eg: 2, 3, 15, etc."
+                                  onChange={(e) => setDaigs(e.target.value)}
+                                  style={{ fontSize: "140%", width: "70%" }}
+                                ></Input>
+                              </Col>
+                              <Col xs={12} xl={12}>
+                                Total Weight (units): <br />
+                                <Input
+                                  placeholder="Eg: 2, 3, 15, etc."
+                                  style={{ fontSize: "140%", width: "70%" }}
+                                  onChange={(e) =>
+                                    setTotalWeight(e.target.value)
+                                  }
+                                ></Input>
+                              </Col>
+                                </>):null
+                              }
+                              
+                              <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                                <br />
+                                <br />
+                                {finaldipatchData &&
+                                  finaldipatchData
+                                    .filter(
+                                      (batch) =>
+                                        batch.food_item_id === item.food_item_id
+                                    )
+                                    .map((item) => (
+                                      <div>
+                                        <Row>
+                                          <Col xs={24} xl={12}>
+                                            Number of Daigs: <br />
+                                            <label style={{ fontSize: "150%" }}>
+                                              {item.no_of_deigh}
+                                            </label>
+                                          </Col>
+                                          <Col xs={24} xl={12}>
+                                            Total Weight: <br />
+                                            <label style={{ fontSize: "150%" }}>
+                                              {item.total_weight}
+                                            </label>
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                    ))}
+                                {finaldipatchData &&
+                                finaldipatchData.filter(
+                                  (batch) =>
+                                    batch.food_item_id === item.food_item_id
+                                ).length <= 0 ? (
+                                  <Button
+                                    type="primary"
+                                    onClick={(e) =>
+                                      dispatchData(
+                                        item.food_item_id,
+                                        item.food_name
+                                      )
+                                    }
+                                  >
+                                    Dispatch Food
+                                  </Button>
+                                ) : (
+                                  <label>
+                                    <br />
+                                    <Tag color="green">DISPATCHED</Tag>
+                                  </label>
+                                )}
+                              </Col>
+                              <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                                <br />
+                                <br />
+                                Confirm Delivery: <br />
+                                <Tag color="orange">Pending</Tag>
+                              </Col>
+                            </Row>
+                            {/* <Row>
                             <Col xs={12} xl={12}>
                               Number of Daigs:
                               <br />
@@ -487,16 +544,18 @@ const Dispatch = () => {
                               <Tag color="gold">PENDING</Tag>
                             </Col>
                           </Row> */}
-                        </Card>
-                      </List.Item>
-                    )}
-                  />
-                )}
-              </Card>
-            </Col>
-          </Row>
-        </Col>
-      </Row>
+                          </Card>
+                        </List.Item>
+                      )}
+                    />
+                 
+                </Card>
+                 ) : null}
+              </Col>
+            </Row>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

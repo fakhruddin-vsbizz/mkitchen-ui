@@ -15,8 +15,12 @@ import {
   Select,
   Space,
   Table,
+  ConfigProvider,
 } from "antd";
 import { InfoCircleOutlined } from "@ant-design/icons";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import SideNav from "../../components/navigation/SideNav";
+import Header from "../../components/navigation/Header";
 import { useState } from "react";
 
 const VerifyVendor = () => {
@@ -92,55 +96,56 @@ const VerifyVendor = () => {
   };
 
   return (
-    <div>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
+    <div style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}>
+      <div style={{ display: "flex" }}>
+        <SideNav k='4' userType='admin' />
+        <div style={{ width: "100%" }}>
+          <Header
+            title="Verify Vendors"
+            
           />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "2%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
+        <div  style={{ padding: "2%" }}>
+          
+          <Card style={{ width: "100%", backgroundColor: 'transparent' }}>
+          <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: "orange",
+                colorDanger: "",
+              },
+            }}
           >
-            <Row>
-              <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-                Verify Vendors
-              </Col>
-              <Col xs={12} xl={12}></Col>
-            </Row>
-          </Card>
-          <br />
-          <br />
-          <br />
-          <Card>
             {vendors && (
               <List
-                style={{ width: "100%" }}
-                bordered
+                
+                
                 dataSource={vendors}
                 renderItem={(item) => (
-                  <List.Item>
-                    <Row style={{ width: "100%", textAlign: "left" }}>
-                      <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
+                  <List.Item style={{ width: "100%", backgroundColor: 'transparent' }}>
+                    <Row style={{
+                                  padding: 10,
+                                  display: "flex",
+                                  backgroundColor: "#fff",
+                                  borderRadius: 10,
+                                  borderBottom: "2px solid orange",
+                                  width: "100%",
+                                }}>
+                      <Col xs={6} xl={6} style={{ fontSize: "150%", color: '#E08003' }}>
                         {item.vendor_name}
                       </Col>
-                      <Col xs={8} xl={6}>
+                      <Col xs={6} xl={6}>
                         Shop timings: <br />
                         {item.opening_time} to {item.closing_time}
                       </Col>
-                      {/* <Col xs={8} xl={6}>
+                      {/* <Col xs={6} xl={6}>
                         Created on: <br />
                         Rs. {Date(item.createdAt)}/-
                       </Col> */}
-                      <Col xs={8} xl={6}>
+                      <Col xs={6} xl={6}>
                         Address: <br />
                         {item.address}
                       </Col>
-                      <Col xs={8} xl={6}>
+                      <Col xs={6} xl={6}>
                         <Tag color={item.approval_status ? "green" : "orange"}>
                           {!item.approval_status ? "PENDING" : "VERIFIED"}
                         </Tag>
@@ -156,9 +161,11 @@ const VerifyVendor = () => {
                 )}
               />
             )}
+            </ConfigProvider>
           </Card>
-        </Col>
-      </Row>
+        </div>
+      </div>
+      </div>
     </div>
   );
 };

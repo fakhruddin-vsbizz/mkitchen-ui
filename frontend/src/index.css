@@ -31,3 +31,9 @@ code {
 ::-webkit-scrollbar-thumb:hover {
   background: grey; 
 }
+
+
+.ant-layout-sider-trigger{
+  background: '#E86800' !important
+}
+

@@ -11,20 +11,29 @@ import {
   Input,
   Modal,
   DatePicker,
+  ConfigProvider,
 } from "antd";
-import { RightSquareFilled } from "@ant-design/icons";
+import { CaretRightOutlined, PlusOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import Header from "../components/navigation/Header";
+import Sidebar from "../components/navigation/SideNav";
+import DeshboardBg from "../res/img/DeshboardBg.png";
 
 const SetMenu = () => {
   const [getFoodList, setGetFoodList] = useState();
   const [getMkUserId, setGetMkUserId] = useState();
   //date filter
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(
+    `${
+      new Date().getMonth() + 1
+    }/${new Date().getDate()}/${new Date().getFullYear()}`
+  );
 
   const [ingredientItems, setIngredientItems] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [inventoryItemId, setInventoryItemId] = useState([]);
   const [allIngridients, setAllIngridients] = useState([]);
+  const [isSelected, setIsSelected] = useState(false);
 
   const [menuFoodId, setMenuFoodId] = useState();
 
@@ -248,12 +257,15 @@ const SetMenu = () => {
       dateObj.getMonth() + 1
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
+    setIsSelected(false)
   };
 
   console.log(selectedDate);
 
   return (
-    <div>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <Modal
         visible={visible}
         onOk={() => setVisible(false)}
@@ -269,184 +281,238 @@ const SetMenu = () => {
           <p>Ingridient Added Successfully</p>
         </div>
       </Modal>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
-          >
-            <Row>
-              <Col xs={24} xl={12}>
-                <label style={{ fontSize: "200%" }}>Set Ingredients</label>
-                <br />
-                Total count: 8000 People
-              </Col>
-              <Col xs={24} xl={12}>
-                Select the date to view ingredients:
-                <br />
-                <DatePicker onChange={handleDateChange} />
-              </Col>
-            </Row>
-          </Card>
-          <Row>
-            <Col xs={24} xl={12}>
-              {/* <Button onClick={handleButtonClick}>Filter</Button> */}
-              <br />
-              {/* <p>
-                <label
-                  style={{ fontSize: "300%" }}
-                  className="dongle-font-class"
-                >
-                  Set Ingredients
-                </label>
-              </p>
-              <p>
-                <label
-                  style={{ fontSize: "150%" }}
-                  className="dongle-font-class"
-                >
-                  8000 Ashkhaas
-                </label>
-              </p> */}
-              Select Client: &nbsp;&nbsp;&nbsp;
-              <Select
-                defaultValue={0}
-                style={{ width: "80%" }}
-                options={[
-                  { value: 0, label: "MK" },
-                  { value: 1, label: "Mohsin Ranapur" },
-                  { value: 2, label: "Shk. Aliasgar Ranapur" },
-                ]}
-              />
-              <Divider style={{ backgroundColor: "#000" }}></Divider>
-              {getFoodList && (
-                <List
-                  style={{ width: "100&" }}
-                  itemLayout="horizontal"
-                  dataSource={getFoodList}
-                  renderItem={(item, index) => (
-                    <List.Item>
-                      <Card style={{ width: "100%" }}>
-                        <Row>
-                          <Col xs={12} xl={12}>
-                            Food Name:
-                            <br />
-                            <label style={{ fontSize: "125%" }}>
-                              {item.food_name}
-                            </label>
-                          </Col>
-                          <Col xs={12} xl={12}>
-                            <Button
-                              type="ghost"
-                              style={{ marginLeft: "30%", fontSize: "200%" }}
-                              id={"set_index_" + item.index}
-                              onClick={() =>
-                                setFoodReference(item.food_item_id)
-                              }
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="1" userType="cooking" />
+
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Set Ingredients"
+              comp=<Row>
+                <Col style={{ marginRight: 10, fontSize: 18 }}>
+                  Select date for showing history:{" "}
+                </Col>
+                <Col>
+                  <DatePicker onChange={handleDateChange} />
+                </Col>
+              </Row>
+            />
+            <div style={{ padding: 20 }}>
+              <Row>
+                <Col xs={24} xl={24} style={{padding: '0px 50px'}}>
+                  <h3 style={{ color: "#e08003" }}>Total count: 8000 People</h3>
+                  Select Client: &nbsp;&nbsp;&nbsp;
+                  <Select
+                    defaultValue={0}
+                    size="large"
+                    style={{ width: "100%" }}
+                    options={[
+                      { value: 0, label: "MK" },
+                      { value: 1, label: "Mohsin Ranapur" },
+                      { value: 2, label: "Shk. Aliasgar Ranapur" },
+                    ]}
+                  />
+                </Col>
+                <Col xs={24} xl={12} style={{ padding: "1%" }}>
+                  {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
+                  {getFoodList && (
+                    <List
+                      style={{ width: "100&" }}
+                      itemLayout="horizontal"
+                      dataSource={getFoodList}
+                      renderItem={(item, index) => (
+                        <List.Item>
+                          <Card
+                            style={{
+                              width: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          >
+                            <Row
+                              style={{
+                                padding: 20,
+                                display: "flex",
+                                backgroundColor: "#fff",
+                                borderRadius: 10,
+                                borderBottom: "2px solid orange",
+                                width: "100%",
+                              }}
                             >
-                              <i class="fa-solid fa-circle-chevron-right"></i>
-                            </Button>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </List.Item>
+                              <Col xs={16} xl={16}>
+                                Food Name:
+                                <br />
+                                <label style={{ fontSize: "125%" }}>
+                                  {item.food_name}
+                                </label>
+                              </Col>
+                              <Col xs={8} xl={8}>
+                                <Button
+                                  type="primary"
+                                  id={"set_index_" + item.index}
+                                  onClick={() =>
+                                    {setFoodReference(item.food_item_id)
+                                    setIsSelected(true)}
+                                  }
+                                  shape="circle"
+                                  icon={<CaretRightOutlined />}
+                                  size="large"
+                                />
+                              </Col>
+                            </Row>
+                          </Card>
+                        </List.Item>
+                      )}
+                    />
                   )}
-                />
-              )}
-            </Col>
-            <Col xs={24} xl={12} style={{ padding: "3%" }}>
-              <Card>
-                <label
-                  style={{ fontSize: "200%" }}
-                  className="dongle-font-class"
-                >
-                  Select the items
-                </label>
-                <hr></hr>
-                Select the ingredients to add:
-                <Row>
-                  {inventoryItems && (
-                    <Col xs={18} xl={18}>
-                      <AutoComplete
-                        id="ingredient-item-selected"
-                        style={{ width: "100%" }}
-                        options={inventoryItems.map((item) => ({
-                          value: item.ingridient_name,
-                          id: item._id,
-                        }))}
-                        onSelect={handleSelect}
-                        placeholder="Eg: Roti, Chawal, Daal, etc"
-                        filterOption={(inputValue, option) =>
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                      />
-                    </Col>
-                  )}
-                  <Col xs={6} xl={6}>
-                    <Button
-                      type="secondary"
-                      size="small"
-                      onClick={addIngredients}
+                </Col>
+                <Col xs={24} xl={12} style={{ padding: "1% 3%" }}>
+                  <Card
+                    style={{
+                      width: "100%",
+                      backgroundColor: "white",
+                      border: "none",
+                    }}
+                  >
+                    <label
+                      style={{ fontSize: "200%", color: "#e08003" }}
+                      className="dongle-font-class"
                     >
-                      <i class="fa-solid fa-circle-plus"></i>
+                      Select the items
+                    </label>
+                    <hr></hr> 
+                    <span style={{fontSize: 16, color: '#e08003'}}>Select the ingredients to add:</span>
+                    <Row
+                      style={{
+                        padding: 5,
+                        display: "flex",
+                        width: "100%",
+                      }}
+                    >
+                      {inventoryItems && (
+                        <Col xs={18} xl={18}>
+                          <AutoComplete
+                            id="ingredient-item-selected"
+                            style={{ width: "100%" }}
+                            options={inventoryItems.map((item) => ({
+                              value: item.ingridient_name,
+                              id: item._id,
+                            }))}
+                            onSelect={handleSelect}
+                            placeholder="Eg: Roti, Chawal, Daal, etc"
+                            filterOption={(inputValue, option) =>
+                              option.value
+                                .toUpperCase()
+                                .indexOf(inputValue.toUpperCase()) !== -1
+                            }
+                          />
+                        </Col>
+                      )}
+                      <Col xs={6} xl={6}>
+                        <Button
+                          type="primary"
+                          onClick={addIngredients}
+                          shape="circle"
+                          icon={<PlusOutlined />}
+                          style={{ margin: "0px 10px" }}
+                          // size="large"
+                        />
+                      </Col>
+                    </Row>
+                    <List
+                      size="small"
+                      style={{
+                        width: "100%",
+                        padding: 5,
+                        height: "30vh",
+                        overflowY: "scroll",
+                        overflowX: "hidden",
+                        backgroundColor: "#fff6ed",
+                      }}
+                      bordered
+                      dataSource={ingredientItems}
+                      renderItem={(item, index) => (
+                        <List.Item
+                          style={{
+                            margin: 5,
+                            padding: 0,
+                            display: "flex",
+                            backgroundColor: "#fff",
+                            borderRadius: 10,
+                            borderBottom: "2px solid orange",
+                            width: "98%",
+                          }}
+                        >
+                          <Card
+                            style={{
+                              width: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                            title={item.ingredient_name}
+                            bordered={false}
+                          >
+                            <Row>
+                              <Col xs={12} xl={12}>
+                                Per Ashkhaas count
+                              </Col>
+                              <Col xs={12} xl={12}>
+                                <Input
+                                  type="number"
+                                  defaultValue={
+                                    ingredientItems && item.perAshkash
+                                  }
+                                  onChange={(e) =>
+                                    handlePerAshkashChange(
+                                      e.target.value,
+                                      item.ingredient_name
+                                    )
+                                  }
+                                  placeholder="Eg: 1200,200,etc.."
+                                ></Input>
+                              </Col>
+                            </Row>
+                          </Card>
+                        </List.Item>
+                      )}
+                    />
+                    <Button
+                      block
+                      type="primary"
+                      style={{ marginTop: 10 }}
+                      onClick={logIngredientForFood}
+                    >
+                      Confirm Menu
                     </Button>
-                  </Col>
-                </Row>
-                <Divider></Divider>
-                <List
-                  size="small"
-                  bordered
-                  dataSource={ingredientItems}
-                  renderItem={(item, index) => (
-                    <List.Item>
-                      <Card title={item.ingredient_name} bordered={false}>
-                        <Row>
-                          <Col xs={12} xl={12}>
-                            Per Ashkhaas count
-                          </Col>
-                          <Col xs={12} xl={12}>
-                            <Input
-                              type="number"
-                              defaultValue={ingredientItems && item.perAshkash}
-                              onChange={(e) =>
-                                handlePerAshkashChange(
-                                  e.target.value,
-                                  item.ingredient_name
-                                )
-                              }
-                              placeholder="Eg: 1200,200,etc.."
-                            ></Input>
-                          </Col>
-                        </Row>
-                      </Card>
-                    </List.Item>
-                  )}
-                />
-              </Card>
-              <Button block type="primary" onClick={logIngredientForFood}>
-                Confirm Menu
+                  </Card>
+                 
+                </Col>
+              </Row>
+            </div>
+            <center>
+              <Button
+                block
+                style={{
+                  width: "90%",
+                  height: 80,
+                  fontSize: 18,
+                  backgroundColor: "#e08003",
+                }}
+                type="primary"
+                onClick={updateOperationPipeliinIngridient}
+              >
+                Push to inventory
               </Button>
-            </Col>
-          </Row>
-        </Col>
-        <Button
-          block
-          style={{ width: "500px", marginLeft: "300px" }}
-          type="primary"
-          onClick={updateOperationPipeliinIngridient}
-        >
-          Push to inventory
-        </Button>
-      </Row>
+            </center>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };
