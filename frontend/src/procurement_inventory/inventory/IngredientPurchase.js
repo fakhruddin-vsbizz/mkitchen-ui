@@ -12,8 +12,12 @@ import {
   Select,
   Slider,
   InputNumber,
+  ConfigProvider,
 } from "antd";
 import { useParams } from "react-router-dom";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
 
 const IngredientPurchase = () => {
   const [itemPurchase, setItemPurchase] = useState();
@@ -101,20 +105,22 @@ const IngredientPurchase = () => {
   };
 
   return (
-    <div>
-      <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
-        <Row>
-          <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-            <i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Ingredient
-            Purchase : Goat Meat
-          </Col>
-        </Row>
-      </Card>
+    <div style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}>
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+      <div style={{ display: "flex" }}>
+          <Sidebar k="1" userType="pai" />
 
-      <br />
-      <br />
+          <div style={{ width: "100%" }}>
+            <Header title="Purchase Inventory" />
+            <div style={{ padding: 0 }}>
       <center>
-        <Card style={{ width: "85%", textAlign: "left" }}>
+        <Card style={{ width: "95%", textAlign: "left", backgroundColor: 'transparent' }}>
           <Row style={{ width: "100%" }}>
             <Col xs={12} xl={6}>
               Filter by vendor name: <br />
@@ -165,8 +171,7 @@ const IngredientPurchase = () => {
         </Card>
         {itemPurchase && (
           <List
-            style={{ width: "85%" }}
-            bordered
+            style={{ width: "90%" }}
             dataSource={itemPurchase}
             renderItem={(item) => (
               <List.Item>
@@ -200,6 +205,10 @@ const IngredientPurchase = () => {
           />
         )}
       </center>
+      </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

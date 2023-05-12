@@ -10,8 +10,12 @@ import {
   Modal,
   Radio,
   Tag,
+  ConfigProvider,
 } from "antd";
 import { Link } from "react-router-dom";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
 
 const Inventory = () => {
   const data = [
@@ -80,147 +84,200 @@ const Inventory = () => {
   };
 
   return (
-    <div>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Card
-            style={{ padding: "1%", border: "1px solid grey" }}
-            bordered={true}
-          >
-            <Row>
-              <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-                Inventory
-              </Col>
-              <Col xs={12} xl={12}></Col>
-            </Row>
-          </Card>
-          <hr></hr>
-          <table style={{ width: "100%" }} cellPadding={20}>
-            <tr>
-              <td>
-                Filter by ingredients name:
-                <br />
-                <Input
-                  placeholder="Filter by name..."
-                  style={{ width: "70%" }}
-                ></Input>
-              </td>
-              <td>
-                Volume Range:
-                <Slider min={1} max={10000}></Slider>
-              </td>
-              <td>
-                <center>
-                  <Button type="primary" onClick={(e) => setIsModalOpen(true)}>
-                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
-                    Add new ingredient
-                  </Button>
-                </center>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
+      {/* <Modal
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        footer={[
+          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+            OK
+          </Button>,
+        ]}
+      >
+        <div style={{ textAlign: "center" }}>
+          <h2 style={{ color: "#52c41a" }}>Success!</h2>
+          <p>Ingridient Added Successfully</p>
+        </div>
+      </Modal> */}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="1" userType="pai" />
 
-                <Modal
-                  open={isModalOpen}
-                  onOk={handleSubmit}
-                  onCancel={(e) => setIsModalOpen(false)}
+          <div style={{ width: "100%" }}>
+            <Header title="Inventory" />
+            <div style={{ padding: 0 }}>
+              <Col xs={24} xl={20} style={{ width: "100%", padding: "2%" }}>
+                <table
+                  style={{ width: "80vw", marginLeft: 50 }}
+                  cellPadding={10}
                 >
-                  <label style={{ fontSize: "150%" }}>Add new Ingredient</label>
-                  <br />
-                  <br />
-                  <table style={{ width: "100%" }}>
-                    <tr>
-                      <td>Name</td>
-                      <td>
-                        <Input
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          placeholder="Eg: Chicken Meat, Basmati Rice, etc"
-                        ></Input>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Unit for measurement</td>
-                      <td>
-                        <Input
-                          value={unit}
-                          onChange={(e) => setUnit(e.target.value)}
-                          placeholder="Eg: 2,3,4, etc"
-                        ></Input>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>Expiry Period</td>
-                      <td>
-                        <Input
-                          value={expiry}
-                          onChange={(e) => setExpiry(e.target.value)}
-                          placeholder="Eg: 12,24,36, etc"
-                        ></Input>
-                        <Radio.Group
-                          onChange={(e) => setExpiryType(e.target.value)}
+                  <tr>
+                    <td>
+                      Filter by ingredients name:
+                      <br />
+                      <Input
+                        placeholder="Filter by name..."
+                        style={{ width: "70%" }}
+                      ></Input>
+                    </td>
+                    <td>
+                      Volume Range:
+                      <Slider min={1} max={10000}></Slider>
+                    </td>
+                    <td>
+                      <center>
+                        <Button
+                          type="primary"
+                          onClick={(e) => setIsModalOpen(true)}
                         >
-                          <Radio value={"Days"}>Days</Radio>
-                          <Radio value={"Months"}>Months</Radio>
-                          <Radio value={"Year"}>Year</Radio>
-                        </Radio.Group>
-                      </td>
-                    </tr>
-                  </table>
-                </Modal>
-              </td>
-            </tr>
-          </table>
-          <hr></hr>
-          {inventoryItems && (
-            <Card>
-              <List
-                dataSource={inventoryItems}
-                renderItem={(item) => (
-                  <List.Item>
-                    <Row style={{ width: "100%", textAlign: "left" }}>
-                      <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
-                        {item.ingridient_name}
-                      </Col>
-                      <Col xs={8} xl={6}>
-                        Ingredient Expiry period: <br />
-                        {item.ingridient_expiry_amount}{" "}
-                        {item.ingridient_expiry_period}
-                      </Col>
-                      <Col xs={8} xl={6}>
-                        Ingredient total Volume: <br />
-                        {item.total_volume} {item.ingridient_measure_unit}
-                      </Col>
-                      <Col xs={8} xl={6}>
-                        {item.total_volume < 6 ? (
-                          <div>
-                            <i class="fa-solid fa-circle-exclamation"></i> You
-                            are short on items <br />
-                            <br />
-                            <Button
-                              style={{ backgroundColor: "green" }}
-                              type="primary"
+                          <i class="fa-solid fa-circle-plus"></i>{" "}
+                          &nbsp;&nbsp;&nbsp; Add new ingredient
+                        </Button>
+                      </center>
+
+                      <Modal
+                        open={isModalOpen}
+                        onOk={handleSubmit}
+                        onCancel={(e) => setIsModalOpen(false)}
+                      >
+                        <label style={{ fontSize: "150%" }}>
+                          Add new Ingredient
+                        </label>
+                        <br />
+                        <br />
+                        <table style={{ width: "100%" }}>
+                          <tr>
+                            <td>Name</td>
+                            <td>
+                              <Input
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Eg: Chicken Meat, Basmati Rice, etc"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Unit for measurement</td>
+                            <td>
+                              <Input
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                                placeholder="Eg: 2,3,4, etc"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Expiry Period</td>
+                            <td>
+                              <Input
+                                value={expiry}
+                                onChange={(e) => setExpiry(e.target.value)}
+                                placeholder="Eg: 12,24,36, etc"
+                              ></Input>
+                              <Radio.Group
+                                onChange={(e) => setExpiryType(e.target.value)}
+                              >
+                                <Radio value={"Days"}>Days</Radio>
+                                <Radio value={"Months"}>Months</Radio>
+                                <Radio value={"Year"}>Year</Radio>
+                              </Radio.Group>
+                            </td>
+                          </tr>
+                        </table>
+                      </Modal>
+                    </td>
+                  </tr>
+                </table>
+                {inventoryItems && (
+                  <Card
+                    style={{
+                      height: "60vh",
+                      width: "85vw",
+                      overflowY: "scroll",
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <List
+                      size="small"
+                      dataSource={inventoryItems}
+                      renderItem={(item) => (
+                        <List.Item
+                          style={{
+                            margin: 5,
+                            padding: 5,
+                            display: "flex",
+                            backgroundColor: "#fff",
+                            borderRadius: 10,
+                            borderBottom: "2px solid orange",
+                            width: "98%",
+                          }}
+                        >
+                          <Row style={{ width: "100%", textAlign: "left", display: 'flex', alignItems: 'center' }}>
+                            <Col
+                              xs={4}
+                              xl={4}
+                              style={{ fontSize: "150%", color: "#e08003" }}
                             >
-                              Restock Ingredient
-                            </Button>
-                          </div>
-                        ) : (
-                          <div>
-                            <i class="fa-solid fa-circle-check"></i> SUFFICIENT
-                          </div>
-                        )}
-                      </Col>
-                      <Col xs={8} xl={6}>
-                        <Link to={`/pai/inventory/purchases/${item._id}`}>
-                          View Purchases
-                        </Link>
-                      </Col>
-                    </Row>
-                    {/* <Card
+                              {item.ingridient_name}
+                            </Col>
+                            <Col xs={6} xl={6}>
+                              Ingredient Expiry period: <br />
+                              {item.ingridient_expiry_amount}{" "}
+                              {item.ingridient_expiry_period}
+                            </Col>
+                            <Col xs={6} xl={6}>
+                              Ingredient total Volume: <br />
+                              {item.total_volume} {item.ingridient_measure_unit}
+                            </Col>
+                            <Col xs={4} xl={4}>
+                              {item.total_volume < 6 ? (
+                                <div style={{ color: "#e08003" }}>
+                                  <i class="fa-solid fa-circle-exclamation"></i>{" "}
+                                  You are short on items
+                                  <br />
+                                  <Button
+                                    style={{ backgroundColor: "green" }}
+                                    type="primary"
+                                  >
+                                    Restock Ingredient
+                                  </Button>
+                                 
+                                  
+                          
+                                </div>
+                              ) : (
+                                <div
+                                  style={{ fontSize: "130%", color: "green" }}
+                                >
+                                  <i class="fa-solid fa-circle-check" style={{fontSize: "130%"}} ></i>{" "}
+                                  SUFFICIENT
+                                </div>
+                              )}
+                            </Col>
+                            <Col xs={4} xl={4}>
+                              <Link to={`/pai/inventory/purchases/${item._id}`}>
+                                <Button
+                                type="primary"
+                                  style={{
+                                    fontSize: "110%",
+                                 
+                                  }}
+                                >
+                                  View Purchases
+                                </Button>
+                              </Link>
+                            </Col>
+                          </Row>
+                          {/* <Card
                       style={{
                         backgroundColor:
                           item.total_quantity < 0 ? "lightpink" : "lightgreen",
@@ -240,13 +297,16 @@ const Inventory = () => {
                         </b>
                       </label>
                     </Card> */}
-                  </List.Item>
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
                 )}
-              />
-            </Card>
-          )}
-        </Col>
-      </Row>
+              </Col>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };
