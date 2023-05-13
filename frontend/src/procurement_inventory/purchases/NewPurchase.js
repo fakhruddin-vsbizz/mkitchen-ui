@@ -408,3 +408,20 @@ const NewPurchase = () => {
 };
 
 export default NewPurchase;
+
+
+{/* <Modal
+visible={visible}
+onOk={() => setVisible(false)}
+onCancel={() => setVisible(false)}
+footer={[
+  <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+    OK
+  </Button>,
+]}
+>
+<div style={{ textAlign: "center" }}>
+  <h2 style={{ color: "#52c41a" }}>Success!</h2>
+  <p>Items Purchased Successfully</p>
+</div>
+</Modal> */}

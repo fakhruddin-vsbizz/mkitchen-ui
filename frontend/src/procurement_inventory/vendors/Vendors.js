@@ -1,6 +1,10 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Row, Col, List, Card, Tag, Button } from "antd";
+import { Row, Col, List, Card, Tag, Button, ConfigProvider } from "antd";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { Link } from "react-router-dom";
 
 const Vendors = () => {
   const [vendors, setVendors] = useState();
@@ -28,72 +32,88 @@ const Vendors = () => {
 
   console.log("vendors: ", vendors);
   return (
-    <div>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <Row>
-            <Col xs={12} xl={12}>
-              <label style={{ fontSize: "300%" }} className="dongle-font-class">
-                Vendors
-              </label>
-            </Col>
-            <Col xs={12} xl={12}>
-              <center>
-                <Button type="primary">New Vendor</Button>
-              </center>
-            </Col>
-          </Row>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="4" userType="pai" />
 
-          <hr></hr>
-          <br />
-          <label style={{ fontSize: "200%" }} className="dongle-font-class">
-            All vendors
-          </label>
-          {vendors && (
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 4,
-                xxl: 3,
-              }}
-              dataSource={vendors}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card>
-                    <label>
-                      <b>{item.vendor_name}</b>
-                    </label>
-                    <br />
-                    <br />
-                    Purchase quantity:
-                    <br />
-                    <label style={{ fontSize: "130%" }}>
-                      {item.active_purchases}
-                    </label>
-                    <br />
-                    <br />
-                    Approval Status: <br />
-                    <Tag color={item.is_approved ? "green" : "red"}>
-                      {item.is_approved ? "Approved" : "Pending"}
-                    </Tag>
-                  </Card>
-                </List.Item>
-              )}
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Vendor"
+              comp=<center><Link to="/pai/vendors/new">
+              <Button style={{backgroundColor: 'white', color: 'orange'}}>
+                <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp; Add
+                Vendor
+              </Button>
+            </Link></center>
             />
-          )}
-        </Col>
-      </Row>
+            <div style={{ width: "100%", padding: 0 }}>
+              <div style={{ width: "95%", padding: "2%" }}>
+                <label
+                  style={{ fontSize: "200%" }}
+                  className="dongle-font-class"
+                >
+                  All vendors
+                </label>
+                {vendors && (
+                  <List
+                    grid={{
+                      gutter: 16,
+                      xs: 1,
+                      sm: 2,
+                      md: 4,
+                      lg: 4,
+                      xl: 4,
+                      xxl: 3,
+                    }}
+                    dataSource={vendors}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card 
+                         style={{
+                          margin: 5,
+                          width: "100%",
+                   
+                          backgroundColor: "white",
+                          padding: "2%",
+                          borderRadius: 10,
+                          borderBottom: "2px solid orange",
+                        }}
+                         >
+                          <label style={{color: '#e08003'}} >
+                            <b>{item.vendor_name}</b>
+                          </label>
+                          <br />
+                          <br />
+                          Purchase quantity:
+                          <br />
+                          <label style={{ fontSize: "130%" }}>
+                            {item.active_purchases}
+                          </label>
+                          <br />
+                          <br />
+                          Approval Status: <br />
+                          <Tag color={item.is_approved ? "green" : "red"}>
+                            {item.is_approved ? "Approved" : "Pending"}
+                          </Tag>
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

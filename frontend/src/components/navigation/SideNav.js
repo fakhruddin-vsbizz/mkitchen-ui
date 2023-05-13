@@ -6,6 +6,7 @@ import {
   TeamOutlined,
   MenuOutlined,
   HistoryOutlined,
+  LogoutOutlined ,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
 import { useState } from "react";
@@ -75,7 +76,6 @@ const cooking = [
       <TeamOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
-
 ];
 const pai = [
   getItem(
@@ -111,6 +111,15 @@ const pai = [
     "5",
     <Link to="/pai/expiries">
       <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+];
+const logout = [
+  getItem(
+    <Link to="/login">Logout</Link>,
+    "1",
+    <Link to="/login">
+      <LogoutOutlined  style={{ fontSize: "20px" }} />
     </Link>
   ),
 ];
@@ -180,6 +189,19 @@ const SideNav = ({ k, userType }) => {
                 ? pai
                 : null
             }
+          />
+          <Menu
+            theme="light "
+            defaultSelectedKeys={[k]}
+            style={{
+              backgroundColor: "transparent",
+              // marginTop: 32,
+              color: "white",
+              fontSize: 16,
+              fontWeight: 500,
+            }}
+            mode="inline"
+            items={logout}
           />
         </Sider>
       </ConfigProvider>
