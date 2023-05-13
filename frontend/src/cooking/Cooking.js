@@ -294,7 +294,7 @@ const Cooking = () => {
                   <br />
                   <DatePicker onChange={handleDateChange} />
                 </Col>
-                <Col xs={24} xl={12}>
+                {/* <Col xs={24} xl={12}>
                   Select the client:
                   <br />
                   <Select
@@ -306,7 +306,7 @@ const Cooking = () => {
                       { value: 2, label: "Shk. Aliasgar Ranapur" },
                     ]}
                   />
-                </Col>
+                </Col> */}
               </Row>
             />
 
