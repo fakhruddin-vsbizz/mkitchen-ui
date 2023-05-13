@@ -48,12 +48,14 @@ const Vendors = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Vendor"
-              comp=<center><Link to="/pai/vendors/new">
-              <Button style={{backgroundColor: 'white', color: 'orange'}}>
-                <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp; Add
-                Vendor
-              </Button>
-            </Link></center>
+              comp=<center>
+                <Link to="/pai/vendors/new">
+                  <Button style={{ backgroundColor: "white", color: "orange" }}>
+                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    Add Vendor
+                  </Button>
+                </Link>
+              </center>
             />
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "95%", padding: "2%" }}>
@@ -65,45 +67,42 @@ const Vendors = () => {
                 </label>
                 {vendors && (
                   <List
-                    grid={{
-                      gutter: 16,
-                      xs: 1,
-                      sm: 2,
-                      md: 4,
-                      lg: 4,
-                      xl: 4,
-                      xxl: 3,
-                    }}
                     dataSource={vendors}
                     renderItem={(item) => (
                       <List.Item>
-                        <Card 
-                         style={{
-                          margin: 5,
-                          width: "100%",
-                   
-                          backgroundColor: "white",
-                          padding: "2%",
-                          borderRadius: 10,
-                          borderBottom: "2px solid orange",
-                        }}
-                         >
-                          <label style={{color: '#e08003'}} >
-                            <b>{item.vendor_name}</b>
-                          </label>
-                          <br />
-                          <br />
-                          Purchase quantity:
-                          <br />
-                          <label style={{ fontSize: "130%" }}>
-                            {item.active_purchases}
-                          </label>
-                          <br />
-                          <br />
-                          Approval Status: <br />
-                          <Tag color={item.is_approved ? "green" : "red"}>
-                            {item.is_approved ? "Approved" : "Pending"}
-                          </Tag>
+                        <Card
+                          style={{
+                            margin: 5,
+                            width: "100%",
+
+                            backgroundColor: "white",
+                            padding: "2%",
+                            borderRadius: 10,
+                            borderBottom: "2px solid orange",
+                          }}
+                        >
+                          <Row>
+                            <Col xs={8} xl={8}>
+                              <label style={{ color: "#e08003" }}>
+                                <b>{item.vendor_name}</b>
+                              </label>
+                            </Col>
+                            <Col xs={8} xl={8}>
+                              Purchase quantity:
+                              <br />
+                              <label style={{ fontSize: "130%" }}>
+                                {item.active_purchases}
+                              </label>
+                            </Col>
+                            <Col xs={8} xl={8}>
+                              <label style={{ color: "#e08003" }}>
+                                Approval Status: <br />
+                                <Tag color={item.is_approved ? "green" : "red"}>
+                                  {item.is_approved ? "Approved" : "Pending"}
+                                </Tag>
+                              </label>
+                            </Col>
+                          </Row>
                         </Card>
                       </List.Item>
                     )}

@@ -203,36 +203,51 @@ const ConfirmIng = () => {
                           style={{
                             margin: 5,
                             width: "100%",
-                            
+
                             backgroundColor: "white",
                             padding: "2%",
                             borderRadius: 10,
                             borderBottom: "2px solid orange",
                           }}
                         >
-                          
                           <br />
                           <Row>
                             <Col xs={8} xl={8}>
-                            <label style={{ fontSize: "140%" }}>
-                            <span>{item.ingridientName}</span>
-                          </label>
+                              <label style={{ fontSize: "140%" }}>
+                                <span>{item.ingridientName}</span>
+                              </label>
                             </Col>
                             <Col xs={8} xl={8}>
                               Procure Ammount: <br />
-                              <label style={{ color: item.sufficient ? "green" : "red", fontSize: "130%" }}>
+                              <label
+                                style={{
+                                  color: item.sufficient ? "green" : "red",
+                                  fontSize: "130%",
+                                }}
+                              >
                                 {item.total_quantity} {item.unit}
                               </label>
                             </Col>
-                            <Col xs={8} xl={8} style={{color: item.sufficient ? "green" : "red",}}>
+                            <Col
+                              xs={8}
+                              xl={8}
+                              style={{
+                                color: item.sufficient ? "green" : "red",
+                              }}
+                            >
                               {!item.sufficient ? (
-                                <div style={{fontSize: '120%'}}>
-                                <MinusCircleFilled style={{fontSize: '130%'}} />
-                                &nbsp;&nbsp;&nbsp;FULFILLED THROUGH NEGATIVE INVENTORY
-                              </div>
+                                <div style={{ fontSize: "120%" }}>
+                                  <MinusCircleFilled
+                                    style={{ fontSize: "130%" }}
+                                  />
+                                  &nbsp;&nbsp;&nbsp;FULFILLED THROUGH NEGATIVE
+                                  INVENTORY
+                                </div>
                               ) : (
-                                <div style={{fontSize: '120%'}}>
-                                   <PlusCircleFilled style={{fontSize: '130%'}} />
+                                <div style={{ fontSize: "120%" }}>
+                                  <PlusCircleFilled
+                                    style={{ fontSize: "130%" }}
+                                  />
                                   &nbsp;&nbsp;&nbsp;FULFILLED THROUGH INVENTORY
                                 </div>
                               )}

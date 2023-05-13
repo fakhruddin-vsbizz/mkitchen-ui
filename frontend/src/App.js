@@ -55,7 +55,7 @@ function App() {
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
         <Route path="/pai/expiries" element={<DamagedGoodsList />} />
       </Routes>
-    </AuthContextProvider>
+    </AuthContextProvider> 
   );
 }
 

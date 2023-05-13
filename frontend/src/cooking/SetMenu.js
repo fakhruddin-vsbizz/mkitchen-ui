@@ -13,7 +13,11 @@ import {
   DatePicker,
   ConfigProvider,
 } from "antd";
-import { CaretRightOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CaretRightOutlined,
+  DeleteOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useState } from "react";
 import Header from "../components/navigation/Header";
 import Sidebar from "../components/navigation/SideNav";
@@ -257,7 +261,7 @@ const SetMenu = () => {
       dateObj.getMonth() + 1
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
-    setIsSelected(false)
+    setIsSelected(false);
   };
 
   console.log(selectedDate);
@@ -305,9 +309,9 @@ const SetMenu = () => {
             />
             <div style={{ padding: 20 }}>
               <Row>
-                <Col xs={24} xl={24} style={{padding: '0px 50px'}}>
+                <Col xs={24} xl={24} style={{ padding: "0px 50px" }}>
                   <h3 style={{ color: "#e08003" }}>Total count: 8000 People</h3>
-                  Select Client: &nbsp;&nbsp;&nbsp;
+                  {/* Select Client: &nbsp;&nbsp;&nbsp;
                   <Select
                     defaultValue={0}
                     size="large"
@@ -317,7 +321,7 @@ const SetMenu = () => {
                       { value: 1, label: "Mohsin Ranapur" },
                       { value: 2, label: "Shk. Aliasgar Ranapur" },
                     ]}
-                  />
+                  /> */}
                 </Col>
                 <Col xs={24} xl={12} style={{ padding: "1%" }}>
                   {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
@@ -356,10 +360,10 @@ const SetMenu = () => {
                                 <Button
                                   type="primary"
                                   id={"set_index_" + item.index}
-                                  onClick={() =>
-                                    {setFoodReference(item.food_item_id)
-                                    setIsSelected(true)}
-                                  }
+                                  onClick={() => {
+                                    setFoodReference(item.food_item_id);
+                                    setIsSelected(true);
+                                  }}
                                   shape="circle"
                                   icon={<CaretRightOutlined />}
                                   size="large"
@@ -386,8 +390,10 @@ const SetMenu = () => {
                     >
                       Select the items
                     </label>
-                    <hr></hr> 
-                    <span style={{fontSize: 16, color: '#e08003'}}>Select the ingredients to add:</span>
+                    <hr></hr>
+                    <span style={{ fontSize: 16, color: "#e08003" }}>
+                      Select the ingredients to add:
+                    </span>
                     <Row
                       style={{
                         padding: 5,
@@ -455,7 +461,21 @@ const SetMenu = () => {
                               backgroundColor: "transparent",
                               border: "none",
                             }}
-                            title={item.ingredient_name}
+                            title=<Row>
+                              <Col xs={12} xl={12}>
+                                {item.ingredient_name}
+                              </Col>
+                              <Col xs={6} xl={6}>
+                                <Button
+                                  type="primary"
+                                  onClick={addIngredients}
+                                  shape="circle"
+                                  icon={<DeleteOutlined />}
+                                  style={{ margin: "0px 10px" }}
+                                  // size="large"
+                                />
+                              </Col>
+                            </Row>
                             bordered={false}
                           >
                             <Row>
@@ -463,19 +483,40 @@ const SetMenu = () => {
                                 Per Ashkhaas count
                               </Col>
                               <Col xs={12} xl={12}>
-                                <Input
-                                  type="number"
-                                  defaultValue={
-                                    ingredientItems && item.perAshkash
-                                  }
-                                  onChange={(e) =>
-                                    handlePerAshkashChange(
-                                      e.target.value,
-                                      item.ingredient_name
-                                    )
-                                  }
-                                  placeholder="Eg: 1200,200,etc.."
-                                ></Input>
+                                <Row>
+                                  <Col xs={16} xl={16}>
+                                    <Input
+                                      type="number"
+                                      defaultValue={
+                                        ingredientItems && item.perAshkash
+                                      }
+                                      onChange={(e) =>
+                                        handlePerAshkashChange(
+                                          e.target.value,
+                                          item.ingredient_name
+                                        )
+                                      }
+                                      placeholder="Eg: 1200,200,etc.."
+                                    />
+                                  </Col>
+                                  <Col xs={8} xl={8}>
+                                    <Input
+                                      type="text"
+                                      defaultValue={
+                                        ingredientItems && item.perAshkash + " Unit"
+                                      } 
+                                      onChange={(e) =>
+                                        handlePerAshkashChange(
+                                          e.target.value,
+                                          item.ingredient_name
+                                        )
+                                      }
+                                      placeholder="Eg: 1200,200,etc.."
+                                    />
+                                    
+                                  </Col>
+                                </Row>
+                               
                               </Col>
                             </Row>
                           </Card>
@@ -491,7 +532,6 @@ const SetMenu = () => {
                       Confirm Menu
                     </Button>
                   </Card>
-                 
                 </Col>
               </Row>
             </div>
