@@ -9,8 +9,12 @@ import {
   Slider,
   InputNumber,
   // Button, Divider, Skeleton,
+  ConfigProvider,
 } from "antd";
 // import InfiniteScroll from 'react-infinite-scroll-component';
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
 const Purchases = () => {
   const [purchases, setPurchases] = useState();
 
@@ -28,54 +32,54 @@ const Purchases = () => {
       if (data) {
         const res = await data.json();
         setPurchases(res);
-        console.log("==========> DATA FO REF ====> ",res);
+        console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
   }, []);
 
-    const inventory_grid = [
-        {
-            item_id:0,
-            item_name:"Chicken Meat",
-            vendor_name: "V.K. General Store",
-            total_quantity:720,
-            unit:'KG',
-            created_on: '12/06/2023'
-        },
-        {
-            item_id:1,
-            item_name:"Sunflower Oil",
-            vendor_name: "Brahma Stores",
-            total_quantity:720,
-            unit:'KG',
-            created_on: '12/06/2023'
-        },
-        {
-            item_id:2,
-            item_name:"Cabbage",
-            vendor_name: "Somnath General Store",
-            total_quantity:-70,
-            unit:'KG',
-            created_on: '12/06/2023'
-        },
-        {
-            item_id:3,
-            item_name:"Milk",
-            vendor_name: "Supermarket Store",
-            total_quantity:720,
-            unit:'L',
-            created_on: '12/06/2023'
-        },
-        {
-            item_id:4,
-            item_name:"Everest Chicken Masala",
-            vendor_name: "V.K. General Store",
-            total_quantity:720,
-            unit:'Packets',
-            created_on: '12/06/2023'
-        }
-    ]
+  const inventory_grid = [
+    {
+      item_id: 0,
+      item_name: "Chicken Meat",
+      vendor_name: "V.K. General Store",
+      total_quantity: 720,
+      unit: "KG",
+      created_on: "12/06/2023",
+    },
+    {
+      item_id: 1,
+      item_name: "Sunflower Oil",
+      vendor_name: "Brahma Stores",
+      total_quantity: 720,
+      unit: "KG",
+      created_on: "12/06/2023",
+    },
+    {
+      item_id: 2,
+      item_name: "Cabbage",
+      vendor_name: "Somnath General Store",
+      total_quantity: -70,
+      unit: "KG",
+      created_on: "12/06/2023",
+    },
+    {
+      item_id: 3,
+      item_name: "Milk",
+      vendor_name: "Supermarket Store",
+      total_quantity: 720,
+      unit: "L",
+      created_on: "12/06/2023",
+    },
+    {
+      item_id: 4,
+      item_name: "Everest Chicken Masala",
+      vendor_name: "V.K. General Store",
+      total_quantity: 720,
+      unit: "Packets",
+      created_on: "12/06/2023",
+    },
+  ];
 
   const [amtVal, setAmtVal] = useState(1);
   const [weightVal, setWeightVal] = useState(1);
@@ -89,83 +93,117 @@ const Purchases = () => {
   };
 
   return (
-    <div>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <label style={{ fontSize: "300%" }} className="dongle-font-class">
-            Purchases
-          </label>
-          <hr></hr>
-          <table style={{ width: "100%" }} cellPadding={20}>
-            <tr>
-              <td>
-                Ingredient name:
-                <br />
-                <Input placeholder="Filter by name"></Input>
-              </td>
-              <td>
-                Date of purchase:
-                <br />
-                <DatePicker></DatePicker>
-              </td>
-              <td>
-                Total amount:
-                <br />
-                <Slider
-                  min={1}
-                  max={200}
-                  onChange={showAmtVal}
-                  value={amtVal}
-                ></Slider>
-                <br />
-                <InputNumber value={amtVal} onChange={showAmtVal}></InputNumber>
-              </td>
-              <td>
-                Weight:
-                <br />
-                <Slider
-                  min={1}
-                  max={5000}
-                  onChange={showWeightVal}
-                  value={weightVal}
-                ></Slider>
-                <br />
-                <InputNumber
-                  value={weightVal}
-                  onChange={showWeightVal}
-                ></InputNumber>
-              </td>
-            </tr>
-          </table>
-          <hr></hr>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})`, height: '100%  ', overflowY: "hidden", }}
+    >
+      
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="2" userType="pai" />
 
-          <label style={{ fontSize: "180%" }} className="dongle-font-class">
-            Recent Purchases
-          </label>
-          <br />
-          <br />
-          {purchases && (
-            <List
-              dataSource={purchases}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card style={{ width: '100%' }}>
-                    <Row style={{ width: '100%', textAlign:'left' }}>
-                        <Col xs={24} xl={24} style={{ fontSize: '150%' }}>{item.ingredient_name}</Col>
-                        <Col xs={12} xl={6}>Purchase Quantity: <br/>{item.quantity_loaded} units</Col>
-                        <Col xs={12} xl={6}>Vendor ID: <br/>{item.vendor_id}</Col>
-                        <Col xs={12} xl={6}>Date of purchase: <br/>{item.updatedAt}</Col>
-                        <Col xs={12} xl={6}>Purchase cost: <br/><label style={{ fontSize: '120%' }}><b>Rs. {item.rate_per_unit * item.quantity_loaded}/-</b></label></Col>
-                    </Row>
-                  </Card>
-                  {/* <Card>
+          <div style={{ width: "100%" }}>
+            <Header title=" Purchases" />
+            <div style={{ padding: 0,  }}>
+              <Col xs={24} xl={24} style={{width: "100%", padding: "2%",  }}>
+                <table style={{ width: "100%" }} cellPadding={10}>
+                  <tr>
+                    <td>
+                      Ingredient name:
+                      <br />
+                      <Input placeholder="Filter by name"></Input>
+                    </td>
+                    <td>
+                      Date of purchase:
+                      <br />
+                      <DatePicker></DatePicker>
+                    </td>
+                    <td>
+                      Total amount:
+                      <br />
+                      <Slider
+                        min={1}
+                        max={200}
+                        onChange={showAmtVal}
+                        value={amtVal}
+                      ></Slider>
+                      <br />
+                      <InputNumber
+                        value={amtVal}
+                        onChange={showAmtVal}
+                      ></InputNumber>
+                    </td>
+                    <td>
+                      Weight:
+                      <br />
+                      <Slider
+                        min={1}
+                        max={5000}
+                        onChange={showWeightVal}
+                        value={weightVal}
+                      ></Slider>
+                      <br />
+                      <InputNumber
+                        value={weightVal}
+                        onChange={showWeightVal}
+                      ></InputNumber>
+                    </td>
+                  </tr>
+                </table>
+
+                <label
+                  style={{ fontSize: "180%" }}
+                  className="dongle-font-class"
+                >
+                  Recent Purchases
+                </label>
+                <br />
+                <br />
+                {purchases && (
+                  <List
+                  style={{
+                    height: "55vh",
+                    width: "80vw",
+                    overflowY: "scroll",
+                    backgroundColor: "transparent",
+                  }}
+                    dataSource={purchases}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card style={{ width: "100%" }}>
+                          <Row style={{ width: "100%", textAlign: "left" }}>
+                            <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
+                              {item.ingredient_name}
+                            </Col>
+                            <Col xs={12} xl={6}>
+                              Purchase Quantity: <br />
+                              {item.quantity_loaded} units
+                            </Col>
+                            <Col xs={12} xl={6}>
+                              Vendor ID: <br />
+                              {item.vendor_id}
+                            </Col>
+                            <Col xs={12} xl={6}>
+                              Date of purchase: <br />
+                              {item.updatedAt}
+                            </Col>
+                            <Col xs={12} xl={6}>
+                              Purchase cost: <br />
+                              <label style={{ fontSize: "120%" }}>
+                                <b>
+                                  Rs.{" "}
+                                  {item.rate_per_unit * item.quantity_loaded}/-
+                                </b>
+                              </label>
+                            </Col>
+                          </Row>
+                        </Card>
+                        {/* <Card>
                     <label>
                       <b>{item.ingredient_name}</b>
                     </label>
@@ -183,21 +221,21 @@ const Purchases = () => {
                       {item.rate_per_unit}
                     </label>
                   </Card> */}
-                </List.Item>
-              )}
-            />
-          )}
-          <br />
-          <br />
-          <br />
+                      </List.Item>
+                    )}
+                  />
+                )}
+                <br />
+                <br />
+                <br />
 
-          {/* <label style={{ fontSize: "180%" }} className="dongle-font-class">
+                {/* <label style={{ fontSize: "180%" }} className="dongle-font-class">
             Short-on ingredients
           </label> */}
 
-          <br />
-          <br />
-          {/* <List
+                <br />
+                <br />
+                {/* <List
             grid={{
               gutter: 16,
               xs: 1,
@@ -228,8 +266,11 @@ const Purchases = () => {
               </List.Item>
             )}
           /> */}
-        </Col>
-      </Row>
+              </Col>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };
