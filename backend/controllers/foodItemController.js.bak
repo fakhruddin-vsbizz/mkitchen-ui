@@ -38,10 +38,8 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
 		const menuFood = await MenuFood.find({ date_of_cooking: date });
 
 		if (menuFood.length === 0) {
-	      return res
-	        .status(404)
-	        .json({ message: "No menu found for the provided date" });
-	    }
+			return res.status(200).json({ 0: { food_list: [] } });
+		}
 
 		const menuStatus = await OperationPipeLine.findOne({
 			menu_food_id: menuFood[0]._id,

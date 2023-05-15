@@ -13,6 +13,7 @@ import {
   DatePicker,
   Modal,
   ConfigProvider,
+  Alert,
 } from "antd";
 import { useState } from "react";
 import { CaretRightOutlined, RightSquareFilled } from "@ant-design/icons";
@@ -40,6 +41,10 @@ const Dispatch = () => {
   const [viewDispatchedData, setViewDispatchedData] = useState();
   const [finaldipatchData, setFinalDispatchData] = useState([]);
   const [statusOP, setStatusOP] = useState(false);
+
+  //validation stats
+  const [userSelectedError, setUserSelectedError] = useState(false);
+  const [inputError, setInputError] = useState(false);
 
   const handleDateChange = (date) => {
     console.log(date);
@@ -196,10 +201,13 @@ const Dispatch = () => {
         });
         if (data) {
           const res = await data.json();
-          if (res) {
+          if (res[0]) {
             setMenuFoodId(res[0]._id);
             setGetMohallaUsers(res[0].mohalla_wise_ashkhaas);
             setFoodList(res[0].food_list);
+          } else {
+            setGetMohallaUsers([]);
+            setInputError(false);
           }
         }
       }
@@ -233,10 +241,17 @@ const Dispatch = () => {
 
       if (data) {
         const res = await data.json();
-        console.log("done");
-        setVisible(true);
-        setDaigs("");
-        setTotalWeight("");
+
+        console.log(res);
+        if (res.invalidData) {
+          setInputError(true);
+        } else {
+          console.log("done");
+          setVisible(true);
+          setDaigs("");
+          setTotalWeight("");
+          setInputError(false);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -357,6 +372,19 @@ const Dispatch = () => {
                 )}
               </Col>
               <Col xs={24} xl={12}>
+              {inputError && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        message="Warning"
+                        description="Enter weight and daig"
+                        type="error"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
               {isSelected ? (
                 <Card style={{backgroundColor: 'transparent'}} >
                   {/* <label

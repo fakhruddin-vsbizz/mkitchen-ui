@@ -65,6 +65,11 @@ const Accounts = () => {
   const [newpasswordPandI, setNewpasswordPandI] = useState("");
   const [newconfirmpasswordPandI, setNewConfirmpasswordPandI] = useState("");
 
+  const [validationError, setValidationError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+  const [emailErrorPI, setEmailErrorPI] = useState(false);
+  const [emailErrorPandIPassword, setEmailErrorPandIPassword] = useState(false);
+
   const handleUserTypeChange = (value) => {
     console.log("n");
     setUserType(value);
@@ -116,27 +121,33 @@ const Accounts = () => {
 
   const updateMohallAdminEmail = async () => {
     try {
-      if (selectedMohallaUser && newEmailMohalla) {
-        const data = await fetch(
-          "http://localhost:5001/admin/account_management",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: selectedMohallaUser,
-              email: newEmailMohalla,
-              usertype: "Mohalla Admin",
-              action: "update_email",
-            }),
-          }
-        );
-        if (data) {
-          console.log(data.json().then((data) => console.log(data)));
+      const data = await fetch(
+        "http://localhost:5001/admin/account_management",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedMohallaUser,
+            email: newEmailMohalla,
+            usertype: "Mohalla Admin",
+            action: "update_email",
+          }),
+        }
+      );
+      if (data) {
+        const res = await data.json();
+        console.log(res);
+        if (res.message) {
           setNewEmailMohalla("");
           setIsModalOpen(false);
           setVisible(true);
+          setEmailError(false);
+          setValidationError(false);
+        } else {
+          setEmailError(true);
+          setValidationError(false);
         }
       }
     } catch (error) {
@@ -147,27 +158,32 @@ const Accounts = () => {
     console.log("inside 1");
 
     try {
-      if (selectedCookingUser && newEmailCooking) {
-        console.log("inside2");
-        const data = await fetch(
-          "http://localhost:5001/admin/account_management",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: selectedCookingUser,
-              email: newEmailCooking,
-              usertype: "Cooking",
-              action: "update_email",
-            }),
-          }
-        );
-        if (data) {
-          console.log(data.json().then((data) => console.log(data)));
+      console.log("inside2");
+      const data = await fetch(
+        "http://localhost:5001/admin/account_management",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedCookingUser,
+            email: newEmailCooking,
+            usertype: "Cooking",
+            action: "update_email",
+          }),
+        }
+      );
+      if (data) {
+        const res = await data.json();
+        if (res.message) {
           setNewEmailCooking("");
           setVisible(true);
+          setEmailError(false);
+          setValidationError(false);
+        } else {
+          setEmailError(true);
+          setValidationError(false);
         }
       }
     } catch (error) {
@@ -177,26 +193,30 @@ const Accounts = () => {
 
   const updatePandIEmail = async () => {
     try {
-      if (selectedPandIUser && newEmailPandI) {
-        const data = await fetch(
-          "http://localhost:5001/admin/account_management",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: selectedPandIUser,
-              email: newEmailPandI,
-              usertype: "Procurement Inventory",
-              action: "update_email",
-            }),
-          }
-        );
-        if (data) {
-          console.log(data.json().then((data) => console.log(data)));
+      const data = await fetch(
+        "http://localhost:5001/admin/account_management",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedPandIUser,
+            email: newEmailPandI,
+            usertype: "Procurement Inventory",
+            action: "update_email",
+          }),
+        }
+      );
+      if (data) {
+        const res = await data.json();
+        if (res.message) {
           setNewEmailPandI("");
           setVisible(true);
+          setEmailErrorPI(false);
+        } else {
+          setEmailErrorPI(true);
+          setValidationError(false);
         }
       }
     } catch (error) {
@@ -213,6 +233,24 @@ const Accounts = () => {
       setError(false);
     }
   }, [newconfirmpassword, newpassword]);
+
+  useEffect(() => {
+    if (newPasswordMohalla !== newConfirmpasswordMohalla) {
+      setError(true);
+    }
+    if (newPasswordMohalla === newConfirmpasswordMohalla) {
+      setError(false);
+    }
+  }, [newPasswordMohalla, newConfirmpasswordMohalla]);
+
+  useEffect(() => {
+    if (newpasswordPandI !== newconfirmpasswordPandI) {
+      setEmailErrorPandIPassword(true);
+    }
+    if (newpasswordPandI === newconfirmpasswordPandI) {
+      setEmailErrorPandIPassword(false);
+    }
+  }, [newpasswordPandI, newconfirmpasswordPandI]);
 
   const updateUserPasswordMohalla = async (usertype) => {
     try {
@@ -355,41 +393,60 @@ const Accounts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      const data = await fetch(
         "http://localhost:5001/admin/account_management",
         {
-          usertype,
-          username,
-          email,
-          password,
-          action: "create_mk",
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            usertype,
+            username,
+            email,
+            password,
+            action: "create_mk",
+          }),
         }
       );
 
-      setUserEmail("");
-      setUserPassword("");
-      setUserName("");
-      setError(false);
-      setNewMohallaPopup(false);
-      console.log("Signup successful");
+      const res = await data.json();
+      console.log(res);
+
+      if (res.fieldError) {
+        setValidationError(true);
+        setError(false);
+
+        setEmailError(false);
+      } else if (res.errorEmail) {
+        setError(false);
+
+        setEmailError(true);
+        setValidationError(false);
+      } else if (res.emailExists) {
+        setError(true);
+        setEmailError(false);
+        setValidationError(false);
+      } else {
+        setUserEmail("");
+        setUserPassword("");
+        setUserName("");
+        setError(false);
+        setNewMohallaPopup(false);
+        setValidationError(false);
+        setEmailError(false);
+        console.log("Signup successful");
+      }
     } catch (error) {
       console.error(error);
       console.log(error.message);
       setError(true);
+      setEmailError(false);
+      setValidationError(false);
     }
   };
 
-  const options = [
-    { value: "Mutton Biryani" },
-    { value: "Mutton Kebab" },
-    { value: "Moong Dal" },
-    { value: "Dal" },
-    { value: "Chawal" },
-    { value: "Palidu" },
-    { value: "Roti" },
-    { value: "Manda" },
-    { value: "Chicken Gravy" },
-  ];
+
 
   const [foodItems, setFoodItems] = useState([]);
   console.log(selectedCookingUser);
@@ -497,13 +554,39 @@ const Accounts = () => {
                   <Input.Password placeholder="Confirm initial password" />
                 </td>
               </tr> */}
-                {error && (
+                {error && !validationError && (
                   <tr>
                     <td colSpan={2}>
                       <br />
                       <Alert
                         message="Validation Error"
                         description="User already exists. Please try a different user email."
+                        type="error"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
+                {validationError && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        message="Validation Error"
+                        description="All Fields Must Be Filled"
+                        type="error"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
+                {emailError && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        message="Validation Error"
+                        description="Plese write the correct email"
                         type="error"
                         closable
                       />
@@ -633,6 +716,19 @@ const Accounts = () => {
                             </Button>
                           </td>
                         </tr>
+                        {emailError && (
+                          <tr>
+                            <td colSpan={2}>
+                              <br />
+                              <Alert
+                                message="Validation Error"
+                                description=" Invalid Email. Please try again"
+                                type="error"
+                                closable
+                              />
+                            </td>
+                          </tr>
+                        )}
                       </table>
                       <Divider style={{ backgroundColor: "#000" }}></Divider>
                       <p>Reset Password</p>
@@ -675,6 +771,19 @@ const Accounts = () => {
                             </Button>
                           </td>
                         </tr>
+                        {error && (
+                          <tr>
+                            <td colSpan={2}>
+                              <br />
+                              <Alert
+                                message="Validation Error"
+                                description=" password do not match. Please try again"
+                                type="error"
+                                closable
+                              />
+                            </td>
+                          </tr>
+                        )}
                       </table>
                     </Modal>
                   </div>
@@ -768,6 +877,19 @@ const Accounts = () => {
                                 </Button>
                               </td>
                             </tr>
+                            {emailError && (
+                              <tr>
+                                <td colSpan={2}>
+                                  <br />
+                                  <Alert
+                                    message="Validation Error"
+                                    description="User not selected or invalid email !!"
+                                    type="error"
+                                    closable
+                                  />
+                                </td>
+                              </tr>
+                            )}
                           </table>
                         </Card>
                       </Col>
@@ -820,7 +942,7 @@ const Accounts = () => {
                                   <br />
                                   <Alert
                                     message="Validation Error"
-                                    description="Either email is invalid or password do not match. Please try again"
+                                    description="Password do not match or user not selected. Please try again"
                                     type="error"
                                     closable
                                   />
@@ -976,6 +1098,19 @@ const Accounts = () => {
                                 </Button>
                               </td>
                             </tr>
+                            {emailErrorPI && (
+                              <tr>
+                                <td colSpan={2}>
+                                  <br />
+                                  <Alert
+                                    message="Validation Error"
+                                    description="User not selected or invalid email !!"
+                                    type="error"
+                                    closable
+                                  />
+                                </td>
+                              </tr>
+                            )}
                           </table>
                         </Card>
                       </Col>
@@ -1023,13 +1158,13 @@ const Accounts = () => {
                                 />
                               </td>
                             </tr>
-                            {error && (
+                            {emailErrorPandIPassword && (
                               <tr>
                                 <td colSpan={2}>
                                   <br />
                                   <Alert
                                     message="Validation Error"
-                                    description="Either email is invalid or password do not match. Please try again"
+                                    description="Password do not match or user not selected. Please try again"
                                     type="error"
                                     closable
                                   />

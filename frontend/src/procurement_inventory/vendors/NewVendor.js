@@ -10,10 +10,14 @@ import {
   Checkbox,
   Radio,
   Modal,
+  Alert,
   List,
   Tag,
   ConfigProvider,
 } from "antd";
+
+import AuthContext from "../../components/context/auth-context";
+
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
@@ -21,12 +25,19 @@ import { Link } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const NewVendor = () => {
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [vendorName, setVendorName] = useState();
   const [vendorEmail, setVendorEmail] = useState();
   const [vendorAddress, setVendorAddress] = useState();
   const [closingTime, setClosingTime] = useState();
   const [openingTime, setOpeningTime] = useState();
   const [visible, setVisible] = useState(false);
+
+  const [validationError, setValidationError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const userEmail = authCtx.userEmail;
 
   const createNewVendor = async () => {
     const selectedTimeOpening = openingTime ? new Date(openingTime) : null;
@@ -40,45 +51,47 @@ const NewVendor = () => {
       ? selectedTimeClosing.toLocaleTimeString()
       : "";
 
-    if (
-      vendorAddress &&
-      vendorEmail &&
-      vendorName &&
-      finalClosingTime &&
-      finalOpeningTime
-    ) {
-      try {
-        console.log("inside");
-        const data = await fetch("http://localhost:5001/vendor", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            mkuser_email: "sujeet@gmail.com",
-            vendor_name: vendorName,
-            opening_time: finalOpeningTime,
-            closing_time: finalClosingTime,
-            email: vendorName,
-            address: vendorAddress,
-            approval_status: 0,
-          }),
-        });
+    try {
+      console.log("inside");
+      const data = await fetch("http://localhost:5001/vendor", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          mkuser_email: userEmail,
+          vendor_name: vendorName,
+          opening_time: finalOpeningTime,
+          closing_time: finalClosingTime,
+          email: vendorEmail,
+          address: vendorAddress,
+          approval_status: 0,
+        }),
+      });
 
-        if (data) {
-          const res = await data.json();
+      if (data) {
+        const res = await data.json();
+        console.log(res);
+
+        if (res.inputInvalid) {
+          setValidationError(true);
+          setEmailError(false);
+        } else if (res.emailInvalid) {
+          setEmailError(true);
+          setValidationError(false);
+        } else {
           setVisible(true);
           setVendorEmail("");
           setVendorName("");
           setVendorAddress("");
           setOpeningTime("");
           setClosingTime("");
-
-          console.log(res);
+          setEmailError(false);
+          setValidationError(false);
         }
-      } catch (error) {
-        console.log(error);
-      }
+      
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -120,6 +133,32 @@ const NewVendor = () => {
                 </Button>
               </center>
             />
+            {validationError && (
+          <tr>
+            <td colSpan={2}>
+              <br />
+              <Alert
+                message="Validation Error"
+                description="All Fields Must Be Filled"
+                type="error"
+                closable
+              />
+            </td>
+          </tr>
+        )}
+        {emailError && (
+          <tr>
+            <td colSpan={2}>
+              <br />
+              <Alert
+                message="Validation Error"
+                description="Plese write the correct email"
+                type="error"
+                closable
+              />
+            </td>
+          </tr>
+        )}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "90%", padding: "3%" }}>
                 <Card

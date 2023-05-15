@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react";
 
 import {
-	Row,
-	Col,
-	List,
-	Tag,
-	Divider,
-	Calendar,
-	Card,
-	Button,
-	AutoComplete,
-	Modal,
-	Input,
-	ConfigProvider,
-	theme,
+  Row,
+  Col,
+  List,
+  Tag,
+  Divider,
+  Calendar,
+  Card,
+  Button,
+  AutoComplete,
+  Modal,
+  Input,
+  ConfigProvider,
+  theme,
 } from "antd";
 import Sidebar from "../../components/navigation/SideNav.js";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
@@ -24,34 +24,34 @@ const { useToken } = theme;
 const Menu = () => {
 	const data = ["Menu", "Process History", "Vendor Management", "Reports"];
 
-	const [dateValue, setDateValue] = useState(
-		`${
-			new Date().getMonth() + 1
-		}/${new Date().getDate()}/${new Date().getFullYear()}`
-	);
+  const [dateValue, setDateValue] = useState(
+    `${
+      new Date().getMonth() + 1
+    }/${new Date().getDate()}/${new Date().getFullYear()}`
+  );
 
-	const [dataAdded, setDataAdded] = useState(false);
+  const [dataAdded, setDataAdded] = useState(false);
 
-	const [foodItems, setFoodItems] = useState([]);
-	const [foodItemId, setFoodItemId] = useState();
+  const [foodItems, setFoodItems] = useState([]);
+  const [foodItemId, setFoodItemId] = useState();
 
-	const [selectedFood, setSelectedFood] = useState("");
-	const [AddedFoodItems, setAddedFoodItems] = useState();
-	const [isMenu, setIsMenu] = useState(false);
+  const [selectedFood, setSelectedFood] = useState("");
+  const [AddedFoodItems, setAddedFoodItems] = useState();
+  const [isMenu, setIsMenu] = useState(false);
 
-	const [ingridientList, setIngridientList] = useState([]);
+  const [ingridientList, setIngridientList] = useState([]);
 
-	const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(false);
 
-	const onSelectDate = newValue => {
-		const dateObj = new Date(newValue);
-		const formattedDate = `${
-			dateObj.getMonth() + 1
-		}/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-		setDateValue(formattedDate);
-	};
+  const onSelectDate = (newValue) => {
+    const dateObj = new Date(newValue);
+    const formattedDate = `${
+      dateObj.getMonth() + 1
+    }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+    setDateValue(formattedDate);
+  };
 
-	/*
+  /*
         REFERENCE FOR BACKEND ENGINEERING
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'

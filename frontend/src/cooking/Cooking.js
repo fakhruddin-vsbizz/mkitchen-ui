@@ -1,19 +1,20 @@
 import React, { useEffect } from "react";
 import {
-	Row,
-	Col,
-	Select,
-	List,
-	Divider,
-	Card,
-	Button,
-	AutoComplete,
-	Input,
-	Switch,
-	DatePicker,
-	Tag,
-	Modal,
-	ConfigProvider,
+  Row,
+  Col,
+  Select,
+  List,
+  Divider,
+  Card,
+  Button,
+  AutoComplete,
+  Input,
+  Switch,
+  DatePicker,
+  Tag,
+  Modal,
+  ConfigProvider,
+  Alert,
 } from "antd";
 import { CaretRightOutlined, PlusOutlined } from "@ant-design/icons";
 
@@ -37,6 +38,7 @@ const Cooking = () => {
 	const [update, setUpdate] = useState(false);
 	const [visible, setVisible] = useState(false);
 	const [totalAshkashCount, setTotalAshkashCount] = useState();
+	const [status, setStatus] = useState();
 
 	const [getFoodList, setGetFoodList] = useState();
 
@@ -50,6 +52,29 @@ const Cooking = () => {
 	};
 
 	console.log(selectedDate);
+	
+	//getting the status from operational pipeline
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_status_op",
+            menu_id: menuFoodId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          setStatus(res);
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId]);
 
 	useEffect(() => {
 		const getData = async () => {
@@ -259,7 +284,6 @@ const Cooking = () => {
 				}),
 			});
 
-
 			if (data) {
 				const res = await data.json();
 				console.log(data);
@@ -304,7 +328,6 @@ const Cooking = () => {
 									<DatePicker onChange={handleDateChange} />
 								</Col>
 								{/* <Col xs={24} xl={12}>
-
                   Select the client:
                   <br />
                   <Select
@@ -320,9 +343,21 @@ const Cooking = () => {
 							</Row>
 						/>
 
-
 						<Row style={{ padding: 10 }}>
 							<Col xs={24} xl={16} style={{ padding: "2%" }}>
+							{status >= 3 && (
+				                  <tr>
+				                    <td colSpan={2}>
+				                      <br />
+				                      <Alert
+				                        message="Menu Cooked"
+				                        description="This Menu is been cooked"
+				                        type="success"
+				                        closable
+				                      />
+				                    </td>
+				                  </tr>
+				                )}
 								<List
 									style={{ width: "100%", overflowY: "scroll", height: "70vh" }}
 									itemLayout="horizontal"
@@ -539,16 +574,16 @@ const Cooking = () => {
 									</div>
 								)}
 							</Col>
-							{getFoodList && (
-								<Button
-									block
-									disabled={isDisabled}
-									style={{ height: "160%", fontSize: "200%" }}
-									type="primary"
-									onClick={cookingDone}>
-									Mark Cooking Done
-								</Button>
-							)}
+							{getFoodList && status < 3 && (
+				                <Button
+				                  block
+				                  style={{ height: "160%", fontSize: "200%" }}
+				                  type="primary"
+				                  onClick={cookingDone}
+				                >
+				                  Mark Cooking Done
+				                </Button>
+				             )}
 						</Row>
 					</div>
 				</div>

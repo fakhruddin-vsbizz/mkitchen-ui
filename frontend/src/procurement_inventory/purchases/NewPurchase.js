@@ -8,6 +8,7 @@ import {
   List,
   Modal,
   ConfigProvider,
+  Alert,
 } from "antd";
 import { useContext, useEffect, useState } from "react";
 import React from "react";
@@ -26,6 +27,9 @@ const NewPurchase = () => {
   const [selectedVendor, setSelectedVendor] = useState();
   const [visible, setVisible] = useState(false);
 
+
+  const [validationError, setValidationError] = useState(false);
+  const [fieldsError, setFieldsError] = useState(false);
   const authCtx = useContext(AuthContext);
   const userId = authCtx.userId;
   //getting all the vendors
@@ -85,15 +89,21 @@ const NewPurchase = () => {
   const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
 
   const onAddIngredient = () => {
-    var ingredient_added = {
-      mkuser_id: userId,
-      ingredient_name: inventoryItemName,
-      vendor_id: selectedVendor,
-      inventory_id: inventoryItemId,
-      rate_per_unit: price,
-      quantity_loaded: quantity,
-    };
-    setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
+    if (inventoryItemName === undefined) {
+      console.log("here ");
+      setValidationError(true);
+    } else {
+      setValidationError(false);
+      var ingredient_added = {
+        mkuser_id: userId,
+        ingredient_name: inventoryItemName,
+        vendor_id: selectedVendor,
+        inventory_id: inventoryItemId,
+        rate_per_unit: price,
+        quantity_loaded: quantity,
+      };
+      setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
+    }
   };
 
   const handlePricePerIngridient = (value, ingredientName) => {
@@ -157,13 +167,23 @@ const NewPurchase = () => {
         const res = await data.json();
         if (res) {
           console.log(res);
-          setVisible(true);
-          setIngredientForPurchase([]);
-          setPrice("");
-          setQuantity("");
-          setSelectedVendor("");
-          setInventoryItemName("");
-          setInventoryItemId("");
+          if (res.error) {
+            setValidationError(true);
+            setFieldsError(false);
+          } else if (res.fieldError) {
+            setFieldsError(true);
+            setValidationError(false);
+          } else {
+            setVisible(true);
+            setIngredientForPurchase([]);
+            setPrice("");
+            setQuantity("");
+            setSelectedVendor("");
+            setInventoryItemName("");
+            setInventoryItemId("");
+            setValidationError(false);
+            setFieldsError(false);
+          }
         }
       }
     } catch (err) {}
@@ -230,6 +250,32 @@ const NewPurchase = () => {
                         </center>
                       </td>
                     </tr>
+                    {validationError && (
+			            <tr>
+			              <td colSpan={2}>
+			                <br />
+			                <Alert
+			                  message="Validation Error"
+			                  description="Please select the ingridients and add values !!"
+			                  type="error"
+			                  closable
+			                />
+			              </td>
+			            </tr>
+			          )}
+			          {fieldsError && (
+			            <tr>
+			              <td colSpan={2}>
+			                <br />
+			                <Alert
+			                  message="Validation Error"
+			                  description="Please fill all the fields !!"
+			                  type="error"
+			                  closable
+			                />
+			              </td>
+			            </tr>
+			          )}
                   </table>
 
                   {/* <label style={{ fontSize: "150%" }}>Select the item</label> */}

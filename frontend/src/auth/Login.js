@@ -1,5 +1,15 @@
 import React, { useContext, useState } from "react";
-import { Row, Col, Image, Divider, Radio, Card, Input, Button, ConfigProvider } from "antd";
+import {
+  Row,
+  Col,
+  Image,
+  Divider,
+  Radio,
+  Card,
+  Input,
+  Button,
+  Alert,
+} from "antd";
 
 import logo from "../res/img/logo.png";
 import axios from "axios";
@@ -179,16 +189,18 @@ const Login = () => {
                 </tr>
        
                 {error && (
-                  <tr>
-                    <h2
-                      style={{
-                        color: "red",
-                      }}
-                    >
-                      Invalid Email Or Password
-                    </h2>
-                  </tr>
-                )}
+                <tr>
+                  <td colSpan={2}>
+                    <br />
+                    <Alert
+                      message="Validation Error"
+                      description="Invalid Email Or Password"
+                      type="error"
+                      closable
+                    />
+                  </td>
+                </tr>
+              )}
                 <tr style={{ textAlign: "left",height: '10vh', paddingTop: 30 }}>
                   <td colSpan={2}>
                     <Button

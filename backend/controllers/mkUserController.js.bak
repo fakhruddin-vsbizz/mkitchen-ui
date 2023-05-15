@@ -3,27 +3,14 @@ const MKUser = require("../models/mkUserModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 const createMkUser = expressAsyncHandler(async (req, res) => {
 	const { usertype, username, email, password, action } = req.body;
 
 	if (action === "create_mk") {
-		if (
-      usertype === "" ||
-      username === "" ||
-      email === "" ||
-      password === "" ||
-      email === ""
-    ) {
-      return res.status(403).json({ fieldError: "invalid fields" });
-    }
-
-    let testEmail = emailRegex.test(email);
-
-    if (testEmail !== true) {
-      return res.status(403).json({ errorEmail: "invalid email" });
-    }
+		if (!usertype || !email || !password || !username) {
+			res.status(400);
+			throw new Error("All fields are mendatory");
+		}
 
 		const userAvailable = await MKUser.findOne({ email });
 
@@ -97,14 +84,8 @@ const loginUser = expressAsyncHandler(async (req, res) => {
 const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
 	const { username, usertype, action, email, password } = req.body;
 
-	let testEmail = emailRegex.test(email);
-
-    if (testEmail !== true || username === undefined) {
-      return res.status(400).json({ error: "invalid email" });
-    }
-
-    const user = await MKUser.findOne({ username, usertype });
-    console.log(username, usertype, action, email, password);
+	const user = await MKUser.findOne({ username, usertype });
+	console.log(username, usertype, action, email, password);
 
 	if (user && action === "update_email") {
 		const updateUser = await MKUser.findByIdAndUpdate(

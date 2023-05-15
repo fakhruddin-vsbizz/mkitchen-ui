@@ -1,18 +1,18 @@
 import React, { useEffect } from "react";
 import {
-	Row,
-	Col,
-	Select,
-	List,
-	Divider,
-	Card,
-	Button,
-	AutoComplete,
-	Input,
-	Modal,
-	DatePicker,
-	ConfigProvider,
-	Tag,
+  Row,
+  Col,
+  Select,
+  List,
+  Divider,
+  Card,
+  Button,
+  AutoComplete,
+  Input,
+  Modal,
+  DatePicker,
+  ConfigProvider,
+  Alert,
 } from "antd";
 import {
 	CaretRightOutlined,
@@ -50,6 +50,10 @@ const SetMenu = () => {
 
 	const [foodIndex, setFoodIndex] = useState();
 	const [foodIngredientMap, setFoodIngredientMap] = useState([]);
+	const [validationError, setValidationError] = useState(false);
+
+
+    const [status, setStatus] = useState();
 
 	const OnDelete = id => {
 		setIngredientItems(pervItem =>
@@ -114,14 +118,22 @@ const SetMenu = () => {
 						date: selectedDate,
 					}),
 				});
+				
 				if (data) {
-					const res = await data.json();
-					console.log(res);
-					if (res) {
-						setMenuFoodId(res[0]._id);
-						setGetFoodList(res[0].food_list);
-					}
-				}
+		          const res = await data.json();
+		          console.log(res);
+		          if (res[0]) {
+		            setMenuFoodId(res[0]._id);
+		            setGetFoodList(res[0].food_list);
+		            setIngredientItems([]);
+		            setStatus(res.status);
+		          } else {
+		            console.log("here");
+		            setGetFoodList([]);
+		            setIngredientItems([]);
+		            setStatus(0);
+		          }
+		        }
 			}
 		};
 		getFood();
@@ -165,16 +177,24 @@ const SetMenu = () => {
 	console.log(inventoryItems);
 
 	const addIngredients = () => {
-		const newIngredient = {
+		
+		
+		if (ingredientName === "") {
+      console.log("here ");
+      setValidationError(true);
+    } else {
+      const newIngredient = {
 			inventory_item_id: inventoryItemId,
 			ingredient_name: ingredientName,
 			perAshkash: 0, // set initial perAshkash value as empty string
 		};
-
-		setIngredientItems(prevState =>
+      setIngredientItems(prevState =>
 			prevState === undefined ? [newIngredient] : [...prevState, newIngredient]
 		);
 		setUpdateAshkash(true);
+    }
+
+		
 	};
 
 	const handlePerAshkashChange = (value, ingredientName) => {
@@ -265,7 +285,6 @@ const SetMenu = () => {
 					}),
 				});
 
-
 				if (data) {
 					console.log(data);
 					const res = await data.json();
@@ -345,7 +364,6 @@ const SetMenu = () => {
 										Total count: {AshkhaasCount} People
 									</h3>
 									{/* Select Client: &nbsp;&nbsp;&nbsp;
-
                   <Select
                     defaultValue={0}
                     size="large"
@@ -358,6 +376,14 @@ const SetMenu = () => {
                   /> */}
 								</Col>
 								<Col xs={24} xl={12} style={{ padding: "1%" }}>
+								{status >= 1 && (
+			                        <Alert
+			                          message="Message"
+			                          description="Ingridient Items have already added"
+			                          type="success"
+			                          closable
+			                        />
+				                  )}
 									{/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
 									{getFoodList && (
 										<List
@@ -548,20 +574,24 @@ const SetMenu = () => {
 												</List.Item>
 											)}
 										/>
-										<Button
-											block
-											type="primary"
-											style={{ marginTop: 10 }}
-											onClick={logIngredientForFood}>
-											Confirm Menu
-										</Button>
+										{status < 1 && (
+					                      <Button
+					                        block
+					                        type="primary"
+					                        style={{ marginTop: 10 }}
+					                        onClick={logIngredientForFood}
+					                      >
+					                        Confirm Menu
+					                      </Button>
+					                    )}
 									</Card>
 								</Col>
 							</Row>
 						</div>
 						<center>
-							<Button
-								block
+						{status < 1 && (
+			                <Button
+			                  block
 								style={{
 									width: "90%",
 									height: 80,
@@ -569,16 +599,17 @@ const SetMenu = () => {
 									backgroundColor: "#e08003",
 								}}
 								type="primary"
-								onClick={updateOperationPipeliinIngridient}>
-								Push to inventory
-							</Button>
+								onClick={updateOperationPipeliinIngridient}
+			                >
+			                  Push to inventory
+			                </Button>
+			              )}
 						</center>
 					</div>
 				</div>
 			</ConfigProvider>
 		</div>
 	);
-
 };
 
 export default SetMenu;
