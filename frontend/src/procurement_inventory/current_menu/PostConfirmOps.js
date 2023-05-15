@@ -4,10 +4,12 @@ import {
   Col,
   List,
   ConfigProvider,
+  Input,
   Card,
   Button,
   Tag,
   DatePicker,
+  Alert
 } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -20,6 +22,7 @@ const PostConfirmOps = () => {
   const [foodItems, setFoodItems] = useState(null);
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(true);
+  const [status, setStatus] = useState();
 
   const data = [
     "Inventory",
@@ -28,6 +31,29 @@ const PostConfirmOps = () => {
     "Vendors",
     "Damaged Goods",
   ];
+
+  //getting the status from operational pipeline
+  useEffect(() => {
+    const getFood = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_status_op",
+            menu_id: menuFoodId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          setStatus(res);
+        }
+      }
+    };
+    getFood();
+  }, [menuFoodId]);
 
   useEffect(() => {
     const getFood = async () => {
@@ -136,6 +162,14 @@ const PostConfirmOps = () => {
               title="Post-Procument Ops"
               comp=<DatePicker onChange={handleDateChange} />
             />
+            {status < 2 && (
+	            <Alert
+	              message="IN-PROGRESS"
+	              description="Procurement is in progress"
+	              type="success"
+	              closable
+	            />
+	          )}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ padding: "3%" }}>
                 <label
@@ -144,7 +178,7 @@ const PostConfirmOps = () => {
                 >
                   Food Item Cooking Status
                 </label>
-                {foodItems && (
+                {foodItems && status >= 2 && (
                   <List
                     grid={{
                       gutter: 16,
@@ -189,7 +223,7 @@ const PostConfirmOps = () => {
                 >
                   Re-order Logs
                 </label>
-                {reorderLogs && (
+                {reorderLogs && status >= 2 (
                   <List
                     style={{
                       height: "35vh",

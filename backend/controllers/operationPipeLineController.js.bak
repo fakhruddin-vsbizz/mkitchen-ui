@@ -129,13 +129,6 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
 	}
 
 	if (type === "post_dispatch_data") {
-		
-		if (total_weight === undefined || no_of_deigh === undefined) {
-         return res
-          .status(403)
-          .json({ invalidData: "total weight and daigh cannot be empty" });
-        }
-		
 		const dispatchDoc = await OperationPipeLine.findOne({
 			menu_food_id: menu_id,
 		});

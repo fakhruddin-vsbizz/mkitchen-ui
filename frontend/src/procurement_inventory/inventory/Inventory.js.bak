@@ -221,7 +221,14 @@ const Inventory = () => {
                             width: "98%",
                           }}
                         >
-                          <Row style={{ width: "100%", textAlign: "left", display: 'flex', alignItems: 'center' }}>
+                          <Row
+                            style={{
+                              width: "100%",
+                              textAlign: "left",
+                              display: "flex",
+                              alignItems: "center",
+                            }}
+                          >
                             <Col
                               xs={4}
                               xl={4}
@@ -250,15 +257,15 @@ const Inventory = () => {
                                   >
                                     Restock Ingredient
                                   </Button>
-                                 
-                                  
-                          
                                 </div>
                               ) : (
                                 <div
                                   style={{ fontSize: "130%", color: "green" }}
                                 >
-                                  <i class="fa-solid fa-circle-check" style={{fontSize: "130%"}} ></i>{" "}
+                                  <i
+                                    class="fa-solid fa-circle-check"
+                                    style={{ fontSize: "130%" }}
+                                  ></i>{" "}
                                   SUFFICIENT
                                 </div>
                               )}
@@ -266,10 +273,9 @@ const Inventory = () => {
                             <Col xs={4} xl={4}>
                               <Link to={`/pai/inventory/purchases/${item._id}`}>
                                 <Button
-                                type="primary"
+                                  type="primary"
                                   style={{
                                     fontSize: "110%",
-                                 
                                   }}
                                 >
                                   View Purchases

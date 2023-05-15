@@ -9,6 +9,7 @@ import {
   DatePicker,
   ConfigProvider,
   Modal,
+  Alert,
 } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -185,6 +186,14 @@ const ConfirmIng = () => {
               title="Confirm Ingredient"
               comp=<DatePicker onChange={handleDateChange} />
             />
+            {operationalPipelineStatus >= 2 && (
+                <Alert
+                  message="Menu Procured"
+                  description="This Menu is been Procured"
+                  type="success"
+                  closable
+                />
+          	)}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "95%", padding: "2%" }}>
                 {procureIngridients && (
@@ -260,15 +269,15 @@ const ConfirmIng = () => {
                 )}
 
                 {operationalPipelineStatus && operationalPipelineStatus < 2 && (
-                  <Button
-                    onClick={markProcureIngridients}
-                    block
-                    type="primary"
-                    style={{ fontSize: "200%", height: "10%" }}
-                  >
-                    FINALIZE AND PUSH TO INVENTORY
-                  </Button>
-                )}
+		            <Button
+		              onClick={markProcureIngridients}
+		              block
+		              type="primary"
+		              style={{ fontSize: "200%", height: "10%" }}
+		            >
+		              FINALIZE AND PUSH TO INVENTORY
+		            </Button>
+          		)}
               </div>
             </div>
           </div>

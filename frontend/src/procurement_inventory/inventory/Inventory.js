@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -11,8 +11,10 @@ import {
   Radio,
   Tag,
   ConfigProvider,
+  Alert,
 } from "antd";
 import { Link } from "react-router-dom";
+import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
@@ -34,6 +36,9 @@ const Inventory = () => {
   const [inventoryItems, setInventoryItems] = useState();
   const [updated, setUpdated] = useState(false);
 
+  const [validationError, setValidationError] = useState(false);
+  const authCtx = useContext(AuthContext);
+  const email = authCtx.userEmail;
   useEffect(() => {
     const getInventory = async () => {
       const data = await fetch("http://localhost:5001/inventory/addinventory");
@@ -55,7 +60,7 @@ const Inventory = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          mkuser_email: "naman@gmail.com",
+          mkuser_email: email,
           ingridient_name: name,
           ingridient_measure_unit: unit,
           ingridient_expiry_period: expiryType,
@@ -71,13 +76,19 @@ const Inventory = () => {
 
       if (data) {
         const res = await data.json();
-        setUpdated((prev) => !prev);
-        setIsModalOpen(false);
-        setName("");
-        setExpiry("");
-        setUnit("");
-        console.log(res);
-      }
+        if (res.error) {
+          setValidationError(true);
+        } else {
+          setUpdated((prev) => !prev);
+          setIsModalOpen(false);
+          setName("");
+          setExpiry("");
+          setUnit("");
+          setValidationError(false);
+          setValidationError(false);
+
+          console.log(res);
+        }
     } catch (error) {
       console.log(error);
     }
@@ -192,6 +203,19 @@ const Inventory = () => {
                               </Radio.Group>
                             </td>
                           </tr>
+                          {validationError && (
+		                      <tr>
+		                        <td colSpan={2}>
+		                          <br />
+		                          <Alert
+		                            message="Validation Error"
+		                            description="All Fields Must Be Filled"
+		                            type="error"
+		                            closable
+		                          />
+		                        </td>
+		                      </tr>
+		                   )}
                         </table>
                       </Modal>
                     </td>

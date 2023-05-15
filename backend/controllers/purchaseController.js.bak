@@ -17,19 +17,6 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
 	} = req.body;
 
 	console.log(documents);
-	//validation and error handling
-	  if (documents.length === 0) {
-	    return res.status(403).json({ error: "please add items" });
-	  }
-	  documents.forEach((element) => {
-	    if (
-	      element.quantity_loaded === undefined ||
-	      element.rate_per_unit === undefined ||
-	      element.vendor_id === undefined
-	    ) {
-	      return res.status(403).json({ fieldError: "please add all the fields" });
-	    }
-	  });
 	// Create an array of write operations to perform in bulk
 	const ops = documents.map(doc => ({
 		insertOne: { document: doc },

@@ -24,16 +24,6 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 	// const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
 
 	if (mkUser) {
-		
-		if (
-      ingridient_measure_unit === "" ||
-      ingridient_expiry_period === "" ||
-      ingridient_expiry_amount === "" ||
-      ingridient_name === ""
-    ) {
-      return res.status(403).json({ error: "All fields are mendatory" });
-    }
-		
 		const inventoryItems = await InventoryModel.create({
 			mkuser_id: mkUser._id,
 			ingridient_name,

@@ -1,5 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, List, Input, Card, Button, DatePicker, Modal } from "antd";
+import {
+  Row,
+  Col,
+  List,
+  Input,
+  Card,
+  Button,
+  DatePicker,
+  ConfigProvider,
+  Modal,
+} from "antd";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 
 const ConfirmIng = () => {
   const [menuFoodId, setMenuFoodId] = useState();
@@ -138,7 +152,9 @@ const ConfirmIng = () => {
   };
 
   return (
-    <div>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <Modal
         visible={visible}
         onOk={() => setVisible(false)}
@@ -154,76 +170,110 @@ const ConfirmIng = () => {
           <p>Ingridients Procured Successfully</p>
         </div>
       </Modal>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <label style={{ fontSize: "300%" }} className="dongle-font-class">
-            Confirm Ingredient
-          </label>
-          <hr></hr>
-          <DatePicker onChange={handleDateChange} />
-          {procureIngridients && (
-            <List
-              size="small"
-              bordered
-              dataSource={procureIngridients}
-              renderItem={(item) => (
-                <List.Item>
-                  <div
-                    style={{
-                      width: "100%",
-                      backgroundColor: item.sufficient ? "lightgreen" : "pink",
-                      padding: "2%",
-                    }}
-                  >
-                    <label style={{ fontSize: "140%" }}>
-                      <u>{item.ingridientName}</u>
-                    </label>
-                    <br />
-                    <Row>
-                      <Col xs={12} xl={12}>
-                        Search vendor: <br />
-                        <label style={{ fontSize: "120%" }}>
-                          {item.total_quantity} {item.unit}
-                        </label>
-                      </Col>
-                      <Col xs={12} xl={12}>
-                        {!item.sufficient ? (
-                          <></>
-                        ) : (
-                          <div>
-                            <i class="fa-solid fa-circle-check"></i>
-                            &nbsp;&nbsp;&nbsp;FULFILLED THROUGH INVENTORY
-                          </div>
-                        )}
-                      </Col>
-                    </Row>
-                  </div>
-                </List.Item>
-              )}
-            />
-          )}
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="3" userType="pai" />
 
-          <br />
-          <br />
-          {operationalPipelineStatus && operationalPipelineStatus < 2 && (
-            <Button
-              onClick={markProcureIngridients}
-              block
-              type="primary"
-              style={{ fontSize: "200%", height: "10%" }}
-            >
-              FINALIZE AND PUSH TO INVENTORY
-            </Button>
-          )}
-        </Col>
-      </Row>
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Confirm Ingredient"
+              comp=<DatePicker onChange={handleDateChange} />
+            />
+            <div style={{ width: "100%", padding: 0 }}>
+              <div style={{ width: "95%", padding: "2%" }}>
+                {procureIngridients && (
+                  <List
+                    size="small"
+                    style={{
+                      height: "75vh",
+                      width: "100%",
+                      overflowY: "scroll",
+                      backgroundColor: "transparent",
+                    }}
+                    dataSource={procureIngridients}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <div
+                          style={{
+                            margin: 5,
+                            width: "100%",
+
+                            backgroundColor: "white",
+                            padding: "2%",
+                            borderRadius: 10,
+                            borderBottom: "2px solid orange",
+                          }}
+                        >
+                          <br />
+                          <Row>
+                            <Col xs={8} xl={8}>
+                              <label style={{ fontSize: "140%" }}>
+                                <span>{item.ingridientName}</span>
+                              </label>
+                            </Col>
+                            <Col xs={8} xl={8}>
+                              Procure Ammount: <br />
+                              <label
+                                style={{
+                                  color: item.sufficient ? "green" : "red",
+                                  fontSize: "130%",
+                                }}
+                              >
+                                {item.total_quantity} {item.unit}
+                              </label>
+                            </Col>
+                            <Col
+                              xs={8}
+                              xl={8}
+                              style={{
+                                color: item.sufficient ? "green" : "red",
+                              }}
+                            >
+                              {!item.sufficient ? (
+                                <div style={{ fontSize: "120%" }}>
+                                  <MinusCircleFilled
+                                    style={{ fontSize: "130%" }}
+                                  />
+                                  &nbsp;&nbsp;&nbsp;FULFILLED THROUGH NEGATIVE
+                                  INVENTORY
+                                </div>
+                              ) : (
+                                <div style={{ fontSize: "120%" }}>
+                                  <PlusCircleFilled
+                                    style={{ fontSize: "130%" }}
+                                  />
+                                  &nbsp;&nbsp;&nbsp;FULFILLED THROUGH INVENTORY
+                                </div>
+                              )}
+                            </Col>
+                          </Row>
+                        </div>
+                      </List.Item>
+                    )}
+                  />
+                )}
+
+                {operationalPipelineStatus && operationalPipelineStatus < 2 && (
+                  <Button
+                    onClick={markProcureIngridients}
+                    block
+                    type="primary"
+                    style={{ fontSize: "200%", height: "10%" }}
+                  >
+                    FINALIZE AND PUSH TO INVENTORY
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

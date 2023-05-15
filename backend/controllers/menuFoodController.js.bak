@@ -54,103 +54,6 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
 		console.log(foodMenu);
 		return res.json(foodMenu);
 	}
-	
-	if (add_type === "add_menu") {
-    if (date_of_cooking === "" || food_list.length === 0) {
-      return res
-        .status(404)
-        .json({ error: "date or food item not selected " });
-    }
-
-    console.log("adding menu");
-    console.log(
-      food_list,
-      total_ashkhaas,
-      module,
-      date_of_cooking,
-      client_name,
-      jaman_coming,
-      reason_for_undelivered
-    );
-    const foodMenu = await FoodMenu.create({
-      food_list,
-      total_ashkhaas,
-      mohalla_wise_ashkhaas,
-      date_of_cooking,
-      client_name,
-      jaman_coming,
-      reason_for_undelivered,
-    });
-
-    if (foodMenu) {
-      const operationPipeLine = await OperationPipeLine.create({
-        menu_food_id: foodMenu._id,
-        ingridient_list,
-        reorder_logs,
-        dispatch,
-        status,
-      });
-
-      if (operationPipeLine) {
-        return res.status(201).json({
-          _id: operationPipeLine.id,
-          menu_food_id: operationPipeLine.menu_food_id,
-          message: "menu created ",
-        });
-      } else {
-        res.status(400);
-        throw new Error("Error creating the operationPipeLine ");
-      }
-    } else {
-      res.status(400);
-      throw new Error("Error creating the menu");
-    }
-    // return res.json({ message: "menu created " });
-  }
-
-  if (add_type === "food_item") {
-    console.log("adding item");
-
-    const mkUser = await MkUser.findOne({ email: mkuser_email });
-
-    console.log(mkUser);
-    console.log(food_name, ingridient_list, usage_counter);
-    if (mkUser) {
-      console.log("inside mk");
-      const foodItem = await FoodItem.create({
-        mkuser_id: mkUser._id,
-        name: food_name,
-        ingridient_list,
-        usage_counter,
-      });
-
-      if (foodItem) {
-        console.log("created");
-        return res.status(201).json({ _id: foodItem.id, name: foodItem.name });
-      } else {
-        res.status(400);
-        throw new Error("Error creating the food item");
-      }
-    }
-  }
-
-  if (add_type === "get_food_item") {
-    console.log("getItem");
-    const foodMenu = await FoodItem.find();
-    return res.json(foodMenu);
-  }
-
-  if (add_type === "get_food_item_id") {
-    console.log("getItem id");
-    const foodMenu = await FoodItem.findOne({ name: selected_food });
-    console.log(foodMenu);
-    return res.json(foodMenu);
-  }
-  if (add_type === "get_mohalla_ashkash") {
-    const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
-    console.log(foodMenu);
-    return res.json(foodMenu.mohalla_wise_ashkhaas);
-  }
 });
 
 const getFoodMenu = expressAsyncHandler(async (req, res) => {
@@ -267,6 +170,7 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
 	const { data, date_of_cooking } = req.body;
 
 	const foodMenu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
+
 	if (foodMenu) {
 		console.log("data: ", data);
 		// const updatedMenuAskash = await FoodMenu.findByIdAndUpdate(

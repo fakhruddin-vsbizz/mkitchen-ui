@@ -2,8 +2,6 @@ const expressAsyncHandler = require("express-async-handler");
 const MkUser = require("../models/mkUserModel");
 const VendorModel = require("../models/vendorModel");
 
-const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
 const addVendor = expressAsyncHandler(async (req, res) => {
 	const {
 		mkuser_email,
@@ -19,21 +17,6 @@ const addVendor = expressAsyncHandler(async (req, res) => {
 	const mkUser = await MkUser.findOne({ email: mkuser_email });
 
 	if (mkUser) {
-		if (
-      address === "" ||
-      email === "" ||
-      vendor_name === "" ||
-      closing_time === "" ||
-      opening_time === ""
-    ) {
-      return res.status(403).json({ inputInvalid: "All Fields Are Mendatory" });
-    }
-
-    if (emailRegex.test(email) !== true) {
-      return res
-        .status(403)
-        .json({ emailInvalid: "Please write correct email!!" });
-    }
 		const vendor = await VendorModel.create({
 			mkuser_id: mkUser._id,
 			vendor_name,
