@@ -25,6 +25,7 @@ import VendorPurchase from "./procurement_inventory/vendors/VendorPurchase";
 import DamagedGoodsList from "./procurement_inventory/damaged_goods/DamagedGoodsList";
 import ProcedureLogs from "./admin/procedure_log/ProcedureLogs";
 import IngredientPurchase from "./procurement_inventory/inventory/IngredientPurchase";
+import ResetPassword from "./auth/ResetPasswor";
 function App() {
   return (
     <AuthContextProvider>
@@ -36,6 +37,7 @@ function App() {
         <Route path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
 
         {/*  ------------------------------- Cooking Route --------------------------  */}
         <Route path="/cooking/ingredients" element={<SetMenu />} />
@@ -45,7 +47,10 @@ function App() {
 
         {/*  ------------------------------- P&I Route ------------------------------  */}
         <Route path="/pai/inventory" element={<Inventory />} />
-        <Route path="/pai/inventory/purchases/:id" element={<IngredientPurchase />} />
+        <Route
+          path="/pai/inventory/purchases/:id"
+          element={<IngredientPurchase />}
+        />
         <Route path="/pai/purchases" element={<Purchases />} />
         <Route path="/pai/purchases/new" element={<NewPurchase />} />
         <Route path="/pai/procurement/" element={<ConfirmIng />} />
@@ -55,9 +60,8 @@ function App() {
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
         <Route path="/pai/expiries" element={<DamagedGoodsList />} />
       </Routes>
-    </AuthContextProvider> 
+    </AuthContextProvider>
   );
 }
 
 export default App;
-

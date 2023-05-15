@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 import {
@@ -23,6 +23,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
+import AuthContext from "../../components/context/auth-context";
 
 const Accounts = () => {
   const [usertype, setUserType] = useState(0);
@@ -69,6 +70,9 @@ const Accounts = () => {
   const [emailError, setEmailError] = useState(false);
   const [emailErrorPI, setEmailErrorPI] = useState(false);
   const [emailErrorPandIPassword, setEmailErrorPandIPassword] = useState(false);
+
+  const authCtx = useContext(AuthContext);
+  const userId = authCtx.userEmail;
 
   const handleUserTypeChange = (value) => {
     console.log("n");
@@ -446,8 +450,6 @@ const Accounts = () => {
     }
   };
 
-
-
   const [foodItems, setFoodItems] = useState([]);
   console.log(selectedCookingUser);
   const addFoodItem = () => {
@@ -462,6 +464,20 @@ const Accounts = () => {
     old_food_item_list.pop(old_food_item_list.indexOf(subject));
   };
 
+  const sentEmailNotification = async () => {
+    const data = await fetch("http://localhost:5001/admin/reset_password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: userId,
+      }),
+    });
+    if (data) {
+      console.log(data);
+    }
+  };
   /* ---------------------------------- Table --------------------------------- */
 
   return (
@@ -469,7 +485,7 @@ const Accounts = () => {
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
     >
       <div style={{ display: "flex" }}>
-        <SideNav k='3' userType='admin' />
+        <SideNav k="3" userType="admin" />
         <div style={{ width: "100%" }}>
           <Header
             title="Account Management"
@@ -493,6 +509,12 @@ const Accounts = () => {
               },
             }}
           >
+            <Button
+              style={{ marginTop: "50px" }}
+              onClick={sentEmailNotification}
+            >
+              Reset Password
+            </Button>
             <Modal
               title=<h3 style={{ color: "#E86800" }}>Add new account</h3>
               open={newMohallaPopup}

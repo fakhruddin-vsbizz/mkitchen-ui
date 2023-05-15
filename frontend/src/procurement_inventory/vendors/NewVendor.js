@@ -89,7 +89,7 @@ const NewVendor = () => {
           setEmailError(false);
           setValidationError(false);
         }
-      
+      }
     } catch (error) {
       console.log(error);
     }
@@ -126,7 +126,15 @@ const NewVendor = () => {
 
           <div style={{ width: "100%" }}>
             <Header
-              title=<p><Link to="/pai/vendors" style={{color:'white', textDecoration: 'none'}} ><ArrowLeftOutlined /></Link> Add New Vendor</p>
+              title=<p>
+                <Link
+                  to="/pai/vendors"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  <ArrowLeftOutlined />
+                </Link>{" "}
+                Add New Vendor
+              </p>
               comp=<center>
                 <Button style={{ backgroundColor: "white", color: "orange" }}>
                   Cancel
@@ -134,31 +142,31 @@ const NewVendor = () => {
               </center>
             />
             {validationError && (
-          <tr>
-            <td colSpan={2}>
-              <br />
-              <Alert
-                message="Validation Error"
-                description="All Fields Must Be Filled"
-                type="error"
-                closable
-              />
-            </td>
-          </tr>
-        )}
-        {emailError && (
-          <tr>
-            <td colSpan={2}>
-              <br />
-              <Alert
-                message="Validation Error"
-                description="Plese write the correct email"
-                type="error"
-                closable
-              />
-            </td>
-          </tr>
-        )}
+              <tr>
+                <td colSpan={2}>
+                  <br />
+                  <Alert
+                    message="Validation Error"
+                    description="All Fields Must Be Filled"
+                    type="error"
+                    closable
+                  />
+                </td>
+              </tr>
+            )}
+            {emailError && (
+              <tr>
+                <td colSpan={2}>
+                  <br />
+                  <Alert
+                    message="Validation Error"
+                    description="Plese write the correct email"
+                    type="error"
+                    closable
+                  />
+                </td>
+              </tr>
+            )}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "90%", padding: "3%" }}>
                 <Card
