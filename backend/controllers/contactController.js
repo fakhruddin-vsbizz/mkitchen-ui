@@ -14,7 +14,6 @@ const getContacts = asyncHandler(async (req, res) => {
 //@access public
 
 const createContact = asyncHandler(async (req, res) => {
-	console.log("req body: ", req);
 	const { name, email, phone } = req.body;
 
 	if (!name || !email || !phone) {
@@ -69,8 +68,6 @@ const updateContact = asyncHandler(async (req, res) => {
 
 const deleteContact = asyncHandler(async (req, res) => {
 	const contact = await Contact.findById(req.params.id);
-
-	console.log("contact: ", contact);
 
 	if (!contact) {
 		res.status(404);

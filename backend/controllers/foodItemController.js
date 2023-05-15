@@ -16,11 +16,10 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
 	if (typeDF === "get_food_and_ingridient") {
 		// Convert the food item IDs to ObjectId format
 		const objectIds = foodItemIds.map(id => new ObjectId(id.food_item_id));
-		console.log(objectIds);
+
 		// Retrieve the ingredient list for the given food item IDs from the food_item collection
 		FoodItem.find({ _id: { $in: objectIds } })
 			.then(foodItems => {
-				console.log(foodItems);
 				// Extract the ingredient lists from the retrieved food items
 				const ingredientLists = foodItems.map(
 					foodItem => foodItem.ingridient_list
@@ -36,21 +35,23 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
 	}
 
 	if (type === "get_food_Item") {
-		console.log("touched");
 		const menuFood = await MenuFood.find({ date_of_cooking: date });
+
+		if (menuFood.length === 0) {
+			return res.status(200).json({ 0: { food_list: [] } });
+		}
+
 		const menuStatus = await OperationPipeLine.findOne({
 			menu_food_id: menuFood[0]._id,
 		});
 		const status = menuStatus.status;
-		console.log("menuFood", menuFood[0]._id);
-		console.log("status", status);
+
 		const newMenuFood = { ...menuFood, status };
-		if (menuFood) {
-			return res.status(201).json(newMenuFood);
-		} else {
+		if (!menuFood) {
 			res.status(400);
 			throw new Error("Error getting the food list");
 		}
+		return res.status(201).json(newMenuFood);
 	}
 
 	if (type === "get_mohalla_users") {
@@ -101,8 +102,6 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
 	});
 
 	if (type === "update_food_ingridient" && foodItem) {
-		console.log("update ingridients of food items");
-
 		const updateIngridient = await FoodItem.findByIdAndUpdate(
 			{ _id: Object(foodItem._id) },
 			{ $set: { ingridient_list: ingridient_list } },
@@ -127,7 +126,6 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
 		);
 
 		if (updatePipeline && updatePipelineStatus) {
-			console.log("success");
 			return res.json({ message: "pipeline  updated successfully" });
 		}
 	}
@@ -139,7 +137,6 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
 			{ new: true }
 		);
 		if (updatePipeline) {
-			console.log("success");
 			return res.json({ message: "pipeline  updated successfully" });
 		}
 	}
