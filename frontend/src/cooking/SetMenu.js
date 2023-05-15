@@ -264,6 +264,15 @@ const SetMenu = () => {
 						ingridient_list: ingredientItems,
 					}),
 				});
+  const handleDateChange = (date) => {
+    console.log(date);
+    const dateObj = new Date(date);
+    const formattedDate = `${
+      dateObj.getMonth() + 1
+    }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+    setSelectedDate(formattedDate);
+    setIsSelected(false);
+  };
 
 				if (data) {
 					console.log(data);
