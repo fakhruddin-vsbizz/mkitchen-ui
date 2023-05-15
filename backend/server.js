@@ -20,6 +20,8 @@ app.use("/admin/account_management", require("./routes/mkUserRoutes"));
 app.use("/login", require("./routes/loginRoute"));
 
 app.use("/admin/menu", require("./routes/menuFoodRoute"));
+app.use("/admin/reset_password", require("./routes/emailNotificationRoute"));
+
 app.use("/cooking/ingredients", require("./routes/foodItemRoute"));
 
 app.use("/inventory/addinventory", require("./routes/inventoryItemsRoute"));

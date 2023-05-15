@@ -62,6 +62,7 @@ export const AuthContextProvider = (props) => {
 
     localStorage.removeItem("type");
     localStorage.removeItem("email");
+    localStorage.removeItem("expirationTime");
 
     localStorage.removeItem("user_id");
 
@@ -69,7 +70,7 @@ export const AuthContextProvider = (props) => {
     if (logoutHandler) {
       clearTimeout(logoutTimer);
     }
-    // window.location.href = "/";
+    window.location.href = "/login";
 
     console.log("In auth Logout");
   };

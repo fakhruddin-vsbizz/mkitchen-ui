@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Alert,
+  ConfigProvider,
 } from "antd";
 
 import logo from "../res/img/logo.png";
@@ -104,20 +105,26 @@ const Login = () => {
       }}
     >
       <ConfigProvider
-              theme={{
-                token: {
-                  colorPrimary: "orange",
-                  colorDanger: "",
-                },
-              }}
-            >
-
-      <Row style={{ height: "100% " }}>
-        <Col xs={24} xl={12} style={{ padding: "5%" }}>
-          <center>
-            <Image width={"100%"} preview={false} src={logo} />
-            <Divider plain style={{ backgroundColor: "orange", height: 5, borderRadius: 20 }}></Divider>
-            {/* <Radio.Group
+        theme={{
+          token: {
+            colorPrimary: "orange",
+            colorDanger: "",
+          },
+        }}
+      >
+        <Row style={{ height: "100% " }}>
+          <Col xs={24} xl={12} style={{ padding: "5%" }}>
+            <center>
+              <Image width={"100%"} preview={false} src={logo} />
+              <Divider
+                plain
+                style={{
+                  backgroundColor: "orange",
+                  height: 5,
+                  borderRadius: 20,
+                }}
+              ></Divider>
+              {/* <Radio.Group
               defaultValue={0}
               // size="small"
               style={{ marginTop: 16 }}
@@ -132,97 +139,114 @@ const Login = () => {
                 Cooking
               </Radio.Button>
             </Radio.Group> */}
-          </center>
-        </Col>
-        <Col xs={24} xl={12} style={{ padding: "5%" }}>
-          <label style={{height: 150, textAlign: 'center' }}>
-          </label>
-          <Card
-            bordered={true}
-            style={{
-              width: "100%",
-              border: "2px solid #e08003",
-              marginTop: 20,
-            }}
-            className="dongle-font-class"
-          >
-            {/* <label style={{ fontSize: "200%" }}>
+            </center>
+          </Col>
+          <Col xs={24} xl={12} style={{ padding: "5%" }}>
+            <label style={{ height: 150, textAlign: "center" }}></label>
+            <Card
+              bordered={true}
+              style={{
+                width: "100%",
+                border: "2px solid #e08003",
+                marginTop: 20,
+              }}
+              className="dongle-font-class"
+            >
+              {/* <label style={{ fontSize: "200%" }}>
               Login using respective credentials:
             </label>
             <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-            <table
-              style={{ width: "100%", height: "50vh", fontSize: "150%" }}
-              className="dongle-font-class"
-            >
-              {/* <Image width={"50%"} preview={false} src={logo} /> */}
-              <center>
-                <Image
-                  width={"40%"}
-                  preview={false}
-                  src={whiteLogo}
-                  style={{ filter: "invert(3)", margin: "50px 30px" }}
-                />
-              </center>
-              <center style={{ width: "100%",  marginBottom: -50 }}>
-                <tr style={{ textAlign: "left",height: '6vh', marginBottom: 10 }}>
-                  <td style={{ width: "8vw" }}>Email:</td>
-                  <td>
-                    <Input
-                      value={email}
-                      style={{ width: "24vw" }}
-                      onChange={(e) => setUserEmail(e.target.value)}
-                      placeholder="your email here...."
-                      allowClear
-                    />
-                  </td>
-                </tr>
-                <tr style={{ textAlign: "left",height: '6vh', marginBottom: 10 }}>
-                  <td>Password:</td>
-                  <td style={{ width: "8vw" }}>
-                    <Input.Password
-                      value={password}
-                      style={{ width: "24vw" }}
-                      onChange={(e) => setUserPassword(e.target.value)}
-                      placeholder="input password"
-                    />
-                  </td>
-                </tr>
-       
-                {error && (
-                <tr>
-                  <td colSpan={2}>
-                    <br />
-                    <Alert
-                      message="Validation Error"
-                      description="Invalid Email Or Password"
-                      type="error"
-                      closable
-                    />
-                  </td>
-                </tr>
-              )}
-                <tr style={{ textAlign: "left",height: '10vh', paddingTop: 30 }}>
-                  <td colSpan={2}>
-                    <Button
-                      onClick={handleLogin}
-                      type="primary"
-                      className="dongle-font-class"
-                      style={{
-                        marginTop: "2%",
-                        // backgroundColor: "#801801",
-                        fontSize: "100%",
-                      }}
-                      block
-                    >
-                      Authenticate
-                    </Button>
-                  </td>
-                </tr>
-              </center>
-            </table>
-          </Card>
-        </Col>
-      </Row>
+              <table
+                style={{ width: "100%", height: "50vh", fontSize: "150%" }}
+                className="dongle-font-class"
+              >
+                {/* <Image width={"50%"} preview={false} src={logo} /> */}
+                <center>
+                  <Image
+                    width={"40%"}
+                    preview={false}
+                    src={whiteLogo}
+                    style={{ filter: "invert(3)", margin: "50px 30px" }}
+                  />
+                </center>
+                <center style={{ width: "100%", marginBottom: -50 }}>
+                  <tr
+                    style={{
+                      textAlign: "left",
+                      height: "6vh",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <td style={{ width: "8vw" }}>Email:</td>
+                    <td>
+                      <Input
+                        value={email}
+                        style={{ width: "24vw" }}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                        placeholder="your email here...."
+                        allowClear
+                      />
+                    </td>
+                  </tr>
+                  <tr
+                    style={{
+                      textAlign: "left",
+                      height: "6vh",
+                      marginBottom: 10,
+                    }}
+                  >
+                    <td>Password:</td>
+                    <td style={{ width: "8vw" }}>
+                      <Input.Password
+                        value={password}
+                        style={{ width: "24vw" }}
+                        onChange={(e) => setUserPassword(e.target.value)}
+                        placeholder="input password"
+                      />
+                    </td>
+                  </tr>
+
+                  {error && (
+                    <tr>
+                      <td colSpan={2}>
+                        <br />
+                        <Alert
+                          message="Validation Error"
+                          description="Invalid Email Or Password"
+                          type="error"
+                          closable
+                        />
+                      </td>
+                    </tr>
+                  )}
+                  <tr
+                    style={{
+                      textAlign: "left",
+                      height: "10vh",
+                      paddingTop: 30,
+                    }}
+                  >
+                    <td colSpan={2}>
+                      <Button
+                        onClick={handleLogin}
+                        type="primary"
+                        className="dongle-font-class"
+                        style={{
+                          marginTop: "2%",
+                          // backgroundColor: "#801801",
+                          fontSize: "100%",
+                        }}
+                        block
+                      >
+                        Authenticate
+                      </Button>
+                    </td>
+                  </tr>
+                </center>
+              </table>
+            </Card>
+          </Col>
+        </Row>
       </ConfigProvider>
     </div>
   );

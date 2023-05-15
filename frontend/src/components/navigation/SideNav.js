@@ -6,7 +6,7 @@ import {
   TeamOutlined,
   MenuOutlined,
   HistoryOutlined,
-  LogoutOutlined ,
+  LogoutOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
 import { useState } from "react";
@@ -119,7 +119,7 @@ const logout = [
     <Link to="/login">Logout</Link>,
     "1",
     <Link to="/login">
-      <LogoutOutlined  style={{ fontSize: "20px" }} />
+      <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
 ];

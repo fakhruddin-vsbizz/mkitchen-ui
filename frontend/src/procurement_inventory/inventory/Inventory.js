@@ -89,6 +89,7 @@ const Inventory = () => {
 
           console.log(res);
         }
+      }
     } catch (error) {
       console.log(error);
     }
@@ -204,18 +205,18 @@ const Inventory = () => {
                             </td>
                           </tr>
                           {validationError && (
-		                      <tr>
-		                        <td colSpan={2}>
-		                          <br />
-		                          <Alert
-		                            message="Validation Error"
-		                            description="All Fields Must Be Filled"
-		                            type="error"
-		                            closable
-		                          />
-		                        </td>
-		                      </tr>
-		                   )}
+                            <tr>
+                              <td colSpan={2}>
+                                <br />
+                                <Alert
+                                  message="Validation Error"
+                                  description="All Fields Must Be Filled"
+                                  type="error"
+                                  closable
+                                />
+                              </td>
+                            </tr>
+                          )}
                         </table>
                       </Modal>
                     </td>
