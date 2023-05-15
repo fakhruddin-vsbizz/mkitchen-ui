@@ -10,7 +10,15 @@ import {
   Checkbox,
   Radio,
   Modal,
+  List,
+  Tag,
+  ConfigProvider,
 } from "antd";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { Link } from "react-router-dom";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const NewVendor = () => {
   const [vendorName, setVendorName] = useState();
@@ -75,100 +83,112 @@ const NewVendor = () => {
   };
 
   return (
-    <div>
-      <Modal
-        visible={visible}
-        onOk={() => setVisible(false)}
-        onCancel={() => setVisible(false)}
-        footer={[
-          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
-            OK
-          </Button>,
-        ]}
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
       >
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ color: "#52c41a" }}>Success!</h2>
-          <p>Vendor Added Successfully</p>
-        </div>
-      </Modal>
-
-      <Card style={{ padding: "1%", border: "1px solid grey" }} bordered={true}>
-        <Row>
-          <Col xs={12} xl={12} style={{ fontSize: "200%" }}>
-            <i class="fa-solid fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;New Vendor
-          </Col>
-          <Col xs={12} xl={12}>
-            <center>
-              <Button type="primary" danger>
-                Cancel
-              </Button>
-            </center>
-          </Col>
-        </Row>
-      </Card>
-      <div style={{ width: "80%", padding: "3%" }}>
-        <Card
-          style={{ border: "2px solid orange" }}
-          className="dongle-font-class"
+        <Modal
+          visible={visible}
+          onOk={() => setVisible(false)}
+          onCancel={() => setVisible(false)}
+          footer={[
+            <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+              OK
+            </Button>,
+          ]}
         >
-          <label style={{ fontSize: "150%" }}>
-            <u>Vendor Details</u>
-          </label>
-          <br />
-          <table style={{ width: "100%", fontSize: "130%" }} cellPadding={20}>
-            <tr>
-              <td>
-                Vendor Name:{" "}
-                <Input
-                  value={vendorName}
-                  onChange={(e) => setVendorName(e.target.value)}
-                  placeholder="Eg: VK General store, Brahma store, etc.."
-                ></Input>
-              </td>
-              <td>
-                Email:{" "}
-                <Input
-                  value={vendorEmail}
-                  onChange={(e) => setVendorEmail(e.target.value)}
-                  placeholder="Eg: brahma@gmail.com, vkstore@hotmail.com, etc.."
-                ></Input>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                Address:{" "}
-                <Input
-                  value={vendorAddress}
-                  onChange={(e) => setVendorAddress(e.target.value)}
-                  placeholder="Must include Street name, locality, city and country.."
-                ></Input>
-              </td>
-              <td>
-                <Row>
-                  <Col xs={12} xl={12}>
-                    Opening time: <br />
-                    <TimePicker
-                      value={openingTime}
-                      onChange={(time) => setOpeningTime(time)}
-                    ></TimePicker>
-                  </Col>
-                  <Col xs={12} xl={12}>
-                    Closing time: <br />
-                    <TimePicker
-                      value={closingTime}
-                      onChange={(time) => setClosingTime(time)}
-                    ></TimePicker>
-                  </Col>
-                </Row>
-              </td>
-            </tr>
-          </table>
-        </Card>
+          <div style={{ textAlign: "center" }}>
+            <h2 style={{ color: "#52c41a" }}>Success!</h2>
+            <p>Vendor Added Successfully</p>
+          </div>
+        </Modal>
+        <div style={{ display: "flex" }}>
+          <Sidebar k="4" userType="pai" />
 
-        <br />
-        <br />
+          <div style={{ width: "100%" }}>
+            <Header
+              title=<p><Link to="/pai/vendors" style={{color:'white', textDecoration: 'none'}} ><ArrowLeftOutlined /></Link> Add New Vendor</p>
+              comp=<center>
+                <Button style={{ backgroundColor: "white", color: "orange" }}>
+                  Cancel
+                </Button>
+              </center>
+            />
+            <div style={{ width: "100%", padding: 0 }}>
+              <div style={{ width: "90%", padding: "3%" }}>
+                <Card
+                  style={{ border: "2px solid orange" }}
+                  className="dongle-font-class"
+                >
+                  <label style={{ fontSize: "250%" }}>
+                    <span>Vendor Details</span>
+                  </label>
+                  <br />
+                  <table
+                    style={{ width: "100%", fontSize: "130%" }}
+                    cellPadding={20}
+                  >
+                    <tr>
+                      <td>
+                        Vendor Name:{" "}
+                        <Input
+                          value={vendorName}
+                          onChange={(e) => setVendorName(e.target.value)}
+                          placeholder="Eg: VK General store, Brahma store, etc.."
+                        ></Input>
+                      </td>
+                      <td>
+                        Email:{" "}
+                        <Input
+                          value={vendorEmail}
+                          onChange={(e) => setVendorEmail(e.target.value)}
+                          placeholder="Eg: brahma@gmail.com, vkstore@hotmail.com, etc.."
+                        ></Input>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        Address:{" "}
+                        <Input
+                          value={vendorAddress}
+                          onChange={(e) => setVendorAddress(e.target.value)}
+                          placeholder="Must include Street name, locality, city and country.."
+                        ></Input>
+                      </td>
+                      <td>
+                        <Row>
+                          <Col xs={12} xl={12}>
+                            Opening time: <br />
+                            <TimePicker
+                              value={openingTime}
+                              onChange={(time) => setOpeningTime(time)}
+                              style={{ width: "90%" }}
+                            ></TimePicker>
+                          </Col>
+                          <Col xs={12} xl={12}>
+                            Closing time: <br />
+                            <TimePicker
+                              value={closingTime}
+                              style={{ width: "100%" }}
+                              onChange={(time) => setClosingTime(time)}
+                            ></TimePicker>
+                          </Col>
+                        </Row>
+                      </td>
+                    </tr>
+                  </table>
+                </Card>
 
-        {/* <Card style={{ border: '2px solid orange' }} className='dongle-font-class'>
+                <br />
+                <br />
+
+                {/* <Card style={{ border: '2px solid orange' }} className='dongle-font-class'>
                 <label style={{ fontSize: '150%' }}>
                     <u>Availability</u>
                 </label>
@@ -198,13 +218,17 @@ const NewVendor = () => {
                         
             </Card> */}
 
-        <br />
-        <br />
+                <br />
+                <br />
 
-        <Button onClick={createNewVendor} type="primary">
-          ADD VENDOR
-        </Button>
-      </div>
+                <Button onClick={createNewVendor} type="primary">
+                  ADD VENDOR
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

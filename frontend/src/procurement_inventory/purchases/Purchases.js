@@ -94,9 +94,14 @@ const Purchases = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})`, height: '100%  ', overflowY: "hidden", }}
+      style={{
+        margin: 0,
+        padding: 0,
+        backgroundImage: `url(${DeshboardBg})`,
+        height: "100%  ",
+        overflowY: "hidden",
+      }}
     >
-      
       <ConfigProvider
         theme={{
           token: {
@@ -109,8 +114,8 @@ const Purchases = () => {
 
           <div style={{ width: "100%" }}>
             <Header title=" Purchases" />
-            <div style={{ padding: 0,  }}>
-              <Col xs={24} xl={24} style={{width: "100%", padding: "2%",  }}>
+            <div style={{ padding: 0 }}>
+              <Col xs={24} xl={24} style={{ width: "100%", padding: "2%" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
                   <tr>
                     <td>
@@ -166,12 +171,12 @@ const Purchases = () => {
                 <br />
                 {purchases && (
                   <List
-                  style={{
-                    height: "55vh",
-                    width: "80vw",
-                    overflowY: "scroll",
-                    backgroundColor: "transparent",
-                  }}
+                    style={{
+                      height: "55vh",
+                      width: "80vw",
+                      overflowY: "scroll",
+                      backgroundColor: "transparent",
+                    }}
                     dataSource={purchases}
                     renderItem={(item) => (
                       <List.Item>

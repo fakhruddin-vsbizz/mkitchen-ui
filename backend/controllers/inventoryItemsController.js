@@ -19,8 +19,6 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 		rate_per_unit,
 	} = req.body;
 
-	console.log("req object", req.body);
-
 	//getting the id's for the respective user
 	const mkUser = await MKUser.findOne({ email: mkuser_email });
 	// const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
@@ -35,8 +33,6 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 			decommisioned,
 			total_volume,
 		});
-
-		console.log(inventoryItems);
 
 		// if (inventoryItems) {
 		// 	const transectionLogs = await TransectionLogs.create({
@@ -60,14 +56,13 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 });
 
 const getInventoryItems = expressAsyncHandler(async (req, res) => {
-	console.log("hitting");
 	const inventory = await InventoryModel.find();
 	return res.json(inventory);
 });
 
 const updateInventoryItems = expressAsyncHandler(async (req, res) => {
 	const { inventory_id, quantity, type } = req.body;
-	console.log("hitting");
+
 	const inventory = await InventoryModel.findOne({ _id: inventory_id });
 
 	if (type === "udate_volume") {

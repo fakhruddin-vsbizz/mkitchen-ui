@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { Row, Col, List, Input, Card, Button, Tag, DatePicker } from "antd";
+import {
+  Row,
+  Col,
+  List,
+  ConfigProvider,
+  Card,
+  Button,
+  Tag,
+  DatePicker,
+} from "antd";
+import Header from "../../components/navigation/Header";
+import Sidebar from "../../components/navigation/SideNav";
+import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 
 const PostConfirmOps = () => {
   const [menuFoodId, setMenuFoodId] = useState();
@@ -105,95 +118,124 @@ const PostConfirmOps = () => {
     setSelectedDate(formattedDate);
   };
   return (
-    <div>
-      <Row>
-        <Col xs={0} xl={4} style={{ padding: "1%" }}>
-          <List
-            bordered
-            dataSource={data}
-            renderItem={(item) => <List.Item>{item}</List.Item>}
-          />
-        </Col>
-        <Col xs={24} xl={20} style={{ padding: "3%" }}>
-          <label style={{ fontSize: "300%" }} className="dongle-font-class">
-            Post-Procument Ops
-          </label>
-          <hr></hr>
-          <DatePicker onChange={handleDateChange} />
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
+      <ConfigProvider
+        theme={{
+          token: {
+            colorPrimary: "orange",
+          },
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <Sidebar k="3" userType="pai" />
 
-          <br />
-          <label style={{ fontSize: "180%" }} className="dongle-font-class">
-            Food Item Cooking Status
-          </label>
-          {foodItems && (
-            <List
-              grid={{
-                gutter: 16,
-                xs: 1,
-                sm: 2,
-                md: 4,
-                lg: 4,
-                xl: 6,
-                xxl: 3,
-              }}
-              dataSource={foodItems}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card title={item.food_name}>
-                    Cooking Status:{" "}
-                    {item.status === "COOKING" ? (
-                      <Tag color="gold">Cooking</Tag>
-                    ) : (
-                      <Tag color="green">Ready for Dispatch</Tag>
+          <div style={{ width: "100%" }}>
+            <Header
+              title="Post-Procument Ops"
+              comp=<DatePicker onChange={handleDateChange} />
+            />
+            <div style={{ width: "100%", padding: 0 }}>
+              <div style={{ padding: "3%" }}>
+                <label
+                  style={{ fontSize: "180%" }}
+                  className="dongle-font-class"
+                >
+                  Food Item Cooking Status
+                </label>
+                {foodItems && (
+                  <List
+                    grid={{
+                      gutter: 16,
+                      xs: 1,
+                      sm: 2,
+                      md: 4,
+                      lg: 4,
+                      xl: 6,
+                      xxl: 3,
+                    }}
+                    dataSource={foodItems}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card
+                          title={item.food_name}
+                          style={{
+                            margin: 5,
+                            width: "100%",
+                            // color: '#e08003',
+                            backgroundColor: "white",
+                            padding: "2%",
+                            borderRadius: 10,
+                            borderBottom: "2px solid orange",
+                          }}
+                        >
+                          Cooking Status:{" "}
+                          {item.status === "COOKING" ? (
+                            <Tag color="gold">Cooking</Tag>
+                          ) : (
+                            <Tag color="green">Ready for Dispatch</Tag>
+                          )}
+                        </Card>
+                      </List.Item>
                     )}
-                  </Card>
-                </List.Item>
-              )}
-            />
-          )}
-          <br />
-          <br />
-          <label style={{ fontSize: "180%" }} className="dongle-font-class">
-            Re-order Logs
-          </label>
-          {reorderLogs && (
-            <List
-              bordered
-              dataSource={reorderLogs}
-              renderItem={(item) => (
-                <List.Item>
-                  <Card style={{ width: "100%" }}>
-                    <Row>
-                      <Col xs={8} xl={8}>
-                        {item.ingridient_name}
-                      </Col>
-                      <Col xs={8} xl={8}>
-                        Required quantity: {item.quantity_requireds} {item.unit}
-                      </Col>
-                      <Col xs={8} xl={8}>
-                        {item.reorder_delivery_status ? (
-                          <>
-                            <Button
-                              onClick={(e) =>
-                                updateReorderStatus(item.inventory_id)
-                              }
-                              type="primary"
-                            >
-                              FULLFILL ORDER
-                            </Button>
-                          </>
-                        ) : (
-                          <Tag color="green">FULFILLED</Tag>
-                        )}
-                      </Col>
-                    </Row>
-                  </Card>
-                </List.Item>
-              )}
-            />
-          )}
-        </Col>
-      </Row>
+                  />
+                )}
+                <br />
+                <br />
+                <label
+                  style={{ fontSize: "180%" }}
+                  className="dongle-font-class"
+                >
+                  Re-order Logs
+                </label>
+                {reorderLogs && (
+                  <List
+                    style={{
+                      height: "35vh",
+                      width: "100%",
+                      overflowY: "scroll",
+                      backgroundColor: "transparent",
+                    }}
+                    dataSource={reorderLogs}
+                    renderItem={(item) => (
+                      <List.Item>
+                        <Card style={{ margin: '0px 10px' ,width: "100%" }}>
+                          <Row>
+                            <Col xs={8} xl={8}>
+                              {item.ingridient_name}
+                            </Col>
+                            <Col xs={8} xl={8}>
+                              Required quantity: {item.quantity_requireds}{" "}
+                              {item.unit}
+                            </Col>
+                            <Col xs={8} xl={8}>
+                              {item.reorder_delivery_status ? (
+                                <>
+                                  <Button
+                                    onClick={(e) =>
+                                      updateReorderStatus(item.inventory_id)
+                                    }
+                                    type="primary"
+                                  >
+                                    FULLFILL ORDER
+                                  </Button>
+                                </>
+                              ) : (
+                                <Tag color="green">FULFILLED</Tag>
+                              )}
+                            </Col>
+                          </Row>
+                        </Card>
+                      </List.Item>
+                    )}
+                  />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </ConfigProvider>
     </div>
   );
 };

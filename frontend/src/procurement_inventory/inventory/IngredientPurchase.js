@@ -14,10 +14,11 @@ import {
   InputNumber,
   ConfigProvider,
 } from "antd";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const IngredientPurchase = () => {
   const [itemPurchase, setItemPurchase] = useState();
@@ -105,7 +106,9 @@ const IngredientPurchase = () => {
   };
 
   return (
-    <div style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}>
+    <div
+      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+    >
       <ConfigProvider
         theme={{
           token: {
@@ -113,99 +116,140 @@ const IngredientPurchase = () => {
           },
         }}
       >
-      <div style={{ display: "flex" }}>
+        <div style={{ display: "flex" }}>
           <Sidebar k="1" userType="pai" />
 
           <div style={{ width: "100%" }}>
-            <Header title="Purchase Inventory" />
+            <Header
+              title=<p>
+                <Link
+                  to="/pai/inventory"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  <ArrowLeftOutlined />
+                </Link>{" "}
+                Purchase Inventory
+              </p>
+            />
             <div style={{ padding: 0 }}>
-      <center>
-        <Card style={{ width: "95%", textAlign: "left", backgroundColor: 'transparent' }}>
-          <Row style={{ width: "100%" }}>
-            <Col xs={12} xl={6}>
-              Filter by vendor name: <br />
-              <Input
-                placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
-                style={{ width: "70%" }}
-              ></Input>
-            </Col>
-            <Col xs={12} xl={6}>
-              Date of Purchase: <br />
-              <DatePicker></DatePicker>
-            </Col>
-            <Col xs={12} xl={6}>
-              Paid status: <br />
-              <Select
-                defaultValue={0}
-                style={{ width: "70%" }}
-                options={[
-                  { value: 0, label: "PAID" },
-                  { value: 1, label: "UNPAID" },
-                ]}
-              ></Select>
-            </Col>
-            <Col xs={12} xl={6}>
-              Price Range: <br />
-              <Row>
-                <Col xs={12} xl={12}>
-                  <Slider
-                    style={{ width: "70%" }}
-                    min={1}
-                    max={100000}
-                    onChange={onChange}
-                    value={typeof inputValue === "number" ? inputValue : 0}
+              <center>
+                <Card
+                  style={{
+                    width: "95%",
+                    textAlign: "left",
+                    backgroundColor: "transparent",
+                  }}
+                >
+                  <Row style={{ width: "100%" }}>
+                    <Col xs={12} xl={6}>
+                      Filter by vendor name: <br />
+                      <Input
+                        placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
+                        style={{ width: "70%" }}
+                      ></Input>
+                    </Col>
+                    <Col xs={12} xl={6}>
+                      Date of Purchase: <br />
+                      <DatePicker></DatePicker>
+                    </Col>
+                    <Col xs={12} xl={6}>
+                      Paid status: <br />
+                      <Select
+                        defaultValue={0}
+                        style={{ width: "70%" }}
+                        options={[
+                          { value: 0, label: "PAID" },
+                          { value: 1, label: "UNPAID" },
+                        ]}
+                      ></Select>
+                    </Col>
+                    <Col xs={12} xl={6}>
+                      Price Range: <br />
+                      <Row>
+                        <Col xs={12} xl={12}>
+                          <Slider
+                            style={{ width: "70%" }}
+                            min={1}
+                            max={100000}
+                            onChange={onChange}
+                            value={
+                              typeof inputValue === "number" ? inputValue : 0
+                            }
+                          />
+                        </Col>
+                        <Col xs={12} xl={12}>
+                          <InputNumber
+                            min={1}
+                            max={10000}
+                            style={{ margin: "0 16px" }}
+                            value={inputValue}
+                            onChange={onChange}
+                          />
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </Card>
+                {itemPurchase && (
+                  <List
+                    style={{
+                      padding: "0px 20px",
+                      margin: "10px 0px",
+                      width: "100%",
+                      height: "60vh",
+                      width: "85vw",
+                      overflowY: "scroll",
+                    }}
+                    dataSource={itemPurchase}
+                    renderItem={(item) => (
+                      <List.Item
+                        style={{
+                          margin: 10,
+                          padding: 20,
+                          display: "flex",
+                          backgroundColor: "#fff",
+                          borderRadius: 10,
+                          borderBottom: "2px solid orange",
+                          width: "98%",
+                        }}
+                      >
+                        <Row style={{ width: "100%", textAlign: "left" }}>
+                          <Col
+                            xs={24}
+                            xl={6}
+                            style={{ fontSize: "150%", color: "#e08003" }}
+                          >
+                            {vendors &&
+                              vendors
+                                .filter(
+                                  (it, index) => it._id === item.vendor_id
+                                )
+                                .map((ele) => ele.vendor_name)}
+                          </Col>
+                          <Col xs={8} xl={4}>
+                            Required quantity: <br />
+                            {item.quantity_loaded} {item.unit}
+                          </Col>
+                          <Col xs={8} xl={4}>
+                            Price: <br />
+                            Rs. {item.quantity_loaded * item.rate_per_unit}/-
+                          </Col>
+                          <Col xs={8} xl={6}>
+                            Date of purchase: <br />
+                            {item.createdAt}
+                          </Col>
+                          <Col xs={8} xl={4}>
+                            <Tag color={item.is_paid ? "green" : "red"}>
+                              {item.is_paid ? "PAID" : "UNPAID"}
+                            </Tag>
+                          </Col>
+                        </Row>
+                      </List.Item>
+                    )}
                   />
-                </Col>
-                <Col xs={12} xl={12}>
-                  <InputNumber
-                    min={1}
-                    max={10000}
-                    style={{ margin: "0 16px" }}
-                    value={inputValue}
-                    onChange={onChange}
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-        </Card>
-        {itemPurchase && (
-          <List
-            style={{ width: "90%" }}
-            dataSource={itemPurchase}
-            renderItem={(item) => (
-              <List.Item>
-                <Row style={{ width: "100%", textAlign: "left" }}>
-                  <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
-                    {vendors &&
-                      vendors
-                        .filter((it, index) => it._id === item.vendor_id)
-                        .map((ele) => ele.vendor_name)}
-                  </Col>
-                  <Col xs={8} xl={6}>
-                    Required quantity: <br />
-                    {item.quantity_loaded} {item.unit}
-                  </Col>
-                  <Col xs={8} xl={6}>
-                    Price: <br />
-                    Rs. {item.quantity_loaded * item.rate_per_unit}/-
-                  </Col>
-                  <Col xs={8} xl={6}>
-                    Date of purchase: <br />
-                    {item.createdAt}
-                  </Col>
-                  <Col xs={8} xl={6}>
-                    <Tag color={item.is_paid ? "green" : "red"}>
-                      {item.is_paid ? "PAID" : "UNPAID"}
-                    </Tag>
-                  </Col>
-                </Row>
-              </List.Item>
-            )}
-          />
-        )}
-      </center>
-      </div>
+                )}
+              </center>
+            </div>
           </div>
         </div>
       </ConfigProvider>
