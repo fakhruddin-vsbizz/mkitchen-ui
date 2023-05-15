@@ -264,15 +264,7 @@ const SetMenu = () => {
 						ingridient_list: ingredientItems,
 					}),
 				});
-  const handleDateChange = (date) => {
-    console.log(date);
-    const dateObj = new Date(date);
-    const formattedDate = `${
-      dateObj.getMonth() + 1
-    }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-    setSelectedDate(formattedDate);
-    setIsSelected(false);
-  };
+
 
 				if (data) {
 					console.log(data);
@@ -353,6 +345,7 @@ const SetMenu = () => {
 										Total count: {AshkhaasCount} People
 									</h3>
 									{/* Select Client: &nbsp;&nbsp;&nbsp;
+
                   <Select
                     defaultValue={0}
                     size="large"
@@ -585,6 +578,7 @@ const SetMenu = () => {
 			</ConfigProvider>
 		</div>
 	);
+
 };
 
 export default SetMenu;
