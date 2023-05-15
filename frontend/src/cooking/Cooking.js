@@ -259,6 +259,7 @@ const Cooking = () => {
 				}),
 			});
 
+
 			if (data) {
 				const res = await data.json();
 				console.log(data);
@@ -303,6 +304,7 @@ const Cooking = () => {
 									<DatePicker onChange={handleDateChange} />
 								</Col>
 								{/* <Col xs={24} xl={12}>
+
                   Select the client:
                   <br />
                   <Select
@@ -317,6 +319,7 @@ const Cooking = () => {
                 </Col> */}
 							</Row>
 						/>
+
 
 						<Row style={{ padding: 10 }}>
 							<Col xs={24} xl={16} style={{ padding: "2%" }}>
