@@ -9,12 +9,13 @@ import {
   Button,
   Tag,
   DatePicker,
-  Alert
+  Alert,
 } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const PostConfirmOps = () => {
   const [menuFoodId, setMenuFoodId] = useState();
@@ -31,7 +32,36 @@ const PostConfirmOps = () => {
     "Vendors",
     "Damaged Goods",
   ];
+  const navigate = useNavigate();
+  /**************Restricting PandI Route************************* */
 
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/procurement/post");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
   //getting the status from operational pipeline
   useEffect(() => {
     const getFood = async () => {
@@ -163,13 +193,13 @@ const PostConfirmOps = () => {
               comp=<DatePicker onChange={handleDateChange} />
             />
             {status < 2 && (
-	            <Alert
-	              message="IN-PROGRESS"
-	              description="Procurement is in progress"
-	              type="success"
-	              closable
-	            />
-	          )}
+              <Alert
+                message="IN-PROGRESS"
+                description="Procurement is in progress"
+                type="success"
+                closable
+              />
+            )}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ padding: "3%" }}>
                 <label
@@ -223,7 +253,7 @@ const PostConfirmOps = () => {
                 >
                   Re-order Logs
                 </label>
-                {reorderLogs && status >= 2 (
+                {reorderLogs && status >= 2 && (
                   <List
                     style={{
                       height: "35vh",
@@ -234,7 +264,7 @@ const PostConfirmOps = () => {
                     dataSource={reorderLogs}
                     renderItem={(item) => (
                       <List.Item>
-                        <Card style={{ margin: '0px 10px' ,width: "100%" }}>
+                        <Card style={{ margin: "0px 10px", width: "100%" }}>
                           <Row>
                             <Col xs={8} xl={8}>
                               {item.ingridient_name}

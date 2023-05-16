@@ -22,6 +22,10 @@ const InventoryItems = mongoose.Schema(
       type: String,
       required: true,
     },
+    price: {
+      type: Number,
+      required: true,
+    },
     decommisioned: {
       type: Boolean,
       required: true,

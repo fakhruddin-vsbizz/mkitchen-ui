@@ -16,6 +16,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { useNavigate } from "react-router-dom";
 
 const NewPurchase = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -27,12 +28,43 @@ const NewPurchase = () => {
   const [selectedVendor, setSelectedVendor] = useState();
   const [visible, setVisible] = useState(false);
 
-
   const [validationError, setValidationError] = useState(false);
   const [fieldsError, setFieldsError] = useState(false);
   const authCtx = useContext(AuthContext);
   const userId = authCtx.userId;
   //getting all the vendors
+
+  const navigate = useNavigate();
+
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/purchases/new");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
 
   useEffect(() => {
     const getVendors = async () => {
@@ -251,31 +283,31 @@ const NewPurchase = () => {
                       </td>
                     </tr>
                     {validationError && (
-			            <tr>
-			              <td colSpan={2}>
-			                <br />
-			                <Alert
-			                  message="Validation Error"
-			                  description="Please select the ingridients and add values !!"
-			                  type="error"
-			                  closable
-			                />
-			              </td>
-			            </tr>
-			          )}
-			          {fieldsError && (
-			            <tr>
-			              <td colSpan={2}>
-			                <br />
-			                <Alert
-			                  message="Validation Error"
-			                  description="Please fill all the fields !!"
-			                  type="error"
-			                  closable
-			                />
-			              </td>
-			            </tr>
-			          )}
+                      <tr>
+                        <td colSpan={2}>
+                          <br />
+                          <Alert
+                            message="Validation Error"
+                            description="Please select the ingridients and add values !!"
+                            type="error"
+                            closable
+                          />
+                        </td>
+                      </tr>
+                    )}
+                    {fieldsError && (
+                      <tr>
+                        <td colSpan={2}>
+                          <br />
+                          <Alert
+                            message="Validation Error"
+                            description="Please fill all the fields !!"
+                            type="error"
+                            closable
+                          />
+                        </td>
+                      </tr>
+                    )}
                   </table>
 
                   {/* <label style={{ fontSize: "150%" }}>Select the item</label> */}

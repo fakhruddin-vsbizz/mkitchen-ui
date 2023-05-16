@@ -15,6 +15,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const ConfirmIng = () => {
   const [menuFoodId, setMenuFoodId] = useState();
@@ -30,6 +31,37 @@ const ConfirmIng = () => {
     "Vendors",
     "Damaged Goods",
   ];
+
+  const navigate = useNavigate();
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/procurement");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
 
   const handleDateChange = (date) => {
     const dateObj = new Date(date);
@@ -82,6 +114,7 @@ const ConfirmIng = () => {
           console.log(res);
           if (res) {
             setMenuFoodId(res[0]._id);
+            setOperationalPipelineStatus(res.status);
           }
         }
       }
@@ -91,7 +124,7 @@ const ConfirmIng = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      if (menuFoodId) {
+      if (selectedDate) {
         try {
           console.log("inside");
           const data = await fetch("http://localhost:5001/pai/procurement", {
@@ -100,15 +133,47 @@ const ConfirmIng = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              menu_id: menuFoodId,
-              type: "get_procure_data",
+              date: selectedDate,
+              type: "get_procure_history",
             }),
           });
 
           if (data) {
             const res = await data.json();
-            if (res) {
-              setProcureIngridients(res);
+            if (res._id) {
+              console.log("procure history");
+
+              setProcureIngridients(res.procure_items);
+            }
+            if (res.message) {
+              console.log("procure record");
+
+              if (menuFoodId) {
+                try {
+                  const data = await fetch(
+                    "http://localhost:5001/pai/procurement",
+                    {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        menu_id: menuFoodId,
+                        type: "get_procure_data",
+                      }),
+                    }
+                  );
+
+                  if (data) {
+                    const res = await data.json();
+                    if (res) {
+                      setProcureIngridients(res);
+                    }
+                  }
+                } catch (error) {
+                  console.log(error);
+                }
+              }
             }
           }
         } catch (error) {
@@ -117,7 +182,7 @@ const ConfirmIng = () => {
       }
     };
     getInventory();
-  }, [menuFoodId]);
+  }, [menuFoodId, selectedDate]);
 
   console.log("date: ", selectedDate);
   console.log("menu id: ", menuFoodId);
@@ -135,6 +200,8 @@ const ConfirmIng = () => {
           documents: procureIngridients,
           menu_id: menuFoodId,
           type: "procure_ingridient",
+          date: selectedDate,
+          procure_items: procureIngridients,
         }),
       });
 
@@ -186,14 +253,22 @@ const ConfirmIng = () => {
               title="Confirm Ingredient"
               comp=<DatePicker onChange={handleDateChange} />
             />
+            {operationalPipelineStatus === 0 && (
+              <Alert
+                message="Message"
+                description="Ingridients not set for the selected date"
+                type="error"
+                closable
+              />
+            )}
             {operationalPipelineStatus >= 2 && (
-                <Alert
-                  message="Menu Procured"
-                  description="This Menu is been Procured"
-                  type="success"
-                  closable
-                />
-          	)}
+              <Alert
+                message="Menu Procured"
+                description="This Menu is been Procured"
+                type="success"
+                closable
+              />
+            )}
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "95%", padding: "2%" }}>
                 {procureIngridients && (
@@ -268,16 +343,18 @@ const ConfirmIng = () => {
                   />
                 )}
 
-                {operationalPipelineStatus && operationalPipelineStatus < 2 && (
-		            <Button
-		              onClick={markProcureIngridients}
-		              block
-		              type="primary"
-		              style={{ fontSize: "200%", height: "10%" }}
-		            >
-		              FINALIZE AND PUSH TO INVENTORY
-		            </Button>
-          		)}
+                {operationalPipelineStatus &&
+                  operationalPipelineStatus < 2 &&
+                  operationalPipelineStatus !== 0 && (
+                    <Button
+                      onClick={markProcureIngridients}
+                      block
+                      type="primary"
+                      style={{ fontSize: "200%", height: "10%" }}
+                    >
+                      FINALIZE AND PUSH TO INVENTORY
+                    </Button>
+                  )}
               </div>
             </div>
           </div>

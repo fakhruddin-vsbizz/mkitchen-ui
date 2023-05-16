@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -41,6 +41,37 @@ const Login = () => {
       value: 2,
     },
   ];
+
+   /**************Restricting Admin Route************************* */
+
+   useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/inventory");
+    }
+  }, [navigate]);
+
+  /**************Restricting Admin Route************************* */
+
 
   const handleLogin = async (e) => {
     e.preventDefault();

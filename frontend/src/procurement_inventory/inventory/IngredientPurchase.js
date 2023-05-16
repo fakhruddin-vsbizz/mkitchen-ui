@@ -14,7 +14,7 @@ import {
   InputNumber,
   ConfigProvider,
 } from "antd";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
@@ -26,6 +26,38 @@ const IngredientPurchase = () => {
 
   const { id } = useParams();
   console.log(id);
+
+  const navigate = useNavigate();
+
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    // if (!typeAdmin && type && type === "Procurement Inventory") {
+    //   navigate("/pai/inventory/purchases/:id");
+    // }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
 
   useEffect(() => {
     const getInventory = async () => {

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   List,
   Card,
@@ -17,7 +17,39 @@ import {
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { useNavigate } from "react-router-dom";
 const DamagedGoodsList = () => {
+  const navigate = useNavigate();
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/expiries");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
+
   const vendorPurchaseList = [
     {
       ingredient_name: "Goat Meat",
@@ -90,10 +122,16 @@ const DamagedGoodsList = () => {
 
           <div style={{ width: "100%" }}>
             <Header title="Expries" />
-            <div style={{ width: "100%", padding: '20px 0px' }}>
-              <div style={{ width: "100%", }}>
+            <div style={{ width: "100%", padding: "20px 0px" }}>
+              <div style={{ width: "100%" }}>
                 <center>
-                  <Card style={{ width: "85%", textAlign: "left", backgroundColor: 'transparent' }}>
+                  <Card
+                    style={{
+                      width: "85%",
+                      textAlign: "left",
+                      backgroundColor: "transparent",
+                    }}
+                  >
                     <Row style={{ width: "100%" }}>
                       <Col xs={12} xl={6}>
                         Filter by Ingredients: <br />
@@ -160,15 +198,21 @@ const DamagedGoodsList = () => {
                     dataSource={vendorPurchaseList}
                     renderItem={(item, idx) => (
                       <List.Item>
-                        <Row style={{
+                        <Row
+                          style={{
                             margin: 5,
                             width: "100%",
                             backgroundColor: "white",
                             padding: "2%",
                             borderRadius: 10,
                             borderBottom: "2px solid orange",
-                          }}>
-                          <Col xs={24} xl={6} style={{ fontSize: "150%", color: '#e08003' }}>
+                          }}
+                        >
+                          <Col
+                            xs={24}
+                            xl={6}
+                            style={{ fontSize: "150%", color: "#e08003" }}
+                          >
                             {item.ingredient_name}
                           </Col>
                           <Col xs={12} xl={4}>
