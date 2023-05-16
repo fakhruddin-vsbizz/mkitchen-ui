@@ -13,7 +13,7 @@ import {
   ConfigProvider,
   Alert,
 } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -33,12 +33,47 @@ const Inventory = () => {
   const [unit, setUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [expiryType, setExpiryType] = useState("");
+  const [price, setPrice] = useState("");
+
   const [inventoryItems, setInventoryItems] = useState();
   const [updated, setUpdated] = useState(false);
 
   const [validationError, setValidationError] = useState(false);
   const authCtx = useContext(AuthContext);
   const email = authCtx.userEmail;
+
+  const navigate = useNavigate();
+
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/inventory");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
+
   useEffect(() => {
     const getInventory = async () => {
       const data = await fetch("http://localhost:5001/inventory/addinventory");
@@ -66,6 +101,7 @@ const Inventory = () => {
           ingridient_expiry_period: expiryType,
           ingridient_expiry_amount: expiry,
           decommisioned: true,
+          price: price,
           total_volume: 0,
           date: "4/21/2023",
           quantity_transected: 0,
@@ -184,6 +220,16 @@ const Inventory = () => {
                                 value={unit}
                                 onChange={(e) => setUnit(e.target.value)}
                                 placeholder="Eg: 2,3,4, etc"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Avearage Price</td>
+                            <td>
+                              <Input
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                placeholder="Eg: 250, 100"
                               ></Input>
                             </td>
                           </tr>

@@ -15,6 +15,7 @@ import {
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { useNavigate } from "react-router-dom";
 const Purchases = () => {
   const [purchases, setPurchases] = useState();
 
@@ -25,6 +26,38 @@ const Purchases = () => {
     "Vendors",
     "Damaged Goods",
   ];
+
+  const navigate = useNavigate();
+
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/purchases");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
 
   useEffect(() => {
     const getPurchases = async () => {

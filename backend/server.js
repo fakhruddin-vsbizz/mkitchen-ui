@@ -38,5 +38,5 @@ app.use("/pai/procurement", require("./routes/procurementRoutes"));
 app.use(errorHandler);
 
 app.listen(port, () => {
-	console.log(`listning on ${port}`);
+  console.log(`listning on ${port}`);
 });

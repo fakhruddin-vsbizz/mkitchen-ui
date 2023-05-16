@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 
 import {
   Card,
@@ -21,7 +21,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const NewVendor = () => {
@@ -38,6 +38,37 @@ const NewVendor = () => {
 
   const authCtx = useContext(AuthContext);
   const userEmail = authCtx.userEmail;
+
+  const navigate = useNavigate();
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/vendors/new");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
 
   const createNewVendor = async () => {
     const selectedTimeOpening = openingTime ? new Date(openingTime) : null;

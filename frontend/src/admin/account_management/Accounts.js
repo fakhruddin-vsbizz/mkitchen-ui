@@ -24,6 +24,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import AuthContext from "../../components/context/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const Accounts = () => {
   const [usertype, setUserType] = useState(0);
@@ -73,13 +74,56 @@ const Accounts = () => {
 
   const authCtx = useContext(AuthContext);
   const userId = authCtx.userEmail;
+  const navigate = useNavigate();
 
+  /**************Restricting Admin Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/account_management");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/inventory");
+    }
+  }, [navigate]);
+
+  /**************Restricting Admin Route************************* */
+
+  console.log(selectedCookingUser);
+
+  const handlepandIUser = (data, email) => {
+    setSelectedPandIUser(data);
+    setNewEmailPandI(email.id);
+  };
+  const handleCookingUser = (data, email) => {
+    setSelectedCookingUser(data);
+    setNewEmailCooking(email.id);
+  };
   const handleUserTypeChange = (value) => {
     console.log("n");
     setUserType(value);
   };
-  const showModal = (data) => {
+  const showModal = (data, email) => {
+    console.log(email);
     setSelectedMohallaUser(data);
+    setNewEmailMohalla(email);
     setIsModalOpen(true);
   };
 
@@ -480,6 +524,7 @@ const Accounts = () => {
   };
   /* ---------------------------------- Table --------------------------------- */
 
+  console.log("mohalla users: ", mohallaUsers);
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -690,7 +735,9 @@ const Accounts = () => {
                                   <Button
                                     size="small"
                                     type="primary"
-                                    onClick={() => showModal(item.username)}
+                                    onClick={() =>
+                                      showModal(item.username, item.email)
+                                    }
                                   >
                                     Manage Account
                                   </Button>
@@ -860,9 +907,10 @@ const Accounts = () => {
                                 options={cookingDepartmentUser.map((item) => ({
                                   value: item.username,
                                   label: item.username,
+                                  id: item.email,
                                 }))}
-                                onChange={(value) =>
-                                  setSelectedCookingUser(value)
+                                onChange={(value, id) =>
+                                  handleCookingUser(value, id)
                                 }
                               />
                             )}
@@ -1081,9 +1129,10 @@ const Accounts = () => {
                                 options={pandiDepartmentUser.map((item) => ({
                                   value: item.username,
                                   label: item.username,
+                                  id: item.email,
                                 }))}
-                                onChange={(value) =>
-                                  setSelectedPandIUser(value)
+                                onChange={(value, id) =>
+                                  handlepandIUser(value, id)
                                 }
                               />
                             )}

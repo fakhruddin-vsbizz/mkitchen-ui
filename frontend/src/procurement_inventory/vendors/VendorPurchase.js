@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   Card,
@@ -17,7 +17,39 @@ import {
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { useNavigate } from "react-router-dom";
 const VendorPurchase = () => {
+  const navigate = useNavigate();
+  /**************Restricting PandI Route************************* */
+
+  useEffect(() => {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/vendors/purchases");
+    }
+  }, [navigate]);
+
+  /**************Restricting PandI Route************************* */
+
   const vendorPurchaseList = [
     {
       ingredient_name: "Goat Meat",
@@ -84,7 +116,13 @@ const VendorPurchase = () => {
             />
             <div style={{ width: "100%", padding: 0 }}>
               <center>
-                <Card style={{ width: "85%", textAlign: "left", backgroundColor: 'transparent' }}>
+                <Card
+                  style={{
+                    width: "85%",
+                    textAlign: "left",
+                    backgroundColor: "transparent",
+                  }}
+                >
                   <Row style={{ width: "100%" }}>
                     <Col xs={12} xl={6}>
                       Filter by Ingredients: <br />
@@ -136,26 +174,33 @@ const VendorPurchase = () => {
                   </Row>
                 </Card>
                 <List
-                  style={{ width: "100%", height: "60vh",
-                  width: "85vw",
-                  overflowY: "scroll", }}
+                  style={{
+                    width: "100%",
+                    height: "60vh",
+                    width: "85vw",
+                    overflowY: "scroll",
+                  }}
                   dataSource={vendorPurchaseList}
                   renderItem={(item) => (
-                    <List.Item style={{
-                      margin: 10,
-                      padding: 20,
-                      display: "flex",
-                      backgroundColor: "#fff",
-                      borderRadius: 10,
-                      borderBottom: "2px solid orange",
-                      width: "98%",
-                    }}>
-                      <Row  style={{
-                              width: "100%",
-                              textAlign: "left",
-                              display: "flex",
-                              alignItems: "center",
-                            }}>
+                    <List.Item
+                      style={{
+                        margin: 10,
+                        padding: 20,
+                        display: "flex",
+                        backgroundColor: "#fff",
+                        borderRadius: 10,
+                        borderBottom: "2px solid orange",
+                        width: "98%",
+                      }}
+                    >
+                      <Row
+                        style={{
+                          width: "100%",
+                          textAlign: "left",
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
                         <Col xs={8} xl={6} style={{ fontSize: "150%" }}>
                           {item.ingredient_name}
                         </Col>

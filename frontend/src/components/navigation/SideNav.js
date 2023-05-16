@@ -8,7 +8,7 @@ import {
   HistoryOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
-import { Breadcrumb, Layout, Menu, theme, ConfigProvider } from "antd";
+import { Breadcrumb, Layout, Menu, theme, ConfigProvider, Button } from "antd";
 import { useState } from "react";
 import Logo from "../../res/img/MKWhiteLogo.png";
 import LogoMin from "../../res/img/MKWhiteLogoMin.png";
@@ -24,6 +24,21 @@ function getItem(label, key, icon, children, link) {
     link,
   };
 }
+
+const logoutHandler = () => {
+  console.log("In auth Logout");
+  localStorage.removeItem("token");
+
+  localStorage.removeItem("type");
+  localStorage.removeItem("email");
+  localStorage.removeItem("expirationTime");
+
+  localStorage.removeItem("user_id");
+
+  window.location.href = "/login";
+
+  console.log("In auth Logout");
+};
 const admin = [
   getItem(
     <Link to="/admin/menu">Today's Menu</Link>,
@@ -116,9 +131,9 @@ const pai = [
 ];
 const logout = [
   getItem(
-    <Link to="/login">Logout</Link>,
+    <Button onClick={logoutHandler}>Logout</Button>,
     "1",
-    <Link to="/login">
+    <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),

@@ -4,38 +4,105 @@ import { Card, List, Row, Col } from "antd";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
+import { useNavigate } from "react-router-dom";
 
 const ProcedureLogs = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [menuFoodId, setMenuFoodId] = useState();
   const [reviewData, setReviewData] = useState([]);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
+  const [inventoryItems, setInventoryItems] = useState([]);
 
   const [ingridientList, setIngridientList] = useState([]);
 
+  const navigate = useNavigate();
+  /**************Restricting Admin Route************************* */
+
   useEffect(() => {
-    const getHistory = async () => {
-      if (selectedDate !== "1/1/1970") {
-        const data = await fetch("http://localhost:5001/api/menu/history", {
+    console.log("in");
+
+    const type = localStorage.getItem("type");
+
+    console.log("ttt=>", type);
+
+    if (!type) {
+      console.log("second in");
+      navigate("/login");
+    }
+
+    const typeAdmin = type === "mk admin" ? true : false;
+
+    if (typeAdmin) {
+      console.log("second in");
+      navigate("/admin/menu/history");
+    }
+    if (!typeAdmin && type && type === "Cooking") {
+      navigate("/cooking/ingredients");
+    }
+    if (!typeAdmin && type && type === "Procurement Inventory") {
+      navigate("/pai/inventory");
+    }
+  }, [navigate]);
+
+  /**************Restricting Admin Route************************* */
+
+  useEffect(() => {
+    const getInventory = async () => {
+      try {
+        console.log("inside");
+        const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            date: selectedDate,
+            type: "get_inventory_ingridients",
+          }),
+        });
+
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            setInventoryItems(res);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getInventory();
+  }, []);
+
+  console.log(inventoryItems);
+
+  useEffect(() => {
+    const getHistory = async () => {
+      if (menuFoodId) {
+        const data = await fetch("http://localhost:5001/admin/menu", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            menu_id: menuFoodId,
+            add_type: "get_total_ashkash_sum",
           }),
         });
         if (data) {
+          console.log("yes");
           const res = await data.json();
+          console.log(res);
           // setGetMkUserId(res.user);
-          setTotalAshkhaas(res?.totalAshkhaas);
+          setTotalAshkhaas(res);
           console.log("getFood menu/history ==============> ", res);
         }
       }
     };
 
     getHistory();
-  }, [selectedDate]);
+  }, [menuFoodId]);
+
+  console.log("total Ashkash ==>", totalAshkash);
 
   useEffect(() => {
     const getFood = async () => {
@@ -63,6 +130,8 @@ const ProcedureLogs = () => {
     };
     getFood();
   }, [menuFoodId]);
+
+  console.log("getFood operation_pipeline ==============> ", ingridientList);
 
   useEffect(() => {
     const getFood = async () => {
@@ -116,112 +185,6 @@ const ProcedureLogs = () => {
     getData();
   }, [selectedDate, menuFoodId]);
 
-  const mohalla_user_data = [
-    {
-      mohalla_user: "Fakhri Mohalla",
-      count: 240,
-      total_daig_count: 12,
-      total_weight: 2400,
-      delivery_status: true,
-      rating: 3,
-      review: "N/A",
-    },
-    {
-      mohalla_user: "Badshah Nagar",
-      count: 240,
-      total_daig_count: 12,
-      total_weight: 2400,
-      delivery_status: true,
-      rating: 3,
-      review: "N/A",
-    },
-    {
-      mohalla_user: "Konark Pooram",
-      count: 240,
-      total_daig_count: 12,
-      total_weight: 2400,
-      delivery_status: false,
-      rating: 3,
-      review: "N/A",
-    },
-    {
-      mohalla_user: "Hatimi Mohalla",
-      count: 240,
-      total_daig_count: 12,
-      total_weight: 2400,
-      delivery_status: false,
-      rating: 3,
-      review: "N/A",
-    },
-    {
-      mohalla_user: "Taiyabi Mohalla",
-      count: 240,
-      total_daig_count: 12,
-      total_weight: 2400,
-      delivery_status: true,
-      rating: 3,
-      review: "N/A",
-    },
-  ];
-
-  const ingredients_inventory = [
-    {
-      ingredient_name: "Goat Meat",
-      required_amount: 1200,
-      unit: "KG",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Pudina Masala",
-      required_amount: 200,
-      unit: "Packet",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Sunflower Oil",
-      required_amount: 1200,
-      unit: "L",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Rawa",
-      required_amount: 1200,
-      unit: "KG",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Govardhan Ghee",
-      required_amount: 1200,
-      unit: "KG",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Moong Dal",
-      required_amount: 3500,
-      unit: "KG",
-      per_unit_price: 12,
-      left_item: 200,
-    },
-    {
-      ingredient_name: "Basmati Rice",
-      required_amount: 3500,
-      unit: "KG",
-      per_unit_price: 12,
-      left_item: 500,
-    },
-    {
-      ingredient_name: "Eggs",
-      required_amount: 12,
-      unit: "Dozens",
-      per_unit_price: 12,
-      left_item: 0.5,
-    },
-  ];
   const handleDateChange = (date) => {
     console.log(date);
     const dateObj = new Date(date);
@@ -313,15 +276,14 @@ const ProcedureLogs = () => {
                                   Total Weight : 180
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                <i class="fa-solid fa-star"></i>{" "}
+                                  <i class="fa-solid fa-star"></i>{" "}
                                   &nbsp;&nbsp;&nbsp; {item.review}/5
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                  Review: 
-                                  &nbsp;&nbsp;&nbsp; {item.review}/5
+                                  Review: &nbsp;&nbsp;&nbsp; {item.review}/5
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                {item.review ? (
+                                  {item.review ? (
                                     <div>
                                       <i class="fa-solid fa-circle-check"></i>{" "}
                                       Delivered
@@ -339,7 +301,7 @@ const ProcedureLogs = () => {
                         )}
                       />
                     )}
-                      {/* <List
+                    {/* <List
                         style={{ width: "100%" }}
                         dataSource={reviewData}
                         renderItem={(item) => (
@@ -389,7 +351,6 @@ const ProcedureLogs = () => {
                           </List.Item>
                         )}
                       /> */}
-                
                   </Card>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
@@ -429,7 +390,15 @@ const ProcedureLogs = () => {
                                     <br />
                                     <b>
                                       {item.perAshkash * totalAshkash}{" "}
-                                      {item.unit}
+                                      {inventoryItems
+                                        .filter(
+                                          (inventory) =>
+                                            inventory._id ===
+                                            item.inventory_item_id
+                                        )
+                                        .map(
+                                          (ele) => ele.ingridient_measure_unit
+                                        )}
                                     </b>
                                   </center>
                                 </Col>
@@ -438,7 +407,16 @@ const ProcedureLogs = () => {
                                     Leftover amount:
                                     <br />
                                     <b>
-                                      {item.leftover_amount} {item.unit}
+                                      {item.leftover_amount}{" "}
+                                      {inventoryItems
+                                        .filter(
+                                          (inventory) =>
+                                            inventory._id ===
+                                            item.inventory_item_id
+                                        )
+                                        .map(
+                                          (ele) => ele.ingridient_measure_unit
+                                        )}
                                     </b>
                                   </center>
                                 </Col>
@@ -446,8 +424,16 @@ const ProcedureLogs = () => {
                                   <center>
                                     <label style={{ fontSize: "120%" }}>
                                       Rs.
-                                      {item.per_unit_price *
-                                        item.required_amount}
+                                      {inventoryItems
+                                        .filter(
+                                          (inventory) =>
+                                            inventory._id ===
+                                            item.inventory_item_id
+                                        )
+                                        .map(
+                                          (filteredItem) =>
+                                            filteredItem.price * totalAshkash
+                                        )}
                                       /-
                                     </label>
                                   </center>
