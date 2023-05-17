@@ -94,6 +94,25 @@ const updateInventoryItems = expressAsyncHandler(async (req, res) => {
   return res.json(inventory);
 });
 
+const updateInventoryVolume = expressAsyncHandler(async (req, res) => {
+  const { inventory_id, quantity } = req.body;
+
+  const inventory = await InventoryModel.findOne({ _id: inventory_id });
+
+  const updateInventory = await InventoryModel.findByIdAndUpdate(
+    { _id: Object(inventory._id) },
+    {
+      $inc: { total_volume: inventory.total_volume < 0 ? quantity : -quantity },
+    },
+    { new: true }
+  );
+  if (updateInventory) {
+    return res
+      .status(201)
+      .json({ message: "inventory volume updated successfully" });
+  }
+});
+
 const decommissionOne = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   const inventory = await InventoryModel.findOneAndUpdate(
@@ -128,4 +147,5 @@ module.exports = {
   updateInventoryItems,
   decommissionOne,
   recommissionOne,
+  updateInventoryVolume,
 };

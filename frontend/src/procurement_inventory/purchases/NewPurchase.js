@@ -126,6 +126,40 @@ const NewPurchase = () => {
       setValidationError(true);
     } else {
       setValidationError(false);
+      let currentDate = new Date();
+
+      const data = inventoryItems.filter(
+        (item) => item._id === inventoryItemId
+      );
+
+      const time = +data[0].ingridient_expiry_amount;
+      const period = data[0].ingridient_expiry_period;
+
+      // Get the current date
+
+      console.log(time, " ", period);
+
+      // Add the specified time and period to the current date
+      if (period === "Days") {
+        currentDate.setDate(currentDate.getDate() + time);
+      } else if (period === "Months") {
+        currentDate.setMonth(currentDate.getMonth() + time);
+      } else if (period === "Year") {
+        currentDate.setFullYear(currentDate.getFullYear() + time);
+      }
+      let formattedDateData = currentDate.toDateString();
+
+      var date = new Date(formattedDateData);
+
+      var formattedDate = date.toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        year: "2-digit",
+      });
+
+      // Output the final date
+      console.log("Final Date:", formattedDate);
+
       var ingredient_added = {
         mkuser_id: userId,
         ingredient_name: inventoryItemName,
@@ -133,6 +167,10 @@ const NewPurchase = () => {
         inventory_id: inventoryItemId,
         rate_per_unit: price,
         quantity_loaded: quantity,
+        paid: false,
+        total_amount: price * quantity,
+        expiry_date: formattedDate,
+        unshelf: false,
       };
       setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
     }
@@ -145,6 +183,7 @@ const NewPurchase = () => {
         return {
           ...ingredient,
           rate_per_unit: +value,
+          total_amount: +value * ingredient.quantity_loaded,
         };
       }
       return ingredient; // return the unchanged ingredient object
@@ -159,6 +198,7 @@ const NewPurchase = () => {
         return {
           ...ingredient,
           quantity_loaded: +value,
+          total_amount: ingredient.rate_per_unit * +value,
         };
       }
       return ingredient; // return the unchanged ingredient object
@@ -376,7 +416,15 @@ const NewPurchase = () => {
                               )}
                             </Col>
                             <Col xs={8} xl={8}>
-                              Price per KG: <br />
+                              Price per{" "}
+                              {inventoryItems &&
+                                inventoryItems
+                                  .filter(
+                                    (itemNew) =>
+                                      itemNew._id === item.inventory_id
+                                  )
+                                  .map((ele) => ele.ingridient_measure_unit)}
+                              <br />
                               Rs.
                               <Input
                                 onChange={(e) =>

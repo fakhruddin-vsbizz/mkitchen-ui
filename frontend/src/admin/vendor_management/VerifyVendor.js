@@ -76,35 +76,6 @@ const VerifyVendor = () => {
   }, [update]);
 
   console.log(vendors);
-  const data = ["Menu", "Process History", "Vendor Management", "Reports"];
-
-  const all_verified_vendors = [
-    {
-      key: "1",
-      vendor_name: "V.K. General Store",
-      date_created: "19-06-2022",
-      id: "099089724383243",
-    },
-    {
-      key: "2",
-      vendor_name: "Mohsin Sons and Co.",
-      date_created: "19-06-2022",
-      id: "099089724383243",
-    },
-    {
-      key: "3",
-      vendor_name: "Turban Supermall",
-      date_created: "19-06-2022",
-      id: "099089724383243",
-    },
-  ];
-
-  const mohalla_accounts = [
-    { vendor_name: "G S Sons", date_created: "19-06-2021" },
-    { vendor_name: "Brahma Sons and Co.", date_created: "19-06-2021" },
-    { vendor_name: "V K General Store", date_created: "19-06-2021" },
-    { vendor_name: "Badhshah General Store", date_created: "19-06-2021" },
-  ];
 
   const markVendorVerified = async (id) => {
     try {

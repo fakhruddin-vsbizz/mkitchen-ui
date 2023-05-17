@@ -19,7 +19,13 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 const VendorPurchase = () => {
+  const [purchaseList, setPurchaseList] = useState();
+  const [inventoryItems, setInventoryItems] = useState([]);
+  const [inputValue, setInputValue] = useState(1);
+  const [update, setUpdate] = useState(false);
+
   const navigate = useNavigate();
+
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
@@ -50,42 +56,74 @@ const VendorPurchase = () => {
 
   /**************Restricting PandI Route************************* */
 
-  const vendorPurchaseList = [
-    {
-      ingredient_name: "Goat Meat",
-      quantity_ordered: 130,
-      rate: 600,
-      unit: "KG",
-      is_paid: false,
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Cabbage",
-      quantity_ordered: 400,
-      rate: 40,
-      unit: "KG",
-      is_paid: true,
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Amul Butter",
-      quantity_ordered: 500,
-      rate: 25,
-      unit: "KG",
-      is_paid: false,
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Sunflower Oil",
-      quantity_ordered: 200,
-      rate: 100,
-      unit: "L",
-      is_paid: true,
-      created_on: "24-06-2023",
-    },
-  ];
+  //getting all purchase data
+  useEffect(() => {
+    const getPurchaseData = async () => {
+      try {
+        const data = await fetch("http://localhost:5001/purchase");
+        const res = await data.json();
 
-  const [inputValue, setInputValue] = useState(1);
+        if (res) {
+          setPurchaseList(res);
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    getPurchaseData();
+  }, [update]);
+
+  console.log("purcahse list: ", purchaseList);
+  console.log("Inventory list: ", inventoryItems);
+
+  useEffect(() => {
+    const getInventory = async () => {
+      try {
+        console.log("inside");
+        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_inventory_ingridients",
+          }),
+        });
+
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            setInventoryItems(res);
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getInventory();
+  }, []);
+
+  const payPurchaseItem = async (id) => {
+    console.log(id);
+    try {
+      const data = await fetch("http://localhost:5001/purchase", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          purchase_id: id,
+          paid: true,
+        }),
+      });
+      if (data) {
+        console.log(data);
+        setUpdate((prev) => !prev);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   const onChange = (newValue) => {
     setInputValue(newValue);
@@ -173,60 +211,74 @@ const VendorPurchase = () => {
                     </Col>
                   </Row>
                 </Card>
-                <List
-                  style={{
-                    width: "100%",
-                    height: "60vh",
-                    width: "85vw",
-                    overflowY: "scroll",
-                  }}
-                  dataSource={vendorPurchaseList}
-                  renderItem={(item) => (
-                    <List.Item
-                      style={{
-                        margin: 10,
-                        padding: 20,
-                        display: "flex",
-                        backgroundColor: "#fff",
-                        borderRadius: 10,
-                        borderBottom: "2px solid orange",
-                        width: "98%",
-                      }}
-                    >
-                      <Row
+                {purchaseList && (
+                  <List
+                    style={{
+                      width: "100%",
+                      height: "60vh",
+                      width: "85vw",
+                      overflowY: "scroll",
+                    }}
+                    dataSource={purchaseList}
+                    renderItem={(item) => (
+                      <List.Item
                         style={{
-                          width: "100%",
-                          textAlign: "left",
+                          margin: 10,
+                          padding: 20,
                           display: "flex",
-                          alignItems: "center",
+                          backgroundColor: "#fff",
+                          borderRadius: 10,
+                          borderBottom: "2px solid orange",
+                          width: "98%",
                         }}
                       >
-                        <Col xs={8} xl={6} style={{ fontSize: "150%" }}>
-                          {item.ingredient_name}
-                        </Col>
-                        <Col xs={8} xl={4}>
-                          Required quantity: <br />
-                          {item.quantity_ordered} {item.unit}
-                        </Col>
-                        <Col xs={8} xl={4}>
-                          Required quantity: <br />
-                          Rs. {item.quantity_ordered * item.rate}/-
-                        </Col>
-                        <Col xs={12} xl={4}>
-                          Date of purchase: <br />
-                          {item.created_on}
-                        </Col>
-                        <Col xs={12} xl={6}>
-                          <Tag color={item.is_paid ? "green" : "red"}>
-                            {item.is_paid ? "PAID" : "UNPAID"}
-                          </Tag>
-                          &nbsp;&nbsp;&nbsp;
-                          {!item.is_paid ? <Button>MARK PAID</Button> : null}
-                        </Col>
-                      </Row>
-                    </List.Item>
-                  )}
-                />
+                        <Row
+                          style={{
+                            width: "100%",
+                            textAlign: "left",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Col xs={8} xl={6} style={{ fontSize: "150%" }}>
+                            {item.ingredient_name}
+                          </Col>
+                          <Col xs={8} xl={4}>
+                            Required quantity: <br />
+                            {item.quantity_loaded}{" "}
+                            {inventoryItems &&
+                              inventoryItems
+                                .filter(
+                                  (itemNew) => itemNew._id === item.inventory_id
+                                )
+                                .map((ele) => ele.ingridient_measure_unit)}
+                          </Col>
+                          <Col xs={8} xl={4}>
+                            Total Amount: <br />
+                            Rs. {item.total_amount}/-
+                          </Col>
+                          <Col xs={12} xl={4}>
+                            Date of purchase: <br />
+                            {item.createdAt}
+                          </Col>
+                          <Col xs={12} xl={6}>
+                            <Tag color={item.paid ? "green" : "red"}>
+                              {item.paid ? "PAID" : "UNPAID"}
+                            </Tag>
+                            &nbsp;&nbsp;&nbsp;
+                            {!item.paid ? (
+                              <Button
+                                onClick={(e) => payPurchaseItem(item._id)}
+                              >
+                                MARK PAID
+                              </Button>
+                            ) : null}
+                          </Col>
+                        </Row>
+                      </List.Item>
+                    )}
+                  />
+                )}
               </center>
             </div>
           </div>

@@ -108,7 +108,7 @@ const pai = [
     </Link>
   ),
   getItem(
-    <Link to="/pai/procurement">Accounts</Link>,
+    <Link to="/pai/procurement">Procurement</Link>,
     "3",
     <Link to="/pai/procurement">
       <TeamOutlined style={{ fontSize: "20px" }} />
