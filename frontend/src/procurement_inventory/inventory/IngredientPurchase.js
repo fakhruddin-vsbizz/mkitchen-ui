@@ -271,8 +271,8 @@ const IngredientPurchase = () => {
                             {item.createdAt}
                           </Col>
                           <Col xs={8} xl={4}>
-                            <Tag color={item.is_paid ? "green" : "red"}>
-                              {item.is_paid ? "PAID" : "UNPAID"}
+                            <Tag color={item.paid ? "green" : "red"}>
+                              {item.paid ? "PAID" : "UNPAID"}
                             </Tag>
                           </Col>
                         </Row>

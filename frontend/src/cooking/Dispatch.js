@@ -621,8 +621,36 @@ const Dispatch = () => {
                               <Col xs={12} xl={12} style={{ padding: "1%" }}>
                                 <br />
                                 <br />
-                                Confirm Delivery: <br />
-                                <Tag color="orange">Pending</Tag>
+                                {finaldipatchData &&
+                                  finaldipatchData
+                                    .filter(
+                                      (batch) =>
+                                        batch.food_item_id === item.food_item_id
+                                    )
+                                    .map((ele) => (
+                                      <div>
+                                        <Row>
+                                          <Col xs={24} xl={12}>
+                                            {ele.delivery_status ===
+                                            "completed" ? (
+                                              <div>
+                                                Confirm Delivery: <br />
+                                                <Tag color="green">
+                                                  Confirmed
+                                                </Tag>
+                                              </div>
+                                            ) : (
+                                              <div>
+                                                Confirm Delivery: <br />
+                                                <Tag color="orange">
+                                                  Pending
+                                                </Tag>
+                                              </div>
+                                            )}
+                                          </Col>
+                                        </Row>
+                                      </div>
+                                    ))}
                               </Col>
                             </Row>
                             {/* <Row>

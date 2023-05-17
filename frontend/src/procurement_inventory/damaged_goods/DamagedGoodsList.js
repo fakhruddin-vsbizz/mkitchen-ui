@@ -19,7 +19,29 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 const DamagedGoodsList = () => {
+  const [todayDate, setTodayDate] = useState("");
+
+  const [inventoryId, setInventoryId] = useState();
+  const [purchaseId, setPurchaseId] = useState();
+  const [quantityLoaded, setQuantityLoaded] = useState();
+  const [update, setUpdate] = useState(false);
+
+  const [inputValue, setInputValue] = useState(1);
+  const [days, setDays] = useState(1);
+  const [expiredItems, setExpiredItems] = useState([]);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const formattedDate = `${
+      currentDate.getMonth() + 1
+    }/${currentDate.getDate()}/${currentDate.getFullYear()}`;
+    setTodayDate(formattedDate);
+  }, []);
+
+  console.log("todays date: ", todayDate);
+
   const navigate = useNavigate();
+
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
@@ -50,39 +72,31 @@ const DamagedGoodsList = () => {
 
   /**************Restricting PandI Route************************* */
 
-  const vendorPurchaseList = [
-    {
-      ingredient_name: "Goat Meat",
-      quantity_ordered: 130,
-      period_post_exipry: 10,
-      period: "Days",
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Cabbage",
-      quantity_ordered: 12,
-      period_post_exipry: 40,
-      period: "Months",
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Amul Butter",
-      quantity_ordered: 25,
-      period_post_exipry: 25,
-      period: "Months",
-      created_on: "24-06-2023",
-    },
-    {
-      ingredient_name: "Sunflower Oil",
-      quantity_ordered: 1,
-      period_post_exipry: 100,
-      period: "Years",
-      created_on: "24-06-2023",
-    },
-  ];
+  //getting all purchase data
+  useEffect(() => {
+    const getPurchaseData = async () => {
+      if (todayDate) {
+        try {
+          const data = await fetch("http://localhost:5001/purchase");
+          const res = await data.json();
 
-  const [inputValue, setInputValue] = useState(1);
-  const [days, setDays] = useState(1);
+          if (res) {
+            const filterData = res.filter((item) => {
+              const expiryDate = new Date(item.expiry_date);
+              const today = new Date(todayDate);
+              return item.unshelf === false && expiryDate < today;
+            });
+            setExpiredItems(filterData);
+            console.log(filterData);
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    };
+
+    getPurchaseData();
+  }, [todayDate, update]);
 
   const onChange = (newValue) => {
     setInputValue(newValue);
@@ -94,15 +108,67 @@ const DamagedGoodsList = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-
   const handleOk = () => {
     setIsModalOpen(false);
   };
 
   const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const getIds = async (inventory_id, purchase_id, quantity_loaded) => {
+    setIsModalOpen(true);
+    setInventoryId(inventory_id);
+    setPurchaseId(purchase_id);
+    setQuantityLoaded(quantity_loaded);
+  };
+
+  const unshelfAndRemoveItem = async () => {
+    console.log(inventoryId);
+    console.log(purchaseId);
+    console.log(quantityLoaded);
+
+    //update unshelf in purchase
+    try {
+      const data = await fetch("http://localhost:5001/purchase/update_shelf", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          purchase_id: purchaseId,
+          shelf: true,
+        }),
+      });
+      if (data) {
+        console.log(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    //update total volume in inventory
+
+    try {
+      const data = await fetch(
+        "http://localhost:5001/inventory/addinventory/update_volume",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            inventory_id: inventoryId,
+            quantity: +quantityLoaded,
+          }),
+        }
+      );
+      if (data) {
+        console.log(data);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+    setUpdate((prev) => !prev);
     setIsModalOpen(false);
   };
 
@@ -193,49 +259,60 @@ const DamagedGoodsList = () => {
                       </Col>
                     </Row>
                   </Card>
-                  <List
-                    style={{ width: "85%" }}
-                    dataSource={vendorPurchaseList}
-                    renderItem={(item, idx) => (
-                      <List.Item>
-                        <Row
-                          style={{
-                            margin: 5,
-                            width: "100%",
-                            backgroundColor: "white",
-                            padding: "2%",
-                            borderRadius: 10,
-                            borderBottom: "2px solid orange",
-                          }}
-                        >
-                          <Col
-                            xs={24}
-                            xl={6}
-                            style={{ fontSize: "150%", color: "#e08003" }}
+                  {expiredItems && (
+                    <List
+                      style={{ width: "85%" }}
+                      dataSource={expiredItems}
+                      renderItem={(item, idx) => (
+                        <List.Item>
+                          <Row
+                            style={{
+                              margin: 5,
+                              width: "100%",
+                              backgroundColor: "white",
+                              padding: "2%",
+                              borderRadius: 10,
+                              borderBottom: "2px solid orange",
+                            }}
                           >
-                            {item.ingredient_name}
-                          </Col>
-                          <Col xs={12} xl={4}>
-                            Fresh until: <br />
-                            {item.period_post_exipry} {item.period}
-                          </Col>
-                          <Col xs={12} xl={4}>
-                            Date of purchase: <br />
-                            {item.created_on}
-                          </Col>
-                          <Col xs={12} xl={6}>
-                            Days from expired date: <br />
-                            {idx + 1} days
-                          </Col>
-                          <Col xs={12} xl={4}>
-                            <Button type="primary" onClick={showModal}>
-                              TAKE ACTION
-                            </Button>
-                          </Col>
-                        </Row>
-                      </List.Item>
-                    )}
-                  />
+                            <Col
+                              xs={24}
+                              xl={6}
+                              style={{ fontSize: "150%", color: "#e08003" }}
+                            >
+                              {item.ingredient_name}
+                            </Col>
+                            <Col xs={12} xl={4}>
+                              Expired on: <br />
+                              {item.expiry_date}
+                            </Col>
+                            <Col xs={12} xl={4}>
+                              Date of purchase: <br />
+                              {item.createdAt}
+                            </Col>
+                            <Col xs={12} xl={6}>
+                              Days from expired date: <br />
+                              {idx + 1} days
+                            </Col>
+                            <Col xs={12} xl={4}>
+                              <Button
+                                type="primary"
+                                onClick={(e) =>
+                                  getIds(
+                                    item.inventory_id,
+                                    item._id,
+                                    item.quantity_loaded
+                                  )
+                                }
+                              >
+                                TAKE ACTION
+                              </Button>
+                            </Col>
+                          </Row>
+                        </List.Item>
+                      )}
+                    />
+                  )}
                   <Modal
                     open={isModalOpen}
                     onOk={handleOk}
@@ -258,7 +335,11 @@ const DamagedGoodsList = () => {
                         <Button type="primary">KEEP IN INVENTORY</Button>
                       </Col>
                       <Col xs={12} xl={12}>
-                        <Button type="primary" danger>
+                        <Button
+                          type="primary"
+                          onClick={unshelfAndRemoveItem}
+                          danger
+                        >
                           UNSHELF AND REMOVE AMOUNT
                         </Button>
                       </Col>

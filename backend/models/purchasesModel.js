@@ -28,6 +28,22 @@ const purcahsesModel = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    paid: {
+      type: Boolean,
+      required: false,
+    },
+    total_amount: {
+      type: Number,
+      required: false,
+    },
+    expiry_date: {
+      type: String,
+      required: false,
+    },
+    unshelf: {
+      type: Boolean,
+      required: false,
+    },
   },
   { timestamps: true }
 );
