@@ -61,58 +61,18 @@ const Purchases = () => {
 
   useEffect(() => {
     const getPurchases = async () => {
-      const data = await fetch("http://localhost:5001/purchase");
+      const data = await fetch(
+        "http://localhost:5001/purchase/vendor_purchase"
+      );
       if (data) {
         const res = await data.json();
-        setPurchases(res);
+        console.log(res);
+        setPurchases(res.data);
         console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
   }, []);
-
-  const inventory_grid = [
-    {
-      item_id: 0,
-      item_name: "Chicken Meat",
-      vendor_name: "V.K. General Store",
-      total_quantity: 720,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 1,
-      item_name: "Sunflower Oil",
-      vendor_name: "Brahma Stores",
-      total_quantity: 720,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 2,
-      item_name: "Cabbage",
-      vendor_name: "Somnath General Store",
-      total_quantity: -70,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 3,
-      item_name: "Milk",
-      vendor_name: "Supermarket Store",
-      total_quantity: 720,
-      unit: "L",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 4,
-      item_name: "Everest Chicken Masala",
-      vendor_name: "V.K. General Store",
-      total_quantity: 720,
-      unit: "Packets",
-      created_on: "12/06/2023",
-    },
-  ];
 
   const [amtVal, setAmtVal] = useState(1);
   const [weightVal, setWeightVal] = useState(1);
@@ -223,8 +183,8 @@ const Purchases = () => {
                               {item.quantity_loaded} units
                             </Col>
                             <Col xs={12} xl={6}>
-                              Vendor ID: <br />
-                              {item.vendor_id}
+                              Vendor Name: <br />
+                              {item.vendorName}
                             </Col>
                             <Col xs={12} xl={6}>
                               Date of purchase: <br />

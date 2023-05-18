@@ -29,11 +29,15 @@ const Inventory = () => {
   ];
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpenUpdate, setIsModalOpenUpdate] = useState(false);
+
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [expiryType, setExpiryType] = useState("");
   const [price, setPrice] = useState("");
+  const [baseline, setbaseline] = useState("");
+  const [inventoryId, setInventoryId] = useState("");
 
   const [inventoryItems, setInventoryItems] = useState();
   const [updated, setUpdated] = useState(false);
@@ -102,6 +106,7 @@ const Inventory = () => {
           ingridient_expiry_amount: expiry,
           decommisioned: true,
           price: price,
+          baseline: baseline,
           total_volume: 0,
           date: "4/21/2023",
           quantity_transected: 0,
@@ -119,7 +124,10 @@ const Inventory = () => {
           setIsModalOpen(false);
           setName("");
           setExpiry("");
+          setExpiryType("");
           setUnit("");
+          setPrice("");
+          setbaseline("");
           setValidationError(false);
           setValidationError(false);
 
@@ -129,6 +137,81 @@ const Inventory = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const updateIngridientItem = async () => {
+    console.log(inventoryId);
+
+    try {
+      console.log("inside");
+      const data = await fetch(
+        "http://localhost:5001/inventory/addinventory/update_inventory",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            inventory_id: inventoryId,
+            ingridient_name: name,
+            ingridient_measure_unit: unit,
+            ingridient_expiry_period: expiryType,
+            ingridient_expiry_amount: expiry,
+            price: price,
+            baseline: baseline,
+          }),
+        }
+      );
+
+      console.log(data);
+      if (data) {
+        const res = await data.json();
+        if (res.error) {
+          console.log("got err");
+          setValidationError(true);
+        } else {
+          setUpdated((prev) => !prev);
+          setIsModalOpenUpdate(false);
+          setName("");
+          setExpiry("");
+          setExpiryType("");
+          setUnit("");
+          setPrice("");
+          setbaseline("");
+          setValidationError(false);
+          setValidationError(false);
+
+          console.log(res);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateIngridientHandler = async (id) => {
+    setInventoryId(id);
+    const data = inventoryItems.filter((item) => item._id === id);
+    setName(data[0].ingridient_name);
+    setExpiry(data[0].ingridient_expiry_amount);
+    setUnit(data[0].ingridient_measure_unit);
+    setExpiryType(data[0].ingridient_expiry_period);
+    setPrice(data[0].price);
+    setbaseline(data[0].baseline);
+    setIsModalOpenUpdate(true);
+    console.log(data);
+  };
+  const closeModelForUpdateIngridient = () => {
+    setValidationError(false);
+
+    setName();
+    setExpiry();
+    setUnit();
+    setExpiryType();
+    setPrice();
+    setbaseline();
+
+    setIsModalOpenUpdate(false);
   };
 
   return (
@@ -234,6 +317,16 @@ const Inventory = () => {
                             </td>
                           </tr>
                           <tr>
+                            <td>Baseline</td>
+                            <td>
+                              <Input
+                                value={baseline}
+                                onChange={(e) => setbaseline(e.target.value)}
+                                placeholder="Eg: 1, 2"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
                             <td>Expiry Period</td>
                             <td>
                               <Input
@@ -245,6 +338,87 @@ const Inventory = () => {
                                 onChange={(e) => setExpiryType(e.target.value)}
                               >
                                 <Radio value={"Days"}>Days</Radio>
+                                <Radio value={"Months"}>Months</Radio>
+                                <Radio value={"Year"}>Year</Radio>
+                              </Radio.Group>
+                            </td>
+                          </tr>
+                          {validationError && (
+                            <tr>
+                              <td colSpan={2}>
+                                <br />
+                                <Alert
+                                  message="Validation Error"
+                                  description="All Fields Must Be Filled"
+                                  type="error"
+                                  closable
+                                />
+                              </td>
+                            </tr>
+                          )}
+                        </table>
+                      </Modal>
+                      <Modal
+                        open={isModalOpenUpdate}
+                        onOk={updateIngridientItem}
+                        onCancel={closeModelForUpdateIngridient}
+                      >
+                        <label style={{ fontSize: "150%" }}>
+                          Update Ingredient
+                        </label>
+                        <br />
+                        <br />
+                        <table style={{ width: "100%" }}>
+                          <tr>
+                            <td>Name</td>
+                            <td>
+                              <label>{name}</label>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Unit for measurement</td>
+                            <td>
+                              <Input
+                                value={unit}
+                                onChange={(e) => setUnit(e.target.value)}
+                                placeholder="Eg: 2,3,4, etc"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Avearage Price</td>
+                            <td>
+                              <Input
+                                value={price}
+                                onChange={(e) => setPrice(e.target.value)}
+                                placeholder="Eg: 250, 100"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Baseline</td>
+                            <td>
+                              <Input
+                                value={baseline}
+                                onChange={(e) => setbaseline(e.target.value)}
+                                placeholder="Eg: 1, 2"
+                              ></Input>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Expiry Period</td>
+                            <td>
+                              <Input
+                                value={expiry}
+                                onChange={(e) => setExpiry(e.target.value)}
+                                placeholder="Eg: 12,24,36, etc"
+                              ></Input>
+                              <Radio.Group
+                                value={expiryType}
+                                onChange={(e) => setExpiryType(e.target.value)}
+                              >
+                                <Radio value={"Days"}>Days</Radio>
+
                                 <Radio value={"Months"}>Months</Radio>
                                 <Radio value={"Year"}>Year</Radio>
                               </Radio.Group>
@@ -319,11 +493,17 @@ const Inventory = () => {
                             <Col xs={4} xl={4}>
                               {item.total_volume < 6 ? (
                                 <div style={{ color: "#e08003" }}>
-                                  <i class="fa-solid fa-circle-exclamation"></i>{" "}
+                                  <i
+                                    class="fa-solid fa-circle-exclamation"
+                                    style={{ marginLeft: "-50px" }}
+                                  ></i>{" "}
                                   You are short on items
                                   <br />
                                   <Button
-                                    style={{ backgroundColor: "green" }}
+                                    style={{
+                                      backgroundColor: "green",
+                                      marginLeft: "-50px",
+                                    }}
                                     type="primary"
                                   >
                                     Restock Ingredient
@@ -331,7 +511,11 @@ const Inventory = () => {
                                 </div>
                               ) : (
                                 <div
-                                  style={{ fontSize: "130%", color: "green" }}
+                                  style={{
+                                    fontSize: "130%",
+                                    color: "green",
+                                    marginLeft: "-50px",
+                                  }}
                                 >
                                   <i
                                     class="fa-solid fa-circle-check"
@@ -347,12 +531,24 @@ const Inventory = () => {
                                   type="primary"
                                   style={{
                                     fontSize: "110%",
+                                    marginLeft: "-60px",
                                   }}
                                 >
                                   View Purchases
                                 </Button>
                               </Link>
                             </Col>
+                            <Button
+                              onClick={(e) => updateIngridientHandler(item._id)}
+                              type="primary"
+                              style={{
+                                fontSize: "110%",
+                                marginLeft: "-110px",
+                                backgroundColor: "gray",
+                              }}
+                            >
+                              Update
+                            </Button>
                           </Row>
                           {/* <Card
                       style={{

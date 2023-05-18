@@ -73,28 +73,56 @@ const DamagedGoodsList = () => {
   /**************Restricting PandI Route************************* */
 
   //getting all purchase data
+  // useEffect(() => {
+  //   const getPurchaseData = async () => {
+  //     if (todayDate) {
+  //       try {
+  //         const data = await fetch("http://localhost:5001/purchase");
+  //         const res = await data.json();
+
+  //         if (res) {
+  //           const filterData = res.filter((item) => {
+  //             const expiryDate = new Date(item.expiry_date);
+  //             const today = new Date(todayDate);
+  //             return item.unshelf === false && expiryDate < today;
+  //           });
+  //           setExpiredItems(filterData);
+  //           console.log(filterData);
+  //         }
+  //       } catch (e) {
+  //         console.log(e);
+  //       }
+  //     }
+  //   };
+
+  //   getPurchaseData();
+  // }, [todayDate, update]);
+
+  console.log(todayDate);
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
-        try {
-          const data = await fetch("http://localhost:5001/purchase");
-          const res = await data.json();
-
-          if (res) {
-            const filterData = res.filter((item) => {
-              const expiryDate = new Date(item.expiry_date);
-              const today = new Date(todayDate);
-              return item.unshelf === false && expiryDate < today;
-            });
-            setExpiredItems(filterData);
-            console.log(filterData);
+        const data = await fetch(
+          "http://localhost:5001/purchase/expired_items",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: todayDate,
+            }),
           }
-        } catch (e) {
-          console.log(e);
+        );
+        if (data) {
+          const res = await data.json();
+          console.log(res);
+          if (res) {
+            setExpiredItems(res);
+          }
         }
       }
     };
-
     getPurchaseData();
   }, [todayDate, update]);
 

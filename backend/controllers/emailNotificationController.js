@@ -5,7 +5,6 @@ const passWordResetLink = expressAsyncHandler(async (req, res) => {
   const { email } = req.body;
 
   try {
-    console.log("here");
     // Send email using Nodemailer
     const transporter = nodemailer.createTransport({
       service: "gmail",

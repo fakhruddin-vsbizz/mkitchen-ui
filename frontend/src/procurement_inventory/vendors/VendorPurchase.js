@@ -60,11 +60,13 @@ const VendorPurchase = () => {
   useEffect(() => {
     const getPurchaseData = async () => {
       try {
-        const data = await fetch("http://localhost:5001/purchase");
+        const data = await fetch(
+          "http://localhost:5001/purchase/vendor_purchase"
+        );
         const res = await data.json();
 
         if (res) {
-          setPurchaseList(res);
+          setPurchaseList(res.data);
         }
       } catch (e) {
         console.log(e);
