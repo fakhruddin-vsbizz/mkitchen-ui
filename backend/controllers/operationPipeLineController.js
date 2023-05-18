@@ -83,30 +83,39 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
 		const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
 		const dispatchArr = pipeline.dispatch;
 
+		console.log('dispatch hoja: ', dispatchArr);
+
 		if (dispatchArr) {
 			// let targetDispatchObj = dispatchArr.find(
 			//   (dispatch) => dispatch.mk_id === mk_id
 			// );
 
-			dispatchArr.forEach((ele, index1) => {
-				if (ele.mk_id === mk_id) {
-					dispatchArr[index1].dispatch.forEach((element, index2) => {
-						if (element.food_item_id === food_item_id) {
-							console.log("yes");
-							dispatchArr[index1].dispatch[index2].delivery_status =
-								"completed";
-						}
-					});
-				}
-			});
+			try {
+				dispatchArr.forEach((ele, index1) => {
+					if (ele.mk_id === mk_id) {
+						dispatchArr[index1].dispatch.forEach((element, index2) => {
+							if (element.food_item_id === food_item_id) {
+								console.log("yes");
+								dispatchArr[index1].dispatch[index2].delivery_status =
+									"completed";
+							}
+						});
+					}
+				});
+	
+				console.log("dispatch array: ", dispatchArr);
+				console.log("dispatch1: ", dispatchArr[0].dispatch);
+				console.log("dispatch2: ", dispatchArr[1]?.dispatch);
+	
+				const updated = await pipeline.updateOne({ $set: { dispatch: dispatchArr } });
+	
+				console.log("updated: => ", updated);
+				return res.status(201).json(dispatchArr);
+			}catch(error){
+				throw new Error('Some issue occured while doing the try', error.message);
+			}
 
-			console.log("dispatch array: ", dispatchArr);
-			console.log("dispatch1: ", dispatchArr[0].dispatch);
-			console.log("dispatch2: ", dispatchArr[1].dispatch);
-
-			await pipeline.updateOne({ $set: { dispatch: dispatchArr } });
-
-			return res.status(201).json(dispatchArr);
+			
 		} else {
 			res.status(400);
 			throw new Error("Error getting the pipeline");

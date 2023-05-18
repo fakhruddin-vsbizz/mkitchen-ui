@@ -15,7 +15,7 @@ import {
 import logo from "../res/img/logo.png";
 import axios from "axios";
 import AuthContext from "../components/context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import whiteLogo from "../res/img/MKWhiteLogo.png";
 
@@ -236,6 +236,8 @@ const Login = () => {
                       />
                     </td>
                   </tr>
+
+                  <Link to="/reset-password">Forget Password</Link>
 
                   {error && (
                     <tr>

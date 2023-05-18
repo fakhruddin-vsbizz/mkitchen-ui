@@ -131,7 +131,7 @@ const pai = [
 ];
 const logout = [
   getItem(
-    <Button onClick={logoutHandler}>Logout</Button>,
+    <span onClick={logoutHandler}>Logout</span>,
     "1",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
