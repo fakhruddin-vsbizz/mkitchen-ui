@@ -43,21 +43,17 @@ const NewVendor = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
 
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
 
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -83,7 +79,6 @@ const NewVendor = () => {
       : "";
 
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/vendor", {
         method: "POST",
         headers: {
@@ -102,7 +97,6 @@ const NewVendor = () => {
 
       if (data) {
         const res = await data.json();
-        console.log(res);
 
         if (res.inputInvalid) {
           setValidationError(true);

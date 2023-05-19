@@ -52,21 +52,15 @@ const Menu = () => {
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -98,7 +92,6 @@ const Menu = () => {
       const data = await fetch("http://localhost:5001/cooking/ingredients");
 
       if (data) {
-        console.log(data, "Data");
         const res = await data.json();
         if (res) {
           setIngridientList(res);
@@ -107,8 +100,6 @@ const Menu = () => {
     };
     getIngridients();
   }, []);
-
-  console.log(ingridientList);
 
   useEffect(() => {
     const getFood = async () => {
@@ -124,20 +115,14 @@ const Menu = () => {
         }),
       })
         .then((res) => {
-          console.log("res", res);
           const data = res.json();
-          console.log("res json", data);
           return data;
         })
         .then((data) => {
           if (data.message) {
-            console.log("no menu is set for the provided date");
-
             setIsMenu(false);
             setFoodItems([]);
           } else {
-            console.log("datatatatat=====", data);
-            console.log(data[0].food_list);
             setFoodItems(data[0].food_list);
             setIsMenu(true);
           }
@@ -158,7 +143,6 @@ const Menu = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("setAddedFoodItems", data);
           setAddedFoodItems(data);
         });
     };
@@ -170,7 +154,6 @@ const Menu = () => {
       return;
     } else {
       if (AddedFoodItems.find((item) => item.name === selectedFood)) {
-        console.log("exists");
         await fetch("http://localhost:5001/admin/menu/get_food_item_id", {
           method: "POST",
           headers: {
@@ -182,7 +165,6 @@ const Menu = () => {
         })
           .then((res) => res.json())
           .then((data) => {
-            console.log("get_food_item_id: in some", data);
             let id = data._id;
             const newFoodItem = {
               food_item_id: id,
@@ -190,13 +172,10 @@ const Menu = () => {
               // total_weight: 0,
               food_name: selectedFood,
             };
-            console.log("FIRST SPREADER");
             setFoodItems([...foodItems, newFoodItem]);
           });
       } else {
         try {
-          console.log("not exists");
-
           await fetch("http://localhost:5001/admin/menu/food_item", {
             method: "POST",
             headers: {
@@ -211,7 +190,6 @@ const Menu = () => {
           })
             .then((res) => res.json())
             .then((data) => {
-              console.log("get_food_item_id : not in some", data);
               setDataAdded((prev) => !prev);
 
               const newFoodItem = {
@@ -220,7 +198,6 @@ const Menu = () => {
                 // total_weight: 0,
                 food_name: selectedFood,
               };
-              console.log("SECOND SPREADER");
               setFoodItems([...foodItems, newFoodItem]);
             });
         } catch (error) {
@@ -250,12 +227,11 @@ const Menu = () => {
           status: 0,
           reorder_logs: [],
           dispatch: [],
+          leftover: [],
         }),
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log("data", data);
-          console.log("admin/menu/add_menu: (post)", data);
           setVisible(true);
           setFoodItemId("");
         });
@@ -264,25 +240,12 @@ const Menu = () => {
     }
   };
 
-  useEffect(() => {
-    console.log(
-      ingridientList
-        .filter((it) => it.name === "Haldi")
-        .map(
-          (newItem, indexEle) =>
-            newItem.ingridient_list[indexEle].ingredient_name
-        )
-    );
-  }, [ingridientList]);
-
   const deleteItem = (item) => {
     const filteredItems = foodItems.filter(
       (foodItem) => foodItem.food_item_id !== item.food_item_id
     );
-    console.log(filteredItems);
     setFoodItems(filteredItems);
   };
-  console.log("food list: ", foodItems);
 
   //test code for ashkash update mohall wisee-----------*TESTING*-----------------
 
@@ -319,13 +282,10 @@ const Menu = () => {
     getData();
   }, []);
 
-  console.log(mohallaAshkash);
-
   useEffect(() => {
     const updateMohallaWiseCount = async () => {
       if (mohallaAshkash && update)
         try {
-          console.log("inside");
           const data = await fetch("http://localhost:5001/admin/menu", {
             method: "PUT",
             headers: {
@@ -339,7 +299,6 @@ const Menu = () => {
 
           if (data) {
             const res = await data.json();
-            console.log(data);
             setUpdate(false);
           }
         } catch (error) {
@@ -355,7 +314,6 @@ const Menu = () => {
       total_ashkhaas: +value2,
       name: "Mohalla Bhopal",
     };
-    console.log("THIRD SPREADER");
     setMohallaAshkash([...mohallaAshkash, obj]);
     setUpdate(true);
   };

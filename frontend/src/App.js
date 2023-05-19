@@ -37,7 +37,7 @@ function App() {
         <Route path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:id" element={<ResetPassword />} />
 
         {/*  ------------------------------- Cooking Route --------------------------  */}
         <Route path="/cooking/ingredients" element={<SetMenu />} />

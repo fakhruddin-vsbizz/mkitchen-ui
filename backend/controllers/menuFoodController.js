@@ -39,7 +39,6 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   } = req.body;
 
   if (add_type === "get_total_ashkash_sum") {
-    console.log("getting the sum");
     const foodMenu = await FoodMenu.findOne({ _id: menu_id });
 
     const totalAshkashCount = foodMenu.mohalla_wise_ashkhaas.reduce(
@@ -47,14 +46,11 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
       0
     );
 
-    console.log("total ashkash");
-
     return res.json(totalAshkashCount);
   }
 
   if (add_type === "get_mohalla_ashkash") {
     const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
-    console.log(foodMenu);
     return res.json(foodMenu);
   }
 
@@ -100,7 +96,6 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
         throw new Error("Error creating the menu");
       }
     } else {
-      console.log("updating the menu");
       menu.food_list = food_list;
       menu.total_ashkhaas = total_ashkhaas;
       menu.mohalla_wise_ashkhaas = mohalla_wise_ashkhaas;
@@ -116,14 +111,9 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   }
 
   if (add_type === "food_item") {
-    console.log("adding item");
-
     const mkUser = await MkUser.findOne({ email: mkuser_email });
 
-    console.log(mkUser);
-    console.log(food_name, ingridient_list, usage_counter);
     if (mkUser) {
-      console.log("inside mk");
       const foodItem = await FoodItem.create({
         mkuser_id: mkUser._id,
         name: food_name,
@@ -132,7 +122,6 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
       });
 
       if (foodItem) {
-        console.log("created");
         return res.status(201).json({ _id: foodItem.id, name: foodItem.name });
       } else {
         res.status(400);
@@ -142,20 +131,16 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   }
 
   if (add_type === "get_food_item") {
-    console.log("getItem");
     const foodMenu = await FoodItem.find();
     return res.json(foodMenu);
   }
 
   if (add_type === "get_food_item_id") {
-    console.log("getItem id");
     const foodMenu = await FoodItem.findOne({ name: selected_food });
-    console.log(foodMenu);
     return res.json(foodMenu);
   }
   if (add_type === "get_mohalla_ashkash") {
     const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
-    console.log(foodMenu);
     return res.json(foodMenu.mohalla_wise_ashkhaas);
   }
 });
@@ -190,6 +175,7 @@ const addMenu = expressAsyncHandler(async (req, res) => {
     ingridient_list,
     reorder_logs,
     dispatch,
+    leftover,
     status,
   } = req.body;
 
@@ -230,6 +216,7 @@ const addMenu = expressAsyncHandler(async (req, res) => {
     ingridient_list,
     reorder_logs,
     dispatch,
+    leftover,
     status,
   });
 
@@ -250,7 +237,6 @@ const createFoodItem = expressAsyncHandler(async (req, res) => {
 
   const mkUser = await MkUser.findOne({ email: mkuser_email });
 
-  console.log("yes ");
   if (!mkUser) {
     res.status(400);
     throw new Error("Error user not found");
@@ -260,7 +246,6 @@ const createFoodItem = expressAsyncHandler(async (req, res) => {
   //   res.status(400);
   //   throw new Error("Error creating the food item");
   // }
-  console.log("yes ty");
 
   const foodItem = await FoodItem.create({
     mkuser_id: mkUser._id,
@@ -277,7 +262,6 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
 
   const foodMenu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
   if (foodMenu) {
-    console.log("data: ", data);
     // const updatedMenuAskash = await FoodMenu.findByIdAndUpdate(
     //   { _id: Object(foodMenu._id) },
     //   { $set: { mohalla_wise_ashkhaas: data } },
@@ -323,8 +307,6 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
       }
     });
 
-    console.log("op: ", operations);
-
     // Execute the bulk update operation
     FoodMenu.bulkWrite(operations)
       .then((result) => {
@@ -334,7 +316,6 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
         console.error(error);
       });
 
-    console.log("result: ", result);
     return res.status(200).send("Data upserted successfully");
   }
 });

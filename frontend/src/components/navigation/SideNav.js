@@ -26,7 +26,6 @@ function getItem(label, key, icon, children, link) {
 }
 
 const logoutHandler = () => {
-  console.log("In auth Logout");
   localStorage.removeItem("token");
 
   localStorage.removeItem("type");
@@ -37,7 +36,6 @@ const logoutHandler = () => {
 
   window.location.href = "/login";
 
-  console.log("In auth Logout");
 };
 const admin = [
   getItem(

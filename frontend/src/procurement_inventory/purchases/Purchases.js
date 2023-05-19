@@ -32,21 +32,17 @@ const Purchases = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
 
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
 
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -66,9 +62,7 @@ const Purchases = () => {
       );
       if (data) {
         const res = await data.json();
-        console.log(res);
         setPurchases(res.data);
-        console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();

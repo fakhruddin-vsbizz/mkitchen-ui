@@ -25,28 +25,21 @@ const IngredientPurchase = () => {
   const [vendors, setVendors] = useState([]);
 
   const { id } = useParams();
-  console.log(id);
 
   const navigate = useNavigate();
 
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -74,8 +67,6 @@ const IngredientPurchase = () => {
     getInventory();
   }, []);
 
-  console.log(vendors);
-
   useEffect(() => {
     const getInventory = async () => {
       const data = await fetch("http://localhost:5001/purchase");
@@ -93,8 +84,6 @@ const IngredientPurchase = () => {
     };
     getInventory();
   }, [id]);
-
-  console.log(itemPurchase);
 
   const vendorPurchaseList = [
     {

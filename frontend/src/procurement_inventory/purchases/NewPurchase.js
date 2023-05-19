@@ -39,21 +39,15 @@ const NewPurchase = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -86,7 +80,6 @@ const NewPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        console.log("inside");
         const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
@@ -115,14 +108,10 @@ const NewPurchase = () => {
     setInventoryItemName(value);
   };
 
-  console.log(inventoryItems);
-  console.log(selectedVendor);
-
   const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
 
   const onAddIngredient = () => {
     if (inventoryItemName === undefined) {
-      console.log("here ");
       setValidationError(true);
     } else {
       setValidationError(false);
@@ -136,8 +125,6 @@ const NewPurchase = () => {
       const period = data[0].ingridient_expiry_period;
 
       // Get the current date
-
-      console.log(time, " ", period);
 
       // Add the specified time and period to the current date
       if (period === "Days") {
@@ -158,7 +145,6 @@ const NewPurchase = () => {
       });
 
       // Output the final date
-      console.log("Final Date:", formattedDate);
 
       var ingredient_added = {
         mkuser_id: userId,
@@ -207,7 +193,6 @@ const NewPurchase = () => {
   };
 
   const handleVendorPerIngridient = (value, ingredientName) => {
-    console.log(value);
     const updatedIngredients = ingredientForPurchase.map((ingredient) => {
       if (ingredient.ingredient_name === ingredientName) {
         // if the ingredient name matches, update its perAshkash value
@@ -220,8 +205,6 @@ const NewPurchase = () => {
     });
     setIngredientForPurchase(updatedIngredients);
   };
-
-  console.log("purchase: ", ingredientForPurchase);
 
   const addPurchaseData = async () => {
     try {
@@ -238,7 +221,6 @@ const NewPurchase = () => {
       if (data) {
         const res = await data.json();
         if (res) {
-          console.log(res);
           if (res.error) {
             setValidationError(true);
             setFieldsError(false);

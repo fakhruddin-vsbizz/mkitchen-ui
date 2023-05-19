@@ -21,21 +21,15 @@ const Vendors = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -49,10 +43,9 @@ const Vendors = () => {
   /**************Restricting PandI Route************************* */
 
   //getting all the vendors
-
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("http://localhost:5001/vendor");
+      const data = await fetch("http://localhost:5001/vendor/totalpurchase");
       if (data) {
         const res = await data.json();
         setVendors(res);
@@ -61,7 +54,6 @@ const Vendors = () => {
     getVendors();
   }, []);
 
-  console.log("vendors: ", vendors);
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -122,7 +114,7 @@ const Vendors = () => {
                               Purchase quantity:
                               <br />
                               <label style={{ fontSize: "130%" }}>
-                                {item.active_purchases}
+                                {item.totalPurchases}
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>

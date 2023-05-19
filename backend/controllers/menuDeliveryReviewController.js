@@ -53,18 +53,13 @@ const addDeliveryReview = expressAsyncHandler(async (req, res) => {
 const getReviewsForMKUser = expressAsyncHandler(async (req, res) => {
   const { mkuser_id } = req.body;
 
-  console.log(mkuser_id);
-  console.log("getting the data");
   // Retrieve documents matching the mkuser_id
   try {
     const foodReviews = await MenuDelivery.find({ mkuser_id });
 
-    console.log(foodReviews);
-
     const data = await Promise.all(
       foodReviews.map(async (doc) => {
         const { menu_food_id, review, remark } = doc;
-        console.log("menu id: ", menu_food_id);
 
         const menuFood = await FoodMenu.findOne({ _id: menu_food_id });
 

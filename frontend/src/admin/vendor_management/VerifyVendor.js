@@ -37,21 +37,15 @@ const VerifyVendor = () => {
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/verifyvendor");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -75,8 +69,6 @@ const VerifyVendor = () => {
     getVendors();
   }, [update]);
 
-  console.log(vendors);
-
   const markVendorVerified = async (id) => {
     try {
       const data = await fetch("http://localhost:5001/vendor", {
@@ -91,7 +83,6 @@ const VerifyVendor = () => {
         }),
       });
       if (data) {
-        console.log(data);
         setUpdate((prev) => !prev);
       }
     } catch (e) {

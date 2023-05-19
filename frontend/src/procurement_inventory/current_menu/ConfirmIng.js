@@ -36,21 +36,17 @@ const ConfirmIng = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
 
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
 
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -86,7 +82,6 @@ const ConfirmIng = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setOperationalPipelineStatus(res);
           }
@@ -111,7 +106,6 @@ const ConfirmIng = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setMenuFoodId(res[0]._id);
             setOperationalPipelineStatus(res.status);
@@ -126,7 +120,6 @@ const ConfirmIng = () => {
     const getInventory = async () => {
       if (selectedDate) {
         try {
-          console.log("inside");
           const data = await fetch("http://localhost:5001/pai/procurement", {
             method: "POST",
             headers: {
@@ -141,12 +134,10 @@ const ConfirmIng = () => {
           if (data) {
             const res = await data.json();
             if (res._id) {
-              console.log("procure history");
 
               setProcureIngridients(res.procure_items);
             }
             if (res.message) {
-              console.log("procure record");
 
               if (menuFoodId) {
                 try {
@@ -184,10 +175,7 @@ const ConfirmIng = () => {
     getInventory();
   }, [menuFoodId, selectedDate]);
 
-  console.log("date: ", selectedDate);
-  console.log("menu id: ", menuFoodId);
-  console.log("procure items: ", procureIngridients);
-  console.log("status: ", operationalPipelineStatus);
+
 
   const markProcureIngridients = async () => {
     try {
@@ -208,7 +196,6 @@ const ConfirmIng = () => {
       if (data) {
         const res = await data.json();
         if (res) {
-          console.log(res);
           setVisible(true);
           setSelectedDate("");
           setMenuFoodId("");

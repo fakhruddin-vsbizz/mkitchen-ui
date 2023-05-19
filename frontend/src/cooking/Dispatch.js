@@ -56,21 +56,15 @@ const Dispatch = () => {
   /**************Restricting Cooking Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -106,11 +100,7 @@ const Dispatch = () => {
     getFood();
   }, [menuFoodId]);
 
-  console.log("status ==> ", status);
-  console.log("menu ==> ", menuFoodId);
-
   const handleDateChange = (date) => {
-    console.log(date);
     const dateObj = new Date(date);
     const formattedDate = `${
       dateObj.getMonth() + 1
@@ -120,8 +110,6 @@ const Dispatch = () => {
 
     setIsSelected(false);
   };
-
-  console.log(selectedDate);
 
   //get the dispatch data for mk -user.
 
@@ -141,7 +129,6 @@ const Dispatch = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log("mohalla user food data: ", res);
         }
       }
     };
@@ -167,7 +154,6 @@ const Dispatch = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log("mohalla user food updated: ", res);
         }
       }
     };
@@ -190,7 +176,6 @@ const Dispatch = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log("operational pipeline status: ", res);
         }
       }
     };
@@ -214,7 +199,6 @@ const Dispatch = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            console.log(res.dispatch);
             if (res.dispatch.length > 0) {
               setViewDispatchedData(res.dispatch);
             }
@@ -225,23 +209,14 @@ const Dispatch = () => {
     getFood();
   }, [menuFoodId, visible, mohallaUserId]);
 
-  console.log("dispatched View data: ", viewDispatchedData);
-  console.log("dispatched View data object: ", finaldipatchData);
-
   //filtering the dispatched data based on the Mohalla admin
   useEffect(() => {
     if (viewDispatchedData) {
-      console.log("inside data");
       const data = viewDispatchedData.filter(
         (item) => item.mk_id === mohallaUserId
       );
       if (data[0]) {
-        console.log(data[0].dispatch);
         setFinalDispatchData(data[0].dispatch);
-        console.log(
-          "===========================FINAL DISPATCH DATA=================================\n\n",
-          finaldipatchData
-        );
       } else {
         setFinalDispatchData([]);
       }
@@ -284,7 +259,6 @@ const Dispatch = () => {
 
   const dispatchData = async (food_id, name) => {
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/operation_pipeline", {
         method: "POST",
         headers: {
@@ -305,11 +279,9 @@ const Dispatch = () => {
       if (data) {
         const res = await data.json();
 
-        console.log(res);
         if (res.invalidData) {
           setInputError(true);
         } else {
-          console.log("done");
           setVisible(true);
           setDaigs("");
           setTotalWeight("");
@@ -336,18 +308,12 @@ const Dispatch = () => {
 
       if (data) {
         const res = await data.json();
-        console.log(data);
         setVisible(true);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  console.log("mohalla users: ", getMohallaUsers);
-  console.log("menu id: ", menuFoodId);
-  console.log("Food list: ", foodList);
-
-  console.log("mohalla id: ", mohallaUserId);
 
   return (
     <div

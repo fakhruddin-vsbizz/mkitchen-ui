@@ -16,7 +16,6 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
     documents,
   } = req.body;
 
-  console.log(documents);
   //validation and error handling
   if (documents.length === 0) {
     return res.status(403).json({ error: "please add items" });
@@ -55,7 +54,6 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
       },
     },
   }));
-  console.log(updateInventory);
 
   // Perform the bulk write operation
   InventoryModel.bulkWrite(updateInventory)
@@ -135,10 +133,8 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
       return expiryDate < parsedDate;
     });
 
-    console.log(filteredPurchases);
     res.status(200).json(filteredPurchases);
   } catch (error) {
-    console.error("Error executing MongoDB query:", error);
     res.status(500).send("Internal Server Error");
   }
 });
@@ -186,7 +182,6 @@ const unShelfItem = expressAsyncHandler(async (req, res) => {
 });
 
 const getPurchaseWithExpiry = expressAsyncHandler(async (req, res) => {
-  console.log("hitting");
   const purchase = await Purchase.find().exec();
   const inventory = await InventoryModel.find();
 

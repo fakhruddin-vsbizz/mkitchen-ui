@@ -56,7 +56,6 @@ export const AuthContextProvider = (props) => {
   const userIsLoggedIn = !!token;
 
   const logoutHandler = () => {
-    console.log("In auth Logout");
     setToken(null);
     localStorage.removeItem("token");
 
@@ -72,7 +71,6 @@ export const AuthContextProvider = (props) => {
     }
     window.location.href = "/login";
 
-    console.log("In auth Logout");
   };
 
   const loginHandler = (token, expirationTime) => {
@@ -88,7 +86,6 @@ export const AuthContextProvider = (props) => {
   };
 
   const setUserRoleType = (type, email, userId) => {
-    console.log("inside setting data");
 
     localStorage.setItem("type", type);
     localStorage.setItem("email", email);

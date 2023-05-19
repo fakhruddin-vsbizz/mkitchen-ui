@@ -51,21 +51,17 @@ const Inventory = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
 
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
 
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -84,7 +80,6 @@ const Inventory = () => {
       if (data) {
         const res = await data.json();
         setInventoryItems(res);
-        console.log(res);
       }
     };
     getInventory();
@@ -92,7 +87,6 @@ const Inventory = () => {
 
   const handleSubmit = async () => {
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/inventory/addinventory", {
         method: "POST",
         headers: {
@@ -131,7 +125,6 @@ const Inventory = () => {
           setValidationError(false);
           setValidationError(false);
 
-          console.log(res);
         }
       }
     } catch (error) {
@@ -140,10 +133,8 @@ const Inventory = () => {
   };
 
   const updateIngridientItem = async () => {
-    console.log(inventoryId);
 
     try {
-      console.log("inside");
       const data = await fetch(
         "http://localhost:5001/inventory/addinventory/update_inventory",
         {
@@ -163,11 +154,9 @@ const Inventory = () => {
         }
       );
 
-      console.log(data);
       if (data) {
         const res = await data.json();
         if (res.error) {
-          console.log("got err");
           setValidationError(true);
         } else {
           setUpdated((prev) => !prev);
@@ -181,7 +170,6 @@ const Inventory = () => {
           setValidationError(false);
           setValidationError(false);
 
-          console.log(res);
         }
       }
     } catch (error) {
@@ -199,7 +187,6 @@ const Inventory = () => {
     setPrice(data[0].price);
     setbaseline(data[0].baseline);
     setIsModalOpenUpdate(true);
-    console.log(data);
   };
   const closeModelForUpdateIngridient = () => {
     setValidationError(false);

@@ -21,14 +21,12 @@ const registerUser = expressAsyncHandler(async (req, res) => {
 
 	//Hash Password using bcrypt
 	const hashPassword = await bcrypt.hash(password, 10);
-	console.log("hash password: ", hashPassword);
 
 	const user = await User.create({
 		username,
 		email,
 		password: hashPassword,
 	});
-	console.log("user created: ", user);
 
 	if (user) {
 		return res
