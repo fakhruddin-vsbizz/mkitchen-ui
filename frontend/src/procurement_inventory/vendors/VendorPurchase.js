@@ -20,7 +20,13 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 const VendorPurchase = () => {
   const [purchaseList, setPurchaseList] = useState();
+
+  const [filteredPurchases, setFilteredPurchases] = useState([]);
+	const [filterByName, setFilterByName] = useState("");
+  const [filterByDate, setFilterByDate] = useState(null);
+  const [filterByStatus, setFilterByStatus] = useState(null)
   const [inventoryItems, setInventoryItems] = useState([]);
+  
   const [inputValue, setInputValue] = useState(1);
   const [update, setUpdate] = useState(false);
 
@@ -74,6 +80,43 @@ const VendorPurchase = () => {
     };
     getPurchaseData();
   }, [update]);
+
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName && filterByStatus !== null && filterByDate !== null) {
+				return purchaseList.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName && filterByStatus !== null) {
+				return purchaseList.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus
+				);
+			} else 
+      if (filterByName && filterByDate !== null) {
+				return purchaseList.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByStatus !== null && filterByDate !== null) {
+				return purchaseList.filter(item =>
+					item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByName) {
+				return purchaseList.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} else if (filterByDate !== null) {
+				return purchaseList.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
+			} 
+      else if (filterByStatus !== null) {
+				return purchaseList.filter(item => item.paid === filterByStatus
+				);
+			}
+			return purchaseList
+		};
+		const filteredList = filterList();
+		setFilteredPurchases(filteredList);
+	}, [filterByName, purchaseList, filterByDate, filterByStatus]);
 
   console.log("purcahse list: ", purchaseList);
   console.log("Inventory list: ", inventoryItems);
@@ -148,11 +191,11 @@ const VendorPurchase = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Add New Vendor"
-              comp=<center>
+              comp={<center>
                 <Button style={{ backgroundColor: "white", color: "orange" }}>
                   Cancel
                 </Button>
-              </center>
+              </center>}
             />
             <div style={{ width: "100%", padding: 0 }}>
               <center>
@@ -167,22 +210,27 @@ const VendorPurchase = () => {
                     <Col xs={12} xl={6}>
                       Filter by Ingredients: <br />
                       <Input
+                      value={filterByName}
+                      onChange={e => setFilterByName(e.target.value)}
                         placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
                         style={{ width: "70%" }}
                       ></Input>
                     </Col>
                     <Col xs={12} xl={6}>
                       Date of Purchase: <br />
-                      <DatePicker></DatePicker>
+                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                     </Col>
                     <Col xs={12} xl={6}>
                       Paid status: <br />
                       <Select
-                        defaultValue={0}
+                        defaultValue={null}
+                        value={filterByStatus}
+                        onChange={value => setFilterByStatus(value)}
                         style={{ width: "70%" }}
                         options={[
-                          { value: 0, label: "PAID" },
-                          { value: 1, label: "UNPAID" },
+                          { value: true, label: "PAID" },
+                          { value: false, label: "UNPAID" },
+                          { value: null, label: "ALL" },
                         ]}
                       ></Select>
                     </Col>
@@ -221,7 +269,7 @@ const VendorPurchase = () => {
                       width: "85vw",
                       overflowY: "scroll",
                     }}
-                    dataSource={purchaseList}
+                    dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item
                         style={{
@@ -251,9 +299,8 @@ const VendorPurchase = () => {
                             {inventoryItems &&
                               inventoryItems
                                 .filter(
-                                  (itemNew) => itemNew._id === item.inventory_id
-                                )
-                                .map((ele) => ele.ingridient_measure_unit)}
+                                  (itemNew) => itemNew.ingridient_name === item.ingredient_name
+                                )[0]?.ingridient_measure_unit}
                           </Col>
                           <Col xs={8} xl={4}>
                             Total Amount: <br />
@@ -261,7 +308,7 @@ const VendorPurchase = () => {
                           </Col>
                           <Col xs={12} xl={4}>
                             Date of purchase: <br />
-                            {item.createdAt}
+                            {new Date(item.createdAt).toDateString()}
                           </Col>
                           <Col xs={12} xl={6}>
                             <Tag color={item.paid ? "green" : "red"}>
