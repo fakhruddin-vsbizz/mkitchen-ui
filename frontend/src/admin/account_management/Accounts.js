@@ -554,12 +554,7 @@ const Accounts = () => {
               },
             }}
           >
-            <Button
-              style={{ marginTop: "50px" }}
-              onClick={sentEmailNotification}
-            >
-              Reset Password
-            </Button>
+            
             <Modal
               title=<h3 style={{ color: "#E86800" }}>Add new account</h3>
               open={newMohallaPopup}
