@@ -105,6 +105,7 @@ const DamagedGoodsList = () => {
   //   getPurchaseData();
   // }, [todayDate, update]);
 
+
   useEffect(() => {
 		const filterList = () => {
       if (filterByName && filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
@@ -143,6 +144,7 @@ const DamagedGoodsList = () => {
 		setFilteredExpiredItems(filteredList);
 	}, [filterByName, expiredItems, filterByDate, filterByDaysAfterExpiry]);
 
+
   console.log(todayDate);
   useEffect(() => {
     const getPurchaseData = async () => {
@@ -164,7 +166,9 @@ const DamagedGoodsList = () => {
           console.log(res);
           if (res) {
             setExpiredItems(res);
+
             setFilteredExpiredItems(res);
+
           }
         }
       }

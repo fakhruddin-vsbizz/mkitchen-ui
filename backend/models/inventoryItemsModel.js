@@ -34,6 +34,10 @@ const InventoryItems = mongoose.Schema(
       type: Number,
       required: true,
     },
+    baseline: {
+      type: Number,
+      required: true,
+    },
   },
   { timestamps: true }
 );

@@ -66,12 +66,12 @@ const Purchases = () => {
         console.log(res);
         setPurchases(res.data);
         setFilteredPurchases(res.data)
+
         console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
   }, []);
-
   useEffect(() => {
 		const filterList = () => {
       if (filterByName && filterByVolume !== 1 && filterByDate !== null) {

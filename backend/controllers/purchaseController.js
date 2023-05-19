@@ -69,15 +69,78 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
   return res.json({ message: "Purchase added" });
 });
 
-const getPurchase = expressAsyncHandler(async (req, res) => {
-  console.log("hitting");
-  const purchase = await Purchase.find();
+const getVendorWisePurchase = expressAsyncHandler(async (req, res) => {
+  // const purchase = await Purchase.find();
 
+  const data = await Purchase.aggregate([
+    {
+      $lookup: {
+        from: "vendormodels",
+        localField: "vendor_id",
+        foreignField: "_id",
+        as: "vendorInfo",
+      },
+    },
+    //to create the seperate document
+
+    {
+      $unwind: "$vendorInfo",
+    },
+    {
+      $project: {
+        _id: 1,
+        vendor_id: 1,
+        mkuser_id: 1,
+        ingredient_name: 1,
+        quantity_loaded: 1,
+        rate_per_unit: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        paid: 1,
+        total_amount: 1,
+        expiry_date: 1,
+        unshelf: 1,
+        vendorName: "$vendorInfo.vendor_name",
+      },
+    },
+  ]);
+
+  const totalAmountSum = data.reduce((sum, item) => sum + item.total_amount, 0);
+  const arrayLength = data.length;
+
+  return res
+    .status(200)
+    .json({ data, totalAmountSum, totalPurchases: arrayLength });
+});
+
+const getPurchase = expressAsyncHandler(async (req, res) => {
+  const purchase = await Purchase.find();
   if (!purchase) {
     return res.status(404).json({ error: "No purchase found" });
   }
 
   return res.status(200).json(purchase);
+});
+
+const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
+  try {
+    const { date } = req.body;
+    const parsedDate = new Date(date);
+
+    const purchases = await Purchase.find({ unshelf: false });
+
+    const filteredPurchases = purchases.filter((purchase) => {
+      const [month, day, year] = purchase.expiry_date.split("/");
+      const expiryDate = new Date(`${month}/${day}/20${year}`);
+      return expiryDate < parsedDate;
+    });
+
+    console.log(filteredPurchases);
+    res.status(200).json(filteredPurchases);
+  } catch (error) {
+    console.error("Error executing MongoDB query:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 const updatePaidStatusPurchase = expressAsyncHandler(async (req, res) => {
@@ -177,4 +240,6 @@ module.exports = {
   unShelfItem,
   updatePaidStatusPurchase,
   updateShelfStatus,
+  getExpiredInventoryItems,
+  getVendorWisePurchase,
 };

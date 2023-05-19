@@ -1,25 +1,25 @@
 const expressAsyncHandler = require("express-async-handler");
 const MkUser = require("../models/mkUserModel");
 const VendorModel = require("../models/vendorModel");
-
+const Purchase = require("../models/purchasesModel");
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const addVendor = expressAsyncHandler(async (req, res) => {
-	const {
-		mkuser_email,
-		vendor_name,
-		opening_time,
-		closing_time,
-		email,
-		address,
-		mkuser_id,
-		approval_status,
-	} = req.body;
+  const {
+    mkuser_email,
+    vendor_name,
+    opening_time,
+    closing_time,
+    email,
+    address,
+    mkuser_id,
+    approval_status,
+  } = req.body;
 
-	const mkUser = await MkUser.findOne({ email: mkuser_email });
+  const mkUser = await MkUser.findOne({ email: mkuser_email });
 
-	if (mkUser) {
-		if (
+  if (mkUser) {
+    if (
       address === "" ||
       email === "" ||
       vendor_name === "" ||
@@ -34,47 +34,89 @@ const addVendor = expressAsyncHandler(async (req, res) => {
         .status(403)
         .json({ emailInvalid: "Please write correct email!!" });
     }
-		const vendor = await VendorModel.create({
-			mkuser_id: mkUser._id,
-			vendor_name,
-			opening_time,
-			closing_time,
-			email,
-			address,
-			approval_status,
-		});
+    const vendor = await VendorModel.create({
+      mkuser_id: mkUser._id,
+      vendor_name,
+      opening_time,
+      closing_time,
+      email,
+      address,
+      approval_status,
+    });
 
-		if (vendor) {
-			return res.status(201).json({ _id: vendor.id, name: vendor.vendor_name });
-		} else {
-			res.status(400);
-			throw new Error("Error creating the Vendor");
-		}
-	}
-	return res.json({ message: "vendor created " });
+    if (vendor) {
+      return res.status(201).json({ _id: vendor.id, name: vendor.vendor_name });
+    } else {
+      res.status(400);
+      throw new Error("Error creating the Vendor");
+    }
+  }
+  return res.json({ message: "vendor created " });
 });
 
 const getVendor = expressAsyncHandler(async (req, res) => {
-	const vendor = await VendorModel.find();
-	return res.json(vendor);
+  const vendor = await VendorModel.find();
+  return res.json(vendor);
 });
+
+const getVendorPurchaseWithOrderHistory = expressAsyncHandler(
+  async (req, res) => {
+    const data = await Purchase.aggregate([
+      {
+        $lookup: {
+          from: "vendormodels",
+          localField: "vendor_id",
+          foreignField: "_id",
+          as: "vendorInfo",
+        },
+      },
+      //to create the seperate document
+      {
+        $unwind: "$vendorInfo",
+      },
+      {
+        $group: {
+          _id: "$vendorInfo",
+          totalOrders: { $sum: 1 },
+          totalCost: { $sum: "$total_amount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          vendorName: "$_id.vendor_name",
+          vendorId: "$_id._id",
+          totalOrders: 1,
+          totalCost: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(data);
+  }
+);
 
 const updateVendor = expressAsyncHandler(async (req, res) => {
-	const { type, approval_status, vendor_id } = req.body;
+  const { type, approval_status, vendor_id } = req.body;
 
-	const vendorData = await VendorModel.findOne({ _id: vendor_id });
+  const vendorData = await VendorModel.findOne({ _id: vendor_id });
 
-	if (type === "update_status") {
-		console.log("in here");
-		const updateVendorStatus = await VendorModel.findByIdAndUpdate(
-			{ _id: Object(vendorData._id) },
-			{ $set: { approval_status: approval_status } },
-			{ new: true }
-		);
-		if (updateVendorStatus) {
-			return res.json(updateVendorStatus);
-		}
-	}
+  if (type === "update_status") {
+    console.log("in here");
+    const updateVendorStatus = await VendorModel.findByIdAndUpdate(
+      { _id: Object(vendorData._id) },
+      { $set: { approval_status: approval_status } },
+      { new: true }
+    );
+    if (updateVendorStatus) {
+      return res.json(updateVendorStatus);
+    }
+  }
 });
 
-module.exports = { addVendor, getVendor, updateVendor };
+module.exports = {
+  addVendor,
+  getVendor,
+  updateVendor,
+  getVendorPurchaseWithOrderHistory,
+};

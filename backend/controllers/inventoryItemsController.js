@@ -14,6 +14,8 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
     decommisioned,
     total_volume,
     price,
+    baseline,
+
     date,
     quantity_transected,
     latest_rate,
@@ -30,7 +32,8 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
       ingridient_expiry_period === "" ||
       ingridient_expiry_amount === "" ||
       ingridient_name === "" ||
-      price === ""
+      price === "" ||
+      baseline === ""
     ) {
       return res.status(403).json({ error: "All fields are mendatory" });
     }
@@ -44,6 +47,7 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
       decommisioned,
       total_volume,
       price,
+      baseline,
     });
 
     if (inventoryItems) {
@@ -73,7 +77,13 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 
 const getInventoryItems = expressAsyncHandler(async (req, res) => {
   const inventory = await InventoryModel.find();
-  return res.json(inventory);
+  return res.status(200).json(inventory);
+});
+
+const getNegativeInventory = expressAsyncHandler(async (req, res) => {
+  const inventory = await InventoryModel.find({ total_volume: { $lte: 0 } });
+
+  return res.status(200).json(inventory);
 });
 
 const updateInventoryItems = expressAsyncHandler(async (req, res) => {
@@ -113,6 +123,50 @@ const updateInventoryVolume = expressAsyncHandler(async (req, res) => {
   }
 });
 
+const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
+  const {
+    inventory_id,
+    ingridient_measure_unit,
+    ingridient_expiry_period,
+    ingridient_expiry_amount,
+    price,
+    baseline,
+  } = req.body;
+  console.log("errrsdf");
+
+  if (
+    ingridient_measure_unit === "" ||
+    ingridient_expiry_period === "" ||
+    ingridient_expiry_amount === "" ||
+    price === "" ||
+    baseline === ""
+  ) {
+    console.log("errr");
+    return res.status(403).json({ error: "All fields are mendatory" });
+  }
+
+  const inventory = await InventoryModel.findOne({ _id: inventory_id });
+
+  const updateInventory = await InventoryModel.findByIdAndUpdate(
+    { _id: Object(inventory._id) },
+    {
+      $set: {
+        ingridient_measure_unit: ingridient_measure_unit,
+        ingridient_expiry_period: ingridient_expiry_period,
+        ingridient_expiry_amount: ingridient_expiry_amount,
+        price: price,
+        baseline: baseline,
+      },
+    },
+    { new: true }
+  );
+  if (updateInventory) {
+    return res
+      .status(201)
+      .json({ message: "inventory items updated successfully" });
+  }
+});
+
 const decommissionOne = expressAsyncHandler(async (req, res) => {
   const { id } = req.params;
   const inventory = await InventoryModel.findOneAndUpdate(
@@ -148,4 +202,6 @@ module.exports = {
   decommissionOne,
   recommissionOne,
   updateInventoryVolume,
+  updateInventoryAllItems,
+  getNegativeInventory,
 };
