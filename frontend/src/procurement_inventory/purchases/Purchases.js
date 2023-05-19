@@ -10,22 +10,19 @@ import {
   InputNumber,
   // Button, Divider, Skeleton,
   ConfigProvider,
+  Button,
 } from "antd";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Purchases = () => {
-  const [purchases, setPurchases] = useState();
-
-  const data = [
-    "Inventory",
-    "Purchases",
-    "Current Menu",
-    "Vendors",
-    "Damaged Goods",
-  ];
+  const [purchases, setPurchases] = useState([]);
+  const [filteredPurchases, setFilteredPurchases] = useState([]);
+	const [filterByName, setFilterByName] = useState("");
+  const [filterByDate, setFilterByDate] = useState(null);
+	const [filterByVolume, setFilterByVolume] = useState(1)
 
   const navigate = useNavigate();
 
@@ -61,69 +58,53 @@ const Purchases = () => {
 
   useEffect(() => {
     const getPurchases = async () => {
-      const data = await fetch("http://localhost:5001/purchase");
+      const data = await fetch(
+        "http://localhost:5001/purchase/vendor_purchase"
+      );
       if (data) {
         const res = await data.json();
-        setPurchases(res);
+        console.log(res);
+        setPurchases(res.data);
+        setFilteredPurchases(res.data)
         console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
   }, []);
 
-  const inventory_grid = [
-    {
-      item_id: 0,
-      item_name: "Chicken Meat",
-      vendor_name: "V.K. General Store",
-      total_quantity: 720,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 1,
-      item_name: "Sunflower Oil",
-      vendor_name: "Brahma Stores",
-      total_quantity: 720,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 2,
-      item_name: "Cabbage",
-      vendor_name: "Somnath General Store",
-      total_quantity: -70,
-      unit: "KG",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 3,
-      item_name: "Milk",
-      vendor_name: "Supermarket Store",
-      total_quantity: 720,
-      unit: "L",
-      created_on: "12/06/2023",
-    },
-    {
-      item_id: 4,
-      item_name: "Everest Chicken Masala",
-      vendor_name: "V.K. General Store",
-      total_quantity: 720,
-      unit: "Packets",
-      created_on: "12/06/2023",
-    },
-  ];
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName && filterByVolume !== 1 && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName && filterByVolume !== 1) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume
+				);
+			} else if (filterByName && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByVolume !== 1 && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} else if (filterByDate !== null) {
+				return purchases.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
+			} else if (filterByVolume !== 1) {
+				return purchases.filter(item => item.total_amount <= filterByVolume
+				);
+			}
+			return purchases
+		};
+		const filteredList = filterList();
+		setFilteredPurchases(filteredList);
+	}, [filterByName, filterByVolume, purchases, filterByDate]);
 
-  const [amtVal, setAmtVal] = useState(1);
-  const [weightVal, setWeightVal] = useState(1);
-
-  const showAmtVal = (newAmt) => {
-    setAmtVal(newAmt);
-  };
-
-  const showWeightVal = (newWeight) => {
-    setWeightVal(newWeight);
-  };
 
   return (
     <div
@@ -146,7 +127,14 @@ const Purchases = () => {
           <Sidebar k="2" userType="pai" />
 
           <div style={{ width: "100%" }}>
-            <Header title=" Purchases" />
+            <Header comp={<center>
+                <Link to="/pai/purchases/new">
+                  <Button style={{ backgroundColor: "white", color: "orange" }}>
+                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    New Purchase
+                  </Button>
+                </Link>
+              </center>} title="Purchases" />
             <div style={{ padding: 0 }}>
               <Col xs={24} xl={24} style={{ width: "100%", padding: "2%" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
@@ -154,41 +142,26 @@ const Purchases = () => {
                     <td>
                       Ingredient name:
                       <br />
-                      <Input placeholder="Filter by name"></Input>
+                      <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
                     <td>
                       Date of purchase:
                       <br />
-                      <DatePicker></DatePicker>
+                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                     </td>
                     <td>
-                      Total amount:
+                      Filter By Price:
                       <br />
                       <Slider
+                        value={filterByVolume}
+                        onChange={value => setFilterByVolume(value)}
                         min={1}
-                        max={200}
-                        onChange={showAmtVal}
-                        value={amtVal}
+                        max={1000}
                       ></Slider>
                       <br />
                       <InputNumber
-                        value={amtVal}
-                        onChange={showAmtVal}
-                      ></InputNumber>
-                    </td>
-                    <td>
-                      Weight:
-                      <br />
-                      <Slider
-                        min={1}
-                        max={5000}
-                        onChange={showWeightVal}
-                        value={weightVal}
-                      ></Slider>
-                      <br />
-                      <InputNumber
-                        value={weightVal}
-                        onChange={showWeightVal}
+                        value={filterByVolume}
+                        onChange={value => setFilterByVolume(value)}
                       ></InputNumber>
                     </td>
                   </tr>
@@ -210,7 +183,7 @@ const Purchases = () => {
                       overflowY: "scroll",
                       backgroundColor: "transparent",
                     }}
-                    dataSource={purchases}
+                    dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item>
                         <Card style={{ width: "100%" }}>
@@ -223,12 +196,12 @@ const Purchases = () => {
                               {item.quantity_loaded} units
                             </Col>
                             <Col xs={12} xl={6}>
-                              Vendor ID: <br />
-                              {item.vendor_id}
+                              Vendor Name: <br />
+                              {item.vendorName}
                             </Col>
                             <Col xs={12} xl={6}>
                               Date of purchase: <br />
-                              {item.updatedAt}
+                              {new Date(item.createdAt).toDateString()}
                             </Col>
                             <Col xs={12} xl={6}>
                               Purchase cost: <br />

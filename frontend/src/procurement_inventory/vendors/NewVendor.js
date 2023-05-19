@@ -157,7 +157,7 @@ const NewVendor = () => {
 
           <div style={{ width: "100%" }}>
             <Header
-              title=<p>
+              title={<p>
                 <Link
                   to="/pai/vendors"
                   style={{ color: "white", textDecoration: "none" }}
@@ -165,12 +165,14 @@ const NewVendor = () => {
                   <ArrowLeftOutlined />
                 </Link>{" "}
                 Add New Vendor
-              </p>
-              comp=<center>
+              </p>}
+              comp={<center>
+                <Link to="/pai/vendors">
                 <Button style={{ backgroundColor: "white", color: "orange" }}>
                   Cancel
                 </Button>
-              </center>
+                </Link>
+              </center>}
             />
             {validationError && (
               <tr>

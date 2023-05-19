@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Row,
   Col,
@@ -26,9 +26,11 @@ const ResetPassword = () => {
   const [open, setOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [modalText, setModalText] = useState("Content of the modal");
-  const showModal = () => {
-    setOpen(true);
-  };
+  const [error, setError] = useState(false);
+
+  const [validationError, setValidationError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
+
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
@@ -48,8 +50,25 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   console.log(newPassword);
   console.log(confirmPassword);
+
+  useEffect(() => {
+    if (confirmPassword !== newPassword) {
+      setError(true);
+    }
+    if (confirmPassword === newPassword) {
+      setError(false);
+    }
+  }, [confirmPassword, newPassword]);
+
   const handleResetSubmit = async (e) => {
     e.preventDefault();
+
+    console.log("here");
+
+    if (confirmPassword === "" || newPassword === "") {
+      setValidationError(true);
+      return;
+    }
 
     try {
       const data = await fetch(
@@ -72,6 +91,7 @@ const ResetPassword = () => {
         console.log(data.json().then((data) => console.log(data)));
         // authCtx.logout();
         // navigate("/login");
+        setOpen(true);
       }
     } catch (error) {
       console.error(error);
@@ -184,7 +204,32 @@ const ResetPassword = () => {
                         />
                       </td>
                     </tr>
-
+                    {error && (
+                      <tr>
+                        <td colSpan={2}>
+                          <br />
+                          <Alert
+                            message="Validation Error"
+                            description=" password do not match. Please try again"
+                            type="error"
+                            closable
+                          />
+                        </td>
+                      </tr>
+                    )}
+                    {validationError && (
+                      <tr>
+                        <td colSpan={2}>
+                          <br />
+                          <Alert
+                            message="Validation Error"
+                            description="All the fields are required"
+                            type="error"
+                            closable
+                          />
+                        </td>
+                      </tr>
+                    )}
                     <tr
                       style={{
                         textAlign: "left",
@@ -195,7 +240,6 @@ const ResetPassword = () => {
                       <td colSpan={2}>
                         <center>
                           <button
-                            onClick={showModal}
                             type="submit"
                             style={{
                               marginTop: "2%",
@@ -219,7 +263,12 @@ const ResetPassword = () => {
           </Row>
         </form>
         <Modal
-          title=<h3><CheckCircleFilled style={{color: 'green', fontSize: 28, marginRight:10}} />Password Reset Successfully</h3>
+          title=<h3>
+            <CheckCircleFilled
+              style={{ color: "green", fontSize: 28, marginRight: 10 }}
+            />
+            Password Reset Successfully
+          </h3>
           open={open}
           okText="Login"
           onOk={handleOk}

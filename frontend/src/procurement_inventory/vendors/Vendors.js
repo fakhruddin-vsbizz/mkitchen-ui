@@ -1,13 +1,16 @@
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { Row, Col, List, Card, Tag, Button, ConfigProvider } from "antd";
+import { Row, Col, List, Card, Tag, Button, ConfigProvider, Input } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
 
 const Vendors = () => {
-  const [vendors, setVendors] = useState();
+  const [vendors, setVendors] = useState([]);
+  const [filteredVendors, setFilteredVendors] = useState([])
+	const [filterByName, setFilterByName] = useState("");
+
 
   const data = [
     "Inventory",
@@ -56,10 +59,24 @@ const Vendors = () => {
       if (data) {
         const res = await data.json();
         setVendors(res);
+        setFilteredVendors(res)
       }
     };
     getVendors();
   }, []);
+
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName) {
+				return vendors.filter(item =>
+					item.vendor_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} 
+			return vendors
+		};
+		const filteredList = filterList();
+		setFilteredVendors(filteredList);
+	}, [filterByName, vendors]);
+
 
   console.log("vendors: ", vendors);
   return (
@@ -79,16 +96,28 @@ const Vendors = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Vendor"
-              comp=<center>
+              comp={<center>
                 <Link to="/pai/vendors/new">
                   <Button style={{ backgroundColor: "white", color: "orange" }}>
                     <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     Add Vendor
                   </Button>
                 </Link>
-              </center>
+              </center>}
             />
             <div style={{ width: "100%", padding: 0 }}>
+
+            <Col xs={12} xl={12} style={{ padding: "2%" }}>
+                <table style={{ width: "100%" }} cellPadding={10}>
+                  <tr>
+                    <td>
+                      Ingredient name:
+                      <br />
+                      <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                    </td>
+                    </tr>
+                    </table>
+                    </Col>
               <div style={{ width: "95%", padding: "2%" }}>
                 <label
                   style={{ fontSize: "200%" }}
@@ -98,7 +127,7 @@ const Vendors = () => {
                 </label>
                 {vendors && (
                   <List
-                    dataSource={vendors}
+                    dataSource={filteredVendors}
                     renderItem={(item) => (
                       <List.Item>
                         <Card
@@ -114,15 +143,18 @@ const Vendors = () => {
                         >
                           <Row>
                             <Col xs={8} xl={8}>
+                              <span>Vendor's Name:</span>
+                              
+                              <br />
                               <label style={{ color: "#e08003" }}>
                                 <b>{item.vendor_name}</b>
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>
-                              Purchase quantity:
+                              Vendor's Address:
                               <br />
                               <label style={{ fontSize: "130%" }}>
-                                {item.active_purchases}
+                                {item.address}
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>

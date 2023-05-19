@@ -256,9 +256,10 @@ const SetMenu = () => {
                 ingridient_measure_unit: "gram",
                 ingridient_expiry_period: "Days",
                 ingridient_expiry_amount: "5",
-                price:0,
+                price: 0,
                 decommisioned: true,
                 total_volume: 0,
+                baseline: 1,
               }),
             }
           );

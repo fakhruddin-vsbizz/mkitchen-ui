@@ -6,7 +6,6 @@ import {
   Col,
   Slider,
   DatePicker,
-  Tag,
   Button,
   Input,
   InputNumber,
@@ -29,6 +28,14 @@ const DamagedGoodsList = () => {
   const [inputValue, setInputValue] = useState(1);
   const [days, setDays] = useState(1);
   const [expiredItems, setExpiredItems] = useState([]);
+  const [filteredExpiredItems, setFilteredExpiredItems] = useState([]);
+	const [filterByName, setFilterByName] = useState("");
+  const [filterByDate, setFilterByDate] = useState(null);
+  const [filterByDaysAfterExpiry, setFilterByDaysAfterExpiry] = useState(0)
+
+  const daysAfterExpiry = (expiry_date) => {
+    return (new Date(new Date(expiry_date).getDate() - new Date().getDate()).getDate())+1
+  }
 
   useEffect(() => {
     const currentDate = new Date();
@@ -73,38 +80,105 @@ const DamagedGoodsList = () => {
   /**************Restricting PandI Route************************* */
 
   //getting all purchase data
+  // useEffect(() => {
+  //   const getPurchaseData = async () => {
+  //     if (todayDate) {
+  //       try {
+  //         const data = await fetch("http://localhost:5001/purchase");
+  //         const res = await data.json();
+
+  //         if (res) {
+  //           const filterData = res.filter((item) => {
+  //             const expiryDate = new Date(item.expiry_date);
+  //             const today = new Date(todayDate);
+  //             return item.unshelf === false && expiryDate < today;
+  //           });
+  //           setExpiredItems(filterData);
+  //           console.log(filterData);
+  //         }
+  //       } catch (e) {
+  //         console.log(e);
+  //       }
+  //     }
+  //   };
+
+  //   getPurchaseData();
+  // }, [todayDate, update]);
+
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName && filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
+				return expiredItems.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByName && filterByDaysAfterExpiry !== 0) {
+				return expiredItems.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
+				);
+			} else 
+      if (filterByName && filterByDate !== null) {
+				return expiredItems.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
+				return expiredItems.filter(item =>
+					daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByName) {
+				return expiredItems.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} else if (filterByDate !== null) {
+				return expiredItems.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
+			} else 
+      if (filterByDaysAfterExpiry !== 0 ) {
+				return expiredItems.filter(item => daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
+				);
+			}
+			return expiredItems
+		};
+		const filteredList = filterList();
+		setFilteredExpiredItems(filteredList);
+	}, [filterByName, expiredItems, filterByDate, filterByDaysAfterExpiry]);
+
+  console.log(todayDate);
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
-        try {
-          const data = await fetch("http://localhost:5001/purchase");
-          const res = await data.json();
-
-          if (res) {
-            const filterData = res.filter((item) => {
-              const expiryDate = new Date(item.expiry_date);
-              const today = new Date(todayDate);
-              return item.unshelf === false && expiryDate < today;
-            });
-            setExpiredItems(filterData);
-            console.log(filterData);
+        const data = await fetch(
+          "http://localhost:5001/purchase/expired_items",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              date: todayDate,
+            }),
           }
-        } catch (e) {
-          console.log(e);
+        );
+        if (data) {
+          const res = await data.json();
+          console.log(res);
+          if (res) {
+            setExpiredItems(res);
+            setFilteredExpiredItems(res);
+          }
         }
       }
     };
-
     getPurchaseData();
   }, [todayDate, update]);
 
-  const onChange = (newValue) => {
-    setInputValue(newValue);
-  };
+  // const onChange = (newValue) => {
+  //   setInputValue(newValue);
+  // };
 
-  const onChangeDayValue = (newValue) => {
-    setDays(newValue);
-  };
+  // const onChangeDayValue = (newValue) => {
+  //   setDays(newValue);
+  // };
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -202,25 +276,27 @@ const DamagedGoodsList = () => {
                       <Col xs={12} xl={6}>
                         Filter by Ingredients: <br />
                         <Input
+                        value={filterByName}
+                        onChange={e => setFilterByName(e.target.value)}
                           placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
                           style={{ width: "70%" }}
                         ></Input>
                       </Col>
                       <Col xs={12} xl={6}>
                         Date of Purchase: <br />
-                        <DatePicker></DatePicker>
+                        <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                       </Col>
                       <Col xs={12} xl={6}>
-                        Expiry Period: <br />
+                        Days After Expiry: <br />
                         <Row>
                           <Col xs={6} xl={3}>
                             <InputNumber
-                              min={1}
-                              value={days}
-                              onChange={onChangeDayValue}
-                            ></InputNumber>
+                              min={0}
+                              value={filterByDaysAfterExpiry}
+                              onChange={value => setFilterByDaysAfterExpiry(value)}
+                            />
                           </Col>
-                          <Col xs={6} xl={3}>
+                          {/* <Col xs={6} xl={3}>
                             <Select
                               defaultValue={0}
                               options={[
@@ -229,32 +305,7 @@ const DamagedGoodsList = () => {
                                 { value: 2, label: "Years" },
                               ]}
                             ></Select>
-                          </Col>
-                        </Row>
-                      </Col>
-                      <Col xs={12} xl={6}>
-                        Price Range: <br />
-                        <Row>
-                          <Col xs={12} xl={12}>
-                            <Slider
-                              style={{ width: "70%" }}
-                              min={1}
-                              max={100000}
-                              onChange={onChange}
-                              value={
-                                typeof inputValue === "number" ? inputValue : 0
-                              }
-                            />
-                          </Col>
-                          <Col xs={12} xl={12}>
-                            <InputNumber
-                              min={1}
-                              max={100000}
-                              style={{ margin: "0 16px" }}
-                              value={inputValue}
-                              onChange={onChange}
-                            />
-                          </Col>
+                          </Col> */}
                         </Row>
                       </Col>
                     </Row>
@@ -262,7 +313,7 @@ const DamagedGoodsList = () => {
                   {expiredItems && (
                     <List
                       style={{ width: "85%" }}
-                      dataSource={expiredItems}
+                      dataSource={filteredExpiredItems}
                       renderItem={(item, idx) => (
                         <List.Item>
                           <Row
@@ -284,15 +335,15 @@ const DamagedGoodsList = () => {
                             </Col>
                             <Col xs={12} xl={4}>
                               Expired on: <br />
-                              {item.expiry_date}
+                              {new Date(item.expiry_date).toDateString()}
                             </Col>
                             <Col xs={12} xl={4}>
                               Date of purchase: <br />
-                              {item.createdAt}
+                              {new Date(item.createdAt).toDateString()}
                             </Col>
                             <Col xs={12} xl={6}>
-                              Days from expired date: <br />
-                              {idx + 1} days
+                              Days after expiry: <br />
+                              {(new Date( (new Date(item.expiry_date).getDate()) - (new Date().getDate()))).toDateString()} days
                             </Col>
                             <Col xs={12} xl={4}>
                               <Button

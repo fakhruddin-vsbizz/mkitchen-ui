@@ -16,7 +16,8 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const NewPurchase = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -26,7 +27,11 @@ const NewPurchase = () => {
   const [quantity, setQuantity] = useState();
   const [vendors, setVendors] = useState();
   const [selectedVendor, setSelectedVendor] = useState();
+  const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
   const [visible, setVisible] = useState(false);
+  const [itemName, setItemName] = useState("")
+
+  const [idFromPrams, setIdFromPrams] = useState();
 
   const [validationError, setValidationError] = useState(false);
   const [fieldsError, setFieldsError] = useState(false);
@@ -36,7 +41,15 @@ const NewPurchase = () => {
 
   const navigate = useNavigate();
 
+  const {id} = useParams();
+
   /**************Restricting PandI Route************************* */
+
+  useEffect(()=>{
+    if (id) {
+      setIdFromPrams(id)
+    }
+  },[])
 
   useEffect(() => {
     console.log("in");
@@ -113,12 +126,69 @@ const NewPurchase = () => {
   const handleSelect = (value, option) => {
     setInventoryItemId(option.id);
     setInventoryItemName(value);
+    setItemName(value);
   };
+
+  useEffect(()=>{
+    if (inventoryItems.length !== 0 && idFromPrams !== undefined) {
+      
+    let currentDate = new Date();
+
+      const data = inventoryItems.filter(
+        (item) => item._id === idFromPrams
+      );
+
+      // setName(data[0]?.ingridient_name)
+
+      console.log(data, "dtata");
+
+      const time = +data[0].ingridient_expiry_amount;
+      const period = data[0].ingridient_expiry_period;
+
+      // Get the current date
+
+      console.log(time, " ", period);
+
+      // Add the specified time and period to the current date
+      if (period === "Days") {
+        currentDate.setDate(currentDate.getDate() + time);
+      } else if (period === "Months") {
+        currentDate.setMonth(currentDate.getMonth() + time);
+      } else if (period === "Year") {
+        currentDate.setFullYear(currentDate.getFullYear() + time);
+      }
+      let formattedDateData = currentDate.toDateString();
+
+      var date = new Date(formattedDateData);
+
+      var formattedDate = date.toLocaleDateString("en-US", {
+        month: "numeric",
+        day: "numeric",
+        year: "2-digit",
+      });
+
+      // Output the final date
+      console.log("Final Date:", formattedDate);
+
+      const ingredient_added = {
+        mkuser_id: userId,
+        ingredient_name: data[0]?.ingridient_name,
+        vendor_id: selectedVendor,
+        inventory_id: idFromPrams,
+        rate_per_unit: price,
+        quantity_loaded: quantity,
+        paid: false,
+        total_amount: price * quantity,
+        expiry_date: formattedDate,
+        unshelf: false,
+      };
+      setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
+    }
+  },[idFromPrams,inventoryItems])
 
   console.log(inventoryItems);
   console.log(selectedVendor);
 
-  const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
 
   const onAddIngredient = () => {
     if (inventoryItemName === undefined) {
@@ -173,6 +243,8 @@ const NewPurchase = () => {
         unshelf: false,
       };
       setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
+    setItemName("")
+
     }
   };
 
@@ -282,7 +354,15 @@ const NewPurchase = () => {
           <Sidebar k="2" userType="pai" />
 
           <div style={{ width: "100%" }}>
-            <Header title="New Purchases" />
+            <Header title={<p>
+                <Link
+                  to="/pai/vendors"
+                  style={{ color: "white", textDecoration: "none" }}
+                >
+                  <ArrowLeftOutlined />
+                </Link>{" "}
+                Purchases
+              </p>} />
             <div style={{ padding: 0 }}>
               <center>
                 <div
@@ -298,11 +378,13 @@ const NewPurchase = () => {
                             <AutoComplete
                               id="ingredient-item-selected"
                               style={{ width: "70%" }}
+                              value={itemName}
                               options={inventoryItems.map((item) => ({
                                 value: item.ingridient_name,
                                 id: item._id,
                               }))}
                               onSelect={handleSelect}
+                              onChange={(value) => setItemName(value)}
                               placeholder="Eg: Roti, Chawal, Daal, etc"
                               filterOption={(inputValue, option) =>
                                 option.value
