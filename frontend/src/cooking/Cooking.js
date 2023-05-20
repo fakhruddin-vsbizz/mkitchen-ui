@@ -50,21 +50,15 @@ const Cooking = () => {
   /**************Restricting Cooking Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -78,7 +72,6 @@ const Cooking = () => {
   /**************Restricting Cooking Route************************* */
 
   const handleDateChange = (date) => {
-    console.log(date);
     const dateObj = new Date(date);
     const formattedDate = `${
       dateObj.getMonth() + 1
@@ -91,7 +84,6 @@ const Cooking = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        console.log("inside");
         const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
@@ -153,7 +145,6 @@ const Cooking = () => {
         });
 
         if (data) {
-          console.log(data);
           const res = await data.json();
           if (res) {
             setTotalAshkashCount(res);
@@ -180,7 +171,6 @@ const Cooking = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setMenuFoodId(res[0]._id);
             setGetFoodList(res[0].food_list);
@@ -214,11 +204,6 @@ const Cooking = () => {
         });
     }
   }, [getFoodList]);
-
-  console.log("Ingridient list: ", ingredientLists);
-  console.log("Food Items: ", getFoodList);
-  console.log("Food Menu id: ", menuFoodId);
-  console.log("reorder logs: ", reorderLogs);
 
   const handleIngridientReOrder = async (inventoryId, quantity) => {
     setInventoryId(inventoryId);
@@ -281,7 +266,6 @@ const Cooking = () => {
 
           if (data) {
             const res = await data.json();
-            console.log(data);
             setUpdate(false);
             setReorderQuantity("");
           }
@@ -293,7 +277,6 @@ const Cooking = () => {
   }, [update, reorderLogs]);
 
   const reorderIngridient = async (ing) => {
-    console.log(ing);
     let obj = {
       ingridient_name: ing,
       inventory_id: inventoryId,
@@ -321,17 +304,38 @@ const Cooking = () => {
 
       if (data) {
         const res = await data.json();
-        console.log(data);
         setVisible(true);
+      }
+    } catch (error) {}
+  };
+
+  console.log(leftOverQuantity);
+
+  const returnIngToInventory = async (inventory_id, ingName) => {
+    console.log(inventory_id);
+    console.log(ingName);
+
+    try {
+      const data = await fetch("http://localhost:5001/cooking/add_leftover", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          menu_id: menuFoodId,
+          inventory_id: inventory_id,
+          ingredient_name: ingName,
+          leftover_amount: leftOverQuantity,
+        }),
+      });
+
+      if (data) {
+        const res = await data.json();
+        console.log(res);
       }
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const returnIngToInventory = async (inventory_id) => {
-    console.log("inv: ", inventoryId);
-    console.log("leftOverQuantity: ", leftOverQuantity);
 
     try {
       const data = await fetch("http://localhost:5001/inventory/addinventory", {
@@ -348,15 +352,11 @@ const Cooking = () => {
 
       if (data) {
         const res = await data.json();
-        console.log(data);
       }
     } catch (error) {
       console.log(error);
     }
   };
-
-  console.log("status==>", status);
-  console.log("inventoryItems==>", inventoryItems);
 
   return (
     <div
@@ -621,7 +621,8 @@ const Cooking = () => {
                                             disabled={status >= 3}
                                             onClick={(e) =>
                                               returnIngToInventory(
-                                                ing.inventory_item_id
+                                                ing.inventory_item_id,
+                                                ing.ingredient_name
                                               )
                                             }
                                             size="small"

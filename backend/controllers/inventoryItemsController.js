@@ -132,7 +132,6 @@ const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
     price,
     baseline,
   } = req.body;
-  console.log("errrsdf");
 
   if (
     ingridient_measure_unit === "" ||
@@ -141,7 +140,6 @@ const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
     price === "" ||
     baseline === ""
   ) {
-    console.log("errr");
     return res.status(403).json({ error: "All fields are mendatory" });
   }
 

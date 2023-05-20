@@ -45,28 +45,20 @@ const DamagedGoodsList = () => {
     setTodayDate(formattedDate);
   }, []);
 
-  console.log("todays date: ", todayDate);
-
   const navigate = useNavigate();
 
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -104,6 +96,7 @@ const DamagedGoodsList = () => {
 
   //   getPurchaseData();
   // }, [todayDate, update]);
+
 
 
   useEffect(() => {
@@ -146,6 +139,7 @@ const DamagedGoodsList = () => {
 
 
   console.log(todayDate);
+  
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
@@ -163,7 +157,6 @@ const DamagedGoodsList = () => {
         );
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setExpiredItems(res);
 
@@ -202,10 +195,6 @@ const DamagedGoodsList = () => {
   };
 
   const unshelfAndRemoveItem = async () => {
-    console.log(inventoryId);
-    console.log(purchaseId);
-    console.log(quantityLoaded);
-
     //update unshelf in purchase
     try {
       const data = await fetch("http://localhost:5001/purchase/update_shelf", {
@@ -219,7 +208,6 @@ const DamagedGoodsList = () => {
         }),
       });
       if (data) {
-        console.log(data);
       }
     } catch (e) {
       console.log(e);
@@ -241,7 +229,6 @@ const DamagedGoodsList = () => {
         }
       );
       if (data) {
-        console.log(data);
       }
     } catch (e) {
       console.log(e);

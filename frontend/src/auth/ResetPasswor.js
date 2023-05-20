@@ -14,7 +14,7 @@ import {
 } from "antd";
 import axios from "axios";
 import AuthContext from "../components/context/auth-context";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import whiteLogo from "../res/img/MKWhiteLogo.png";
 import logo from "../res/img/logo.png";
@@ -31,6 +31,9 @@ const ResetPassword = () => {
   const [validationError, setValidationError] = useState(false);
   const [emailError, setEmailError] = useState(false);
 
+  const { id } = useParams();
+
+
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
@@ -42,14 +45,12 @@ const ResetPassword = () => {
     navigate("/login");
   };
   const handleCancel = () => {
-    console.log("Clicked cancel button");
     setOpen(false);
   };
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
-  console.log(newPassword);
-  console.log(confirmPassword);
+ 
 
   useEffect(() => {
     if (confirmPassword !== newPassword) {
@@ -63,39 +64,37 @@ const ResetPassword = () => {
   const handleResetSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("here");
-
-    if (confirmPassword === "" || newPassword === "") {
+    if (confirmPassword === "" || newPassword === "" || id === "") {
       setValidationError(true);
       return;
     }
+    if (error === false) {
 
-    try {
-      const data = await fetch(
-        "http://localhost:5001/admin/account_management",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: authCtx.userEmail,
-            username: "mk admin",
-            usertype: "mk admin",
-            password: newPassword,
-            action: "update_password",
-          }),
+      try {
+        const data = await fetch(
+          "http://localhost:5001/admin/account_management/update_password",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              password: confirmPassword,
+              email: id,
+            }),
+          }
+        );
+        if (data) {
+          setError(false);
+          setOpen(true);
+
+          // authCtx.logout();
+          // navigate("/login");
         }
-      );
-      if (data) {
-        console.log(data.json().then((data) => console.log(data)));
-        // authCtx.logout();
-        // navigate("/login");
-        setOpen(true);
+      } catch (error) {
+        console.error(error);
+        alert("Password reset email failed to send.");
       }
-    } catch (error) {
-      console.error(error);
-      alert("Password reset email failed to send.");
     }
   };
 

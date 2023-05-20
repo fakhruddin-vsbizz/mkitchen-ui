@@ -17,7 +17,6 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       0
     );
 
-    console.log(totalAshkashCount);
 
     const inventoryItems = await OperationPipeLine.find({
       menu_food_id: menu_id,
@@ -90,7 +89,6 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       date,
     });
     if (updatePipeline) {
-      console.log("success");
       return res.json({ message: "pipeline  updated successfully" });
     }
   }

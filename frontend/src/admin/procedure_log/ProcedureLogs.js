@@ -19,21 +19,15 @@ const ProcedureLogs = () => {
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu/history");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -49,7 +43,6 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        console.log("inside");
         const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
@@ -73,8 +66,6 @@ const ProcedureLogs = () => {
     getInventory();
   }, []);
 
-  console.log(inventoryItems);
-
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
@@ -89,20 +80,15 @@ const ProcedureLogs = () => {
           }),
         });
         if (data) {
-          console.log("yes");
           const res = await data.json();
-          console.log(res);
           // setGetMkUserId(res.user);
           setTotalAshkhaas(res);
-          console.log("getFood menu/history ==============> ", res);
         }
       }
     };
 
     getHistory();
   }, [menuFoodId]);
-
-  console.log("total Ashkash ==>", totalAshkash);
 
   useEffect(() => {
     const getFood = async () => {
@@ -119,19 +105,14 @@ const ProcedureLogs = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setIngridientList(res);
-            console.log("==============> ", ingridientList);
-            console.log("getFood operation_pipeline ==============> ", res);
           }
         }
       }
     };
     getFood();
   }, [menuFoodId]);
-
-  console.log("getFood operation_pipeline ==============> ", ingridientList);
 
   useEffect(() => {
     const getFood = async () => {
@@ -148,10 +129,8 @@ const ProcedureLogs = () => {
         });
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res) {
             setMenuFoodId(res[0]._id);
-            console.log("getFood ingredients ==============> ", res);
           }
         }
       }
@@ -186,7 +165,6 @@ const ProcedureLogs = () => {
   }, [selectedDate, menuFoodId]);
 
   const handleDateChange = (date) => {
-    console.log(date);
     const dateObj = new Date(date);
     const formattedDate = `${
       dateObj.getMonth() + 1

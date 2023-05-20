@@ -88,6 +88,7 @@ const getVendorPurchaseWithOrderHistory = expressAsyncHandler(
           vendorId: "$_id._id",
           totalOrders: 1,
           totalCost: 1,
+          approval_status: "$_id.approval_status",
         },
       },
     ]);
@@ -96,13 +97,38 @@ const getVendorPurchaseWithOrderHistory = expressAsyncHandler(
   }
 );
 
+const getTotalVendorPurchase = expressAsyncHandler(async (req, res) => {
+  try {
+    const data = await VendorModel.aggregate([
+      {
+        $lookup: {
+          from: "purchasemodels",
+          localField: "_id",
+          foreignField: "vendor_id",
+          as: "purchaseInfo",
+        },
+      },
+      {
+        $project: {
+          vendor_name: "$vendor_name",
+          totalPurchases: { $size: "$purchaseInfo" },
+          approval_status: "$approval_status",
+        },
+      },
+    ]);
+
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
 const updateVendor = expressAsyncHandler(async (req, res) => {
   const { type, approval_status, vendor_id } = req.body;
 
   const vendorData = await VendorModel.findOne({ _id: vendor_id });
 
   if (type === "update_status") {
-    console.log("in here");
     const updateVendorStatus = await VendorModel.findByIdAndUpdate(
       { _id: Object(vendorData._id) },
       { $set: { approval_status: approval_status } },
@@ -119,4 +145,5 @@ module.exports = {
   getVendor,
   updateVendor,
   getVendorPurchaseWithOrderHistory,
+  getTotalVendorPurchase,
 };

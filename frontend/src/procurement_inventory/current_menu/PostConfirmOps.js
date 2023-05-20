@@ -36,21 +36,15 @@ const PostConfirmOps = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -138,7 +132,6 @@ const PostConfirmOps = () => {
 
   const updateReorderStatus = async (id) => {
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/operation_pipeline", {
         method: "PUT",
         headers: {
@@ -154,7 +147,6 @@ const PostConfirmOps = () => {
       if (data) {
         const res = await data.json();
         if (res) {
-          console.log(res);
           setUpdate((prev) => !prev);
         }
       }
@@ -162,9 +154,6 @@ const PostConfirmOps = () => {
       console.log(error);
     }
   };
-  console.log("menu: ", menuFoodId);
-  console.log("food items: ", foodItems);
-  console.log("reorder logs: ", reorderLogs);
 
   const handleDateChange = (date) => {
     const dateObj = new Date(date);

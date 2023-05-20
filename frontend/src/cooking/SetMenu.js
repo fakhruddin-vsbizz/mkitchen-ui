@@ -63,21 +63,15 @@ const SetMenu = () => {
   /**************Restricting Cooking Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -110,20 +104,15 @@ const SetMenu = () => {
           }),
         });
         if (data) {
-          console.log("yes");
           const res = await data.json();
-          console.log(res);
           // setGetMkUserId(res.user);
           setTotalAshkhaas(res);
-          console.log("getFood menu/history ==============> ", res);
         }
       }
     };
 
     getHistory();
   }, [menuFoodId]);
-
-  console.log(totalAshkash);
 
   useEffect(() => {
     const getUserId = async () => {
@@ -162,14 +151,12 @@ const SetMenu = () => {
 
         if (data) {
           const res = await data.json();
-          console.log(res);
           if (res[0]) {
             setMenuFoodId(res[0]._id);
             setGetFoodList(res[0].food_list);
             setIngredientItems([]);
             setStatus(res.status);
           } else {
-            console.log("here");
             setGetFoodList([]);
             setIngredientItems([]);
             setStatus(-1);
@@ -180,18 +167,11 @@ const SetMenu = () => {
     getFood();
   }, [getMkUserId, selectedDate]);
 
-  console.log("food list for menu: ", getFoodList);
-  console.log("food menu id: ", menuFoodId);
-
   const data = ["Set Menu", "Cooking", "Dispatch"];
-
-  console.log(getFoodList);
-  console.log("id: ", inventoryItemId);
 
   useEffect(() => {
     const getInventory = async () => {
       try {
-        console.log("inside");
         const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
@@ -208,25 +188,18 @@ const SetMenu = () => {
             setInventoryItems(res);
           }
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getInventory();
   }, [dataAdded]);
 
-  console.log(inventoryItems);
-
   const addIngredients = async () => {
     if (ingredientName === "") {
-      console.log("here ");
       setValidationError(true);
     } else {
       if (
         inventoryItems.some((item) => item.ingridient_name === ingredientName)
       ) {
-        console.log("item exists");
-
         const newIngredient = {
           inventory_item_id: inventoryItemId,
           ingredient_name: ingredientName,
@@ -241,8 +214,6 @@ const SetMenu = () => {
         setIngredientName("");
       } else {
         try {
-          console.log("item dont exists");
-
           const data = await fetch(
             "http://localhost:5001/inventory/addinventory",
             {
@@ -266,7 +237,6 @@ const SetMenu = () => {
           if (data) {
             setDataAdded((prev) => !prev);
             const res = await data.json();
-            console.log(res);
             const newIngredient = {
               inventory_item_id: res._id,
               ingredient_name: ingredientName,
@@ -301,11 +271,8 @@ const SetMenu = () => {
     setUpdateAshkash(true);
   };
 
-  console.log("food id: ", foodIndex);
-
   const setFoodReference = async (idx) => {
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/cooking/ingredients", {
         method: "POST",
         headers: {
@@ -344,7 +311,6 @@ const SetMenu = () => {
       });
 
       if (data) {
-        console.log(data);
         const res = await data.json();
         setAllIngridients([]);
         setVisible(true);
@@ -375,7 +341,6 @@ const SetMenu = () => {
         });
 
         if (data) {
-          console.log(data);
           const res = await data.json();
           setAllIngridients([...allIngridients, ...ingredientItems]);
           setVisible(true);
@@ -389,13 +354,11 @@ const SetMenu = () => {
   };
 
   const handleSelect = (value, option) => {
-    console.log("value", value);
     setInventoryItemId(option.id);
     setIngredientName(value);
   };
 
   const handleDateChange = (date) => {
-    console.log(date);
     const dateObj = new Date(date);
     const formattedDate = `${
       dateObj.getMonth() + 1
@@ -403,9 +366,6 @@ const SetMenu = () => {
     setSelectedDate(formattedDate);
     setIsSelected(false);
   };
-
-  console.log(selectedDate);
-  console.log(status);
 
   return (
     <div

@@ -35,21 +35,17 @@ const VendorPurchase = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-    console.log("in");
 
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
 
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/menu");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -80,6 +76,7 @@ const VendorPurchase = () => {
     };
     getPurchaseData();
   }, [update]);
+
 
   useEffect(() => {
 		const filterList = () => {
@@ -124,7 +121,6 @@ const VendorPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        console.log("inside");
         const data = await fetch("http://localhost:5001/cooking/ingredients", {
           method: "POST",
           headers: {
@@ -149,7 +145,6 @@ const VendorPurchase = () => {
   }, []);
 
   const payPurchaseItem = async (id) => {
-    console.log(id);
     try {
       const data = await fetch("http://localhost:5001/purchase", {
         method: "PUT",
@@ -162,7 +157,6 @@ const VendorPurchase = () => {
         }),
       });
       if (data) {
-        console.log(data);
         setUpdate((prev) => !prev);
       }
     } catch (e) {

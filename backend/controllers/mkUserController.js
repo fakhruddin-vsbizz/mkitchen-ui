@@ -34,7 +34,6 @@ const createMkUser = expressAsyncHandler(async (req, res) => {
 
     //Hash Password using bcrypt
     const hashPassword = await bcrypt.hash(password, 10);
-    console.log("hash password: ", hashPassword);
 
     const user = await MKUser.create({
       usertype,
@@ -42,8 +41,6 @@ const createMkUser = expressAsyncHandler(async (req, res) => {
       email,
       password: hashPassword,
     });
-
-    console.log("user created: ", user);
 
     if (user) {
       return res
@@ -98,13 +95,11 @@ const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
   const { username, usertype, action, email, password } = req.body;
 
   let testEmail = emailRegex.test(email);
-  console.log(email);
   if (testEmail !== true || username === undefined) {
     return res.status(400).json({ error: "invalid email" });
   }
 
   const user = await MKUser.findOne({ username, usertype });
-  console.log(username, usertype, action, email, password);
 
   if (user && action === "update_email") {
     const updateUser = await MKUser.findByIdAndUpdate(
@@ -118,7 +113,6 @@ const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
   }
 
   if (user && action === "update_password") {
-    console.log("updating the password");
     const hashPassword = await bcrypt.hash(password, 10);
     const updateUser = await MKUser.findByIdAndUpdate(
       { _id: Object(user._id) },
@@ -132,8 +126,65 @@ const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
   return res.json({ message: "user email Not updated" });
 });
 
+const updatePasswordBasedOnEmail = expressAsyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+
+  let testEmail = emailRegex.test(email);
+  if (testEmail !== true) {
+    return res.status(400).json({ error: "invalid email" });
+  }
+
+  const user = await MKUser.findOne({ email });
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  const updateUser = await MKUser.findByIdAndUpdate(
+    { _id: Object(user._id) },
+    { $set: { password: hashPassword } },
+    { new: true }
+  );
+  if (updateUser) {
+    return res
+      .status(200)
+      .json({ message: "user password updated successfully" });
+  }
+
+  return res.status(200).json({ message: "user password Not updated" });
+});
+
+const updatePasswordAdmin = expressAsyncHandler(async (req, res) => {
+  const { email, password, oldPassword } = req.body;
+
+  const user = await MKUser.findOne({ email });
+
+  if (password === "" || oldPassword === "") {
+    return res.status(400).json({ error: "invalid password" });
+  }
+
+  const oldPasswordData = await bcrypt.compare(oldPassword, user.password);
+
+  if (oldPasswordData === false) {
+    return res.status(400).json({ InvalidPassword: "invalid password" });
+  }
+
+  const hashPassword = await bcrypt.hash(password, 10);
+  const updateUser = await MKUser.findByIdAndUpdate(
+    { _id: Object(user._id) },
+    { $set: { password: hashPassword } },
+    { new: true }
+  );
+  if (updateUser) {
+    return res
+      .status(200)
+      .json({ message: "user password updated successfully" });
+  }
+
+  return res.status(200).json({ message: "user password Not updated" });
+});
+
 module.exports = {
   createMkUser,
   loginUser,
   updateUserBasedOnNameAndType,
+  updatePasswordBasedOnEmail,
+  updatePasswordAdmin,
 };

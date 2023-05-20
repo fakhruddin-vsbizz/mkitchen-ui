@@ -66,11 +66,14 @@ const Accounts = () => {
   //update p and i passwords state
   const [newpasswordPandI, setNewpasswordPandI] = useState("");
   const [newconfirmpasswordPandI, setNewConfirmpasswordPandI] = useState("");
+  const [oldAdminPassword, setOldAdminPassword] = useState("");
 
   const [validationError, setValidationError] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [emailErrorPI, setEmailErrorPI] = useState(false);
   const [emailErrorPandIPassword, setEmailErrorPandIPassword] = useState(false);
+  const [fieldError, setFieldError] = useState(false);
+  const [oldPasswordError, setOldPasswordError] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const userId = authCtx.userEmail;
@@ -79,21 +82,15 @@ const Accounts = () => {
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
-    console.log("in");
-
     const type = localStorage.getItem("type");
 
-    console.log("ttt=>", type);
-
     if (!type) {
-      console.log("second in");
       navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      console.log("second in");
       navigate("/admin/account_management");
     }
     if (!typeAdmin && type && type === "Cooking") {
@@ -106,8 +103,6 @@ const Accounts = () => {
 
   /**************Restricting Admin Route************************* */
 
-  console.log(selectedCookingUser);
-
   const handlepandIUser = (data, email) => {
     setSelectedPandIUser(data);
     setNewEmailPandI(email.id);
@@ -117,17 +112,13 @@ const Accounts = () => {
     setNewEmailCooking(email.id);
   };
   const handleUserTypeChange = (value) => {
-    console.log("n");
     setUserType(value);
   };
   const showModal = (data, email) => {
-    console.log(email);
     setSelectedMohallaUser(data);
     setNewEmailMohalla(email);
     setIsModalOpen(true);
   };
-
-  console.log(selectedMohallaUser);
 
   const showNMModal = () => {
     setNewMohallaPopup(true);
@@ -186,7 +177,6 @@ const Accounts = () => {
       );
       if (data) {
         const res = await data.json();
-        console.log(res);
         if (res.message) {
           setNewEmailMohalla("");
           setIsModalOpen(false);
@@ -203,10 +193,7 @@ const Accounts = () => {
     }
   };
   const updateCookingDepartmentEmail = async () => {
-    console.log("inside 1");
-
     try {
-      console.log("inside2");
       const data = await fetch(
         "http://localhost:5001/admin/account_management",
         {
@@ -319,7 +306,6 @@ const Accounts = () => {
           }
         );
         if (data) {
-          console.log(data.json().then((data) => console.log(data)));
           setNewpasswordMohalla("");
           setNewConfirmpasswordMohalla("");
           setIsModalOpen(false);
@@ -359,7 +345,6 @@ const Accounts = () => {
           }
         );
         if (data) {
-          console.log(data.json().then((data) => console.log(data)));
           setNewConfirmpassword("");
           setNewpassword("");
           setNewpasswordPandI("");
@@ -459,7 +444,6 @@ const Accounts = () => {
       );
 
       const res = await data.json();
-      console.log(res);
 
       if (res.fieldError) {
         setValidationError(true);
@@ -483,7 +467,6 @@ const Accounts = () => {
         setNewMohallaPopup(false);
         setValidationError(false);
         setEmailError(false);
-        console.log("Signup successful");
       }
     } catch (error) {
       console.error(error);
@@ -495,7 +478,6 @@ const Accounts = () => {
   };
 
   const [foodItems, setFoodItems] = useState([]);
-  console.log(selectedCookingUser);
   const addFoodItem = () => {
     setFoodItems([
       ...foodItems,
@@ -508,23 +490,48 @@ const Accounts = () => {
     old_food_item_list.pop(old_food_item_list.indexOf(subject));
   };
 
-  const sentEmailNotification = async () => {
-    const data = await fetch("http://localhost:5001/admin/reset_password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        email: userId,
-      }),
-    });
-    if (data) {
-      console.log(data);
+  const updatePasswordAdmin = async () => {
+    if (emailErrorPandIPassword === false) {
+      const data = await fetch(
+        "http://localhost:5001/admin/account_management/update_admin_password",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: authCtx.userEmail,
+            oldPassword: oldAdminPassword,
+            password: newconfirmpasswordPandI,
+          }),
+        }
+      );
+      if (data) {
+        console.log(data);
+        const res = await data.json();
+        console.log(res);
+        if (res.error) {
+          setFieldError(true);
+          setOldPasswordError(false);
+        } else if (res.InvalidPassword) {
+          setOldPasswordError(true);
+          setFieldError(false);
+        } else {
+          setNewConfirmpassword("");
+          setNewpassword("");
+          setNewpasswordPandI("");
+          setNewConfirmpasswordPandI("");
+          setOldAdminPassword("");
+          setVisible(true);
+          setError(false);
+          setFieldError(false);
+          setOldPasswordError(false);
+        }
+      }
     }
   };
   /* ---------------------------------- Table --------------------------------- */
 
-  console.log("mohalla users: ", mohallaUsers);
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -554,12 +561,6 @@ const Accounts = () => {
               },
             }}
           >
-            <Button
-              style={{ marginTop: "50px" }}
-              onClick={sentEmailNotification}
-            >
-              Reset Password
-            </Button>
             <Modal
               title=<h3 style={{ color: "#E86800" }}>Add new account</h3>
               open={newMohallaPopup}
@@ -1262,6 +1263,134 @@ const Accounts = () => {
                       </Col>
                     </Row>
                   </div>
+                </Tabs.TabPane>
+                <Tabs.TabPane tab="Admin Password Reset" key="4">
+                  <Col xs={24} xl={12} style={{ padding: "2%" }}>
+                    <Card
+                      bordered={true}
+                      style={{
+                        marginTop: 5,
+                        marginBottom: 20,
+                        padding: 5,
+                        display: "flex",
+                        backgroundColor: "white",
+                        borderRadius: 10,
+                        borderBottom: "2px solid orange",
+                        width: "100%",
+                      }}
+                    >
+                      <Modal
+                        visible={visible}
+                        onOk={handleOk}
+                        onCancel={handleOk}
+                        footer={[
+                          <Button key="ok" type="primary" onClick={handleOk}>
+                            OK
+                          </Button>,
+                        ]}
+                      >
+                        <div style={{ textAlign: "center" }}>
+                          <h2 style={{ color: "#52c41a" }}>Success!</h2>
+                          <p>User Detail Updated Successfully.</p>
+                        </div>
+                      </Modal>
+                      <h3 style={{ color: "#E86800" }}>
+                        {" "}
+                        Reset Password of P&I Department
+                      </h3>
+                      <table style={{ width: "35vw" }}>
+                        <tr>
+                          <td style={{ width: "30%" }}>Old Password</td>
+                          <td style={{ width: "70%" }}>
+                            <Input.Password
+                              value={oldAdminPassword}
+                              onChange={(e) =>
+                                setOldAdminPassword(e.target.value)
+                              }
+                              placeholder="New password to be set"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td style={{ width: "30%" }}>New Password</td>
+                          <td style={{ width: "70%" }}>
+                            <Input.Password
+                              value={newpasswordPandI}
+                              onChange={(e) =>
+                                setNewpasswordPandI(e.target.value)
+                              }
+                              placeholder="New password to be set"
+                            />
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>Confirm Password</td>
+                          <td>
+                            <Input.Password
+                              v
+                              value={newconfirmpasswordPandI}
+                              onChange={(e) =>
+                                setNewConfirmpasswordPandI(e.target.value)
+                              }
+                              placeholder="Confirm new password"
+                            />
+                          </td>
+                        </tr>
+                        {emailErrorPandIPassword && (
+                          <tr>
+                            <td colSpan={2}>
+                              <br />
+                              <Alert
+                                message="Validation Error"
+                                description="Password do not match . Please try again"
+                                type="error"
+                                closable
+                              />
+                            </td>
+                          </tr>
+                        )}
+                        {fieldError && (
+                          <tr>
+                            <td colSpan={2}>
+                              <br />
+                              <Alert
+                                message="Validation Error"
+                                description="All fields required"
+                                type="error"
+                                closable
+                              />
+                            </td>
+                          </tr>
+                        )}
+                        {oldPasswordError && (
+                          <tr>
+                            <td colSpan={2}>
+                              <br />
+                              <Alert
+                                message="Validation Error"
+                                description="Old Password is incorrect "
+                                type="error"
+                                closable
+                              />
+                            </td>
+                          </tr>
+                        )}
+                        <tr>
+                          <td></td>
+                          <td>
+                            <br />
+                            <Button
+                              onClick={updatePasswordAdmin}
+                              style={{ width: "50%" }}
+                              type="primary"
+                            >
+                              Change Password
+                            </Button>
+                          </td>
+                        </tr>
+                      </table>
+                    </Card>
+                  </Col>
                 </Tabs.TabPane>
               </Tabs>
             </div>

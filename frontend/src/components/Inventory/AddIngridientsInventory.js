@@ -51,10 +51,8 @@ const AddIngridientsInventory = () => {
     getInventory();
   }, [updated]);
 
-  console.log(inventoryItems);
   const handleSubmit = async () => {
     try {
-      console.log("inside");
       const data = await fetch("http://localhost:5001/inventory/addinventory", {
         method: "POST",
         headers: {
@@ -78,7 +76,6 @@ const AddIngridientsInventory = () => {
       if (data) {
         const res = await data.json();
         setUpdated((prev) => !prev);
-        console.log(res);
       }
     } catch (error) {
       console.log(error);
