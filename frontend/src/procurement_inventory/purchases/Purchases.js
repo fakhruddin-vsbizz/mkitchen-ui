@@ -10,22 +10,19 @@ import {
   InputNumber,
   // Button, Divider, Skeleton,
   ConfigProvider,
+  Button,
 } from "antd";
 // import InfiniteScroll from 'react-infinite-scroll-component';
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const Purchases = () => {
-  const [purchases, setPurchases] = useState();
-
-  const data = [
-    "Inventory",
-    "Purchases",
-    "Current Menu",
-    "Vendors",
-    "Damaged Goods",
-  ];
+  const [purchases, setPurchases] = useState([]);
+  const [filteredPurchases, setFilteredPurchases] = useState([]);
+	const [filterByName, setFilterByName] = useState("");
+  const [filterByDate, setFilterByDate] = useState(null);
+	const [filterByVolume, setFilterByVolume] = useState(1)
 
   const navigate = useNavigate();
 
@@ -63,21 +60,47 @@ const Purchases = () => {
       if (data) {
         const res = await data.json();
         setPurchases(res.data);
+
+        setFilteredPurchases(res.data)
+
+        console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
   }, []);
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName && filterByVolume !== 1 && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName && filterByVolume !== 1) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume
+				);
+			} else if (filterByName && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByVolume !== 1 && filterByDate !== null) {
+				return purchases.filter(item =>
+					item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName) {
+				return purchases.filter(item =>
+					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} else if (filterByDate !== null) {
+				return purchases.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
+			} else if (filterByVolume !== 1) {
+				return purchases.filter(item => item.total_amount <= filterByVolume
+				);
+			}
+			return purchases
+		};
+		const filteredList = filterList();
+		setFilteredPurchases(filteredList);
+	}, [filterByName, filterByVolume, purchases, filterByDate]);
 
-  const [amtVal, setAmtVal] = useState(1);
-  const [weightVal, setWeightVal] = useState(1);
-
-  const showAmtVal = (newAmt) => {
-    setAmtVal(newAmt);
-  };
-
-  const showWeightVal = (newWeight) => {
-    setWeightVal(newWeight);
-  };
 
   return (
     <div
@@ -100,7 +123,14 @@ const Purchases = () => {
           <Sidebar k="2" userType="pai" />
 
           <div style={{ width: "100%" }}>
-            <Header title=" Purchases" />
+            <Header comp={<center>
+                <Link to="/pai/purchases/new">
+                  <Button style={{ backgroundColor: "white", color: "orange" }}>
+                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    New Purchase
+                  </Button>
+                </Link>
+              </center>} title="Purchases" />
             <div style={{ padding: 0 }}>
               <Col xs={24} xl={24} style={{ width: "100%", padding: "2%" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
@@ -108,41 +138,26 @@ const Purchases = () => {
                     <td>
                       Ingredient name:
                       <br />
-                      <Input placeholder="Filter by name"></Input>
+                      <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
                     <td>
                       Date of purchase:
                       <br />
-                      <DatePicker></DatePicker>
+                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                     </td>
                     <td>
-                      Total amount:
+                      Filter By Price:
                       <br />
                       <Slider
+                        value={filterByVolume}
+                        onChange={value => setFilterByVolume(value)}
                         min={1}
-                        max={200}
-                        onChange={showAmtVal}
-                        value={amtVal}
+                        max={1000}
                       ></Slider>
                       <br />
                       <InputNumber
-                        value={amtVal}
-                        onChange={showAmtVal}
-                      ></InputNumber>
-                    </td>
-                    <td>
-                      Weight:
-                      <br />
-                      <Slider
-                        min={1}
-                        max={5000}
-                        onChange={showWeightVal}
-                        value={weightVal}
-                      ></Slider>
-                      <br />
-                      <InputNumber
-                        value={weightVal}
-                        onChange={showWeightVal}
+                        value={filterByVolume}
+                        onChange={value => setFilterByVolume(value)}
                       ></InputNumber>
                     </td>
                   </tr>
@@ -164,7 +179,7 @@ const Purchases = () => {
                       overflowY: "scroll",
                       backgroundColor: "transparent",
                     }}
-                    dataSource={purchases}
+                    dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item>
                         <Card style={{ width: "100%" }}>
@@ -182,7 +197,7 @@ const Purchases = () => {
                             </Col>
                             <Col xs={12} xl={6}>
                               Date of purchase: <br />
-                              {item.updatedAt}
+                              {new Date(item.createdAt).toDateString()}
                             </Col>
                             <Col xs={12} xl={6}>
                               Purchase cost: <br />

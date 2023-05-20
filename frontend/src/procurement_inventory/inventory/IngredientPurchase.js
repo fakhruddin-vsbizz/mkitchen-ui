@@ -23,6 +23,11 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 const IngredientPurchase = () => {
   const [itemPurchase, setItemPurchase] = useState();
   const [vendors, setVendors] = useState([]);
+  const [filteredPurchases, setFilteredPurchases] = useState([]);
+	const [filterByName, setFilterByName] = useState("");
+  const [filterByDate, setFilterByDate] = useState(null);
+  const [filterByStatus, setFilterByStatus] = useState(null)
+  const [inventoryItems, setInventoryItems] = useState([]);
 
   const { id } = useParams();
 
@@ -78,12 +83,54 @@ const IngredientPurchase = () => {
               (item, index) => item.inventory_id === id
             );
             setItemPurchase(purchaseData);
+            setFilteredPurchases(purchaseData)
           }
         }
       }
     };
     getInventory();
   }, [id]);
+
+
+
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName && filterByStatus !== null && filterByDate !== null) {
+				return itemPurchase.filter(item =>
+					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else if (filterByName && filterByStatus !== null) {
+				return itemPurchase.filter(item =>
+					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus
+				);
+			} else 
+      if (filterByName && filterByDate !== null) {
+				return itemPurchase.filter(item =>
+					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByStatus !== null && filterByDate !== null) {
+				return itemPurchase.filter(item =>
+					item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
+				);
+			} else 
+      if (filterByName) {
+				return itemPurchase.filter(item =>
+					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()))
+			} else if (filterByDate !== null) {
+				return itemPurchase.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
+			} 
+      else if (filterByStatus !== null) {
+				return itemPurchase.filter(item => item.paid === filterByStatus
+				);
+			}
+			return itemPurchase
+		};
+		const filteredList = filterList();
+		setFilteredPurchases(filteredList);
+	}, [filterByName, itemPurchase, filterByDate, filterByStatus]);
+
+  console.log(itemPurchase);
 
   const vendorPurchaseList = [
     {
@@ -126,6 +173,10 @@ const IngredientPurchase = () => {
     setInputValue(newValue);
   };
 
+  const getVendor = (vendor_id) => {
+    return vendors.filter((itemNew) => itemNew._id === vendor_id)[0]?.vendor_name
+  }
+
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -142,7 +193,7 @@ const IngredientPurchase = () => {
 
           <div style={{ width: "100%" }}>
             <Header
-              title=<p>
+              title={<p>
                 <Link
                   to="/pai/inventory"
                   style={{ color: "white", textDecoration: "none" }}
@@ -150,7 +201,7 @@ const IngredientPurchase = () => {
                   <ArrowLeftOutlined />
                 </Link>{" "}
                 Purchase Inventory
-              </p>
+              </p>}
             />
             <div style={{ padding: 0 }}>
               <center>
@@ -165,22 +216,27 @@ const IngredientPurchase = () => {
                     <Col xs={12} xl={6}>
                       Filter by vendor name: <br />
                       <Input
+                      value={filterByName}
+                      onChange={e => setFilterByName(e.target.value)}
                         placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
                         style={{ width: "70%" }}
                       ></Input>
                     </Col>
                     <Col xs={12} xl={6}>
                       Date of Purchase: <br />
-                      <DatePicker></DatePicker>
+                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                     </Col>
                     <Col xs={12} xl={6}>
                       Paid status: <br />
                       <Select
-                        defaultValue={0}
+                        defaultValue={null}
+                        value={filterByStatus}
+                        onChange={value => setFilterByStatus(value)}
                         style={{ width: "70%" }}
                         options={[
-                          { value: 0, label: "PAID" },
-                          { value: 1, label: "UNPAID" },
+                          { value: true, label: "PAID" },
+                          { value: false, label: "UNPAID" },
+                          { value: null, label: "ALL" },
                         ]}
                       ></Select>
                     </Col>
@@ -221,7 +277,7 @@ const IngredientPurchase = () => {
                       width: "85vw",
                       overflowY: "scroll",
                     }}
-                    dataSource={itemPurchase}
+                    dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item
                         style={{
@@ -241,11 +297,7 @@ const IngredientPurchase = () => {
                             style={{ fontSize: "150%", color: "#e08003" }}
                           >
                             {vendors &&
-                              vendors
-                                .filter(
-                                  (it, index) => it._id === item.vendor_id
-                                )
-                                .map((ele) => ele.vendor_name)}
+                              getVendor(item.vendor_id)}
                           </Col>
                           <Col xs={8} xl={4}>
                             Required quantity: <br />
@@ -257,7 +309,7 @@ const IngredientPurchase = () => {
                           </Col>
                           <Col xs={8} xl={6}>
                             Date of purchase: <br />
-                            {item.createdAt}
+                            {new Date(item.createdAt).toDateString()}
                           </Col>
                           <Col xs={8} xl={4}>
                             <Tag color={item.paid ? "green" : "red"}>
