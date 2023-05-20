@@ -133,9 +133,11 @@ const ConfirmIng = () => {
 
           if (data) {
             const res = await data.json();
+            console.log(res, "ressss");
             if (res._id) {
 
               setProcureIngridients(res.procure_items);
+              
             }
             if (res.message) {
 
@@ -238,7 +240,7 @@ const ConfirmIng = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Confirm Ingredient"
-              comp=<DatePicker onChange={handleDateChange} />
+              comp={<DatePicker onChange={handleDateChange} />}
             />
             {operationalPipelineStatus === 0 && (
               <Alert
@@ -289,7 +291,7 @@ const ConfirmIng = () => {
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>
-                              Procure Ammount: <br />
+                              Amount Procured: <br />
                               <label
                                 style={{
                                   color: item.sufficient ? "green" : "red",
