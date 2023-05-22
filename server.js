@@ -13,11 +13,7 @@ const port = process.env.PORT || 5001;
 app.use(CORS());
 
 app.use(express.json()); // body parser to parse the request of the client
-app.use(express.static('./frontend/build'))
 
-app.get('*', (req,res) => {
-  res.status(200).sendFile(path.join(__dirname, "frontend/build", "index.html"))
-});
 //login and account management routes (adding all type of mk users and updating their details);
 
 app.post("/api/menu/history", menuHistory);
@@ -38,6 +34,12 @@ app.use("/api/review", require("./routes/menuDeliveryReviewRoute"));
 app.use("/api/vendor", require("./routes/vendorRoutes"));
 app.use("/api/purchase", require("./routes/purchaseRoutes"));
 app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
+
+app.use(express.static('./frontend/build'))
+
+app.get('*', (req,res) => {
+  res.status(200).sendFile(path.join(__dirname, "frontend/build", "index.html"))
+});
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
