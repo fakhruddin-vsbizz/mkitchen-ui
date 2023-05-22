@@ -70,7 +70,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const ConfirmIng = () => {
     const getInventory = async () => {
       if (selectedDate) {
         try {
-          const data = await fetch("http://localhost:5001/pai/procurement", {
+          const data = await fetch("/pai/procurement", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const ConfirmIng = () => {
               if (menuFoodId) {
                 try {
                   const data = await fetch(
-                    "http://localhost:5001/pai/procurement",
+                    "/pai/procurement",
                     {
                       method: "POST",
                       headers: {
@@ -181,7 +181,7 @@ const ConfirmIng = () => {
 
   const markProcureIngridients = async () => {
     try {
-      const data = await fetch("http://localhost:5001/pai/procurement", {
+      const data = await fetch("/pai/procurement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -118,7 +118,7 @@ const Accounts = () => {
     try {
       if (selectedMohallaUser && newEmailMohalla) {
         const data = await fetch(
-          "http://localhost:5001/admin/account_management",
+          "/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -150,7 +150,7 @@ const Accounts = () => {
       if (selectedCookingUser && newEmailCooking) {
         console.log("inside2");
         const data = await fetch(
-          "http://localhost:5001/admin/account_management",
+          "/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -179,7 +179,7 @@ const Accounts = () => {
     try {
       if (selectedPandIUser && newEmailPandI) {
         const data = await fetch(
-          "http://localhost:5001/admin/account_management",
+          "/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -218,7 +218,7 @@ const Accounts = () => {
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
         const data = await fetch(
-          "http://localhost:5001/admin/account_management",
+          "/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -258,7 +258,7 @@ const Accounts = () => {
           usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
 
         const data = await fetch(
-          "http://localhost:5001/admin/account_management",
+          "/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -290,7 +290,7 @@ const Accounts = () => {
   useEffect(() => {
     const getMohallas = async () => {
       const data = await fetch(
-        "http://localhost:5001/admin/account_management",
+        "/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -312,7 +312,7 @@ const Accounts = () => {
   useEffect(() => {
     const getCookingUsers = async () => {
       const data = await fetch(
-        "http://localhost:5001/admin/account_management",
+        "/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -333,7 +333,7 @@ const Accounts = () => {
   useEffect(() => {
     const getPandIUsers = async () => {
       const data = await fetch(
-        "http://localhost:5001/admin/account_management",
+        "/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -356,7 +356,7 @@ const Accounts = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://localhost:5001/admin/account_management",
+        "/admin/account_management",
         {
           usertype,
           username,

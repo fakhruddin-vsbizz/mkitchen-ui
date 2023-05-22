@@ -96,7 +96,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/admin/menu", {
+        const data = await fetch("/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -119,7 +119,7 @@ const SetMenu = () => {
 
   useEffect(() => {
     const getUserId = async () => {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getFood = async () => {
       if (getMkUserId) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -173,7 +173,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -217,7 +217,7 @@ const SetMenu = () => {
       } else {
         try {
           const data = await fetch(
-            "http://localhost:5001/inventory/addinventory",
+            "/inventory/addinventory",
             {
               method: "POST",
               headers: {
@@ -276,7 +276,7 @@ const SetMenu = () => {
 
   const setFoodReference = async (idx) => {
     try {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -299,7 +299,7 @@ const SetMenu = () => {
 
   const updateOperationPipeliinIngridient = async () => {
     try {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/cooking/ingredients", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -330,7 +330,7 @@ const SetMenu = () => {
 
     if (foodIndex) {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

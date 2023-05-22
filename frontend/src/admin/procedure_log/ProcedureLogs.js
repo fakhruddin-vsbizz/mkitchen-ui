@@ -43,7 +43,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -69,7 +69,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/admin/menu", {
+        const data = await fetch("/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -93,7 +93,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -117,7 +117,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -141,7 +141,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
-        const data = await fetch("http://localhost:5001/review", {
+        const data = await fetch("/review", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

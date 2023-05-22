@@ -48,7 +48,7 @@ const Vendors = () => {
   //getting all the vendors
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("http://localhost:5001/vendor/totalpurchase");
+      const data = await fetch("/vendor/totalpurchase");
       if (data) {
         const res = await data.json();
         setVendors(res);

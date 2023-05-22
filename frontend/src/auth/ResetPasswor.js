@@ -72,7 +72,7 @@ const ResetPassword = () => {
 
       try {
         const data = await fetch(
-          "http://localhost:5001/admin/account_management/update_password",
+          "/admin/account_management/update_password",
           {
             method: "PUT",
             headers: {
