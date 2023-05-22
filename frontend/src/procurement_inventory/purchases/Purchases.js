@@ -34,7 +34,7 @@ const Purchases = () => {
 
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;

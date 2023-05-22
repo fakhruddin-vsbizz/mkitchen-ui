@@ -42,7 +42,7 @@ const ResetPassword = () => {
     //   setConfirmLoading(false);
     // }, 2000);
     authCtx.logout();
-    navigate("/login");
+    navigate("/");
   };
   const handleCancel = () => {
     setOpen(false);
