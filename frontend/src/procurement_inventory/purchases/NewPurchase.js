@@ -75,7 +75,7 @@ const NewPurchase = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("http://localhost:5001/vendor");
+      const data = await fetch("/vendor");
       if (data) {
         const res = await data.json();
 
@@ -93,7 +93,7 @@ const NewPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -284,7 +284,7 @@ const NewPurchase = () => {
 
   const addPurchaseData = async () => {
     try {
-      const data = await fetch("http://localhost:5001/purchase", {
+      const data = await fetch("/purchase", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -59,7 +59,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("http://localhost:5001/vendor");
+      const data = await fetch("/vendor");
       if (data) {
         const res = await data.json();
         if (res) {
@@ -74,7 +74,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("http://localhost:5001/purchase");
+      const data = await fetch("/purchase");
       if (data && id) {
         const res = await data.json();
         if (res) {

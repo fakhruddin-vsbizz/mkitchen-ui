@@ -79,7 +79,7 @@ const NewVendor = () => {
       : "";
 
     try {
-      const data = await fetch("http://localhost:5001/vendor", {
+      const data = await fetch("/vendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

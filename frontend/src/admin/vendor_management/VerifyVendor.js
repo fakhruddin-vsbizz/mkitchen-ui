@@ -60,7 +60,7 @@ const VerifyVendor = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("http://localhost:5001/vendor");
+      const data = await fetch("/vendor");
       if (data) {
         const res = await data.json();
         setVendors(res);
@@ -71,7 +71,7 @@ const VerifyVendor = () => {
 
   const markVendorVerified = async (id) => {
     try {
-      const data = await fetch("http://localhost:5001/vendor", {
+      const data = await fetch("/vendor", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

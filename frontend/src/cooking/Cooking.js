@@ -84,7 +84,7 @@ const Cooking = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -111,7 +111,7 @@ const Cooking = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -133,7 +133,7 @@ const Cooking = () => {
   useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/admin/menu", {
+        const data = await fetch("/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -159,7 +159,7 @@ const Cooking = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -192,7 +192,7 @@ const Cooking = () => {
   useEffect(() => {
     if (getFoodList) {
       axios
-        .post("http://localhost:5001/cooking/ingredients", {
+        .post("/cooking/ingredients", {
           food_item_ids: getFoodList,
           type: "get_food_and_ingridient",
         })
@@ -218,7 +218,7 @@ const Cooking = () => {
   useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -250,7 +250,7 @@ const Cooking = () => {
       if (reorderLogs && update)
         try {
           const data = await fetch(
-            "http://localhost:5001/cooking/ingredients",
+            "/cooking/ingredients",
             {
               method: "PUT",
               headers: {
@@ -290,7 +290,7 @@ const Cooking = () => {
 
   const cookingDone = async () => {
     try {
-      const data = await fetch("http://localhost:5001/operation_pipeline", {
+      const data = await fetch("/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -316,7 +316,7 @@ const Cooking = () => {
     console.log(ingName);
 
     try {
-      const data = await fetch("http://localhost:5001/cooking/add_leftover", {
+      const data = await fetch("/cooking/add_leftover", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -338,7 +338,7 @@ const Cooking = () => {
     }
 
     try {
-      const data = await fetch("http://localhost:5001/inventory/addinventory", {
+      const data = await fetch("/inventory/addinventory", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -76,7 +76,7 @@ const Inventory = () => {
 
 	useEffect(() => {
 		const getInventory = async () => {
-			const data = await fetch("http://localhost:5001/inventory/addinventory");
+			const data = await fetch("/inventory/addinventory");
 			if (data) {
 				const res = await data.json();
 				setInventoryItems(res);
@@ -113,7 +113,7 @@ const Inventory = () => {
 	const handleSubmit = async () => {
 		try {
 			console.log("inside");
-			const data = await fetch("http://localhost:5001/inventory/addinventory", {
+			const data = await fetch("/inventory/addinventory", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -169,7 +169,7 @@ const Inventory = () => {
 		try {
 			console.log("inside");
 			const data = await fetch(
-				"http://localhost:5001/inventory/addinventory/update_inventory",
+				"/inventory/addinventory/update_inventory",
 				{
 					method: "PUT",
 					headers: {
