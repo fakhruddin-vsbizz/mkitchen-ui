@@ -55,7 +55,7 @@ const Inventory = () => {
 
 		if (!type) {
 			console.log("second in");
-			navigate("/login");
+			navigate("/");
 		}
 
 		const typeAdmin = type === "mk admin" ? true : false;
