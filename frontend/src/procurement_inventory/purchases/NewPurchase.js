@@ -55,7 +55,7 @@ const NewPurchase = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
