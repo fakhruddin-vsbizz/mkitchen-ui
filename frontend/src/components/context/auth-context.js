@@ -69,7 +69,7 @@ export const AuthContextProvider = (props) => {
     if (logoutHandler) {
       clearTimeout(logoutTimer);
     }
-    window.location.href = "/";
+    window.location.href = "/login";
 
   };
 

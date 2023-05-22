@@ -34,7 +34,7 @@ const logoutHandler = () => {
 
   localStorage.removeItem("user_id");
 
-  window.location.href = "/";
+  window.location.href = "/login";
 
 };
 const admin = [

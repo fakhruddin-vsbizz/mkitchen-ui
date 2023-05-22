@@ -40,7 +40,7 @@ const VerifyVendor = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/");
+      navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -60,7 +60,7 @@ const VerifyVendor = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("/vendor");
+      const data = await fetch("/api/vendor");
       if (data) {
         const res = await data.json();
         setVendors(res);
@@ -71,7 +71,7 @@ const VerifyVendor = () => {
 
   const markVendorVerified = async (id) => {
     try {
-      const data = await fetch("/vendor", {
+      const data = await fetch("/api/vendor", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
