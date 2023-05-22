@@ -21,23 +21,23 @@ app.get('*', (req,res) => {
 //login and account management routes (adding all type of mk users and updating their details);
 
 app.post("/api/menu/history", menuHistory);
-app.use("/admin/account_management", require("./routes/mkUserRoutes"));
-app.use("/login", require("./routes/loginRoute"));
+app.use("/api/admin/account_management", require("./routes/mkUserRoutes"));
+app.use("/api/login", require("./routes/loginRoute"));
 
-app.use("/admin/menu", require("./routes/menuFoodRoute"));
-app.use("/admin/reset_password", require("./routes/emailNotificationRoute"));
+app.use("/api/admin/menu", require("./routes/menuFoodRoute"));
+app.use("/api/admin/reset_password", require("./routes/emailNotificationRoute"));
 
-app.use("/cooking/ingredients", require("./routes/foodItemRoute"));
-app.use("/cooking", require("./routes/cookingRoute"));
+app.use("/api/cooking/ingredients", require("./routes/foodItemRoute"));
+app.use("/api/cooking", require("./routes/cookingRoute"));
 
-app.use("/inventory/addinventory", require("./routes/inventoryItemsRoute"));
+app.use("/api/inventory/addinventory", require("./routes/inventoryItemsRoute"));
 
-app.use("/operation_pipeline", require("./routes/operationPipeLineRoute"));
-app.use("/review", require("./routes/menuDeliveryReviewRoute"));
+app.use("/api/operation_pipeline", require("./routes/operationPipeLineRoute"));
+app.use("/api/review", require("./routes/menuDeliveryReviewRoute"));
 
-app.use("/vendor", require("./routes/vendorRoutes"));
-app.use("/purchase", require("./routes/purchaseRoutes"));
-app.use("/pai/procurement", require("./routes/procurementRoutes"));
+app.use("/api/vendor", require("./routes/vendorRoutes"));
+app.use("/api/purchase", require("./routes/purchaseRoutes"));
+app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));

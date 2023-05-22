@@ -85,7 +85,7 @@ const Accounts = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/");
+      navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -161,7 +161,7 @@ const Accounts = () => {
   const updateMohallAdminEmail = async () => {
     try {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "PUT",
           headers: {
@@ -195,7 +195,7 @@ const Accounts = () => {
   const updateCookingDepartmentEmail = async () => {
     try {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "PUT",
           headers: {
@@ -229,7 +229,7 @@ const Accounts = () => {
   const updatePandIEmail = async () => {
     try {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "PUT",
           headers: {
@@ -291,7 +291,7 @@ const Accounts = () => {
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
         const data = await fetch(
-          "/admin/account_management",
+          "http://localhost:5001/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -330,7 +330,7 @@ const Accounts = () => {
           usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
 
         const data = await fetch(
-          "/admin/account_management",
+          "http://localhost:5001/admin/account_management",
           {
             method: "PUT",
             headers: {
@@ -361,7 +361,7 @@ const Accounts = () => {
   useEffect(() => {
     const getMohallas = async () => {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -383,7 +383,7 @@ const Accounts = () => {
   useEffect(() => {
     const getCookingUsers = async () => {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -404,7 +404,7 @@ const Accounts = () => {
   useEffect(() => {
     const getPandIUsers = async () => {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -427,7 +427,7 @@ const Accounts = () => {
     e.preventDefault();
     try {
       const data = await fetch(
-        "/admin/account_management",
+        "http://localhost:5001/admin/account_management",
         {
           method: "POST",
           headers: {
@@ -493,7 +493,7 @@ const Accounts = () => {
   const updatePasswordAdmin = async () => {
     if (emailErrorPandIPassword === false) {
       const data = await fetch(
-        "/admin/account_management/update_admin_password",
+        "http://localhost:5001/admin/account_management/update_admin_password",
         {
           method: "PUT",
           headers: {

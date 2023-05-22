@@ -31,7 +31,7 @@ function App() {
     <AuthContextProvider>
       <Routes>
         {/*  ------------------------------- Admin Route ---------------------------  */}
-        <Route exact path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/admin" element={<Index />} />
         <Route path="/admin/menu" element={<Menu />} />
         <Route path="/admin/menu/history" element={<ProcedureLogs />} />

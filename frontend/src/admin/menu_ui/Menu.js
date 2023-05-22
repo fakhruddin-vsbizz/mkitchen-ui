@@ -55,7 +55,7 @@ const Menu = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/");
+      navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -89,7 +89,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getIngridients = async () => {
-      const data = await fetch("/cooking/ingredients");
+      const data = await fetch("/api/cooking/ingredients");
 
       if (data) {
         const res = await data.json();
@@ -103,7 +103,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getFood = async () => {
-      await fetch("/cooking/ingredients", {
+      await fetch("/api/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getFoodItems = async () => {
-      await fetch("/admin/menu/get_food_item", {
+      await fetch("/api/admin/menu/get_food_item", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -154,7 +154,7 @@ const Menu = () => {
       return;
     } else {
       if (AddedFoodItems.find((item) => item.name === selectedFood)) {
-        await fetch("/admin/menu/get_food_item_id", {
+        await fetch("/api/admin/menu/get_food_item_id", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -176,7 +176,7 @@ const Menu = () => {
           });
       } else {
         try {
-          await fetch("/admin/menu/food_item", {
+          await fetch("/api/admin/menu/food_item", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -210,7 +210,7 @@ const Menu = () => {
 
   const createMenu = async () => {
     try {
-      await fetch("/admin/menu/add_menu", {
+      await fetch("/api/admin/menu/add_menu", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -256,7 +256,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await fetch("/admin/menu", {
+      const data = await fetch("/api/admin/menu", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -286,7 +286,7 @@ const Menu = () => {
     const updateMohallaWiseCount = async () => {
       if (mohallaAshkash && update)
         try {
-          const data = await fetch("/admin/menu", {
+          const data = await fetch("/api/admin/menu", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",

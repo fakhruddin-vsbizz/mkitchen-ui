@@ -41,7 +41,7 @@ const ConfirmIng = () => {
 
 
     if (!type) {
-      navigate("/");
+      navigate("/login");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -70,7 +70,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (menuFoodId) {
-        const data = await fetch("/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const ConfirmIng = () => {
     const getInventory = async () => {
       if (selectedDate) {
         try {
-          const data = await fetch("/pai/procurement", {
+          const data = await fetch("/api/pai/procurement", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const ConfirmIng = () => {
               if (menuFoodId) {
                 try {
                   const data = await fetch(
-                    "/pai/procurement",
+                    "/api/pai/procurement",
                     {
                       method: "POST",
                       headers: {
@@ -181,7 +181,7 @@ const ConfirmIng = () => {
 
   const markProcureIngridients = async () => {
     try {
-      const data = await fetch("/pai/procurement", {
+      const data = await fetch("/api/pai/procurement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

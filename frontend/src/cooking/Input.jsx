@@ -13,7 +13,7 @@ const IngredientList = ({ingredientItems, OnDelete, inventoryItems, handlePerAsh
     useEffect(()=>{
       const setIngredients = async () => {
         try {
-          const data = await fetch("/cooking/ingredients", {
+          const data = await fetch("http://localhost:5001/cooking/ingredients", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
