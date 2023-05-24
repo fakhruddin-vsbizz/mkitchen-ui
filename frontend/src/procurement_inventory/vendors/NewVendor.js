@@ -48,7 +48,7 @@ const NewVendor = () => {
 
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -79,7 +79,7 @@ const NewVendor = () => {
       : "";
 
     try {
-      const data = await fetch("http://localhost:5001/vendor", {
+      const data = await fetch("/api/vendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -59,7 +59,7 @@ const Login = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -80,7 +80,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5001/login", {
+      const response = await axios.post("/api/login", {
         email,
         password,
       });
@@ -131,7 +131,7 @@ const Login = () => {
       return;
     }
 
-    const data = await fetch("http://localhost:5001/admin/reset_password", {
+    const data = await fetch("/api/admin/reset_password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

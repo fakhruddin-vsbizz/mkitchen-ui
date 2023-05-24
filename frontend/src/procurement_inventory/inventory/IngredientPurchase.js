@@ -39,7 +39,7 @@ const IngredientPurchase = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -59,7 +59,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("http://localhost:5001/vendor");
+      const data = await fetch("/api/vendor");
       if (data) {
         const res = await data.json();
         if (res) {
@@ -74,7 +74,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("http://localhost:5001/purchase");
+      const data = await fetch("/api/purchase");
       if (data && id) {
         const res = await data.json();
         if (res) {

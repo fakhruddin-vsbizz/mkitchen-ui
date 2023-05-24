@@ -41,7 +41,7 @@ const ConfirmIng = () => {
 
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -70,7 +70,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -94,7 +94,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const ConfirmIng = () => {
     const getInventory = async () => {
       if (selectedDate) {
         try {
-          const data = await fetch("http://localhost:5001/pai/procurement", {
+          const data = await fetch("/api/pai/procurement", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -133,16 +133,18 @@ const ConfirmIng = () => {
 
           if (data) {
             const res = await data.json();
+            console.log(res, "ressss");
             if (res._id) {
 
               setProcureIngridients(res.procure_items);
+              
             }
             if (res.message) {
 
               if (menuFoodId) {
                 try {
                   const data = await fetch(
-                    "http://localhost:5001/pai/procurement",
+                    "/api/pai/procurement",
                     {
                       method: "POST",
                       headers: {
@@ -179,7 +181,7 @@ const ConfirmIng = () => {
 
   const markProcureIngridients = async () => {
     try {
-      const data = await fetch("http://localhost:5001/pai/procurement", {
+      const data = await fetch("/api/pai/procurement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -238,7 +240,7 @@ const ConfirmIng = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Confirm Ingredient"
-              comp=<DatePicker onChange={handleDateChange} />
+              comp={<DatePicker onChange={handleDateChange} />}
             />
             {operationalPipelineStatus === 0 && (
               <Alert
@@ -289,7 +291,7 @@ const ConfirmIng = () => {
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>
-                              Procure Ammount: <br />
+                              Amount Procured: <br />
                               <label
                                 style={{
                                   color: item.sufficient ? "green" : "red",

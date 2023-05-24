@@ -40,7 +40,7 @@ const VendorPurchase = () => {
 
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -63,7 +63,7 @@ const VendorPurchase = () => {
     const getPurchaseData = async () => {
       try {
         const data = await fetch(
-          "http://localhost:5001/purchase/vendor_purchase"
+          "/api/purchase/vendor_purchase"
         );
         const res = await data.json();
 
@@ -121,7 +121,7 @@ const VendorPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -146,7 +146,7 @@ const VendorPurchase = () => {
 
   const payPurchaseItem = async (id) => {
     try {
-      const data = await fetch("http://localhost:5001/purchase", {
+      const data = await fetch("/api/purchase", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

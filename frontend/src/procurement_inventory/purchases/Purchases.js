@@ -34,7 +34,7 @@ const Purchases = () => {
 
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -55,7 +55,7 @@ const Purchases = () => {
   useEffect(() => {
     const getPurchases = async () => {
       const data = await fetch(
-        "http://localhost:5001/purchase/vendor_purchase"
+        "/api/purchase/vendor_purchase"
       );
       if (data) {
         const res = await data.json();

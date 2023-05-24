@@ -25,6 +25,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/auth-context";
+import IngredientList from "./Input";
 
 const SetMenu = () => {
   const [getFoodList, setGetFoodList] = useState();
@@ -50,9 +51,11 @@ const SetMenu = () => {
   const [visible, setVisible] = useState(false);
   const [updateAshkash, setUpdateAshkash] = useState(false);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
+  const [ashkaasCountInput, setAshkaasCountInput] = useState(0)
   const [foodIndex, setFoodIndex] = useState();
   const [foodIngredientMap, setFoodIngredientMap] = useState([]);
   const [validationError, setValidationError] = useState(false);
+  const [updatedIngredientsList, setupdatedIngredientsList] = useState([])
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -66,7 +69,7 @@ const SetMenu = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -93,7 +96,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/admin/menu", {
+        const data = await fetch("/api/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -116,7 +119,7 @@ const SetMenu = () => {
 
   useEffect(() => {
     const getUserId = async () => {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/api/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -137,7 +140,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getFood = async () => {
       if (getMkUserId) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -167,12 +170,10 @@ const SetMenu = () => {
     getFood();
   }, [getMkUserId, selectedDate]);
 
-  const data = ["Set Menu", "Cooking", "Dispatch"];
-
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -186,6 +187,7 @@ const SetMenu = () => {
           const res = await data.json();
           if (res) {
             setInventoryItems(res);
+            setupdatedIngredientsList(res)
           }
         }
       } catch (error) {}
@@ -215,7 +217,7 @@ const SetMenu = () => {
       } else {
         try {
           const data = await fetch(
-            "http://localhost:5001/inventory/addinventory",
+            "/api/inventory/addinventory",
             {
               method: "POST",
               headers: {
@@ -257,12 +259,13 @@ const SetMenu = () => {
   };
 
   const handlePerAshkashChange = (value, ingredientName) => {
+    console.log(value);
     const updatedIngredients = ingredientItems.map((ingredient) => {
       if (ingredient.ingredient_name === ingredientName) {
         // if the ingredient name matches, update its perAshkash value
         return {
           ...ingredient,
-          perAshkash: +value,
+          perAshkash: Number(value).toFixed(2),
         };
       }
       return ingredient; // return the unchanged ingredient object
@@ -273,7 +276,7 @@ const SetMenu = () => {
 
   const setFoodReference = async (idx) => {
     try {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/api/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -286,7 +289,6 @@ const SetMenu = () => {
 
       if (data) {
         const res = await data.json();
-
         setIngredientItems(res.ingridient_data);
       }
     } catch (error) {
@@ -297,7 +299,7 @@ const SetMenu = () => {
 
   const updateOperationPipeliinIngridient = async () => {
     try {
-      const data = await fetch("http://localhost:5001/cooking/ingredients", {
+      const data = await fetch("/api/cooking/ingredients", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -328,7 +330,7 @@ const SetMenu = () => {
 
     if (foodIndex) {
       try {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -555,7 +557,7 @@ const SetMenu = () => {
                           />
                         </Col>
                       </Row>
-                      <List
+                      {/* <List
                         size="small"
                         style={{
                           width: "100%",
@@ -614,15 +616,15 @@ const SetMenu = () => {
                                   <Row>
                                     <Col xs={16} xl={16}>
                                       <Input
-                                        type="number"
+                                        type="text"
                                         defaultValue={
-                                          ingredientItems && item.perAshkash
+                                          item.perAshkash
                                         }
-                                        onChange={(e) =>
+                                        onChange={(e) =>{
                                           handlePerAshkashChange(
                                             e.target.value,
                                             item.ingredient_name
-                                          )
+                                          )}
                                         }
                                         placeholder="Eg: 1200,200,etc.."
                                       />
@@ -642,7 +644,8 @@ const SetMenu = () => {
                             </Card>
                           </List.Item>
                         )}
-                      />
+                      /> */}
+                      <IngredientList ingredientItems={ingredientItems} OnDelete={OnDelete} inventoryItems={inventoryItems} handlePerAshkashChange={handlePerAshkashChange} foodIndex={foodIndex} />
                       {status === 0 && (
                         <Button
                           block

@@ -42,7 +42,7 @@ const ResetPassword = () => {
     //   setConfirmLoading(false);
     // }, 2000);
     authCtx.logout();
-    navigate("/login");
+    navigate("/");
   };
   const handleCancel = () => {
     setOpen(false);
@@ -72,7 +72,7 @@ const ResetPassword = () => {
 
       try {
         const data = await fetch(
-          "http://localhost:5001/admin/account_management/update_password",
+          "/api/admin/account_management/update_password",
           {
             method: "PUT",
             headers: {
@@ -89,7 +89,7 @@ const ResetPassword = () => {
           setOpen(true);
 
           // authCtx.logout();
-          // navigate("/login");
+          // navigate("/");
         }
       } catch (error) {
         console.error(error);

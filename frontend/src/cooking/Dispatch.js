@@ -59,7 +59,7 @@ const Dispatch = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -81,7 +81,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -116,7 +116,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -164,7 +164,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -186,7 +186,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -226,7 +226,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -259,7 +259,7 @@ const Dispatch = () => {
 
   const dispatchData = async (food_id, name) => {
     try {
-      const data = await fetch("http://localhost:5001/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -294,7 +294,7 @@ const Dispatch = () => {
   };
   const DispatchDone = async () => {
     try {
-      const data = await fetch("http://localhost:5001/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

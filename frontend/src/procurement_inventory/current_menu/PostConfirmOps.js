@@ -39,7 +39,7 @@ const PostConfirmOps = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -60,7 +60,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -82,7 +82,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("http://localhost:5001/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -107,7 +107,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
-        const data = await fetch("http://localhost:5001/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -132,7 +132,7 @@ const PostConfirmOps = () => {
 
   const updateReorderStatus = async (id) => {
     try {
-      const data = await fetch("http://localhost:5001/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

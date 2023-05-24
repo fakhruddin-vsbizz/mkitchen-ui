@@ -53,7 +53,7 @@ const DamagedGoodsList = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -76,7 +76,7 @@ const DamagedGoodsList = () => {
   //   const getPurchaseData = async () => {
   //     if (todayDate) {
   //       try {
-  //         const data = await fetch("http://localhost:5001/purchase");
+  //         const data = await fetch("/api/purchase");
   //         const res = await data.json();
 
   //         if (res) {
@@ -144,7 +144,7 @@ const DamagedGoodsList = () => {
     const getPurchaseData = async () => {
       if (todayDate) {
         const data = await fetch(
-          "http://localhost:5001/purchase/expired_items",
+          "/api/purchase/expired_items",
           {
             method: "POST",
             headers: {
@@ -197,7 +197,7 @@ const DamagedGoodsList = () => {
   const unshelfAndRemoveItem = async () => {
     //update unshelf in purchase
     try {
-      const data = await fetch("http://localhost:5001/purchase/update_shelf", {
+      const data = await fetch("/api/purchase/update_shelf", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -216,7 +216,7 @@ const DamagedGoodsList = () => {
 
     try {
       const data = await fetch(
-        "http://localhost:5001/inventory/addinventory/update_volume",
+        "/api/inventory/addinventory/update_volume",
         {
           method: "PUT",
           headers: {

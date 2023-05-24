@@ -27,7 +27,7 @@ const Vendors = () => {
     const type = localStorage.getItem("type");
 
     if (!type) {
-      navigate("/login");
+      navigate("/");
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
@@ -48,7 +48,7 @@ const Vendors = () => {
   //getting all the vendors
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("http://localhost:5001/vendor/totalpurchase");
+      const data = await fetch("/api/vendor/totalpurchase");
       if (data) {
         const res = await data.json();
         setVendors(res);
