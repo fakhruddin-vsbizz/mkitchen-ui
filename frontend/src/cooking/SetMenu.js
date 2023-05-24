@@ -69,10 +69,12 @@ const SetMenu = () => {
   const [visible, setVisible] = useState(false);
   const [updateAshkash, setUpdateAshkash] = useState(false);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
+
+  const [ashkaasCountInput, setAshkaasCountInput] = useState(0);
   const [foodIndex, setFoodIndex] = useState();
   const [foodIngredientMap, setFoodIngredientMap] = useState([]);
   const [validationError, setValidationError] = useState(false);
-  const [updatedIngredientsList, setupdatedIngredientsList] = useState([])
+  const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -204,7 +206,7 @@ const SetMenu = () => {
           const res = await data.json();
           if (res) {
             setInventoryItems(res);
-            setupdatedIngredientsList(res)
+            setupdatedIngredientsList(res);
           }
         }
       } catch (error) {}
@@ -233,26 +235,23 @@ const SetMenu = () => {
         setIngredientName("");
       } else {
         try {
-          const data = await fetch(
-            "/api/inventory/addinventory",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                mkuser_email: email,
-                ingridient_name: ingredientName,
-                ingridient_measure_unit: "gram",
-                ingridient_expiry_period: "Days",
-                ingridient_expiry_amount: "5",
-                price: 0,
-                decommisioned: true,
-                total_volume: 0,
-                baseline: 1,
-              }),
-            }
-          );
+          const data = await fetch("/api/inventory/addinventory", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              mkuser_email: email,
+              ingridient_name: ingredientName,
+              ingridient_measure_unit: "gram",
+              ingridient_expiry_period: "Days",
+              ingridient_expiry_amount: "5",
+              price: 0,
+              decommisioned: true,
+              total_volume: 0,
+              baseline: 1,
+            }),
+          });
           if (data) {
             setDataAdded((prev) => !prev);
             const res = await data.json();
@@ -386,9 +385,6 @@ const SetMenu = () => {
   };
 
   return (
-    <>
-    {
-      totalAshkash != 0 ? (
         <div
           style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
         >
@@ -701,9 +697,6 @@ const SetMenu = () => {
             </div>
           </ConfigProvider>
         </div>
-      ) : (null)
-    }
-    </>
   );
 };
 

@@ -40,7 +40,9 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     }));
 
     if (pipeline) {
-      return res.status(201).json(newPipeLine);
+      return res
+        .status(201)
+        .json({ data: newPipeLine, leftover: pipeline.leftover });
     } else {
       res.status(400);
       throw new Error("Error getting the pipeline");

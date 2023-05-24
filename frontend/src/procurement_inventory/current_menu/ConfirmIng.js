@@ -45,10 +45,9 @@ const ConfirmIng = () => {
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
 
+  console.log(procureIngridients);
   useEffect(() => {
-
     const type = localStorage.getItem("type");
-
 
     if (!type) {
       navigate("/");
@@ -144,27 +143,21 @@ const ConfirmIng = () => {
           if (data) {
             const res = await data.json();
             if (res._id) {
-
               setProcureIngridients(res.procure_items);
-              
             }
             if (res.message) {
-
               if (menuFoodId) {
                 try {
-                  const data = await fetch(
-                    "/api/pai/procurement",
-                    {
-                      method: "POST",
-                      headers: {
-                        "Content-Type": "application/json",
-                      },
-                      body: JSON.stringify({
-                        menu_id: menuFoodId,
-                        type: "get_procure_data",
-                      }),
-                    }
-                  );
+                  const data = await fetch("/api/pai/procurement", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      menu_id: menuFoodId,
+                      type: "get_procure_data",
+                    }),
+                  });
 
                   if (data) {
                     const res = await data.json();
@@ -185,8 +178,6 @@ const ConfirmIng = () => {
     };
     getInventory();
   }, [menuFoodId, selectedDate]);
-
-
 
   const markProcureIngridients = async () => {
     try {
@@ -307,7 +298,7 @@ const ConfirmIng = () => {
                                   fontSize: "130%",
                                 }}
                               >
-                                {item.total_quantity} {item.unit}
+                                {item.requiredVolume} {item.unit}
                               </label>
                             </Col>
                             <Col
