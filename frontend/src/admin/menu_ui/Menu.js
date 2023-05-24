@@ -269,10 +269,7 @@ const Menu = () => {
 
       if (data) {
         const res = await data.json();
-        console.log(res);
         if (res) {
-          console.log(res);
-
           if (res[0].mk_id) {
             setMohallaAshkash(res);
           }
@@ -325,7 +322,7 @@ const Menu = () => {
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
     >
       <Modal
-        visible={visible}
+        open={visible}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
@@ -371,7 +368,6 @@ const Menu = () => {
                     border: "1px solid lightgray",
                     backgroundColor: "orange",
                   }}
-                  mode="month"
                   onSelect={onSelectDate}
                   fullscreen={false}
                 />
@@ -393,7 +389,7 @@ const Menu = () => {
                 >
                   <Col xs={24} xl={12}>
                     <label style={{ fontSize: "120%", fontWeight: 600 }}>
-                      Item for {dateValue}
+                      Items for <span style={{fontWeight: 'bold', fontSize: '1.2rem'}}> {new Date(dateValue).toDateString()} </span>
                     </label>
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -444,7 +440,7 @@ const Menu = () => {
                       display: "flex",
                       alignContent: "center",
                       justifyContent: "center",
-                      alignItems: "center",
+                      alignItems: "flex-end",
                     }}
                   >
                     <Button
@@ -457,7 +453,7 @@ const Menu = () => {
                       }}
                       onClick={addFoodItem}
                     >
-                      <i class="fa-solid fa-plus"></i>
+                      <i className="fa-solid fa-plus"></i>
                     </Button>
                   </div>
                 </div>

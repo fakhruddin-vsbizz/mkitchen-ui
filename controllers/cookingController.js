@@ -12,8 +12,6 @@ const addLeftOverData = expressAsyncHandler(async (req, res) => {
     leftover_amount,
   } = req.body;
 
-  console.log("getting the data");
-
   const operationId = await OperationPipeLine.findOne({
     menu_food_id: menu_id,
   });

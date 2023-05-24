@@ -11,15 +11,6 @@ const Vendors = () => {
   const [filteredVendors, setFilteredVendors] = useState([])
 	const [filterByName, setFilterByName] = useState("");
 
-
-  const data = [
-    "Inventory",
-    "Purchases",
-    "Current Menu",
-    "Vendors",
-    "Damaged Goods",
-  ];
-
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
 
@@ -52,6 +43,7 @@ const Vendors = () => {
       if (data) {
         const res = await data.json();
         setVendors(res);
+        console.log(res);
         setFilteredVendors(res)
       }
     };
@@ -71,8 +63,6 @@ const Vendors = () => {
 		setFilteredVendors(filteredList);
 	}, [filterByName, vendors]);
 
-
-  console.log("vendors: ", vendors);
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -93,7 +83,7 @@ const Vendors = () => {
               comp={<center>
                 <Link to="/pai/vendors/new">
                   <Button style={{ backgroundColor: "white", color: "orange" }}>
-                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     Add Vendor
                   </Button>
                 </Link>
@@ -103,13 +93,15 @@ const Vendors = () => {
 
             <Col xs={12} xl={12} style={{ padding: "2%" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
+                  <tbody>
                   <tr>
                     <td>
-                      Ingredient name:
+                      Vendor name:
                       <br />
                       <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
-                    </tr>
+                  </tr>
+                  </tbody>
                     </table>
                     </Col>
               <div style={{ width: "95%", padding: "2%" }}>
@@ -121,6 +113,12 @@ const Vendors = () => {
                 </label>
                 {vendors && (
                   <List
+                  style={{
+                    height: "60vh",
+                    width: "100%",
+                    overflowY: "scroll",
+                    backgroundColor: "transparent",
+                  }}
                     dataSource={filteredVendors}
                     renderItem={(item) => (
                       <List.Item>
@@ -136,22 +134,42 @@ const Vendors = () => {
                           }}
                         >
                           <Row>
-                            <Col xs={8} xl={8}>
+                            <Col xs={4} xl={4}>
                               <span>Vendor's Name:</span>
-                              
                               <br />
-                              <label style={{ color: "#e08003" }}>
+                              <label style={{ color: "#e08003", fontSize: "130%" }}>
                                 <b>{item.vendor_name}</b>
                               </label>
                             </Col>
-                            <Col xs={8} xl={8}>
-                              Vendor's Address:
+                            <Col xs={4} xl={4}>
+                              Address:
                               <br />
                               <label style={{ fontSize: "130%" }}>
                                 {item.address}
                               </label>
                             </Col>
-                            <Col xs={8} xl={8}>
+                            <Col xs={4} xl={4}>
+                              Opening Time:
+                              <br />
+                              <label style={{ fontSize: "120%" }}>
+                                {item.opening_time}
+                              </label>
+                            </Col>
+                            <Col xs={4} xl={4}>
+                              Closing Time:
+                              <br />
+                              <label style={{ fontSize: "120%" }}>
+                                {item.closing_time}
+                              </label>
+                            </Col>
+                            <Col xs={4} xl={4}>
+                              Number Of Orders:
+                              <br />
+                              <label style={{ fontSize: "120%" }}>
+                                {item.totalPurchases} Orders
+                              </label>
+                            </Col>
+                            <Col xs={4} xl={4}>
                               <label style={{ color: "#e08003" }}>
                                 Approval Status: <br />
                                 <Tag

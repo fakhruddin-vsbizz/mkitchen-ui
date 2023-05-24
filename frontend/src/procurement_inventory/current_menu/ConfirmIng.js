@@ -3,8 +3,6 @@ import {
   Row,
   Col,
   List,
-  Input,
-  Card,
   Button,
   DatePicker,
   ConfigProvider,
@@ -16,21 +14,33 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
+const dateFormatterForToday = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const dateFormatter = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const TodaysDate = dateFormatterForToday()
+const  newTodaysDate = dateFormatter()
 
 const ConfirmIng = () => {
   const [menuFoodId, setMenuFoodId] = useState();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [procureIngridients, setProcureIngridients] = useState([]);
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
-
-  const data = [
-    "Inventory",
-    "Purchases",
-    "Current Menu",
-    "Vendors",
-    "Damaged Goods",
-  ];
 
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
@@ -105,8 +115,8 @@ const ConfirmIng = () => {
         });
         if (data) {
           const res = await data.json();
-          if (res) {
-            setMenuFoodId(res[0]._id);
+          if (res[0]) {
+            setMenuFoodId(res[0]?._id);
             setOperationalPipelineStatus(res.status);
           }
         }
@@ -132,7 +142,6 @@ const ConfirmIng = () => {
 
           if (data) {
             const res = await data.json();
-            console.log(res, "ressss");
             if (res._id) {
               setProcureIngridients(res.procure_items);
             }
@@ -204,7 +213,7 @@ const ConfirmIng = () => {
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
     >
       <Modal
-        visible={visible}
+        open={visible}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
@@ -231,7 +240,7 @@ const ConfirmIng = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Confirm Ingredient"
-              comp={<DatePicker onChange={handleDateChange} />}
+              comp={<DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />}
             />
             {operationalPipelineStatus === 0 && (
               <Alert
@@ -255,7 +264,7 @@ const ConfirmIng = () => {
                   <List
                     size="small"
                     style={{
-                      height: "75vh",
+                      height: "60vh",
                       width: "100%",
                       overflowY: "scroll",
                       backgroundColor: "transparent",

@@ -35,7 +35,7 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
   }));
 
   // Perform the bulk write operation
-  Purchase.bulkWrite(ops)
+  await Purchase.bulkWrite(ops)
     .then((result) => {
       console.log(result);
     })
@@ -56,7 +56,7 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
   }));
 
   // Perform the bulk write operation
-  InventoryModel.bulkWrite(updateInventory)
+  await InventoryModel.bulkWrite(updateInventory)
     .then((result) => {
       console.log(result);
     })

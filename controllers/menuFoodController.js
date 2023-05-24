@@ -308,7 +308,7 @@ const updateFoodMenuAskahs = expressAsyncHandler(async (req, res) => {
     });
 
     // Execute the bulk update operation
-    FoodMenu.bulkWrite(operations)
+    await FoodMenu.bulkWrite(operations)
       .then((result) => {
         console.log(result);
       })

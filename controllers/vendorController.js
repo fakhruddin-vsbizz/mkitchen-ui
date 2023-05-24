@@ -113,6 +113,9 @@ const getTotalVendorPurchase = expressAsyncHandler(async (req, res) => {
           vendor_name: "$vendor_name",
           totalPurchases: { $size: "$purchaseInfo" },
           approval_status: "$approval_status",
+          address: "$address",
+          opening_time: "$opening_time",
+          closing_time: "$closing_time"
         },
       },
     ]);

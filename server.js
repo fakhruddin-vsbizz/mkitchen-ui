@@ -38,6 +38,7 @@ app.use("/api/vendor", require("./routes/vendorRoutes"));
 app.use("/api/purchase", require("./routes/purchaseRoutes"));
 app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
 
+
 app.use(express.static("./frontend/build"));
 
 app.get("*", (req, res) => {

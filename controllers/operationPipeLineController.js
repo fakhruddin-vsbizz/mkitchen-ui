@@ -101,10 +101,6 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
           }
         });
 
-        console.log("dispatch array: ", dispatchArr);
-        console.log("dispatch1: ", dispatchArr[0].dispatch);
-        console.log("dispatch2: ", dispatchArr[1]?.dispatch);
-
         const updated = await pipeline.updateOne({
           $set: { dispatch: dispatchArr },
         });

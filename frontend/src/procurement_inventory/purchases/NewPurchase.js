@@ -134,14 +134,10 @@ const NewPurchase = () => {
 
       // setName(data[0]?.ingridient_name)
 
-      console.log(data, "dtata");
-
       const time = +data[0].ingridient_expiry_amount;
       const period = data[0].ingridient_expiry_period;
 
       // Get the current date
-
-      console.log(time, " ", period);
 
       // Add the specified time and period to the current date
       if (period === "Days") {
@@ -162,7 +158,6 @@ const NewPurchase = () => {
       });
 
       // Output the final date
-      console.log("Final Date:", formattedDate);
 
       const ingredient_added = {
         mkuser_id: userId,
@@ -176,12 +171,9 @@ const NewPurchase = () => {
         expiry_date: formattedDate,
         unshelf: false,
       };
-      setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
+      setIngredientForPurchase([ingredient_added]);
     }
   },[idFromPrams,inventoryItems])
-
-  console.log(inventoryItems);
-  console.log(selectedVendor);
 
 
   const onAddIngredient = () => {
@@ -342,7 +334,7 @@ const NewPurchase = () => {
           <div style={{ width: "100%" }}>
             <Header title={<p>
                 <Link
-                  to="/pai/vendors"
+                  to="/pai/inventory"
                   style={{ color: "white", textDecoration: "none" }}
                 >
                   <ArrowLeftOutlined />

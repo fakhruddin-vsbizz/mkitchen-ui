@@ -5,14 +5,37 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
+const dateFormatterForToday = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const dateFormatter = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+
+const TodaysDate = dateFormatterForToday()
+
+const  newTodaysDate = dateFormatter()
 
 const ProcedureLogs = () => {
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [menuFoodId, setMenuFoodId] = useState();
   const [reviewData, setReviewData] = useState([]);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [leftOverItems, setLeftOverItems] = useState([]);
+
 
   const [ingridientList, setIngridientList] = useState([]);
 
@@ -42,6 +65,54 @@ const ProcedureLogs = () => {
 
   /**************Restricting Admin Route************************* */
 
+  useEffect(()=>{
+    const getData = async () => {
+      if (selectedDate && menuFoodId) {
+        const data = await fetch("/api/review", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_review",
+            // date: selectedDate,
+            menu_id: menuFoodId,
+          }),
+        });
+
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            setReviewData(res);
+          }
+        }
+      }
+    };
+    getData();
+    const getFood = async () => {
+      if (selectedDate) {
+        const data = await fetch("/api/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_food_Item",
+            date: TodaysDate,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (res) {
+            setMenuFoodId(res[0]._id);
+          }
+        }
+      }
+    };
+    getFood();
+  },[])
+ 
+
   useEffect(() => {
     const getInventory = async () => {
       try {
@@ -66,6 +137,7 @@ const ProcedureLogs = () => {
       }
     };
     getInventory();
+    dateFormatter();
   }, []);
 
   useEffect(() => {
@@ -177,6 +249,7 @@ const ProcedureLogs = () => {
     setSelectedDate(formattedDate);
   };
 
+
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -186,14 +259,14 @@ const ProcedureLogs = () => {
         <div style={{ width: "100%" }}>
           <Header
             title="Process Log"
-            comp=<Row>
+            comp={<Row>
               <Col style={{ marginRight: 10, fontSize: 18 }}>
                 Select date for showing history:{" "}
               </Col>
               <Col>
-                <DatePicker onChange={handleDateChange} />
+                <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
               </Col>
-            </Row>
+            </Row>}
           />
           <div style={{ padding: "1%" }}>
             <ConfigProvider
@@ -221,8 +294,6 @@ const ProcedureLogs = () => {
                     {/* <h2 style={{ color: "#e08003" }}>
                       Menu Decision & Delivery
                     </h2> */}
-
-                    {console.log(reviewData)}
                     {reviewData && (
                       <List
                         style={{ width: "100%" }}
@@ -341,8 +412,6 @@ const ProcedureLogs = () => {
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
-
-                    {console.log(ingridientList)}
                     {ingridientList && (
                       <List
                         dataSource={ingridientList}

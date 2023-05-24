@@ -24,9 +24,6 @@ const DamagedGoodsList = () => {
   const [purchaseId, setPurchaseId] = useState();
   const [quantityLoaded, setQuantityLoaded] = useState();
   const [update, setUpdate] = useState(false);
-
-  const [inputValue, setInputValue] = useState(1);
-  const [days, setDays] = useState(1);
   const [expiredItems, setExpiredItems] = useState([]);
   const [filteredExpiredItems, setFilteredExpiredItems] = useState([]);
 	const [filterByName, setFilterByName] = useState("");
@@ -34,7 +31,7 @@ const DamagedGoodsList = () => {
   const [filterByDaysAfterExpiry, setFilterByDaysAfterExpiry] = useState(0)
 
   const daysAfterExpiry = (expiry_date) => {
-    return (new Date(new Date(expiry_date).getDate() - new Date().getDate()).getDate())+1
+    return (Math.floor(((new Date() - (new Date(expiry_date)))/86400000))).toString()
   }
 
   useEffect(() => {
@@ -136,9 +133,6 @@ const DamagedGoodsList = () => {
 		const filteredList = filterList();
 		setFilteredExpiredItems(filteredList);
 	}, [filterByName, expiredItems, filterByDate, filterByDaysAfterExpiry]);
-
-
-  console.log(todayDate);
   
   useEffect(() => {
     const getPurchaseData = async () => {
@@ -334,7 +328,7 @@ const DamagedGoodsList = () => {
                             </Col>
                             <Col xs={12} xl={6}>
                               Days after expiry: <br />
-                              {(new Date( (new Date(item.expiry_date).getDate()) - (new Date().getDate()))).toDateString()} days
+                              {daysAfterExpiry(item.expiry_date)} days
                             </Col>
                             <Col xs={12} xl={4}>
                               <Button
