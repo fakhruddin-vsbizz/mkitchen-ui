@@ -12,9 +12,11 @@ const ProcedureLogs = () => {
   const [reviewData, setReviewData] = useState([]);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [leftOverItems, setLeftOverItems] = useState([]);
 
   const [ingridientList, setIngridientList] = useState([]);
 
+  console.log(ingridientList);
   const navigate = useNavigate();
   /**************Restricting Admin Route************************* */
 
@@ -106,7 +108,9 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            setIngridientList(res);
+            console.log(res);
+            setIngridientList(res.data);
+            setLeftOverItems(res.leftover);
           }
         }
       }
@@ -114,6 +118,7 @@ const ProcedureLogs = () => {
     getFood();
   }, [menuFoodId]);
 
+  console.log(leftOverItems);
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
@@ -341,7 +346,7 @@ const ProcedureLogs = () => {
                     {ingridientList && (
                       <List
                         dataSource={ingridientList}
-                        renderItem={(item) => (
+                        renderItem={(item, index) => (
                           <List.Item style={{ border: "none" }}>
                             <Card style={{ width: "100%", border: "none" }}>
                               <Row
@@ -385,16 +390,21 @@ const ProcedureLogs = () => {
                                     Leftover amount:
                                     <br />
                                     <b>
-                                      {item.leftover_amount}{" "}
-                                      {inventoryItems
-                                        .filter(
-                                          (inventory) =>
-                                            inventory._id ===
-                                            item.inventory_item_id
-                                        )
-                                        .map(
-                                          (ele) => ele.ingridient_measure_unit
-                                        )}
+                                      {leftOverItems[index] ? (
+                                        leftOverItems[index].leftover_amount
+                                      ) : (
+                                        <label> NONE LEFT</label>
+                                      )}{" "}
+                                      {leftOverItems[index] &&
+                                        inventoryItems
+                                          .filter(
+                                            (inventory) =>
+                                              inventory._id ===
+                                              item.inventory_item_id
+                                          )
+                                          .map(
+                                            (ele) => ele.ingridient_measure_unit
+                                          )}
                                     </b>
                                   </center>
                                 </Col>
