@@ -24,10 +24,31 @@ import Header from "../components/navigation/Header";
 import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
+const dateFormatterForToday = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const dateFormatter = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+
+const TodaysDate = dateFormatterForToday()
+
+const  newTodaysDate = dateFormatter()
 
 const Cooking = () => {
-  const data = ["Set Menu", "Cooking", "Dispatch"];
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [menuFoodId, setMenuFoodId] = useState();
   const [inventoryId, setInventoryId] = useState();
   const [reorderQuantity, setReorderQuantity] = useState();
@@ -78,8 +99,6 @@ const Cooking = () => {
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
   };
-
-  console.log(selectedDate);
 
   useEffect(() => {
     const getInventory = async () => {
@@ -148,7 +167,6 @@ const Cooking = () => {
           const res = await data.json();
           if (res) {
             setTotalAshkashCount(res);
-            console.log(res);
           }
         }
       }
@@ -309,11 +327,7 @@ const Cooking = () => {
     } catch (error) {}
   };
 
-  console.log(leftOverQuantity);
-
   const returnIngToInventory = async (inventory_id, ingName) => {
-    console.log(inventory_id);
-    console.log(ingName);
 
     try {
       const data = await fetch("/api/cooking/add_leftover", {
@@ -390,11 +404,11 @@ const Cooking = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Cooking Operation"
-              comp=<Row>
+              comp={<Row>
                 <Col xs={24} xl={12}>
                   Select the date:
                   <br />
-                  <DatePicker onChange={handleDateChange} />
+                  <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
                 </Col>
                 {/* <Col xs={24} xl={12}>
                   Select the client:
@@ -409,7 +423,7 @@ const Cooking = () => {
                     ]}
                   />
                 </Col> */}
-              </Row>
+              </Row>}
             />
 
             <Row style={{ padding: 10 }}>
@@ -420,7 +434,7 @@ const Cooking = () => {
                       <br />
                       <Alert
                         message="Menu Cooked"
-                        description="This Menu is been cooked"
+                        description="This Menu has been cooked"
                         type="success"
                         closable
                       />

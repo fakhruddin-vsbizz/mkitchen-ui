@@ -8,7 +8,7 @@ const getMohallaReviews = expressAsyncHandler(async (req, res) => {
     mkuser_id: mkuser_id,
   });
 
-  if (menuDelivery) {
+  if (menuDelivery.length !== 0) {
     res.json(menuDelivery);
   } else {
     res.json({ message: "no review for the given food id" });

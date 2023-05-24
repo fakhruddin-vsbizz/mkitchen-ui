@@ -726,7 +726,7 @@ const Accounts = () => {
                                 <Col xs={8} xl={8}>
                                   Verification status: <br />
                                   {item.usertype ? (
-                                    <Tag color="green">ACITVE</Tag>
+                                    <Tag color="green">ACTIVE</Tag>
                                   ) : (
                                     <Tag color="red">DISABLED</Tag>
                                   )}

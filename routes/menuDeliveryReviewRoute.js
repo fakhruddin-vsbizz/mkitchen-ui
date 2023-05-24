@@ -17,6 +17,7 @@ router.post("/mkuser", getReviewsForMKUser);
 
 router.post("/get_mohalla_review", getMohallaReviews);
 
+
 router.get("/", getDeliveryReview);
 
 module.exports = router;

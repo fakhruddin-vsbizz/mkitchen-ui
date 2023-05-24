@@ -115,8 +115,6 @@ const VendorPurchase = () => {
 		setFilteredPurchases(filteredList);
 	}, [filterByName, purchaseList, filterByDate, filterByStatus]);
 
-  console.log("purcahse list: ", purchaseList);
-  console.log("Inventory list: ", inventoryItems);
 
   useEffect(() => {
     const getInventory = async () => {

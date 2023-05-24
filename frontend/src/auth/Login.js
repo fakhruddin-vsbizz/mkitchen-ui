@@ -114,8 +114,6 @@ const Login = () => {
       }
     } catch (error) {
       console.error(error);
-      console.log(error.message);
-
       setUserEmail("");
       setUserPassword("");
       setError(true);
@@ -145,8 +143,6 @@ const Login = () => {
       if (res.error) {
         setUserNotRegisteredError(true);
         setPasswordResetEmailError(false);
-
-        console.log("error");
       } else {
         setPasswordResetEmailError(false);
         setUserNotRegisteredError(false);
@@ -324,24 +320,6 @@ const Login = () => {
                       />
                     </td>
                   </tr>
-
-                  <Button onClick={(e) => setOpen(true)}>
-                    Forget Password
-                  </Button>
-
-                  {error && (
-                    <tr>
-                      <td colSpan={2}>
-                        <br />
-                        <Alert
-                          message="Validation Error"
-                          description="Invalid Email Or Password"
-                          type="error"
-                          closable
-                        />
-                      </td>
-                    </tr>
-                  )}
                   <tr
                     style={{
                       textAlign: "left",
@@ -365,6 +343,25 @@ const Login = () => {
                       </Button>
                     </td>
                   </tr>
+
+                  <Button onClick={(e) => setOpen(true)}>
+                    Forget Password
+                  </Button>
+
+                  {error && (
+                    <tr>
+                      <td colSpan={2}>
+                        <br />
+                        <Alert
+                          message="Validation Error"
+                          description="Invalid Email Or Password"
+                          type="error"
+                          closable
+                        />
+                      </td>
+                    </tr>
+                  )}
+                  
                 </center>
               </table>
             </Card>

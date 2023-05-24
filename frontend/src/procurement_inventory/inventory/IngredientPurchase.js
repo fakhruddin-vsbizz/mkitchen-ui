@@ -130,42 +130,41 @@ const IngredientPurchase = () => {
 		setFilteredPurchases(filteredList);
 	}, [filterByName, itemPurchase, filterByDate, filterByStatus]);
 
-  console.log(itemPurchase);
 
-  const vendorPurchaseList = [
-    {
-      vendor_name: "V.K. General store",
-      quantity_ordered: 130,
-      rate: 600,
-      unit: "KG",
-      is_paid: false,
-      created_on: "24-06-2023",
-    },
-    {
-      vendor_name: "Brahma Stores",
-      quantity_ordered: 400,
-      rate: 40,
-      unit: "KG",
-      is_paid: true,
-      created_on: "24-06-2023",
-    },
-    {
-      vendor_name: "Mustali Stores",
-      quantity_ordered: 500,
-      rate: 25,
-      unit: "KG",
-      is_paid: false,
-      created_on: "24-06-2023",
-    },
-    {
-      vendor_name: "Supermarket Stores",
-      quantity_ordered: 200,
-      rate: 100,
-      unit: "L",
-      is_paid: true,
-      created_on: "24-06-2023",
-    },
-  ];
+  // const vendorPurchaseList = [
+  //   {
+  //     vendor_name: "V.K. General store",
+  //     quantity_ordered: 130,
+  //     rate: 600,
+  //     unit: "KG",
+  //     is_paid: false,
+  //     created_on: "24-06-2023",
+  //   },
+  //   {
+  //     vendor_name: "Brahma Stores",
+  //     quantity_ordered: 400,
+  //     rate: 40,
+  //     unit: "KG",
+  //     is_paid: true,
+  //     created_on: "24-06-2023",
+  //   },
+  //   {
+  //     vendor_name: "Mustali Stores",
+  //     quantity_ordered: 500,
+  //     rate: 25,
+  //     unit: "KG",
+  //     is_paid: false,
+  //     created_on: "24-06-2023",
+  //   },
+  //   {
+  //     vendor_name: "Supermarket Stores",
+  //     quantity_ordered: 200,
+  //     rate: 100,
+  //     unit: "L",
+  //     is_paid: true,
+  //     created_on: "24-06-2023",
+  //   },
+  // ];
 
   const [inputValue, setInputValue] = useState(1);
 

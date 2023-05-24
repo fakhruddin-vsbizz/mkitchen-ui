@@ -17,6 +17,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
+
 const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
   const [filteredPurchases, setFilteredPurchases] = useState([]);
@@ -62,8 +63,6 @@ const Purchases = () => {
         setPurchases(res.data);
 
         setFilteredPurchases(res.data)
-
-        console.log("==========> DATA FO REF ====> ", res);
       }
     };
     getPurchases();
@@ -126,7 +125,7 @@ const Purchases = () => {
             <Header comp={<center>
                 <Link to="/pai/purchases/new">
                   <Button style={{ backgroundColor: "white", color: "orange" }}>
-                    <i class="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     New Purchase
                   </Button>
                 </Link>
@@ -134,6 +133,7 @@ const Purchases = () => {
             <div style={{ padding: 0 }}>
               <Col xs={24} xl={24} style={{ width: "100%", padding: "2%" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
+                  <tbody>
                   <tr>
                     <td>
                       Ingredient name:
@@ -161,6 +161,7 @@ const Purchases = () => {
                       ></InputNumber>
                     </td>
                   </tr>
+                  </tbody>
                 </table>
 
                 <label

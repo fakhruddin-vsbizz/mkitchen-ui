@@ -71,7 +71,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
     }));
 
     // Perform the bulk write operation
-    Inventory.bulkWrite(updateInventory)
+    await Inventory.bulkWrite(updateInventory)
       .then((result) => {
         console.log(result);
       })

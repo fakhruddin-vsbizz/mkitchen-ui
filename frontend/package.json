@@ -10,6 +10,7 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.4.0",
     "axios": "^1.3.5",
+    "dayjs": "^1.11.7",
     "grommet": "^2.31.0",
     "grommet-icons": "^4.10.0",
     "moment": "^2.29.4",

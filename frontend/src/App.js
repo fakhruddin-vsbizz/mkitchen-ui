@@ -52,8 +52,7 @@ function App() {
           element={<IngredientPurchase />}
         />
         <Route path="/pai/purchases" element={<Purchases />} />
-        <Route path="/pai/purchases/new/:id" element={<NewPurchase />} />
-        <Route path="/pai/purchases/new" element={<NewPurchase />} />
+        <Route path="/pai/purchases/new/:id?" element={<NewPurchase />} />
         <Route path="/pai/procurement/" element={<ConfirmIng />} />
         <Route path="/pai/procurement/post" element={<PostConfirmOps />} />
         <Route path="/pai/vendors/" element={<Vendors />} />

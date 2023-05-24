@@ -21,16 +21,32 @@ import Header from "../components/navigation/Header";
 import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
+
+const dateFormatterForToday = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const dateFormatter = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate
+}
+
+const TodaysDate = dateFormatterForToday()
+const  newTodaysDate = dateFormatter()
 
 const Dispatch = () => {
   const data = ["Set Menu", "Cooking", "Dispatch"];
   const [visible, setVisible] = useState(false);
 
-  const [selectedDate, setSelectedDate] = useState(
-    `${
-      new Date().getMonth() + 1
-    }/${new Date().getDate()}/${new Date().getFullYear()}`
-  );
+  const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [menuFoodId, setMenuFoodId] = useState();
   const [getMohallaUsers, setGetMohallaUsers] = useState();
   const [foodList, setFoodList] = useState();
@@ -320,7 +336,7 @@ const Dispatch = () => {
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
     >
       <Modal
-        visible={visible}
+        open={visible}
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
@@ -347,11 +363,11 @@ const Dispatch = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Dispatch"
-              comp=<Row>
+              comp={<Row>
                 <Col xs={24} xl={12}>
                   Select the date:
                   <br />
-                  <DatePicker onChange={handleDateChange} />
+                  <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
                 </Col>
                 {/* <Col xs={24} xl={12}>
                   Select the client:
@@ -366,14 +382,16 @@ const Dispatch = () => {
                     ]}
                   />
                 </Col> */}
-              </Row>
+              </Row>}
             />
 
             {status < 3 && (
+              <table>
+              <tbody>
               <tr>
                 <td colSpan={2}>
                   <br />
-                  <Alert
+                  <Alert style={{marginLeft: "2rem"}}
                     message="Menu Not Procured"
                     description="This Menu is Not Cooked"
                     type="error"
@@ -381,12 +399,16 @@ const Dispatch = () => {
                   />
                 </td>
               </tr>
+                </tbody>
+              </table>
             )}
             {status === 4 && (
+              <table>
+              <tbody>
               <tr>
                 <td colSpan={2}>
                   <br />
-                  <Alert
+                  <Alert style={{marginLeft: "2rem"}}
                     message="Menu Not Procured"
                     description="This Menu is already dispatched"
                     type="success"
@@ -394,6 +416,8 @@ const Dispatch = () => {
                   />
                 </td>
               </tr>
+              </tbody>
+              </table>
             )}
             <Row style={{ padding: 10 }}>
               <Col xs={24} xl={12}>
@@ -453,10 +477,12 @@ const Dispatch = () => {
               </Col>
               <Col xs={24} xl={12}>
                 {inputError && (
+                  <table>
+                  <tbody>
                   <tr>
                     <td colSpan={2}>
                       <br />
-                      <Alert
+                      <Alert style={{marginLeft: "2rem"}}
                         message="Warning"
                         description="Enter weight and daig"
                         type="error"
@@ -464,6 +490,8 @@ const Dispatch = () => {
                       />
                     </td>
                   </tr>
+                  </tbody>
+                  </table>
                 )}
                 {isSelected ? (
                   <Card style={{ backgroundColor: "transparent" }}>

@@ -47,21 +47,15 @@ const Inventory = () => {
 	/**************Restricting PandI Route************************* */
 
 	useEffect(() => {
-		console.log("in");
-
 		const type = localStorage.getItem("type");
 
-		console.log("ttt=>", type);
-
 		if (!type) {
-			console.log("second in");
 			navigate("/");
 		}
 
 		const typeAdmin = type === "mk admin" ? true : false;
 
 		if (typeAdmin) {
-			console.log("second in");
 			navigate("/admin/menu");
 		}
 		if (!typeAdmin && type && type === "Cooking") {
@@ -81,7 +75,6 @@ const Inventory = () => {
 				const res = await data.json();
 				setInventoryItems(res);
 				setFilteredInventoryItems(res);
-				console.log(res);
 			}
 		};
 		getInventory();
@@ -112,7 +105,6 @@ const Inventory = () => {
 
 	const handleSubmit = async () => {
 		try {
-			console.log("inside");
 			const data = await fetch("/api/inventory/addinventory", {
 				method: "POST",
 				headers: {
@@ -150,8 +142,6 @@ const Inventory = () => {
 					setbaseline("");
 					setValidationError(false);
 					setValidationError(false);
-
-					console.log(res);
 				}
 			}
 		} catch (error) {
@@ -160,14 +150,11 @@ const Inventory = () => {
 	};
 
 	const onRestock = (id) => {
-		navigate('/pai/')
+		navigate(`/pai/purchases/new/${id}`)
 	}
 
 	const updateIngridientItem = async () => {
-		console.log(inventoryId);
-
 		try {
-			console.log("inside");
 			const data = await fetch(
 				"/api/inventory/addinventory/update_inventory",
 				{
@@ -186,12 +173,9 @@ const Inventory = () => {
 					}),
 				}
 			);
-
-			console.log(data);
 			if (data) {
 				const res = await data.json();
 				if (res.error) {
-					console.log("got err");
 					setValidationError(true);
 				} else {
 					setUpdated(prev => !prev);
@@ -204,8 +188,6 @@ const Inventory = () => {
 					setbaseline("");
 					setValidationError(false);
 					setValidationError(false);
-
-					console.log(res);
 				}
 			}
 		} catch (error) {
@@ -223,7 +205,6 @@ const Inventory = () => {
 		setPrice(data[0].price);
 		setbaseline(data[0].baseline);
 		setIsModalOpenUpdate(true);
-		console.log(data);
 	};
 	const closeModelForUpdateIngridient = () => {
 		setValidationError(false);
@@ -272,6 +253,7 @@ const Inventory = () => {
 								<table
 									style={{ width: "80vw", marginLeft: 50 }}
 									cellPadding={10}>
+										<tbody>
 									<tr>
 										<td>
 											Filter by ingredients name:
@@ -291,7 +273,7 @@ const Inventory = () => {
 												<Button
 													type="primary"
 													onClick={e => setIsModalOpen(true)}>
-													<i class="fa-solid fa-circle-plus"></i>{" "}
+													<i className="fa-solid fa-circle-plus"></i>{" "}
 													&nbsp;&nbsp;&nbsp; Add new ingredient
 												</Button>
 											</center>
@@ -306,6 +288,8 @@ const Inventory = () => {
 												<br />
 												<br />
 												<table style={{ width: "100%" }}>
+													<tbody>
+
 													<tr>
 														<td>Name</td>
 														<td>
@@ -370,6 +354,7 @@ const Inventory = () => {
 															</td>
 														</tr>
 													)}
+													</tbody>
 												</table>
 											</Modal>
 											<Modal
@@ -382,6 +367,7 @@ const Inventory = () => {
 												<br />
 												<br />
 												<table style={{ width: "100%" }}>
+													<tbody>
 													<tr>
 														<td>Name</td>
 														<td>
@@ -445,10 +431,12 @@ const Inventory = () => {
 															</td>
 														</tr>
 													)}
+													</tbody>
 												</table>
 											</Modal>
 										</td>
 									</tr>
+										</tbody>
 								</table>
 								{inventoryItems && (
 									<Card
@@ -498,7 +486,7 @@ const Inventory = () => {
 															{item.total_volume <= item.baseline ? (
 																<div style={{ color: "#e08003" }}>
 																	<i
-																		class="fa-solid fa-circle-exclamation"
+																		className="fa-solid fa-circle-exclamation"
 																		style={{ marginLeft: "-50px" }}></i>{" "}
 																	You are short on items
 																	<br />
@@ -520,7 +508,7 @@ const Inventory = () => {
 																		marginLeft: "-50px",
 																	}}>
 																	<i
-																		class="fa-solid fa-circle-check"
+																		className="fa-solid fa-circle-check"
 																		style={{ fontSize: "130%" }}></i>{" "}
 																	SUFFICIENT
 																</div>
