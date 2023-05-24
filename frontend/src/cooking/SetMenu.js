@@ -51,11 +51,11 @@ const SetMenu = () => {
   const [visible, setVisible] = useState(false);
   const [updateAshkash, setUpdateAshkash] = useState(false);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
-  const [ashkaasCountInput, setAshkaasCountInput] = useState(0)
+  const [ashkaasCountInput, setAshkaasCountInput] = useState(0);
   const [foodIndex, setFoodIndex] = useState();
   const [foodIngredientMap, setFoodIngredientMap] = useState([]);
   const [validationError, setValidationError] = useState(false);
-  const [updatedIngredientsList, setupdatedIngredientsList] = useState([])
+  const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -187,7 +187,7 @@ const SetMenu = () => {
           const res = await data.json();
           if (res) {
             setInventoryItems(res);
-            setupdatedIngredientsList(res)
+            setupdatedIngredientsList(res);
           }
         }
       } catch (error) {}
@@ -216,26 +216,23 @@ const SetMenu = () => {
         setIngredientName("");
       } else {
         try {
-          const data = await fetch(
-            "/api/inventory/addinventory",
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                mkuser_email: email,
-                ingridient_name: ingredientName,
-                ingridient_measure_unit: "gram",
-                ingridient_expiry_period: "Days",
-                ingridient_expiry_amount: "5",
-                price: 0,
-                decommisioned: true,
-                total_volume: 0,
-                baseline: 1,
-              }),
-            }
-          );
+          const data = await fetch("/api/inventory/addinventory", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              mkuser_email: email,
+              ingridient_name: ingredientName,
+              ingridient_measure_unit: "gram",
+              ingridient_expiry_period: "Days",
+              ingridient_expiry_amount: "5",
+              price: 0,
+              decommisioned: true,
+              total_volume: 0,
+              baseline: 1,
+            }),
+          });
           if (data) {
             setDataAdded((prev) => !prev);
             const res = await data.json();
@@ -431,6 +428,14 @@ const SetMenu = () => {
                   /> */}
                 </Col>
                 <Col xs={24} xl={12} style={{ padding: "1%" }}>
+                  {totalAshkash === 0 && (
+                    <Alert
+                      message="Message"
+                      description="Ashkash Not Added By Mohalla Users"
+                      type="error"
+                      closable
+                    />
+                  )}
                   {status === -1 && (
                     <Alert
                       message="Message"
@@ -448,7 +453,7 @@ const SetMenu = () => {
                     />
                   )}
                   {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-                  {getFoodList && (
+                  {getFoodList && totalAshkash > 0 && (
                     <List
                       style={{ width: "100&" }}
                       itemLayout="horizontal"
@@ -500,7 +505,7 @@ const SetMenu = () => {
                   )}
                 </Col>
                 <Col xs={24} xl={12} style={{ padding: "1% 3%" }}>
-                  {status >= 0 && (
+                  {status >= 0 && totalAshkash > 0 && (
                     <Card
                       style={{
                         width: "100%",
@@ -645,8 +650,14 @@ const SetMenu = () => {
                           </List.Item>
                         )}
                       /> */}
-                      <IngredientList ingredientItems={ingredientItems} OnDelete={OnDelete} inventoryItems={inventoryItems} handlePerAshkashChange={handlePerAshkashChange} foodIndex={foodIndex} />
-                      {status === 0 && (
+                      <IngredientList
+                        ingredientItems={ingredientItems}
+                        OnDelete={OnDelete}
+                        inventoryItems={inventoryItems}
+                        handlePerAshkashChange={handlePerAshkashChange}
+                        foodIndex={foodIndex}
+                      />
+                      {status === 0 && totalAshkash > 0 && (
                         <Button
                           block
                           type="primary"
@@ -662,7 +673,7 @@ const SetMenu = () => {
               </Row>
             </div>
             <center>
-              {status === 0 && (
+              {status === 0 && totalAshkash > 0 && (
                 <Button
                   block
                   style={{

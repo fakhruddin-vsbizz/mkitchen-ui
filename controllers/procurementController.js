@@ -17,7 +17,6 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       0
     );
 
-
     const inventoryItems = await OperationPipeLine.find({
       menu_food_id: menu_id,
     }).lean();
@@ -63,7 +62,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       updateOne: {
         filter: { _id: inventory.inventoryItemId },
         update: {
-          $inc: {
+          $set: {
             total_volume: inventory.total_quantity,
           },
         },
@@ -84,6 +83,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       { $set: { status: 2 } },
       { new: true }
     );
+
     const procureData = await FinalizeProcure.create({
       procure_items,
       date,
