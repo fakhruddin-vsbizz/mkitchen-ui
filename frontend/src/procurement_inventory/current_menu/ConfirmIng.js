@@ -19,21 +19,25 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `0${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
 const dateFormatter = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
-const TodaysDate = dateFormatterForToday()
-const  newTodaysDate = dateFormatter()
+const TodaysDate = dateFormatterForToday();
+const newTodaysDate = dateFormatter();
 
 const ConfirmIng = () => {
   const [menuFoodId, setMenuFoodId] = useState();
@@ -240,10 +244,16 @@ const ConfirmIng = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Confirm Ingredient"
-              comp={<DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />}
+              comp={
+                <DatePicker
+                  defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
+                  onChange={handleDateChange}
+                />
+              }
             />
             {operationalPipelineStatus === 0 && (
               <Alert
+                style={{ margin: "0.5rem" }}
                 message="Message"
                 description="Ingridients not set for the selected date"
                 type="error"
@@ -252,6 +262,7 @@ const ConfirmIng = () => {
             )}
             {operationalPipelineStatus >= 2 && (
               <Alert
+                style={{ margin: "0.5rem" }}
                 message="Menu Procured"
                 description="This Menu is been Procured"
                 type="success"

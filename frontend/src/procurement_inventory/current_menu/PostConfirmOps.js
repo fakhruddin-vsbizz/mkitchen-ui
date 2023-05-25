@@ -183,6 +183,7 @@ const PostConfirmOps = () => {
             />
             {status < 2 && (
               <Alert
+                style={{ margin: "0.5rem" }}
                 message="IN-PROGRESS"
                 description="Procurement is in progress"
                 type="success"

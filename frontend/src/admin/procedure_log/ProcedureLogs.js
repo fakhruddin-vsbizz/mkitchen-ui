@@ -10,23 +10,26 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `0${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
 const dateFormatter = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
+const TodaysDate = dateFormatterForToday();
 
-const TodaysDate = dateFormatterForToday()
-
-const  newTodaysDate = dateFormatter()
+const newTodaysDate = dateFormatter();
 
 const ProcedureLogs = () => {
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
@@ -35,7 +38,6 @@ const ProcedureLogs = () => {
   const [totalAshkash, setTotalAshkhaas] = useState(0);
   const [inventoryItems, setInventoryItems] = useState([]);
   const [leftOverItems, setLeftOverItems] = useState([]);
-
 
   const [ingridientList, setIngridientList] = useState([]);
 
@@ -65,7 +67,7 @@ const ProcedureLogs = () => {
 
   /**************Restricting Admin Route************************* */
 
-  useEffect(()=>{
+  useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
         const data = await fetch("/api/review", {
@@ -89,29 +91,33 @@ const ProcedureLogs = () => {
       }
     };
     getData();
-    const getFood = async () => {
-      if (selectedDate) {
-        const data = await fetch("/api/cooking/ingredients", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_food_Item",
-            date: TodaysDate,
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-          if (res) {
-            setMenuFoodId(res[0]._id);
-          }
-        }
-      }
-    };
-    getFood();
-  },[])
- 
+  }, [menuFoodId, selectedDate]);
+
+  // useEffect(() => {
+  //   const getFood = async () => {
+  //     if (TodaysDate) {
+  //       const data = await fetch("/api/cooking/ingredients", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           type: "get_food_Item",
+  //           date: TodaysDate,
+  //         }),
+  //       });
+  //       if (data) {
+  //         const res = await data.json();
+  //         console.log(res);
+  //         if (res) {
+  //           console.log(res[0]._id);
+  //           setMenuFoodId(res[0]._id);
+  //         }
+  //       }
+  //     }
+  //   };
+  //   getFood();
+  // }, [TodaysDate]);
 
   useEffect(() => {
     const getInventory = async () => {
@@ -180,7 +186,6 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            console.log(res);
             setIngridientList(res.data);
             setLeftOverItems(res.leftover);
           }
@@ -190,7 +195,6 @@ const ProcedureLogs = () => {
     getFood();
   }, [menuFoodId]);
 
-  console.log(leftOverItems);
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
@@ -249,7 +253,6 @@ const ProcedureLogs = () => {
     setSelectedDate(formattedDate);
   };
 
-
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -259,14 +262,19 @@ const ProcedureLogs = () => {
         <div style={{ width: "100%" }}>
           <Header
             title="Process Log"
-            comp={<Row>
-              <Col style={{ marginRight: 10, fontSize: 18 }}>
-                Select date for showing history:{" "}
-              </Col>
-              <Col>
-                <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
-              </Col>
-            </Row>}
+            comp={
+              <Row>
+                <Col style={{ marginRight: 10, fontSize: 18 }}>
+                  Select date for showing history:{" "}
+                </Col>
+                <Col>
+                  <DatePicker
+                    defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
+                    onChange={handleDateChange}
+                  />
+                </Col>
+              </Row>
+            }
           />
           <div style={{ padding: "1%" }}>
             <ConfigProvider
@@ -459,12 +467,13 @@ const ProcedureLogs = () => {
                                     Leftover amount:
                                     <br />
                                     <b>
-                                      {leftOverItems[index] ? (
+                                      {leftOverItems && leftOverItems[index] ? (
                                         leftOverItems[index].leftover_amount
                                       ) : (
-                                        <label> NONE LEFT</label>
-                                      )}{" "}
-                                      {leftOverItems[index] &&
+                                        <label>No Leftovers</label>
+                                      )}
+                                      {leftOverItems &&
+                                        leftOverItems[index] &&
                                         inventoryItems
                                           .filter(
                                             (inventory) =>

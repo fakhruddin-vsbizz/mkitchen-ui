@@ -197,6 +197,7 @@ const Login = () => {
               <td colSpan={2}>
                 <br />
                 <Alert
+                  style={{ margin: "0.5rem" }}
                   message="Validation Error"
                   description="Invalid Email Or Password"
                   type="error"
@@ -210,6 +211,7 @@ const Login = () => {
               <td colSpan={2}>
                 <br />
                 <Alert
+                  style={{ margin: "0.5rem" }}
                   message="Validation Error"
                   description="Email dont exists"
                   type="error"
@@ -353,6 +355,7 @@ const Login = () => {
                       <td colSpan={2}>
                         <br />
                         <Alert
+                          style={{ margin: "0.5rem" }}
                           message="Validation Error"
                           description="Invalid Email Or Password"
                           type="error"
@@ -361,7 +364,6 @@ const Login = () => {
                       </td>
                     </tr>
                   )}
-                  
                 </center>
               </table>
             </Card>

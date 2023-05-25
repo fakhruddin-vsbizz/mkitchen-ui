@@ -33,7 +33,6 @@ const ResetPassword = () => {
 
   const { id } = useParams();
 
-
   const handleOk = () => {
     setModalText("The modal will be closed after two seconds");
     setConfirmLoading(true);
@@ -50,7 +49,6 @@ const ResetPassword = () => {
 
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
- 
 
   useEffect(() => {
     if (confirmPassword !== newPassword) {
@@ -69,7 +67,6 @@ const ResetPassword = () => {
       return;
     }
     if (error === false) {
-
       try {
         const data = await fetch(
           "/api/admin/account_management/update_password",
@@ -208,6 +205,7 @@ const ResetPassword = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
+                            style={{ margin: "0.5rem" }}
                             message="Validation Error"
                             description=" password do not match. Please try again"
                             type="error"
@@ -221,6 +219,7 @@ const ResetPassword = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
+                            style={{ margin: "0.5rem" }}
                             message="Validation Error"
                             description="All the fields are required"
                             type="error"

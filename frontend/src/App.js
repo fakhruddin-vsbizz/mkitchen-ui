@@ -34,13 +34,13 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/admin" element={<Index />} />
         <Route path="/admin/menu" element={<Menu />} />
-        <Route path="/admin/menu/history" element={<ProcedureLogs />} />
+        <Route exact path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
         <Route path="/reset-password/:id" element={<ResetPassword />} />
 
         {/*  ------------------------------- Cooking Route --------------------------  */}
-        <Route path="/cooking/ingredients" element={<SetMenu />} />
+        <Route exact path="/cooking/ingredients" element={<SetMenu />} />
         <Route path="/cooking/cookfood" element={<Cooking />} />
         {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
