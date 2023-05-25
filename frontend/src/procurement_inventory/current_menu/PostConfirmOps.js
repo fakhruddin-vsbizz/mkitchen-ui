@@ -17,9 +17,34 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
+import dayjs from "dayjs";
+
+const dateFormatterForToday = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    dateObj.getMonth() + 1 < 10
+      ? `0${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate;
+};
+
+const dateFormatter = () => {
+  const dateObj = new Date();
+  const formattedDate = `${
+    dateObj.getMonth() + 1 < 10
+      ? `${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
+  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  return formattedDate;
+};
+
+const TodaysDate = dateFormatterForToday();
+const newTodaysDate = dateFormatter();
+
 const PostConfirmOps = () => {
   const [menuFoodId, setMenuFoodId] = useState();
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [foodItems, setFoodItems] = useState(null);
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(true);
@@ -174,12 +199,15 @@ const PostConfirmOps = () => {
         }}
       >
         <div style={{ display: "flex" }}>
-          <Sidebar k="3" userType="pai" />
+          <Sidebar k="4" userType="pai" />
 
           <div style={{ width: "100%" }}>
             <Header
-              title="Post-Procument Ops"
-              comp=<DatePicker onChange={handleDateChange} />
+              title="Post Procurement"
+              comp=<DatePicker
+                defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
+                onChange={handleDateChange}
+              />
             />
             {status < 2 && (
               <Alert
