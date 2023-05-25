@@ -46,16 +46,20 @@ function App() {
         <Route path="/cooking/dispatch" element={<Dispatch />} />
 
         {/*  ------------------------------- P&I Route ------------------------------  */}
-        <Route path="/pai/inventory" element={<Inventory />} />
+        <Route exact path="/pai/inventory" element={<Inventory />} />
         <Route
           path="/pai/inventory/purchases/:id"
           element={<IngredientPurchase />}
         />
-        <Route path="/pai/purchases" element={<Purchases />} />
+        <Route exact path="/pai/purchases" element={<Purchases />} />
         <Route path="/pai/purchases/new/:id?" element={<NewPurchase />} />
-        <Route path="/pai/procurement/" element={<ConfirmIng />} />
-        <Route path="/pai/procurement/post" element={<PostConfirmOps />} />
-        <Route path="/pai/vendors/" element={<Vendors />} />
+        <Route exact path="/pai/procurement/" element={<ConfirmIng />} />
+        <Route
+          exact
+          path="/pai/procurement/post"
+          element={<PostConfirmOps />}
+        />
+        <Route exact path="/pai/vendors/" element={<Vendors />} />
         <Route path="/pai/vendors/new" element={<NewVendor />} />
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
         <Route path="/pai/expiries" element={<DamagedGoodsList />} />

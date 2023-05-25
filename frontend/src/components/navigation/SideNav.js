@@ -7,6 +7,7 @@ import {
   MenuOutlined,
   HistoryOutlined,
   LogoutOutlined,
+  InfoOutlined,
 } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme, ConfigProvider, Button } from "antd";
 import { useState } from "react";
@@ -35,7 +36,6 @@ const logoutHandler = () => {
   localStorage.removeItem("user_id");
 
   window.location.href = "/";
-
 };
 const admin = [
   getItem(
@@ -113,15 +113,22 @@ const pai = [
     </Link>
   ),
   getItem(
-    <Link to="/pai/vendors">Vendor</Link>,
+    <Link to="/pai/procurement/post">Post Procure</Link>,
     "4",
+    <Link to="/pai/procurement/post">
+      <InfoOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/vendors">Vendor</Link>,
+    "5",
     <Link to="/pai/vendors">
       <ShopOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
   getItem(
     <Link to="/pai/expiries">Expiries</Link>,
-    "5",
+    "6",
     <Link to="/pai/expiries">
       <ShopOutlined style={{ fontSize: "20px" }} />
     </Link>

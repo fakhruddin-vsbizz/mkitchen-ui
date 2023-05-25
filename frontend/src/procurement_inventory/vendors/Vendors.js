@@ -75,7 +75,7 @@ const Vendors = () => {
         }}
       >
         <div style={{ display: "flex" }}>
-          <Sidebar k="4" userType="pai" />
+          <Sidebar k="5" userType="pai" />
 
           <div style={{ width: "100%" }}>
             <Header

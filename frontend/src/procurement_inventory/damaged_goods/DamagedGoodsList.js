@@ -26,13 +26,15 @@ const DamagedGoodsList = () => {
   const [update, setUpdate] = useState(false);
   const [expiredItems, setExpiredItems] = useState([]);
   const [filteredExpiredItems, setFilteredExpiredItems] = useState([]);
-	const [filterByName, setFilterByName] = useState("");
+  const [filterByName, setFilterByName] = useState("");
   const [filterByDate, setFilterByDate] = useState(null);
-  const [filterByDaysAfterExpiry, setFilterByDaysAfterExpiry] = useState(0)
+  const [filterByDaysAfterExpiry, setFilterByDaysAfterExpiry] = useState(0);
 
   const daysAfterExpiry = (expiry_date) => {
-    return (Math.floor(((new Date() - (new Date(expiry_date)))/86400000))).toString()
-  }
+    return Math.floor(
+      (new Date() - new Date(expiry_date)) / 86400000
+    ).toString();
+  };
 
   useEffect(() => {
     const currentDate = new Date();
@@ -94,68 +96,87 @@ const DamagedGoodsList = () => {
   //   getPurchaseData();
   // }, [todayDate, update]);
 
-
-
   useEffect(() => {
-		const filterList = () => {
-      if (filterByName && filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
-				return expiredItems.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else 
-      if (filterByName && filterByDaysAfterExpiry !== 0) {
-				return expiredItems.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
-				);
-			} else 
-      if (filterByName && filterByDate !== null) {
-				return expiredItems.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else 
-      if (filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
-				return expiredItems.filter(item =>
-					daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else 
-      if (filterByName) {
-				return expiredItems.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
-			} else if (filterByDate !== null) {
-				return expiredItems.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
-			} else 
-      if (filterByDaysAfterExpiry !== 0 ) {
-				return expiredItems.filter(item => daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
-				);
-			}
-			return expiredItems
-		};
-		const filteredList = filterList();
-		setFilteredExpiredItems(filteredList);
-	}, [filterByName, expiredItems, filterByDate, filterByDaysAfterExpiry]);
-  
+    const filterList = () => {
+      if (
+        filterByName &&
+        filterByDaysAfterExpiry !== 0 &&
+        filterByDate !== null
+      ) {
+        return expiredItems.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName && filterByDaysAfterExpiry !== 0) {
+        return expiredItems.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
+        );
+      } else if (filterByName && filterByDate !== null) {
+        return expiredItems.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByDaysAfterExpiry !== 0 && filterByDate !== null) {
+        return expiredItems.filter(
+          (item) =>
+            daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName) {
+        return expiredItems.filter((item) =>
+          item.ingredient_name
+            .toLowerCase()
+            .includes(filterByName.toLowerCase())
+        );
+      } else if (filterByDate !== null) {
+        return expiredItems.filter(
+          (item) =>
+            new Date(item.createdAt).toDateString() ===
+            new Date(filterByDate).toDateString()
+        );
+      } else if (filterByDaysAfterExpiry !== 0) {
+        return expiredItems.filter(
+          (item) => daysAfterExpiry(item.expiry_date) <= filterByDaysAfterExpiry
+        );
+      }
+      return expiredItems;
+    };
+    const filteredList = filterList();
+    setFilteredExpiredItems(filteredList);
+  }, [filterByName, expiredItems, filterByDate, filterByDaysAfterExpiry]);
+
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
-        const data = await fetch(
-          "/api/purchase/expired_items",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              date: todayDate,
-            }),
-          }
-        );
+        const data = await fetch("/api/purchase/expired_items", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            date: todayDate,
+          }),
+        });
         if (data) {
           const res = await data.json();
           if (res) {
             setExpiredItems(res);
 
             setFilteredExpiredItems(res);
-
           }
         }
       }
@@ -209,19 +230,16 @@ const DamagedGoodsList = () => {
     //update total volume in inventory
 
     try {
-      const data = await fetch(
-        "/api/inventory/addinventory/update_volume",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            inventory_id: inventoryId,
-            quantity: +quantityLoaded,
-          }),
-        }
-      );
+      const data = await fetch("/api/inventory/addinventory/update_volume", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          inventory_id: inventoryId,
+          quantity: +quantityLoaded,
+        }),
+      });
       if (data) {
       }
     } catch (e) {
@@ -243,7 +261,7 @@ const DamagedGoodsList = () => {
         }}
       >
         <div style={{ display: "flex" }}>
-          <Sidebar k="5" userType="pai" />
+          <Sidebar k="6" userType="pai" />
 
           <div style={{ width: "100%" }}>
             <Header title="Expries" />
@@ -261,15 +279,17 @@ const DamagedGoodsList = () => {
                       <Col xs={12} xl={6}>
                         Filter by Ingredients: <br />
                         <Input
-                        value={filterByName}
-                        onChange={e => setFilterByName(e.target.value)}
+                          value={filterByName}
+                          onChange={(e) => setFilterByName(e.target.value)}
                           placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
                           style={{ width: "70%" }}
                         ></Input>
                       </Col>
                       <Col xs={12} xl={6}>
                         Date of Purchase: <br />
-                        <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
+                        <DatePicker
+                          onChange={(value) => setFilterByDate(value)}
+                        ></DatePicker>
                       </Col>
                       <Col xs={12} xl={6}>
                         Days After Expiry: <br />
@@ -278,7 +298,9 @@ const DamagedGoodsList = () => {
                             <InputNumber
                               min={0}
                               value={filterByDaysAfterExpiry}
-                              onChange={value => setFilterByDaysAfterExpiry(value)}
+                              onChange={(value) =>
+                                setFilterByDaysAfterExpiry(value)
+                              }
                             />
                           </Col>
                           {/* <Col xs={6} xl={3}>
