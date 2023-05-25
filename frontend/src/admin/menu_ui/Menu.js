@@ -40,6 +40,7 @@ const Menu = () => {
   const [selectedFood, setSelectedFood] = useState("");
   const [AddedFoodItems, setAddedFoodItems] = useState();
   const [isMenu, setIsMenu] = useState(false);
+  const [status, setStatus] = useState();
 
   const [ingridientList, setIngridientList] = useState([]);
 
@@ -86,6 +87,35 @@ const Menu = () => {
         -----------------------------------
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
+
+  useEffect(() => {
+    const getFood = async () => {
+      if (dateValue) {
+        const data = await fetch("/api/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_food_Item",
+            // mkuser_id: getMkUserId,
+            date: dateValue,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (res[0]) {
+            setStatus(res.status);
+          } else {
+            setStatus(-1);
+          }
+        }
+      }
+    };
+    getFood();
+  }, [dateValue]);
+
+  console.log(status);
 
   useEffect(() => {
     const getIngridients = async () => {
@@ -210,12 +240,13 @@ const Menu = () => {
 
   const createMenu = async () => {
     try {
-      await fetch("/api/admin/menu/add_menu", {
+      await fetch("/api/admin/menu/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          add_type: "add_menu",
           food_list: foodItems,
           total_ashkhaas: 0,
           date_of_cooking: dateValue,
@@ -389,7 +420,11 @@ const Menu = () => {
                 >
                   <Col xs={24} xl={12}>
                     <label style={{ fontSize: "120%", fontWeight: 600 }}>
-                      Items for <span style={{fontWeight: 'bold', fontSize: '1.2rem'}}> {new Date(dateValue).toDateString()} </span>
+                      Items for{" "}
+                      <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
+                        {" "}
+                        {new Date(dateValue).toDateString()}{" "}
+                      </span>
                     </label>
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -412,7 +447,7 @@ const Menu = () => {
                 >
                   <div style={{ width: "80%" }}>
                     <h3>Search menu by name:</h3>
-                    {AddedFoodItems && (
+                    {AddedFoodItems && status !== 4 && (
                       <AutoComplete
                         id="food-item-selected"
                         style={{
@@ -443,18 +478,20 @@ const Menu = () => {
                       alignItems: "flex-end",
                     }}
                   >
-                    <Button
-                      style={{
-                        backgroundColor: "orange",
-                        borderRadius: 50,
-                        color: "white",
-                        fontSize: 26,
-                        height: "auto",
-                      }}
-                      onClick={addFoodItem}
-                    >
-                      <i className="fa-solid fa-plus"></i>
-                    </Button>
+                    {status !== 4 && (
+                      <Button
+                        style={{
+                          backgroundColor: "orange",
+                          borderRadius: 50,
+                          color: "white",
+                          fontSize: 26,
+                          height: "auto",
+                        }}
+                        onClick={addFoodItem}
+                      >
+                        <i className="fa-solid fa-plus"></i>
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -560,6 +597,7 @@ const Menu = () => {
                   )}
                 />
                 {foodItems.length !== 0 &&
+                status !== 4 &&
                 new Date(dateValue) >
                   new Date().setDate(new Date().getDate() - 1) ? (
                   <center>

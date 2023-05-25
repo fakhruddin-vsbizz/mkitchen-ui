@@ -66,6 +66,13 @@ const admin = [
       <ShopOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "5",
+    <Link onClick={logoutHandler}>
+      <LogoutOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
 ];
 const cooking = [
   getItem(
@@ -87,6 +94,13 @@ const cooking = [
     "3",
     <Link to="/cooking/dispatch">
       <TeamOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "4",
+    <Link onClick={logoutHandler}>
+      <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
 ];
@@ -131,6 +145,13 @@ const pai = [
     "6",
     <Link to="/pai/expiries">
       <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "6",
+    <Link onClick={logoutHandler}>
+      <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
   ),
 ];
@@ -210,8 +231,8 @@ const SideNav = ({ k, userType }) => {
                 : null
             }
           />
-          <Menu
-            theme="light "
+          {/* <Menu
+            theme="light"
             defaultSelectedKeys={[k]}
             style={{
               backgroundColor: "transparent",
@@ -222,7 +243,7 @@ const SideNav = ({ k, userType }) => {
             }}
             mode="inline"
             items={logout}
-          />
+          /> */}
         </Sider>
       </ConfigProvider>
       {/* <Menu/> */}

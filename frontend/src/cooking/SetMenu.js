@@ -78,6 +78,7 @@ const SetMenu = () => {
   const [foodIngredientMap, setFoodIngredientMap] = useState([]);
   const [validationError, setValidationError] = useState(false);
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
+  const [finalArrayForData, setFinalArrayForData] = useState([]);
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -190,7 +191,7 @@ const SetMenu = () => {
       }
     };
     getFood();
-  }, [getMkUserId, selectedDate]);
+  }, [getMkUserId, selectedDate, dataAdded]);
 
   useEffect(() => {
     const getInventory = async () => {
@@ -283,7 +284,7 @@ const SetMenu = () => {
         // if the ingredient name matches, update its perAshkash value
         return {
           ...ingredient,
-          perAshkash: Number(value).toFixed(2),
+          perAshkash: +value,
         };
       }
       return ingredient; // return the unchanged ingredient object
@@ -344,6 +345,26 @@ const SetMenu = () => {
     }
   };
 
+  // Compare arrays and get the final array with unique objects
+
+  useEffect(() => {
+    const finalArray = [];
+
+    for (const inventoryItem of inventoryItems) {
+      const found = ingredientItems.some(
+        (ingredientItem) =>
+          ingredientItem.inventory_item_id === inventoryItem._id
+      );
+      if (!found) {
+        finalArray.push(inventoryItem);
+      }
+    }
+    setFinalArrayForData(finalArray);
+  }, [ingredientItems, inventoryItems]);
+
+  // Output the final array
+  console.log(finalArrayForData);
+
   const logIngredientForFood = async () => {
     const foodIngMapObj = { ingridients: ingredientItems };
     setFoodIngredientMap([...foodIngredientMap, foodIngMapObj]);
@@ -374,6 +395,9 @@ const SetMenu = () => {
       }
     }
   };
+
+  console.log(ingredientItems);
+  console.log(inventoryItems);
 
   const handleSelect = (value, option) => {
     setInventoryItemId(option.id);
@@ -559,12 +583,12 @@ const SetMenu = () => {
                           width: "100%",
                         }}
                       >
-                        {inventoryItems && (
+                        {finalArrayForData && (
                           <Col xs={18} xl={18}>
                             <AutoComplete
                               id="ingredient-item-selected"
                               style={{ width: "100%" }}
-                              options={inventoryItems.map((item) => ({
+                              options={finalArrayForData.map((item) => ({
                                 value: item.ingridient_name,
                                 id: item._id,
                               }))}
@@ -591,101 +615,100 @@ const SetMenu = () => {
                           />
                         </Col>
                       </Row>
-                      {/* <List
-                            size="small"
+                      <List
+                        size="small"
+                        style={{
+                          width: "100%",
+                          padding: 5,
+                          height: "30vh",
+                          overflowY: "scroll",
+                          overflowX: "hidden",
+                          backgroundColor: "#fff6ed",
+                        }}
+                        bordered
+                        dataSource={ingredientItems}
+                        renderItem={(item, index) => (
+                          <List.Item
                             style={{
-                              width: "100%",
-                              padding: 5,
-                              height: "30vh",
-                              overflowY: "scroll",
-                              overflowX: "hidden",
-                              backgroundColor: "#fff6ed",
+                              margin: 5,
+                              padding: 0,
+                              display: "flex",
+                              backgroundColor: "#fff",
+                              borderRadius: 10,
+                              borderBottom: "2px solid orange",
+                              width: "98%",
                             }}
-                            bordered
-                            dataSource={ingredientItems}
-                            renderItem={(item, index) => (
-                              <List.Item
-                                style={{
-                                  margin: 5,
-                                  padding: 0,
-                                  display: "flex",
-                                  backgroundColor: "#fff",
-                                  borderRadius: 10,
-                                  borderBottom: "2px solid orange",
-                                  width: "98%",
-                                }}
-                              >
-                                <Card
-                                  style={{
-                                    width: "100%",
-                                    backgroundColor: "transparent",
-                                    border: "none",
-                                  }}
-                                  title={
-                                    <Row>
-                                      <Col xs={12} xl={12}>
-                                        {item.ingredient_name}
-                                      </Col>
-                                      <Col xs={6} xl={6}>
-                                        <Button
-                                          type="primary"
-                                          onClick={() =>
-                                            OnDelete(item.inventory_item_id)
-                                          }
-                                          shape="circle"
-                                          icon={<DeleteOutlined />}
-                                          style={{ margin: "0px 10px" }}
-                                          // size="large"
-                                        />
-                                      </Col>
-                                    </Row>
-                                  }
-                                  bordered={false}
-                                >
+                          >
+                            <Card
+                              style={{
+                                width: "100%",
+                                backgroundColor: "transparent",
+                                border: "none",
+                              }}
+                              title={
+                                <Row>
+                                  <Col xs={12} xl={12}>
+                                    {item.ingredient_name}
+                                  </Col>
+                                  <Col xs={6} xl={6}>
+                                    <Button
+                                      type="primary"
+                                      onClick={() =>
+                                        OnDelete(item.inventory_item_id)
+                                      }
+                                      shape="circle"
+                                      icon={<DeleteOutlined />}
+                                      style={{ margin: "0px 10px" }}
+                                      // size="large"
+                                    />
+                                  </Col>
+                                </Row>
+                              }
+                              bordered={false}
+                            >
+                              <Row>
+                                <Col xs={12} xl={12}>
+                                  Per Ashkhaas count
+                                </Col>
+                                <Col xs={12} xl={12}>
                                   <Row>
-                                    <Col xs={12} xl={12}>
-                                      Per Ashkhaas count
+                                    <Col xs={16} xl={16}>
+                                      <Input
+                                        // min="0"
+                                        type="number"
+                                        value={item.perAshkash}
+                                        onChange={(e) => {
+                                          handlePerAshkashChange(
+                                            e.target.value,
+                                            item.ingredient_name
+                                          );
+                                        }}
+                                        placeholder="Eg: 1200,200,etc.."
+                                      />
                                     </Col>
-                                    <Col xs={12} xl={12}>
-                                      <Row>
-                                        <Col xs={16} xl={16}>
-                                          <Input
-                                            type="text"
-                                            defaultValue={
-                                              item.perAshkash
-                                            }
-                                            onChange={(e) =>{
-                                              handlePerAshkashChange(
-                                                e.target.value,
-                                                item.ingredient_name
-                                              )}
-                                            }
-                                            placeholder="Eg: 1200,200,etc.."
-                                          />
-                                        </Col>
-                                        <Col xs={8} xl={8}>
-                                          <label>
-                                            {inventoryItems.find(
-                                              (inv) =>
-                                                inv.ingridient_name ===
-                                                item.ingredient_name
-                                            )?.ingridient_measure_unit || "kg"}
-                                          </label>
-                                        </Col>
-                                      </Row>
+                                    <Col xs={8} xl={8}>
+                                      <label>
+                                        {inventoryItems.find(
+                                          (inv) =>
+                                            inv.ingridient_name ===
+                                            item.ingredient_name
+                                        )?.ingridient_measure_unit || "kg"}
+                                      </label>
                                     </Col>
                                   </Row>
-                                </Card>
-                              </List.Item>
-                            )}
-                          /> */}
-                      <IngredientList
+                                </Col>
+                              </Row>
+                            </Card>
+                          </List.Item>
+                        )}
+                      />
+                      {/* <IngredientList
                         ingredientItems={ingredientItems}
                         OnDelete={OnDelete}
                         inventoryItems={inventoryItems}
                         handlePerAshkashChange={handlePerAshkashChange}
                         foodIndex={foodIndex}
-                      />
+                      /> */}
                       {status === 0 && (
                         <Button
                           block

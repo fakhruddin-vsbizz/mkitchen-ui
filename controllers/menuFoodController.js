@@ -55,13 +55,17 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   }
 
   if (add_type === "add_menu") {
+    console.log("here");
     if (date_of_cooking === "" || food_list.length === 0) {
       return res.status(404).json({ error: "date or food item not selected " });
     }
 
     const menu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
 
+    console.log(menu);
+
     if (menu === null) {
+      console.log("not exists");
       const foodMenu = await FoodMenu.create({
         food_list,
         total_ashkhaas,
@@ -98,7 +102,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     } else {
       menu.food_list = food_list;
       menu.total_ashkhaas = total_ashkhaas;
-      menu.mohalla_wise_ashkhaas = mohalla_wise_ashkhaas;
+      // menu.mohalla_wise_ashkhaas = mohalla_wise_ashkhaas;
       menu.date_of_cooking = date_of_cooking;
       menu.client_name = client_name;
       menu.jaman_coming = jaman_coming;
