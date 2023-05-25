@@ -43,9 +43,7 @@ const NewVendor = () => {
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-
     const type = localStorage.getItem("type");
-
 
     if (!type) {
       navigate("/");
@@ -151,28 +149,35 @@ const NewVendor = () => {
 
           <div style={{ width: "100%" }}>
             <Header
-              title={<p>
-                <Link
-                  to="/pai/vendors"
-                  style={{ color: "white", textDecoration: "none" }}
-                >
-                  <ArrowLeftOutlined />
-                </Link>{" "}
-                Add New Vendor
-              </p>}
-              comp={<center>
-                <Link to="/pai/vendors">
-                <Button style={{ backgroundColor: "white", color: "orange" }}>
-                  Cancel
-                </Button>
-                </Link>
-              </center>}
+              title={
+                <p>
+                  <Link
+                    to="/pai/vendors"
+                    style={{ color: "white", textDecoration: "none" }}
+                  >
+                    <ArrowLeftOutlined />
+                  </Link>{" "}
+                  Add New Vendor
+                </p>
+              }
+              comp={
+                <center>
+                  <Link to="/pai/vendors">
+                    <Button
+                      style={{ backgroundColor: "white", color: "orange" }}
+                    >
+                      Cancel
+                    </Button>
+                  </Link>
+                </center>
+              }
             />
             {validationError && (
               <tr>
                 <td colSpan={2}>
                   <br />
                   <Alert
+                    style={{ margin: "0.5rem" }}
                     message="Validation Error"
                     description="All Fields Must Be Filled"
                     type="error"
@@ -186,6 +191,7 @@ const NewVendor = () => {
                 <td colSpan={2}>
                   <br />
                   <Alert
+                    style={{ margin: "0.5rem" }}
                     message="Validation Error"
                     description="Plese write the correct email"
                     type="error"

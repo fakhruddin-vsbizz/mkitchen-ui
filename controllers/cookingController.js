@@ -54,6 +54,38 @@ const addLeftOverData = expressAsyncHandler(async (req, res) => {
   return res.json({ message: "operationPipeLine  added" });
 });
 
+const getReorderLeftOverData = expressAsyncHandler(async (req, res) => {
+  const { menu_id } = req.body;
+
+  try {
+    const result = await OperationPipeLine.aggregate([
+      {
+        $lookup: {
+          from: "menufoods",
+          localField: "menu_food_id",
+          foreignField: "_id",
+          as: "menu_food_data",
+        },
+      },
+      {
+        $project: {
+          date_of_cooking: {
+            $arrayElemAt: ["$menu_food_data.date_of_cooking", 0],
+          },
+          reorder_logs: 1,
+          leftover: 1,
+        },
+      },
+    ]);
+
+    res.status(200).json(result);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
 module.exports = {
   addLeftOverData,
+  getReorderLeftOverData,
 };

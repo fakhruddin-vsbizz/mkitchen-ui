@@ -29,23 +29,26 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `0${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
 const dateFormatter = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
+    dateObj.getMonth() + 1 < 10
+      ? `${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
   }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+  return formattedDate;
+};
 
+const TodaysDate = dateFormatterForToday();
 
-const TodaysDate = dateFormatterForToday()
-
-const  newTodaysDate = dateFormatter()
+const newTodaysDate = dateFormatter();
 
 const Cooking = () => {
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
@@ -53,6 +56,7 @@ const Cooking = () => {
   const [inventoryId, setInventoryId] = useState();
   const [reorderQuantity, setReorderQuantity] = useState();
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [reorderFullFilled, setReorderFullFilled] = useState();
 
   const [leftOverQuantity, setLeftOverQuantity] = useState();
 
@@ -167,6 +171,7 @@ const Cooking = () => {
           const res = await data.json();
           if (res) {
             setTotalAshkashCount(res);
+            console.log(res);
           }
         }
       }
@@ -232,6 +237,21 @@ const Cooking = () => {
     setInventoryId(inventoryId);
     setLeftOverQuantity(quantity);
   };
+  console.log(reorderLogs);
+  console.log(reorderFullFilled);
+
+  useEffect(() => {
+    if (reorderLogs) {
+      reorderLogs.forEach((ele, index) => {
+        if (ele.reorder_delivery_status === true) {
+          setReorderFullFilled(false);
+          return;
+        } else {
+          setReorderFullFilled(true);
+        }
+      });
+    }
+  }, [reorderLogs]);
 
   useEffect(() => {
     const getData = async () => {
@@ -267,20 +287,17 @@ const Cooking = () => {
     const updateReorderLog = async () => {
       if (reorderLogs && update)
         try {
-          const data = await fetch(
-            "/api/cooking/ingredients",
-            {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                type: "update_operation_pipeline_reorder_logs",
-                menu_id: menuFoodId,
-                reorder_logs: reorderLogs,
-              }),
-            }
-          );
+          const data = await fetch("/api/cooking/ingredients", {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              type: "update_operation_pipeline_reorder_logs",
+              menu_id: menuFoodId,
+              reorder_logs: reorderLogs,
+            }),
+          });
 
           if (data) {
             const res = await data.json();
@@ -307,28 +324,29 @@ const Cooking = () => {
   };
 
   const cookingDone = async () => {
-    try {
-      const data = await fetch("/api/operation_pipeline", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          type: "update_operation_pipeline_status",
-          menu_id: menuFoodId,
-          status: 3,
-        }),
-      });
+    if (reorderFullFilled === true) {
+      try {
+        const data = await fetch("/api/operation_pipeline", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "update_operation_pipeline_status",
+            menu_id: menuFoodId,
+            status: 3,
+          }),
+        });
 
-      if (data) {
-        const res = await data.json();
-        setVisible(true);
-      }
-    } catch (error) {}
+        if (data) {
+          const res = await data.json();
+          setVisible(true);
+        }
+      } catch (error) {}
+    }
   };
 
   const returnIngToInventory = async (inventory_id, ingName) => {
-
     try {
       const data = await fetch("/api/cooking/add_leftover", {
         method: "POST",
@@ -404,13 +422,17 @@ const Cooking = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Cooking Operation"
-              comp={<Row>
-                <Col xs={24} xl={12}>
-                  Select the date:
-                  <br />
-                  <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
-                </Col>
-                {/* <Col xs={24} xl={12}>
+              comp={
+                <Row>
+                  <Col xs={24} xl={12}>
+                    Select the date:
+                    <br />
+                    <DatePicker
+                      defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
+                      onChange={handleDateChange}
+                    />
+                  </Col>
+                  {/* <Col xs={24} xl={12}>
                   Select the client:
                   <br />
                   <Select
@@ -423,7 +445,8 @@ const Cooking = () => {
                     ]}
                   />
                 </Col> */}
-              </Row>}
+                </Row>
+              }
             />
 
             <Row style={{ padding: 10 }}>
@@ -433,9 +456,24 @@ const Cooking = () => {
                     <td colSpan={2}>
                       <br />
                       <Alert
+                        style={{ margin: "0.5rem" }}
                         message="Menu Cooked"
                         description="This Menu has been cooked"
                         type="success"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
+                {reorderFullFilled === false && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        style={{ margin: "0.5rem" }}
+                        message="Not Recieved Re-Order"
+                        description="Reorder Item is not accepted"
+                        type="error"
                         closable
                       />
                     </td>
@@ -446,6 +484,7 @@ const Cooking = () => {
                     <td colSpan={2}>
                       <br />
                       <Alert
+                        style={{ margin: "0.5rem" }}
                         message="Menu Not Procured"
                         description="This Menu is Not Procured"
                         type="error"
@@ -733,16 +772,21 @@ const Cooking = () => {
                   </div>
                 )}
               </Col>
-              {getFoodList && status !== 0 && status !== 1 && status === 2 && (
-                <Button
-                  block
-                  style={{ height: "160%", fontSize: "200%" }}
-                  type="primary"
-                  onClick={cookingDone}
-                >
-                  Mark Cooking Done
-                </Button>
-              )}
+
+              {reorderFullFilled === true &&
+                getFoodList &&
+                status !== 0 &&
+                status !== 1 &&
+                status === 2 && (
+                  <Button
+                    block
+                    style={{ height: "160%", fontSize: "200%" }}
+                    type="primary"
+                    onClick={cookingDone}
+                  >
+                    Mark Cooking Done
+                  </Button>
+                )}
             </Row>
           </div>
         </div>

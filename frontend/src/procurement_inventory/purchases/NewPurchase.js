@@ -387,6 +387,8 @@ const NewPurchase = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
+                      style={{ margin: "0.5rem" }}
+
                             message="Validation Error"
                             description="Please select the ingridients and add values !!"
                             type="error"
@@ -400,6 +402,8 @@ const NewPurchase = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
+                      style={{ margin: "0.5rem" }}
+
                             message="Validation Error"
                             description="Please fill all the fields !!"
                             type="error"

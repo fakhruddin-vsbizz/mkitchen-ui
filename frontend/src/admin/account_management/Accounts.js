@@ -160,21 +160,18 @@ const Accounts = () => {
 
   const updateMohallAdminEmail = async () => {
     try {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: selectedMohallaUser,
-            email: newEmailMohalla,
-            usertype: "Mohalla Admin",
-            action: "update_email",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: selectedMohallaUser,
+          email: newEmailMohalla,
+          usertype: "Mohalla Admin",
+          action: "update_email",
+        }),
+      });
       if (data) {
         const res = await data.json();
         if (res.message) {
@@ -194,21 +191,18 @@ const Accounts = () => {
   };
   const updateCookingDepartmentEmail = async () => {
     try {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: selectedCookingUser,
-            email: newEmailCooking,
-            usertype: "Cooking",
-            action: "update_email",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: selectedCookingUser,
+          email: newEmailCooking,
+          usertype: "Cooking",
+          action: "update_email",
+        }),
+      });
       if (data) {
         const res = await data.json();
         if (res.message) {
@@ -228,21 +222,18 @@ const Accounts = () => {
 
   const updatePandIEmail = async () => {
     try {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            username: selectedPandIUser,
-            email: newEmailPandI,
-            usertype: "Procurement Inventory",
-            action: "update_email",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: selectedPandIUser,
+          email: newEmailPandI,
+          usertype: "Procurement Inventory",
+          action: "update_email",
+        }),
+      });
       if (data) {
         const res = await data.json();
         if (res.message) {
@@ -288,24 +279,25 @@ const Accounts = () => {
   }, [newpasswordPandI, newconfirmpasswordPandI]);
 
   const updateUserPasswordMohalla = async (usertype) => {
+    console.log("updating 1");
+
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
-        const data = await fetch(
-          "/api/admin/account_management",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: selectedMohallaUser,
-              usertype: usertype,
-              password: newConfirmpasswordMohalla,
-              action: "update_password",
-            }),
-          }
-        );
+        console.log("updating 2");
+        const data = await fetch("/api/admin/account_management", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: selectedMohallaUser,
+            usertype: usertype,
+            password: newConfirmpasswordMohalla,
+            action: "update_password",
+          }),
+        });
         if (data) {
+          console.log(data);
           setNewpasswordMohalla("");
           setNewConfirmpasswordMohalla("");
           setIsModalOpen(false);
@@ -329,21 +321,18 @@ const Accounts = () => {
         let demoName =
           usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
 
-        const data = await fetch(
-          "/api/admin/account_management",
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: demoName,
-              usertype: usertype,
-              password: demoPass,
-              action: "update_password",
-            }),
-          }
-        );
+        const data = await fetch("/api/admin/account_management", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: demoName,
+            usertype: usertype,
+            password: demoPass,
+            action: "update_password",
+          }),
+        });
         if (data) {
           setNewConfirmpassword("");
           setNewpassword("");
@@ -360,19 +349,16 @@ const Accounts = () => {
 
   useEffect(() => {
     const getMohallas = async () => {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usertype: "Mohalla Admin",
-            action: "get_user",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype: "Mohalla Admin",
+          action: "get_user",
+        }),
+      });
       if (data) {
         console.log(data.json().then((data) => setMohallaUsers(data)));
       }
@@ -382,16 +368,13 @@ const Accounts = () => {
 
   useEffect(() => {
     const getCookingUsers = async () => {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ usertype: "Cooking", action: "get_user" }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ usertype: "Cooking", action: "get_user" }),
+      });
       if (data) {
         console.log(
           data.json().then((data) => setcCookingDepartmentUser(data))
@@ -403,19 +386,16 @@ const Accounts = () => {
 
   useEffect(() => {
     const getPandIUsers = async () => {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usertype: "Procurement Inventory",
-            action: "get_user",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype: "Procurement Inventory",
+          action: "get_user",
+        }),
+      });
       if (data) {
         console.log(data.json().then((data) => setpandiDepartmentUser(data)));
       }
@@ -426,22 +406,19 @@ const Accounts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await fetch(
-        "/api/admin/account_management",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            usertype,
-            username,
-            email,
-            password,
-            action: "create_mk",
-          }),
-        }
-      );
+      const data = await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype,
+          username,
+          email,
+          password,
+          action: "create_mk",
+        }),
+      });
 
       const res = await data.json();
 
@@ -627,6 +604,7 @@ const Accounts = () => {
                     <td colSpan={2}>
                       <br />
                       <Alert
+                        style={{ margin: "0.5rem" }}
                         message="Validation Error"
                         description="User already exists. Please try a different user email."
                         type="error"
@@ -640,6 +618,7 @@ const Accounts = () => {
                     <td colSpan={2}>
                       <br />
                       <Alert
+                        style={{ margin: "0.5rem" }}
                         message="Validation Error"
                         description="All Fields Must Be Filled"
                         type="error"
@@ -653,6 +632,7 @@ const Accounts = () => {
                     <td colSpan={2}>
                       <br />
                       <Alert
+                        style={{ margin: "0.5rem" }}
                         message="Validation Error"
                         description="Plese write the correct email"
                         type="error"
@@ -791,6 +771,7 @@ const Accounts = () => {
                             <td colSpan={2}>
                               <br />
                               <Alert
+                                style={{ margin: "0.5rem" }}
                                 message="Validation Error"
                                 description=" Invalid Email. Please try again"
                                 type="error"
@@ -846,6 +827,7 @@ const Accounts = () => {
                             <td colSpan={2}>
                               <br />
                               <Alert
+                                style={{ margin: "0.5rem" }}
                                 message="Validation Error"
                                 description=" password do not match. Please try again"
                                 type="error"
@@ -953,6 +935,7 @@ const Accounts = () => {
                                 <td colSpan={2}>
                                   <br />
                                   <Alert
+                                    style={{ margin: "0.5rem" }}
                                     message="Validation Error"
                                     description="User not selected or invalid email !!"
                                     type="error"
@@ -1012,6 +995,7 @@ const Accounts = () => {
                                 <td colSpan={2}>
                                   <br />
                                   <Alert
+                                    style={{ margin: "0.5rem" }}
                                     message="Validation Error"
                                     description="Password do not match or user not selected. Please try again"
                                     type="error"
@@ -1175,6 +1159,7 @@ const Accounts = () => {
                                 <td colSpan={2}>
                                   <br />
                                   <Alert
+                                    style={{ margin: "0.5rem" }}
                                     message="Validation Error"
                                     description="User not selected or invalid email !!"
                                     type="error"
@@ -1235,6 +1220,7 @@ const Accounts = () => {
                                 <td colSpan={2}>
                                   <br />
                                   <Alert
+                                    style={{ margin: "0.5rem" }}
                                     message="Validation Error"
                                     description="Password do not match or user not selected. Please try again"
                                     type="error"
@@ -1341,6 +1327,7 @@ const Accounts = () => {
                             <td colSpan={2}>
                               <br />
                               <Alert
+                                style={{ margin: "0.5rem" }}
                                 message="Validation Error"
                                 description="Password do not match . Please try again"
                                 type="error"
@@ -1354,6 +1341,7 @@ const Accounts = () => {
                             <td colSpan={2}>
                               <br />
                               <Alert
+                                style={{ margin: "0.5rem" }}
                                 message="Validation Error"
                                 description="All fields required"
                                 type="error"
@@ -1367,6 +1355,7 @@ const Accounts = () => {
                             <td colSpan={2}>
                               <br />
                               <Alert
+                                style={{ margin: "0.5rem" }}
                                 message="Validation Error"
                                 description="Old Password is incorrect "
                                 type="error"
