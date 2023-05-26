@@ -60,6 +60,7 @@ const Dispatch = () => {
   const [viewDispatchedData, setViewDispatchedData] = useState();
   const [finaldipatchData, setFinalDispatchData] = useState([]);
   const [statusOP, setStatusOP] = useState(false);
+  const [dispatchDoneStatus, setDispatchDoneStatus] = useState(false)
 
   //validation stats
   const [userSelectedError, setUserSelectedError] = useState(false);
@@ -309,6 +310,7 @@ const Dispatch = () => {
     }
   };
   const DispatchDone = async () => {
+    
     try {
       const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
@@ -325,6 +327,7 @@ const Dispatch = () => {
       if (data) {
         const res = await data.json();
         setVisible(true);
+        setDispatchDoneStatus(true)
       }
     } catch (error) {
       console.log(error);
@@ -340,7 +343,9 @@ const Dispatch = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+          <Button key="ok" type="primary" onClick={() => {
+            
+            setVisible(false)}}>
             OK
           </Button>,
         ]}
@@ -725,6 +730,7 @@ const Dispatch = () => {
                 status === 3 && (
                   <Button
                     block
+                    disabled={dispatchDoneStatus}
                     style={{ height: "160%", fontSize: "200%" }}
                     type="primary"
                     onClick={DispatchDone}

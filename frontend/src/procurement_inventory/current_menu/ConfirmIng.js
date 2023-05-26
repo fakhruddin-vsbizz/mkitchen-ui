@@ -46,7 +46,7 @@ const ConfirmIng = () => {
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
 
-  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(true)
+  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false)
 
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
@@ -224,7 +224,7 @@ const ConfirmIng = () => {
         onCancel={() => setVisible(false)}
         footer={[
           <Button key="ok" type="primary" onClick={() => {
-            setFinalizeBtnVisible(false)            
+            setFinalizeBtnVisible(true)            
             setVisible(false)}}>
             OK
           </Button>,
@@ -313,7 +313,7 @@ const ConfirmIng = () => {
                                   fontSize: "130%",
                                 }}
                               >
-                                {item.requiredVolume} {item.unit}
+                                {item.requiredVolume.toFixed(2)} {item.unit}
                               </label>
                             </Col>
                             <Col

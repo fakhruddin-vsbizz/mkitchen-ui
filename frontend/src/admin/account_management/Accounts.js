@@ -548,6 +548,12 @@ const Accounts = () => {
               open={newMohallaPopup}
               onOk={handleNMOk}
               onCancel={handleNMCancel}
+              footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
+              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={handleSubmit} type="primary" block>
+                      Create new MK Account
+              </Button>
+              <Button style={{width: "40%"}} onClick={handleNMCancel}>Cancel</Button>
+              </div>}
             >
               <table style={{ width: "100%" }}>
                 <tr>
@@ -647,14 +653,14 @@ const Accounts = () => {
                     </td>
                   </tr>
                 )}
-                <tr>
+                {/* <tr>
                   <td colSpan={2}>
                     <br />
-                    <Button onClick={handleSubmit} type="primary" block>
+                    <Button style={{backgroundColor: "darkred"}} onClick={handleSubmit} type="primary" block>
                       Create new MK Account
                     </Button>
                   </td>
-                </tr>
+                </tr> */}
               </table>
             </Modal>
 
@@ -719,7 +725,7 @@ const Accounts = () => {
                                 </Col>
                                 <Col xs={8} xl={8}>
                                   Email address: <br />
-                                  <label style={{ fontSize:'120%' }}><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;mohalladmin@gmail.com</label>
+                                  <label style={{ fontSize:'120%' }}><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;{item.email}</label>
                                 </Col>
                                 <Col xs={8} xl={8}>
                                   Change Mohalla account's email and password: <br />
@@ -742,9 +748,9 @@ const Accounts = () => {
                     </Card>
 
                     <Modal
-                      title=<h3 style={{ color: "#E86800" }}>
+                      title={<h3 style={{ color: "#E86800" }}>
                         Account setting
-                      </h3>
+                      </h3>}
                       open={isModalOpen}
                       onOk={handleOk}
                       onCancel={handleCancel}
@@ -858,7 +864,7 @@ const Accounts = () => {
                       <b>Cooking Department</b>
                     </label>
                     <Modal
-                      visible={visible}
+                      open={visible}
                       onOk={handleOk}
                       onCancel={handleOk}
                       footer={[
@@ -953,7 +959,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updateCookingDepartmentEmail}
                                   type="primary"
-                                  style={{ backgroundColor: 'red' }}
+                                  style={{ backgroundColor: 'darkred' }}
                                 >
                                   Change Email
                                 </Button>
@@ -1041,7 +1047,7 @@ const Accounts = () => {
                                 <br />
                                 <Button
                                   onClick={() => updateUserPassword("Cooking")}
-                                  style={{ width: "100%", backgroundColor: 'red' }}
+                                  style={{ width: "100%", backgroundColor: 'darkred' }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1195,7 +1201,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updatePandIEmail}
                                   type="primary"
-                                  style={{ backgroundColor:'red' }}
+                                  style={{ backgroundColor:'darkred' }}
                                 >
                                   Change Email
                                 </Button>
@@ -1285,7 +1291,7 @@ const Accounts = () => {
                                   onClick={() =>
                                     updateUserPassword("Procurement Inventory")
                                   }
-                                  style={{ width: "100%", backgroundColor:'red' }}
+                                  style={{ width: "100%", backgroundColor:'darkred' }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1301,6 +1307,7 @@ const Accounts = () => {
                   </div>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Admin Password Reset" key="4">
+                  <center>
                   <Col xs={24} xl={12} style={{ padding: "2%" }}>
                     <Card
                       bordered={true}
@@ -1316,7 +1323,7 @@ const Accounts = () => {
                       }}
                     >
                       <Modal
-                        visible={visible}
+                        open={visible}
                         onOk={handleOk}
                         onCancel={handleOk}
                         footer={[
@@ -1420,7 +1427,8 @@ const Accounts = () => {
                             <br />
                             <Button
                               onClick={updatePasswordAdmin}
-                              style={{ width: "50%" }}
+                              style={{ width: "100%", backgroundColor:'darkred'
+                             }}
                               type="primary"
                             >
                               Change Password
@@ -1430,6 +1438,7 @@ const Accounts = () => {
                       </table>
                     </Card>
                   </Col>
+                  </center>
                 </Tabs.TabPane>
               </Tabs>
             </div>
