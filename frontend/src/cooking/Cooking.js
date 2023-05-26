@@ -56,7 +56,7 @@ const Cooking = () => {
   const [inventoryId, setInventoryId] = useState();
   const [reorderQuantity, setReorderQuantity] = useState();
   const [inventoryItems, setInventoryItems] = useState([]);
-  const [reorderFullFilled, setReorderFullFilled] = useState();
+  const [reorderFullFilled, setReorderFullFilled] = useState(true);
 
   const [leftOverQuantity, setLeftOverQuantity] = useState();
 
@@ -69,6 +69,7 @@ const Cooking = () => {
   const [status, setStatus] = useState();
 
   const [getFoodList, setGetFoodList] = useState();
+  const [cookingDoneStatus, setCookingDoneStatus] = useState(false)
 
   const navigate = useNavigate();
 
@@ -399,7 +400,9 @@ const Cooking = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+          <Button key="ok" type="primary" onClick={() => {
+            setCookingDoneStatus(true)
+            setVisible(false)}}>
             OK
           </Button>,
         ]}
@@ -570,8 +573,8 @@ const Cooking = () => {
                                                 fontSize: "120%",
                                               }}
                                             >
-                                              {ing.perAshkash *
-                                                totalAshkashCount}
+                                              {(ing.perAshkash *
+                                                totalAshkashCount).toFixed(2)}
                                                  &nbsp;
                                                 {inventoryItems &&
                                                 inventoryItems
@@ -778,6 +781,7 @@ const Cooking = () => {
                 status === 2 && (
                   <Button
                     block
+                    disabled={cookingDoneStatus}
                     style={{ height: "160%", fontSize: "200%" }}
                     type="primary"
                     onClick={cookingDone}

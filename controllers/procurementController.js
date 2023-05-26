@@ -45,7 +45,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         return {
           inventoryItemId,
           ingridientName: group.ingridientName,
-          total_quantity: inventory.total_volume - requiredVolume,
+          total_quantity: (inventory.total_volume - requiredVolume).toFixed(2),
           unit: group.unit ?? inventory.ingridient_measure_unit,
           requiredVolume,
           sufficient: inventory.total_volume >= requiredVolume,

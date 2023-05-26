@@ -79,7 +79,7 @@ const SetMenu = () => {
   const [validationError, setValidationError] = useState(false);
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
   const [finalArrayForData, setFinalArrayForData] = useState([]);
-  const [pushToInventoryVisible, setPushToInventoryVisible] = useState(true)
+  const [pushToInventoryVisible, setPushToInventoryVisible] = useState(false)
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -214,7 +214,9 @@ const SetMenu = () => {
             setupdatedIngredientsList(res);
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     getInventory();
   }, [dataAdded]);
@@ -337,6 +339,7 @@ const SetMenu = () => {
       if (data) {
         const res = await data.json();
         setAllIngridients([]);
+        setPushToInventoryVisible(true)
         setVisible(true);
         setFoodIndex("");
         setIngredientItems([]);
@@ -424,7 +427,6 @@ const SetMenu = () => {
         onCancel={() => setVisible(false)}
         footer={[
           <Button key="ok" type="primary" onClick={() => {
-            setPushToInventoryVisible(false)
             setVisible(false)}}>
             OK
           </Button>,
@@ -724,7 +726,7 @@ const SetMenu = () => {
                 </Col>
               </Row>
             </div>
-            {status === -1 && (
+            {(status === -1 && totalAshkash === 0) && (
               <center>
                 <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
                   <label style={{ fontSize: '800%', color: 'darkred' }}>
@@ -735,7 +737,7 @@ const SetMenu = () => {
                 </div>
               </center>
             )}
-            {totalAshkash === 0 && (
+            {(totalAshkash === 0 && status === 0) && (
               <center>
               <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
                 <label style={{ fontSize: '800%', color: 'darkred' }}>

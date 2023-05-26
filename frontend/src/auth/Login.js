@@ -172,12 +172,12 @@ const Login = () => {
         }}
       >
         <Modal
-          title=<h3>
+          title={<h3>
             <CheckCircleFilled
               style={{ color: "green", fontSize: 28, marginRight: 10 }}
             />
             Reset Password
-          </h3>
+          </h3>}
           open={open}
           okText="Reset Password"
           onOk={handlePasswordReset}
@@ -221,18 +221,17 @@ const Login = () => {
             </tr>
           )}
         </Modal>
-        <Row style={{ height: "100% " }}>
-          <Col xs={24} xl={12} style={{ padding: "5%" }}>
-            <center>
-              <Image width={"100%"} preview={false} src={logo} />
-              <Divider
+        <Row style={{ height: "10%" }}>
+          <Col xs={24} xl={6}>
+              <Image width={"50%"} preview={false} src={logo} />
+              {/* <Divider
                 plain
                 style={{
                   backgroundColor: "orange",
                   height: 5,
                   borderRadius: 20,
                 }}
-              ></Divider>
+              ></Divider> */}
               {/* <Radio.Group
               defaultValue={0}
               // size="small"
@@ -248,9 +247,9 @@ const Login = () => {
                 Cooking
               </Radio.Button>
             </Radio.Group> */}
-            </center>
+       
           </Col>
-          <Col xs={24} xl={12} style={{ padding: "5%" }}>
+          <Col xs={24} xl={18} style={{ padding: "5%" }}>
             {linkSent && (
               <h3>
                 <CheckCircleFilled
@@ -263,9 +262,9 @@ const Login = () => {
             <Card
               bordered={true}
               style={{
-                width: "100%",
+                width: "60%",
                 border: "2px solid #e08003",
-                marginTop: 20,
+                marginTop: 50,
               }}
               className="dongle-font-class"
             >
@@ -283,7 +282,7 @@ const Login = () => {
                     width={"40%"}
                     preview={false}
                     src={whiteLogo}
-                    style={{ filter: "invert(3)", margin: "50px 30px" }}
+                    style={{ filter: "invert(3)", margin: "40px 30px" }}
                   />
                 </center>
                 <center style={{ width: "100%", marginBottom: -50 }}>
@@ -325,7 +324,7 @@ const Login = () => {
                   <tr
                     style={{
                       textAlign: "left",
-                      height: "10vh",
+                      height: "3vh",
                       paddingTop: 30,
                     }}
                   >
@@ -346,9 +345,9 @@ const Login = () => {
                     </td>
                   </tr>
 
-                  <Button onClick={(e) => setOpen(true)}>
+                  <Link onClick={(e) => setOpen(true)}>
                     Forget Password
-                  </Button>
+                  </Link>
 
                   {error && (
                     <tr>
@@ -368,6 +367,7 @@ const Login = () => {
               </table>
             </Card>
           </Col>
+          <Col xs={24} xl={2} style={{ padding: "5%" }}></Col>
         </Row>
       </ConfigProvider>
     </div>

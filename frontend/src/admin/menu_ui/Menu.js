@@ -43,6 +43,7 @@ const Menu = () => {
   const [status, setStatus] = useState();
 
   const [ingridientList, setIngridientList] = useState([]);
+  const [menuConfimStatus, setMenuConfimStatus] = useState(false)
 
   const [visible, setVisible] = useState(false);
 
@@ -357,7 +358,9 @@ const Menu = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+          <Button key="ok" type="primary" onClick={() => {
+            setMenuConfimStatus(true)
+            setVisible(false)}}>
             OK
           </Button>,
         ]}
@@ -630,9 +633,10 @@ const Menu = () => {
                   <div style={{ width: '100%', textAlign: 'right' }}>
                     <Button
                       onClick={createMenu}
+                      disabled={menuConfimStatus}
                       style={{
                         width: "100%",
-                        backgroundColor: "#ffa500",
+                        backgroundColor: "maroon",
                         color: "white",
                         height:'170%',
                         fontSize: '120%',

@@ -464,7 +464,7 @@ const ProcedureLogs = () => {
                                     Required Amount: <br/>
                                     <label style={{ fontSize: "120%" }}>
                                       <i class="fa-solid fa-scale-unbalanced"></i> &nbsp;&nbsp;
-                                        {item.perAshkash * totalAshkash}{" "}
+                                        {(item.perAshkash * totalAshkash).toFixed(2)}{" "}
                                         {inventoryItems
                                           .filter(
                                             (inventory) =>
@@ -515,7 +515,7 @@ const ProcedureLogs = () => {
                                       )
                                       .map(
                                         (filteredItem) =>
-                                          filteredItem.price * totalAshkash
+                                          (filteredItem.price * (item.perAshkash * totalAshkash).toFixed(2)).toFixed(2)
                                       )}
                                      &nbsp; / -
                                   </label>
