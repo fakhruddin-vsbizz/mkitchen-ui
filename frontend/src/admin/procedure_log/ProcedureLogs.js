@@ -86,6 +86,7 @@ const ProcedureLogs = () => {
           const res = await data.json();
           if (res) {
             setReviewData(res);
+            console.log(res);
           }
         }
       }
@@ -238,6 +239,7 @@ const ProcedureLogs = () => {
           const res = await data.json();
           if (res) {
             setReviewData(res);
+            
           }
         }
       }
@@ -302,7 +304,7 @@ const ProcedureLogs = () => {
                     {/* <h2 style={{ color: "#e08003" }}>
                       Menu Decision & Delivery
                     </h2> */}
-                    {reviewData && (
+                    {reviewData.length > 0 ? (
                       <List
                         style={{ width: "100%" }}
                         dataSource={reviewData}
@@ -322,47 +324,65 @@ const ProcedureLogs = () => {
                               style={{
                                 width: "100%",
                                 borderColor: "transparent",
-                                color: "#e08003",
                               }}
                             >
-                              <Row>
-                                <Col xs={12} xl={4}>
-                                  <label style={{ fontSize: "120%" }}>
-                                    <span>{item.username}</span>
+                              <Row style={{ width: '100%' }}>
+                                <Col xs={12} xl={24} style={{ padding: '1%' }}>
+                                  <label style={{ fontSize: "150%", fontWeight: 700 }}>
+                                    <span><i class="fa-solid fa-house-user"></i>&nbsp;&nbsp;{item.username}</span>
                                   </label>
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                  Total Daigh: 2
+                                  Total Daigh:<br/>
+                                  <label style={{ fontSize: '130%' }}><i class="fa-solid fa-flask"></i> &nbsp;&nbsp; 2</label>
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                  Total Weight : 180
+                                  Total Weight : <br/>
+                                  <label style={{ fontSize: '130%' }}><i class="fa-solid fa-scale-unbalanced-flip"></i>&nbsp;&nbsp;180</label>
                                 </Col>
                                 <Col xs={6} xl={4}>
-                                  <i class="fa-solid fa-star"></i>{" "}
-                                  &nbsp;&nbsp;&nbsp; {item.review}/5
+                                  Ratings (out of 5) : <br/>
+                                  <label style={{ fontSize: '130%' }}><i class="fa-solid fa-star"></i>&nbsp;&nbsp;{item.review}</label>
                                 </Col>
-                                <Col xs={6} xl={4}>
-                                  Review: &nbsp;&nbsp;&nbsp; {item.review}/5
+                                <Col xs={6} xl={6}>
+                                  Review for the food : <br/>
+                                  <label style={{ fontSize: '130%' }}><i class="fa-solid fa-magnifying-glass"></i>&nbsp;&nbsp;{item.remark}</label>
                                 </Col>
-                                <Col xs={6} xl={4}>
+                                <Col xs={6} xl={6}>
+                                  <center>
+                                  Has the daigs been delivered?<br/>
+                                  
+                                  <label style={{ fontSize: '130%' }}>
+                                  <i class="fa-solid fa-truck-ramp-box"></i> &nbsp;&nbsp;&nbsp;&nbsp;
                                   {item.review ? (
-                                    <div>
+                                    <label style={{ color: 'green' }}>
                                       <i class="fa-solid fa-circle-check"></i>{" "}
                                       Delivered
-                                    </div>
+                                    </label>
                                   ) : (
-                                    <div>
+                                    <label style={{ color: 'orange' }}>
                                       <i class="fa-regular fa-clock"></i>{" "}
                                       Pending
-                                    </div>
+                                    </label>
                                   )}
+                                  </label>
+                                  </center>
                                 </Col>
                               </Row>
                             </Card>
                           </List.Item>
                         )}
                       />
-                    )}
+                    ) : 
+                        <center>
+                          <div style={{ marginTop: '8%' }}>
+                            <label style={{ fontSize: '800%', color: 'darkred' }}>
+                              <i class="fa-solid fa-hourglass-start"></i>
+                            </label>
+                            <br/>
+                            <label style={{ fontSize: '120%', width:'50%' }}>Review has not yet been set. Please visit after some time.</label>
+                          </div>
+                        </center>}
                     {/* <List
                         style={{ width: "100%" }}
                         dataSource={reviewData}
@@ -420,53 +440,48 @@ const ProcedureLogs = () => {
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
-                    {ingridientList && (
+                    {ingridientList.length > 0 ? (
                       <List
                         dataSource={ingridientList}
                         renderItem={(item, index) => (
-                          <List.Item style={{ border: "none" }}>
-                            <Card style={{ width: "100%", border: "none" }}>
-                              <Row
-                                style={{
-                                  padding: 20,
-                                  display: "flex",
+                          <List.Item style={{ border: "none", padding:'0px' }}>
+                            <div
+                              style={{
+                                padding: 10,
                                   backgroundColor: "#fff",
-                                  borderRadius: 10,
-                                  borderBottom: "2px solid orange",
+                                  borderRadius: 5,
+                                  border: "2px solid orange",
                                   width: "100%",
-                                  color: "#e08003",
-                                }}
-                              >
-                                <Col xs={12} xl={6}>
-                                  <center>
-                                    <label style={{ fontSize: "120%" }}>
-                                      {item.ingredient_name}
+                              }}
+                            >
+                              <Row>
+                                <Col xs={12} xl={24} style={{ padding: '1%' }}>
+                                    <label style={{ fontSize: "160%" }}>
+                                    <i class="fa-solid fa-mortar-pestle"></i> &nbsp;&nbsp;{item.ingredient_name}
                                     </label>
-                                  </center>
                                 </Col>
-                                <Col xs={12} xl={6}>
-                                  <center>
-                                    Required Amount:
-                                    <br />
-                                    <b>
-                                      {item.perAshkash * totalAshkash}{" "}
-                                      {inventoryItems
-                                        .filter(
-                                          (inventory) =>
-                                            inventory._id ===
-                                            item.inventory_item_id
-                                        )
-                                        .map(
-                                          (ele) => ele.ingridient_measure_unit
-                                        )}
-                                    </b>
-                                  </center>
+                                <Col xs={12} xl={8}>
+                                    Required Amount: <br/>
+                                    <label style={{ fontSize: "120%" }}>
+                                      <i class="fa-solid fa-scale-unbalanced"></i> &nbsp;&nbsp;
+                                        {item.perAshkash * totalAshkash}{" "}
+                                        {inventoryItems
+                                          .filter(
+                                            (inventory) =>
+                                              inventory._id ===
+                                              item.inventory_item_id
+                                          )
+                                          .map(
+                                            (ele) => ele.ingridient_measure_unit
+                                          )}
+                                    </label>
+                                    
                                 </Col>
-                                <Col xs={12} xl={6}>
-                                  <center>
+                                <Col xs={12} xl={8}>
                                     Leftover amount:
                                     <br />
-                                    <b>
+                                    <label style={{ fontSize: "120%" }}>
+                                    <i class="fa-solid fa-chart-pie"></i> &nbsp;&nbsp;
                                       {leftOverItems && leftOverItems[index] ? (
                                         leftOverItems[index].leftover_amount
                                       ) : (
@@ -483,33 +498,43 @@ const ProcedureLogs = () => {
                                           .map(
                                             (ele) => ele.ingridient_measure_unit
                                           )}
-                                    </b>
-                                  </center>
-                                </Col>
-                                <Col xs={12} xl={6}>
-                                  <center>
-                                    <label style={{ fontSize: "120%" }}>
-                                      Rs.
-                                      {inventoryItems
-                                        .filter(
-                                          (inventory) =>
-                                            inventory._id ===
-                                            item.inventory_item_id
-                                        )
-                                        .map(
-                                          (filteredItem) =>
-                                            filteredItem.price * totalAshkash
-                                        )}
-                                      /-
                                     </label>
-                                  </center>
+                                    
+                                </Col>
+                                <Col xs={12} xl={8}>
+                                  Total procurement amount:
+                                  <br />
+                                  <label style={{ fontSize: "120%" }}>
+                                  <i class="fa-solid fa-indian-rupee-sign"></i>
+                                    &nbsp;&nbsp;
+                                    {inventoryItems
+                                      .filter(
+                                        (inventory) =>
+                                          inventory._id ===
+                                          item.inventory_item_id
+                                      )
+                                      .map(
+                                        (filteredItem) =>
+                                          filteredItem.price * totalAshkash
+                                      )}
+                                     &nbsp; / -
+                                  </label>
                                 </Col>
                               </Row>
-                            </Card>
+                            </div>
+                              
                           </List.Item>
                         )}
                       />
-                    )}
+                    ) : <center>
+                          <div style={{ marginTop: '8%', marginBottom: '8%' }}>
+                            <label style={{ fontSize: '800%', color: 'darkred' }}>
+                              <i class="fa-solid fa-hourglass-start"></i>
+                            </label>
+                            <br/>
+                            <label style={{ fontSize: '120%', width:'50%' }}>Review has not yet been set. Please visit after some time.</label>
+                          </div>
+                        </center>}
                     {/* <Card style={{ width: "100%", border: "none" }}>
 											<Row
 												style={{

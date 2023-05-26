@@ -116,6 +116,7 @@ const VerifyVendor = () => {
                         style={{
                           width: "100%",
                           backgroundColor: "transparent",
+                          padding: '0px'
                         }}
                       >
                         <Row
@@ -124,41 +125,49 @@ const VerifyVendor = () => {
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid orange",
                             width: "100%",
+                            marginBottom:'4px'
                           }}
                         >
                           <Col
-                            xs={6}
-                            xl={6}
-                            style={{ fontSize: "150%", color: "#E08003" }}
+                            xs={24}
+                            xl={24}
+                            style={{ fontSize: "150%", padding:'1%' }}
                           >
-                            {item.vendor_name}
+                            <i class="fa-solid fa-store"></i> &nbsp;&nbsp; {item.vendor_name}
                           </Col>
-                          <Col xs={6} xl={6}>
-                            Shop timings: <br />
-                            {item.opening_time} to {item.closing_time}
+                          <Col xs={12} xl={6}>
+                            Shop opening time: <br />
+                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-door-open"></i> &nbsp;&nbsp;{item.opening_time}</label>
+                          </Col>
+                          <Col xs={12} xl={6}>
+                            Shop closing time: <br />
+                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-door-closed"></i> &nbsp;&nbsp;{item.closing_time}</label>
                           </Col>
                           {/* <Col xs={6} xl={6}>
                         Created on: <br />
                         Rs. {Date(item.createdAt)}/-
                       </Col> */}
-                          <Col xs={6} xl={6}>
+                          <Col xs={12} xl={6}>
                             Address: <br />
-                            {item.address}
+                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;{item.address}</label>
                           </Col>
-                          <Col xs={6} xl={6}>
-                            <Tag
-                              color={item.approval_status ? "green" : "orange"}
-                            >
-                              {!item.approval_status ? "PENDING" : "VERIFIED"}
-                            </Tag>
+                          <Col xs={12} xl={6}>
+                            Approval Status: <br/>
+                            {!item.approval_status ? 
+                            <label style={{ fontSize:"120%", color:'orange' }}><i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Pending&nbsp;&nbsp;&nbsp;|</label> : 
+                            <label style={{ fontSize:"120%", color:'green' }}><i class="fa-solid fa-person-circle-check"></i>&nbsp;&nbsp;Verified</label>}
+                            
+                              
+                            
                             &nbsp;&nbsp;&nbsp;
                             {!item.approval_status ? (
                               <Button
                                 onClick={(e) => markVendorVerified(item._id)}
+                                style={{ backgroundColor:'lightgreen' }}
                               >
-                                MARK VERIFIED
+                                <i class="fa-solid fa-list-check"></i> &nbsp;&nbsp; Confirm and Verify
                               </Button>
                             ) : null}
                           </Col>

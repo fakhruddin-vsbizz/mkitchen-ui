@@ -209,112 +209,126 @@ const PostConfirmOps = () => {
                 onChange={handleDateChange}
               />
             />
-            {status < 2 && (
-              <Alert
-                style={{ margin: "0.5rem" }}
-                message="IN-PROGRESS"
-                description="Procurement is in progress"
-                type="success"
-                closable
-              />
-            )}
-            <div style={{ width: "100%", padding: 0 }}>
-              <div style={{ padding: "3%" }}>
-                <label
-                  style={{ fontSize: "180%" }}
-                  className="dongle-font-class"
-                >
-                  Food Item Cooking Status
+            {status < 2 ? (
+              <center>
+              <div style={{ marginTop: '8%', marginBottom: '8%' }}>
+                <label style={{ fontSize: '800%', color: 'darkred' }}>
+                  <i class="fa-solid fa-hourglass-start"></i>
                 </label>
-                {foodItems && status >= 2 && (
-                  <List
-                    grid={{
-                      gutter: 16,
-                      xs: 1,
-                      sm: 2,
-                      md: 4,
-                      lg: 4,
-                      xl: 6,
-                      xxl: 3,
-                    }}
-                    dataSource={foodItems}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <Card
-                          title={item.food_name}
-                          style={{
-                            margin: 5,
-                            width: "100%",
-                            // color: '#e08003',
-                            backgroundColor: "white",
-                            padding: "2%",
-                            borderRadius: 10,
-                            borderBottom: "2px solid orange",
-                          }}
-                        >
-                          Cooking Status:{" "}
-                          {item.status === "COOKING" ? (
-                            <Tag color="gold">Cooking</Tag>
-                          ) : (
-                            <Tag color="green">Ready for Dispatch</Tag>
-                          )}
-                        </Card>
-                      </List.Item>
-                    )}
-                  />
-                )}
-                <br />
-                <br />
-                <label
-                  style={{ fontSize: "180%" }}
-                  className="dongle-font-class"
-                >
-                  Re-order Logs
-                </label>
-                {reorderLogs && status >= 2 && (
-                  <List
-                    style={{
-                      height: "35vh",
-                      width: "100%",
-                      overflowY: "scroll",
-                      backgroundColor: "transparent",
-                    }}
-                    dataSource={reorderLogs}
-                    renderItem={(item) => (
-                      <List.Item>
-                        <Card style={{ margin: "0px 10px", width: "100%" }}>
-                          <Row>
-                            <Col xs={8} xl={8}>
-                              {item.ingridient_name}
-                            </Col>
-                            <Col xs={8} xl={8}>
-                              Required quantity: {item.quantity_requireds}{" "}
-                              {item.unit}
-                            </Col>
-                            <Col xs={8} xl={8}>
-                              {item.reorder_delivery_status ? (
-                                <>
-                                  <Button
-                                    onClick={(e) =>
-                                      updateReorderStatus(item.inventory_id)
-                                    }
-                                    type="primary"
-                                  >
-                                    FULLFILL ORDER
-                                  </Button>
-                                </>
-                              ) : (
-                                <Tag color="green">FULFILLED</Tag>
-                              )}
-                            </Col>
-                          </Row>
-                        </Card>
-                      </List.Item>
-                    )}
-                  />
-                )}
+                <br/>
+                <label style={{ fontSize: '120%', width:'50%' }}>Procurement is not done yet. Please wait or try again later.</label>
               </div>
-            </div>
+            </center>
+            ) : (
+                <div style={{ width: "100%", padding: 0 }}>
+                  <div style={{ padding: "3%" }}>
+                    <label
+                      style={{ fontSize: "180%" }}
+                      className="dongle-font-class"
+                    >
+                      Food Item Cooking Status
+                    </label>
+                    {foodItems && status >= 2 && (
+                      <List
+                        grid={{
+                          gutter: 16,
+                          xs: 1,
+                          sm: 2,
+                          md: 4,
+                          lg: 4,
+                          xl: 6,
+                          xxl: 3,
+                        }}
+                        dataSource={foodItems}
+                        renderItem={(item) => (
+                          <List.Item>
+                            <Card
+                              title={item.food_name}
+                              style={{
+                                margin: 5,
+                                width: "100%",
+                                // color: '#e08003',
+                                backgroundColor: "white",
+                                padding: "2%",
+                                borderRadius: 10,
+                                borderBottom: "2px solid orange",
+                              }}
+                            >
+                             
+                            </Card>
+                          </List.Item>
+                        )}
+                      />
+                    )}
+                    <br />
+                    <br />
+                    <label
+                      style={{ fontSize: "180%" }}
+                      className="dongle-font-class"
+                    >
+                      Re-order Logs
+                    </label>
+                    {(reorderLogs && status >= 2) ? (
+                      <div>
+                        <List
+                          style={{
+                            height: "35vh",
+                            width: "100%",
+                            overflowY: "scroll",
+                            backgroundColor: "transparent",
+                          }}
+                          dataSource={reorderLogs}
+                          renderItem={(item) => (
+                            <List.Item>
+                              <Card style={{ margin: "0px 10px", width: "100%" }}>
+                                <Row>
+                                  <Col xs={8} xl={8}>
+                                    {item.ingridient_name}
+                                  </Col>
+                                  <Col xs={8} xl={8}>
+                                    Required quantity: {item.quantity_requireds}{" "}
+                                    {item.unit}
+                                  </Col>
+                                  <Col xs={8} xl={8}>
+                                    {item.reorder_delivery_status ? (
+                                      <>
+                                        <Button
+                                          onClick={(e) =>
+                                            updateReorderStatus(item.inventory_id)
+                                          }
+                                          type="primary"
+                                        >
+                                          FULLFILL ORDER
+                                        </Button>
+                                      </>
+                                    ) : (
+                                      <Tag color="green">FULFILLED</Tag>
+                                    )}
+                                  </Col>
+                                </Row>
+                              </Card>
+                            </List.Item>
+                          )}
+                        />
+                      </div>
+                    ) : (
+                      <div style={{ marginBottom: '8%', width:'30%', border:'0.5px solid black', padding:'5%', borderRadius:'10px' }}>
+                        <center>
+                          <label style={{ fontSize: '200%', color: 'darkred' }}>
+                          <i class="fa-brands fa-creative-commons-zero"></i>
+                          </label>
+                          <br/>
+                          <label style={{ fontSize: '100%', width:'50%' }}>For now, there are no reorders for this menu</label>
+                        </center>
+                      </div>
+                    )}
+                    
+                    
+                  </div>
+                </div>
+              )
+            }
+            
           </div>
         </div>
       </ConfigProvider>

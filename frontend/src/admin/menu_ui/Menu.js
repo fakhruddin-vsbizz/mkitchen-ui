@@ -390,14 +390,14 @@ const Menu = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "orange",
+                    colorPrimary: "darkred",
                   },
                 }}
               >
                 <Calendar
                   style={{
                     border: "1px solid lightgray",
-                    backgroundColor: "orange",
+                    backgroundColor: "darkred",
                   }}
                   onSelect={onSelectDate}
                   fullscreen={false}
@@ -412,20 +412,17 @@ const Menu = () => {
               >
                 <Row
                   style={{
-                    backgroundColor: "orange",
+                    backgroundColor: "#CA3F21",
                     padding: "2%",
                     color: "white",
                     borderRadius: 5,
                   }}
                 >
                   <Col xs={24} xl={12}>
-                    <label style={{ fontSize: "120%", fontWeight: 600 }}>
-                      Items for{" "}
-                      <span style={{ fontWeight: "bold", fontSize: "1.2rem" }}>
-                        {" "}
-                        {new Date(dateValue).toDateString()}{" "}
-                      </span>
-                    </label>
+                    
+                      Menu selection for:<br/>
+                      <i class="fa-solid fa-calendar"></i> &nbsp;&nbsp; <span style={{ fontSize: '1.2rem'}}> {new Date(dateValue).toDateString()} </span>
+                    
                   </Col>
                   {/* <Col xs={24} xl={12}>
                     <Button
@@ -440,18 +437,19 @@ const Menu = () => {
                     </Button>
                   </Col> */}
                 </Row>
+                <hr style={{ borderColor:'lightgrey' }}></hr>
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                 <div
                   style={{ marginTop: 10, marginBottom: 20, display: "flex" }}
                 >
                   <div style={{ width: "80%" }}>
-                    <h3>Search menu by name:</h3>
+                    <label>Search menu by name:</label> &nbsp;&nbsp;
                     {AddedFoodItems && status !== 4 && (
                       <AutoComplete
                         id="food-item-selected"
                         style={{
-                          width: "100%",
+                          width: "50%",
                           border: "2px solid orange",
                           borderRadius: 8,
                         }}
@@ -478,20 +476,19 @@ const Menu = () => {
                       alignItems: "flex-end",
                     }}
                   >
-                    {status !== 4 && (
-                      <Button
-                        style={{
-                          backgroundColor: "orange",
-                          borderRadius: 50,
-                          color: "white",
-                          fontSize: 26,
-                          height: "auto",
-                        }}
-                        onClick={addFoodItem}
-                      >
-                        <i className="fa-solid fa-plus"></i>
-                      </Button>
-                    )}
+                    {status !== 4 && (<Button
+                      style={{
+                        backgroundColor: "black",
+                        borderRadius: 50,
+                        color: "white",
+                        fontSize: 14,
+                        height: "auto",
+                      }}
+                      onClick={addFoodItem}
+                    >
+                      <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
+                    </Button>
+                  )}
                   </div>
                 </div>
 
@@ -502,21 +499,19 @@ const Menu = () => {
                   renderItem={(item) => (
                     <div
                       style={{
-                        marginTop: 10,
-                        marginBottom: 20,
-                        padding: 10,
+                        padding: 30,
                         display: "flex",
                         backgroundColor: "rgb(255 246 237)",
-                        borderRadius: 10,
-                        borderBottom: "2px solid orange",
+                        borderRadius: 5,
+                        border: "2px solid orange",
                       }}
                     >
-                      <div style={{ width: "80%" }}>
-                        <label style={{ fontSize: "120%" }}>
-                          {item.food_name}
+                      <div style={{ width: "60%" }}>
+                        <label style={{ fontSize: "140%" }}>
+                        <i class="fa-solid fa-bowl-rice"></i> &nbsp;&nbsp; {item.food_name}
                         </label>
                         <br />
-                        {ingridientList &&
+                        {/* {ingridientList &&
                           ingridientList
                             .filter((it) => it.name === item.food_name)
                             .map((newItem, index) => (
@@ -524,13 +519,44 @@ const Menu = () => {
                                 Ingredients:
                                 {newItem.ingridient_list.map(
                                   (ing, ingIndex) => (
-                                    <span key={ingIndex}>
-                                      {ing.ingredient_name},{" "}
-                                    </span>
+                                    <Tag color="darkred" key={ingIndex}>
+                                      {ing.ingredient_name}
+                                    </Tag>
+                                    // <span key={ingIndex}>
+                                    //   {ing.ingredient_name},{" "}
+                                    // </span>
+                                  )
+                                )}
+                              </div>
+                            ))} */}
+                      </div>
+                      <div
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          alignContent: "left",
+                          justifyContent: "left",
+                          alignItems: "left",
+                        }}
+                      >
+                        {ingridientList &&
+                          ingridientList
+                            .filter((it) => it.name === item.food_name)
+                            .map((newItem, index) => (
+                              <div key={index}>
+                                {newItem.ingridient_list.map(
+                                  (ing, ingIndex) => (
+                                    <Tag color="darkred" key={ingIndex}>
+                                      {ing.ingredient_name}
+                                    </Tag>
+                                    // <span key={ingIndex}>
+                                    //   {ing.ingredient_name},{" "}
+                                    // </span>
                                   )
                                 )}
                               </div>
                             ))}
+
                       </div>
                       <div
                         style={{
@@ -546,7 +572,7 @@ const Menu = () => {
                             backgroundColor: "#E86800",
                             borderRadius: 50,
                             color: "white",
-                            fontSize: 14,
+                            fontSize: 9,
                             height: "auto",
                           }}
                           onClick={() => deleteItem(item)}
@@ -596,23 +622,26 @@ const Menu = () => {
                     // </List.Item>
                   )}
                 />
+                <hr style={{ borderColor:'lightgrey' }}></hr>
                 {foodItems.length !== 0 &&
-                status !== 4 &&
+                status === -1 &&
                 new Date(dateValue) >
                   new Date().setDate(new Date().getDate() - 1) ? (
-                  <center>
+                  <div style={{ width: '100%', textAlign: 'right' }}>
                     <Button
                       onClick={createMenu}
                       style={{
-                        width: "40%",
-                        backgroundColor: "orange",
+                        width: "100%",
+                        backgroundColor: "#ffa500",
                         color: "white",
+                        height:'170%',
+                        fontSize: '120%',
                         fontWeight: 600,
                       }}
                     >
-                      Set The Menu
+                      Finalize and Confirm Menu
                     </Button>
-                  </center>
+                  </div>
                 ) : null}
               </Card>
             </Col>
