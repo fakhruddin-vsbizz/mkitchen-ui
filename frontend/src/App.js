@@ -41,7 +41,7 @@ function App() {
 
         {/*  ------------------------------- Cooking Route --------------------------  */}
         <Route exact path="/cooking/ingredients" element={<SetMenu />} />
-        <Route path="/cooking/cookfood" element={<Cooking />} />
+        <Route exact path="/cooking/cookfood" element={<Cooking />} />
         {/* <Route path="/inventory/addinventory" element={<AddIngridientsInventory />} /> */}
         <Route path="/cooking/dispatch" element={<Dispatch />} />
 
