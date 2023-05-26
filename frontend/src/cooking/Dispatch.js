@@ -386,21 +386,15 @@ const Dispatch = () => {
             />
 
             {status < 3 && (
-              <table>
-              <tbody>
-              <tr>
-                <td colSpan={2}>
-                  <br />
-                  <Alert style={{marginLeft: "2rem"}}
-                    message="Menu Not Procured"
-                    description="This Menu is Not Cooked"
-                    type="error"
-                    closable
-                  />
-                </td>
-              </tr>
-                </tbody>
-              </table>
+              <center>
+                <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                  <label style={{ fontSize: '800%', color: 'darkred' }}>
+                    <i class="fa-solid fa-hourglass-start"></i>
+                  </label>
+                  <br/><br/>
+                  <label style={{ fontSize: '120%', width:'50%' }}>Cooking has not been done yet. Please wait while cooking department has confirmed dispatch.</label>
+                </div>
+              </center>
             )}
             {status === 4 && (
               <table>
@@ -597,10 +591,15 @@ const Dispatch = () => {
                                   <Button
                                     type="primary"
                                     onClick={(e) =>
-                                      dispatchData(
+                                      {
+                                        if (!daigs && !totalWeight) {
+                                          return;
+                                        }
+                                        
+                                        dispatchData(
                                         item.food_item_id,
                                         item.food_name
-                                      )
+                                      )}
                                     }
                                   >
                                     Dispatch Food

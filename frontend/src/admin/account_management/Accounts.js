@@ -507,6 +507,11 @@ const Accounts = () => {
       }
     }
   };
+
+  
+
+
+
   /* ---------------------------------- Table --------------------------------- */
 
   return (
@@ -546,11 +551,11 @@ const Accounts = () => {
             >
               <table style={{ width: "100%" }}>
                 <tr>
-                  <td>Select User type:</td>
-                  <td>
+                  <td colSpan={2}>
+                    Select User type:<br/>
                     <Select
                       defaultValue={null}
-                      style={{ width: "100%" }}
+                      style={{ width: "100%", height:'70%', borderColor:'darkred' }}
                       options={[
                         { value: "Mohalla Admin", label: "Mohalla Admin" },
                         {
@@ -561,6 +566,7 @@ const Accounts = () => {
                       ]}
                       onChange={handleUserTypeChange}
                     />
+                    <hr style={{ borderColor:'lightgrey' }}></hr>
                   </td>
                 </tr>
                 <tr>
@@ -685,42 +691,47 @@ const Accounts = () => {
                         dataSource={mohallaUsers}
                         renderItem={(item) => (
                           <>
-                            <List.Item>
+                            <List.Item style={{ padding:'0px' }}>
                               <Row
                                 style={{
                                   padding: 10,
                                   display: "flex",
                                   backgroundColor: "#fff",
-                                  borderRadius: 10,
-                                  borderBottom: "2px solid orange",
+                                  borderRadius: 5,
+                                  border: "2px solid orange",
                                   width: "100%",
                                 }}
                               >
                                 <Col
-                                  xs={8}
-                                  xl={8}
-                                  style={{ fontSize: "120%", color: "#E86800" }}
+                                  xs={24}
+                                  xl={24}
+                                  style={{ padding:'1%' }}
                                 >
-                                  <h5>{item.username}</h5>
+                                  <label style={{ fontSize:'150%' }}><i class="fa-solid fa-house-user"></i>&nbsp;&nbsp;{item.username}</label>
                                 </Col>
                                 <Col xs={8} xl={8}>
                                   Verification status: <br />
                                   {item.usertype ? (
-                                    <Tag color="green">ACTIVE</Tag>
+                                    <label style={{ fontSize:'120%' }}><i class="fa-solid fa-toggle-on"></i> &nbsp;&nbsp; <Tag color="green">ACTIVE</Tag></label>
                                   ) : (
-                                    <Tag color="red">DISABLED</Tag>
+                                    <label style={{ fontSize:'120%' }}><i class="fa-solid fa-toggle-off"></i> &nbsp;&nbsp; <Tag color="red">DISABLED</Tag></label>
                                   )}
                                 </Col>
                                 <Col xs={8} xl={8}>
-                                  Management: <br />
+                                  Email address: <br />
+                                  <label style={{ fontSize:'120%' }}><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;mohalladmin@gmail.com</label>
+                                </Col>
+                                <Col xs={8} xl={8}>
+                                  Change Mohalla account's email and password: <br />
                                   <Button
                                     size="small"
                                     type="primary"
+                                    style={{ backgroundColor:'darkred', height:'60%' }}
                                     onClick={() =>
                                       showModal(item.username, item.email)
                                     }
                                   >
-                                    Manage Account
+                                    <label style={{ fontSize:'120%' }}><i class="fa-solid fa-gear"></i>&nbsp;&nbsp;Manage Account</label>
                                   </Button>
                                 </Col>
                               </Row>
@@ -872,36 +883,53 @@ const Accounts = () => {
                           style={{
                             marginTop: 10,
                             marginBottom: 20,
-                            // padding: 10,
-                            display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
                             borderBottom: "2px solid orange",
-                            width: "100%",
+                            width: "85%",
                           }}
                         >
-                          <td style={{ width: "25%" }}>Select User type:</td>
-                          <td style={{ width: "25vw" }}>
-                            {cookingDepartmentUser && (
-                              <Select
-                                defaultValue={"select user"}
-                                style={{ width: "100%" }}
-                                block
-                                options={cookingDepartmentUser.map((item) => ({
-                                  value: item.username,
-                                  label: item.username,
-                                  id: item.email,
-                                }))}
-                                onChange={(value, id) =>
-                                  handleCookingUser(value, id)
-                                }
-                              />
-                            )}
-                          </td>
+                          <label style={{ fontSize: '120%', color: "darkred" }}>
+                            <u>Change Email of Cooking Department</u>
+                          </label>
+                          <br/>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          
+                          <table style={{ width:'100%' }}>
+                            <tr>
+                              <td colSpan={2}>
+                              <i class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                              
+                              {cookingDepartmentUser && (
+                                <Select
+                                  defaultValue={"-- SELECT USER FOR ACTION ---"}
+                                  style={{ width: "80%" }}
+                                  block
+                                    options={cookingDepartmentUser.map((item) => ({
+                                      value: item.username,
+                                      label: item.username,
+                                      id: item.email,
+                                    }))}
+                                    onChange={(value, id) =>
+                                      handleCookingUser(value, id)
+                                    }
+                                  />
+                                )}
+                                
+                              </td>
+                            </tr>
+                            <tr><td colSpan={2}>&nbsp;</td></tr>
+                            <tr>
+                            <td> Current email </td>
+                              <td>
+                              <center><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;{newEmailCooking}</center>
+                              </td>
+                            </tr>
+                          </table>
+                          
+                          
 
-                          <h4 style={{ color: "#E86800" }}>
-                            Change Email of Cooking Department
-                          </h4>
+                          
 
                           <table style={{ width: "100%" }}>
                             <tr>
@@ -925,6 +953,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updateCookingDepartmentEmail}
                                   type="primary"
+                                  style={{ backgroundColor: 'red' }}
                                 >
                                   Change Email
                                 </Button>
@@ -945,6 +974,7 @@ const Accounts = () => {
                               </tr>
                             )}
                           </table>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                       <Col xs={24} xl={12} style={{ padding: "2%" }}>
@@ -961,10 +991,11 @@ const Accounts = () => {
                             width: "100%",
                           }}
                         >
-                          <h3 style={{ color: "#E86800" }}>
-                            {" "}
-                            Reset Password of Cooking Department
-                          </h3>
+                          <label style={{ fontSize: '120%', color: "darkred" }}>
+                            <u>Reset Password for cooking department.</u>
+                          </label>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          <br/>
                           <table style={{ width: "35vw" }}>
                             <tr>
                               <td style={{ width: "30%" }}>New Password</td>
@@ -1010,7 +1041,7 @@ const Accounts = () => {
                                 <br />
                                 <Button
                                   onClick={() => updateUserPassword("Cooking")}
-                                  style={{ width: "50%" }}
+                                  style={{ width: "100%", backgroundColor: 'red' }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1018,6 +1049,8 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
+                          <br/>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                     </Row>
@@ -1096,20 +1129,25 @@ const Accounts = () => {
                           style={{
                             marginTop: 10,
                             marginBottom: 20,
-                            // padding: 10,
-                            display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
                             borderBottom: "2px solid orange",
-                            width: "100%",
+                            width: "80%",
                           }}
                         >
-                          <td style={{ width: "25%" }}>Select User :</td>
-                          <td style={{ width: "25vw" }}>
-                            {pandiDepartmentUser && (
+                          <label style={{ fontSize: '120%', color: "darkred" }}>
+                            <u>Change Email of Cooking Department</u>
+                          </label>
+                          <br/>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          <table style={{ width:'100%' }}>
+                            <tr>
+                              <td colspan={2}>
+                                <i class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                                {pandiDepartmentUser && (
                               <Select
                                 defaultValue={"select user"}
-                                style={{ width: "100%" }}
+                                style={{ width: "80%" }}
                                 block
                                 options={pandiDepartmentUser.map((item) => ({
                                   value: item.username,
@@ -1121,11 +1159,19 @@ const Accounts = () => {
                                 }
                               />
                             )}
-                          </td>
+                              </td>
+                            </tr>
+                            <tr><td colSpan={2}>&nbsp;</td></tr>
+                            <tr>
+                            <td> Current email </td>
+                              <td style={{ textAlign:'right' }}>
+                              <i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;{newEmailPandI}
+                              </td>
+                            </tr>
+                          </table>
+                          
+                          
 
-                          <h4 style={{ color: "#E86800" }}>
-                            Change Email of P&I Department
-                          </h4>
 
                           <table style={{ width: "100%" }}>
                             <tr>
@@ -1149,6 +1195,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updatePandIEmail}
                                   type="primary"
+                                  style={{ backgroundColor:'red' }}
                                 >
                                   Change Email
                                 </Button>
@@ -1185,10 +1232,11 @@ const Accounts = () => {
                             width: "100%",
                           }}
                         >
-                          <h3 style={{ color: "#E86800" }}>
-                            {" "}
-                            Reset Password of P&I Department
-                          </h3>
+                          <label style={{ fontSize: '120%', color: "darkred" }}>
+                            <u>Reset Password for P&I department.</u>
+                          </label>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          <br/>
                           <table style={{ width: "35vw" }}>
                             <tr>
                               <td style={{ width: "30%" }}>New Password</td>
@@ -1237,7 +1285,7 @@ const Accounts = () => {
                                   onClick={() =>
                                     updateUserPassword("Procurement Inventory")
                                   }
-                                  style={{ width: "50%" }}
+                                  style={{ width: "100%", backgroundColor:'red' }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1245,6 +1293,8 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
+                          <br/>
+                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                     </Row>
@@ -1272,7 +1322,7 @@ const Accounts = () => {
                         footer={[
                           <Button key="ok" type="primary" onClick={handleOk}>
                             OK
-                          </Button>,
+                          </Button>
                         ]}
                       >
                         <div style={{ textAlign: "center" }}>

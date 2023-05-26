@@ -46,6 +46,8 @@ const ConfirmIng = () => {
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
 
+  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(true)
+
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
 
@@ -221,7 +223,9 @@ const ConfirmIng = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
+          <Button key="ok" type="primary" onClick={() => {
+            setFinalizeBtnVisible(false)            
+            setVisible(false)}}>
             OK
           </Button>,
         ]}
@@ -348,6 +352,7 @@ const ConfirmIng = () => {
                   operationalPipelineStatus !== 0 && (
                     <Button
                       onClick={markProcureIngridients}
+                      disabled={finalizeBtnVisible}
                       block
                       type="primary"
                       style={{ fontSize: "200%", height: "10%" }}
