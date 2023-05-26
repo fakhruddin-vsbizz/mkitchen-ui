@@ -66,7 +66,7 @@ const Cooking = () => {
   const [update, setUpdate] = useState(false);
   const [visible, setVisible] = useState(false);
   const [totalAshkashCount, setTotalAshkashCount] = useState();
-  const [status, setStatus] = useState();
+  const [status, setStatus] = useState(-1);
 
   const [getFoodList, setGetFoodList] = useState();
   const [cookingDoneStatus, setCookingDoneStatus] = useState(false)
@@ -129,6 +129,7 @@ const Cooking = () => {
       }
     };
     getInventory();
+    setStatus(menuFoodId,"menuFoodId");
   }, []);
 
   //getting the status from operational pipeline
@@ -145,9 +146,10 @@ const Cooking = () => {
             menu_id: menuFoodId,
           }),
         });
+        console.log("data",data);
         if (data) {
           const res = await data.json();
-          setStatus(res);
+          console.log(res, "status");
         }
       }
     };
@@ -282,6 +284,7 @@ const Cooking = () => {
       }
     };
     getData();
+
   }, [selectedDate, menuFoodId]);
 
   useEffect(() => {
@@ -454,6 +457,20 @@ const Cooking = () => {
 
             <Row style={{ padding: 10 }}>
               <Col xs={24} xl={16} style={{ padding: "2%" }}>
+                { menuFoodId === undefined && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        style={{ margin: "0.5rem" }}
+                        message="Menu Not Procured"
+                        description="This Menu is Not Set"
+                        type="error"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
                 {status >= 3 && (
                   <tr>
                     <td colSpan={2}>
