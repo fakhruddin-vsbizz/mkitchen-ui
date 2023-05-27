@@ -69,7 +69,7 @@ const Cooking = () => {
   const [status, setStatus] = useState(-1);
 
   const [getFoodList, setGetFoodList] = useState();
-  const [cookingDoneStatus, setCookingDoneStatus] = useState(false)
+  const [cookingDoneStatus, setCookingDoneStatus] = useState(false);
 
   const navigate = useNavigate();
 
@@ -106,6 +106,33 @@ const Cooking = () => {
   };
 
   useEffect(() => {
+    const getStatus = async () => {
+      if (selectedDate) {
+        const data = await fetch("/api/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_food_Item",
+            // mkuser_id: getMkUserId,
+            date: selectedDate,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (res[0]) {
+            setStatus(res.status);
+          } else {
+            setStatus(-1);
+          }
+        }
+      }
+    };
+    getStatus();
+  }, [selectedDate]);
+
+  useEffect(() => {
     const getInventory = async () => {
       try {
         const data = await fetch("/api/cooking/ingredients", {
@@ -129,8 +156,10 @@ const Cooking = () => {
       }
     };
     getInventory();
-    setStatus(menuFoodId,"menuFoodId");
+    // setStatus(menuFoodId,"menuFoodId");
   }, []);
+
+  console.log(status);
 
   //getting the status from operational pipeline
   useEffect(() => {
@@ -146,7 +175,7 @@ const Cooking = () => {
             menu_id: menuFoodId,
           }),
         });
-        console.log("data",data);
+        console.log("data", data);
         if (data) {
           const res = await data.json();
           console.log(res, "status");
@@ -284,7 +313,6 @@ const Cooking = () => {
       }
     };
     getData();
-
   }, [selectedDate, menuFoodId]);
 
   useEffect(() => {
@@ -403,9 +431,14 @@ const Cooking = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => {
-            setCookingDoneStatus(true)
-            setVisible(false)}}>
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              setCookingDoneStatus(true);
+              setVisible(false);
+            }}
+          >
             OK
           </Button>,
         ]}
@@ -457,13 +490,13 @@ const Cooking = () => {
 
             <Row style={{ padding: 10 }}>
               <Col xs={24} xl={16} style={{ padding: "2%" }}>
-                { menuFoodId === undefined && (
+                {status === -1 && (
                   <tr>
                     <td colSpan={2}>
                       <br />
                       <Alert
                         style={{ margin: "0.5rem" }}
-                        message="Menu Not Procured"
+                        message="Menu Not set"
                         description="This Menu is Not Set"
                         type="error"
                         closable
@@ -499,7 +532,7 @@ const Cooking = () => {
                     </td>
                   </tr>
                 )}
-                {status < 2 && (
+                {status !== -1 && status < 2 && (
                   <tr>
                     <td colSpan={2}>
                       <br />
@@ -527,14 +560,13 @@ const Cooking = () => {
                         <Card style={{ width: "100%" }}>
                           <Row>
                             <Col xs={12} xl={8}>
-                              <label
-                                style={{ fontSize: "130%" }}
-                              >
-                                <label style={{ fontSize:'160%' }}><i class="fa-solid fa-plate-wheat"></i>&nbsp;&nbsp;{item.food_name}</label>
+                              <label style={{ fontSize: "130%" }}>
+                                <label style={{ fontSize: "160%" }}>
+                                  <i class="fa-solid fa-plate-wheat"></i>
+                                  &nbsp;&nbsp;{item.food_name}
+                                </label>
                               </label>
                             </Col>
-                            
-                            
                           </Row>
                           <hr></hr>
                           <Row>
@@ -544,7 +576,7 @@ const Cooking = () => {
                               <List
                                 dataSource={ingredientLists[index]}
                                 renderItem={(ing, index) => (
-                                  <List.Item style={{ padding:'0px' }}>
+                                  <List.Item style={{ padding: "0px" }}>
                                     <Card
                                       style={{
                                         width: "100%",
@@ -572,7 +604,10 @@ const Cooking = () => {
                                               fontSize: "110%",
                                             }}
                                           >
-                                            <label style={{ fontSize:'140%' }}><i class="fa-solid fa-bowl-rice"></i>&nbsp;&nbsp;{ing.ingredient_name}</label>
+                                            <label style={{ fontSize: "140%" }}>
+                                              <i class="fa-solid fa-bowl-rice"></i>
+                                              &nbsp;&nbsp;{ing.ingredient_name}
+                                            </label>
                                           </label>
                                         </Col>
                                         <Col
@@ -582,32 +617,34 @@ const Cooking = () => {
                                         >
                                           Amount procured:
                                           <br />
-                                          <label style={{ fontSize:'120%' }}>
-                                            <i class="fa-solid fa-scale-unbalanced"></i>&nbsp;&nbsp;
+                                          <label style={{ fontSize: "120%" }}>
+                                            <i class="fa-solid fa-scale-unbalanced"></i>
+                                            &nbsp;&nbsp;
                                             {totalAshkashCount && (
-                                            <label
-                                              style={{
-                                                fontSize: "120%",
-                                              }}
-                                            >
-                                              {(ing.perAshkash *
-                                                totalAshkashCount).toFixed(2)}
-                                                 &nbsp;
+                                              <label
+                                                style={{
+                                                  fontSize: "120%",
+                                                }}
+                                              >
+                                                {(
+                                                  ing.perAshkash *
+                                                  totalAshkashCount
+                                                ).toFixed(2)}
+                                                &nbsp;
                                                 {inventoryItems &&
-                                                inventoryItems
-                                                  .filter(
-                                                    (itemNew) =>
-                                                      itemNew._id ===
-                                                      ing.inventory_item_id
-                                                  )
-                                                  .map(
-                                                    (ele) =>
-                                                      ele.ingridient_measure_unit
-                                                  )}
-                                            </label>
-                                          )}
+                                                  inventoryItems
+                                                    .filter(
+                                                      (itemNew) =>
+                                                        itemNew._id ===
+                                                        ing.inventory_item_id
+                                                    )
+                                                    .map(
+                                                      (ele) =>
+                                                        ele.ingridient_measure_unit
+                                                    )}
+                                              </label>
+                                            )}
                                           </label>
-                                          
                                         </Col>
                                         <Col
                                           xs={12}
@@ -617,10 +654,11 @@ const Cooking = () => {
                                           You can re-order the items here too if
                                           needed:
                                           <br />
-                                          
-                                          
                                           <Input
-                                            style={{ width: "70%", marginBottom: "10px" }}
+                                            style={{
+                                              width: "70%",
+                                              marginBottom: "10px",
+                                            }}
                                             onChange={(e) =>
                                               handleIngridientReOrder(
                                                 ing.inventory_item_id,
@@ -630,18 +668,17 @@ const Cooking = () => {
                                             placeholder="Eg: 1L, 12KG, etc"
                                           ></Input>
                                           &nbsp;
-                                            {inventoryItems &&
-                                              inventoryItems
-                                                .filter(
-                                                  (itemNew) =>
-                                                    itemNew._id ===
-                                                    ing.inventory_item_id
-                                                )
-                                                .map(
-                                                  (ele) =>
-                                                    ele.ingridient_measure_unit
-                                                )}
-                                                
+                                          {inventoryItems &&
+                                            inventoryItems
+                                              .filter(
+                                                (itemNew) =>
+                                                  itemNew._id ===
+                                                  ing.inventory_item_id
+                                              )
+                                              .map(
+                                                (ele) =>
+                                                  ele.ingridient_measure_unit
+                                              )}
                                           <Button
                                             disabled={status >= 3}
                                             onClick={(e) =>
@@ -665,9 +702,12 @@ const Cooking = () => {
                                           Leftover amount of{" "}
                                           {ing.ingredient_name}
                                           <br />
-                                          <br/>
+                                          <br />
                                           <Input
-                                            style={{ width: "70%", marginBottom: "10px" }}
+                                            style={{
+                                              width: "70%",
+                                              marginBottom: "10px",
+                                            }}
                                             onChange={(e) =>
                                               handleleftOver(
                                                 ing.inventory_item_id,
@@ -677,17 +717,17 @@ const Cooking = () => {
                                             placeholder="Eg: 1L, 12KG, etc"
                                           ></Input>
                                           &nbsp;
-                                            {inventoryItems &&
-                                              inventoryItems
-                                                .filter(
-                                                  (itemNew) =>
-                                                    itemNew._id ===
-                                                    ing.inventory_item_id
-                                                )
-                                                .map(
-                                                  (ele) =>
-                                                    ele.ingridient_measure_unit
-                                                )}
+                                          {inventoryItems &&
+                                            inventoryItems
+                                              .filter(
+                                                (itemNew) =>
+                                                  itemNew._id ===
+                                                  ing.inventory_item_id
+                                              )
+                                              .map(
+                                                (ele) =>
+                                                  ele.ingridient_measure_unit
+                                              )}
                                           <Button
                                             disabled={status >= 3}
                                             onClick={(e) =>
