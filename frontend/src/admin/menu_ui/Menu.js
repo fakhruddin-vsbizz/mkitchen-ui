@@ -43,7 +43,7 @@ const Menu = () => {
   const [status, setStatus] = useState();
 
   const [ingridientList, setIngridientList] = useState([]);
-  const [menuConfimStatus, setMenuConfimStatus] = useState(false)
+  const [menuConfimStatus, setMenuConfimStatus] = useState(false);
 
   const [visible, setVisible] = useState(false);
 
@@ -358,9 +358,14 @@ const Menu = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => {
-            setMenuConfimStatus(true)
-            setVisible(false)}}>
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              setMenuConfimStatus(true);
+              setVisible(false);
+            }}
+          >
             OK
           </Button>,
         ]}
@@ -422,10 +427,13 @@ const Menu = () => {
                   }}
                 >
                   <Col xs={24} xl={12}>
-                    
-                      Menu selection for:<br/>
-                      <i class="fa-solid fa-calendar"></i> &nbsp;&nbsp; <span style={{ fontSize: '1.2rem'}}> {new Date(dateValue).toDateString()} </span>
-                    
+                    Menu selection for:
+                    <br />
+                    <i class="fa-solid fa-calendar"></i> &nbsp;&nbsp;{" "}
+                    <span style={{ fontSize: "1.2rem" }}>
+                      {" "}
+                      {new Date(dateValue).toDateString()}{" "}
+                    </span>
                   </Col>
                   {/* <Col xs={24} xl={12}>
                     <Button
@@ -440,7 +448,7 @@ const Menu = () => {
                     </Button>
                   </Col> */}
                 </Row>
-                <hr style={{ borderColor:'lightgrey' }}></hr>
+                <hr style={{ borderColor: "lightgrey" }}></hr>
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                 <div
@@ -479,19 +487,20 @@ const Menu = () => {
                       alignItems: "flex-end",
                     }}
                   >
-                    {status !== 4 && (<Button
-                      style={{
-                        backgroundColor: "black",
-                        borderRadius: 50,
-                        color: "white",
-                        fontSize: 14,
-                        height: "auto",
-                      }}
-                      onClick={addFoodItem}
-                    >
-                      <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
-                    </Button>
-                  )}
+                    {status !== 4 && (
+                      <Button
+                        style={{
+                          backgroundColor: "black",
+                          borderRadius: 50,
+                          color: "white",
+                          fontSize: 14,
+                          height: "auto",
+                        }}
+                        onClick={addFoodItem}
+                      >
+                        <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
+                      </Button>
+                    )}
                   </div>
                 </div>
 
@@ -511,7 +520,8 @@ const Menu = () => {
                     >
                       <div style={{ width: "60%" }}>
                         <label style={{ fontSize: "140%" }}>
-                        <i class="fa-solid fa-bowl-rice"></i> &nbsp;&nbsp; {item.food_name}
+                          <i class="fa-solid fa-bowl-rice"></i> &nbsp;&nbsp;{" "}
+                          {item.food_name}
                         </label>
                         <br />
                         {/* {ingridientList &&
@@ -559,7 +569,6 @@ const Menu = () => {
                                 )}
                               </div>
                             ))}
-
                       </div>
                       <div
                         style={{
@@ -625,12 +634,13 @@ const Menu = () => {
                     // </List.Item>
                   )}
                 />
-                <hr style={{ borderColor:'lightgrey' }}></hr>
+                <hr style={{ borderColor: "lightgrey" }}></hr>
                 {foodItems.length !== 0 &&
-                status === -1 &&
+                /*status === -1 &&*/
+                status !== 4 &&
                 new Date(dateValue) >
                   new Date().setDate(new Date().getDate() - 1) ? (
-                  <div style={{ width: '100%', textAlign: 'right' }}>
+                  <div style={{ width: "100%", textAlign: "right" }}>
                     <Button
                       onClick={createMenu}
                       disabled={menuConfimStatus}
@@ -638,8 +648,8 @@ const Menu = () => {
                         width: "100%",
                         backgroundColor: "maroon",
                         color: "white",
-                        height:'170%',
-                        fontSize: '120%',
+                        height: "170%",
+                        fontSize: "120%",
                         fontWeight: 600,
                       }}
                     >

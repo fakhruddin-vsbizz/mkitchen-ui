@@ -33,6 +33,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     reorder_logs,
     status,
     dispatch,
+    leftover,
 
     //get the mohalla wise count
     menu_id,
@@ -83,6 +84,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
           reorder_logs,
           dispatch,
           status,
+          leftover,
         });
 
         if (operationPipeLine) {
