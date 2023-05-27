@@ -79,7 +79,6 @@ const SetMenu = () => {
   const [validationError, setValidationError] = useState(false);
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
   const [finalArrayForData, setFinalArrayForData] = useState([]);
-  const [pushToInventoryVisible, setPushToInventoryVisible] = useState(false)
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -214,9 +213,7 @@ const SetMenu = () => {
             setupdatedIngredientsList(res);
           }
         }
-      } catch (error) {
-        console.log(error);
-      }
+      } catch (error) {}
     };
     getInventory();
   }, [dataAdded]);
@@ -339,7 +336,6 @@ const SetMenu = () => {
       if (data) {
         const res = await data.json();
         setAllIngridients([]);
-        setPushToInventoryVisible(true)
         setVisible(true);
         setFoodIndex("");
         setIngredientItems([]);
@@ -426,8 +422,7 @@ const SetMenu = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => {
-            setVisible(false)}}>
+          <Button key="ok" type="primary" onClick={() => setVisible(false)}>
             OK
           </Button>,
         ]}
@@ -464,14 +459,12 @@ const SetMenu = () => {
                 </Row>
               }
             />
-            
             <div style={{ padding: 20 }}>
               <Row>
                 <Col xs={24} xl={24} style={{ padding: "0px 50px" }}>
-                  <label>
-                    Today's total people to cook for <br/>
-                    <label style={{ fontSize:'170%' }}><i class="fa-solid fa-users"></i> &nbsp;&nbsp;{totalAshkash}</label>
-                  </label>
+                  <h3 style={{ color: "#e08003" }}>
+                    Total count: {totalAshkash} People
+                  </h3>
                   {/* Select Client: &nbsp;&nbsp;&nbsp;
                       <Select
                         defaultValue={0}
@@ -484,7 +477,7 @@ const SetMenu = () => {
                         ]}
                       /> */}
                 </Col>
-                <Col xs={24} xl={12} style={{ padding: "1%", marginTop:'3%' }}>
+                <Col xs={24} xl={12} style={{ padding: "1%" }}>
                   {totalAshkash === 0 && (
                     <Alert
                       style={{ margin: "0.5rem" }}
@@ -494,7 +487,15 @@ const SetMenu = () => {
                       closable
                     />
                   )}
-                  
+                  {status === -1 && (
+                    <Alert
+                      style={{ margin: "0.5rem" }}
+                      message="Message"
+                      description="Menu not set for the selected date"
+                      type="error"
+                      closable
+                    />
+                  )}
                   {status >= 1 && (
                     <Alert
                       style={{ margin: "0.5rem" }}
@@ -505,28 +506,35 @@ const SetMenu = () => {
                     />
                   )}
                   {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-                  {getFoodList && totalAshkash  > 0 && status !== -1 && (
+                  {getFoodList && totalAshkash > 0 && (
                     <List
                       style={{ width: "100&" }}
                       itemLayout="horizontal"
                       dataSource={getFoodList}
                       renderItem={(item, index) => (
-                        <List.Item style={{ padding:'0px' }}>
+                        <List.Item>
+                          <Card
+                            style={{
+                              width: "100%",
+                              backgroundColor: "transparent",
+                              border: "none",
+                            }}
+                          >
                             <Row
                               style={{
                                 padding: 20,
+                                display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                border: "2px solid orange",
+                                borderBottom: "2px solid orange",
                                 width: "100%",
-                                marginBottom:'4px'
                               }}
                             >
                               <Col xs={16} xl={16}>
                                 Food Name:
                                 <br />
-                                <label style={{ fontSize: "150%" }}>
-                                <i class="fa-solid fa-plate-wheat"></i>  &nbsp;&nbsp; {item.food_name}
+                                <label style={{ fontSize: "125%" }}>
+                                  {item.food_name}
                                 </label>
                               </Col>
                               <Col xs={8} xl={8}>
@@ -537,17 +545,19 @@ const SetMenu = () => {
                                     setFoodReference(item.food_item_id);
                                     setIsSelected(true);
                                   }}
-                                  
+                                  shape="circle"
+                                  icon={<CaretRightOutlined />}
                                   size="large"
-                                >Set the ingredients &nbsp;&nbsp; <i class="fa-solid fa-circle-chevron-right"></i></Button>
+                                />
                               </Col>
                             </Row>
+                          </Card>
                         </List.Item>
                       )}
                     />
                   )}
                 </Col>
-                <Col xs={24} xl={12} style={{ padding: "1% 3%", marginTop:'3%' }}>
+                <Col xs={24} xl={12} style={{ padding: "1% 3%" }}>
                   {status >= 0 && totalAshkash > 0 && (
                     <Card
                       style={{
@@ -556,23 +566,16 @@ const SetMenu = () => {
                         border: "none",
                       }}
                     >
-                      <div
-                        style={{
-                          backgroundColor: "#CA3F21",
-                          padding: "2%",
-                          color: "white",
-                          borderRadius: 5,
-                        }}
+                      <label
+                        style={{ fontSize: "200%", color: "#e08003" }}
+                        className="dongle-font-class"
                       >
-                        <label
-                          style={{ fontSize: "120%", color: "white" }}
-                        >
-                          Ingredients for the selected food item
-                        </label>
-                      </div>
-                      
+                        Select the items
+                      </label>
                       <hr></hr>
-                      
+                      <span style={{ fontSize: 16, color: "#e08003" }}>
+                        Select the ingredients to add:
+                      </span>
                       <Row
                         style={{
                           padding: 5,
@@ -601,19 +604,15 @@ const SetMenu = () => {
                             />
                           </Col>
                         )}
-                        <Col xs={6} xl={6} style={{ textAlign:'right' }}>
+                        <Col xs={6} xl={6}>
                           <Button
-                            style={{
-                              backgroundColor: "black",
-                              borderRadius: 50,
-                              color: "white",
-                              fontSize: 14,
-                              height: "auto",
-                            }}
+                            type="primary"
                             onClick={addIngredients}
-                          >
-                            <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
-                          </Button>
+                            shape="circle"
+                            icon={<PlusOutlined />}
+                            style={{ margin: "0px 10px" }}
+                            // size="large"
+                          />
                         </Col>
                       </Row>
                       <List
@@ -712,13 +711,12 @@ const SetMenu = () => {
                       /> */}
                       {status === 0 && (
                         <Button
-                        disabled={pushToInventoryVisible}
                           block
                           type="primary"
                           style={{ marginTop: 10 }}
                           onClick={logIngredientForFood}
                         >
-                          Confirm Ingredients
+                          Confirm Menu
                         </Button>
                       )}
                     </Card>
@@ -726,39 +724,15 @@ const SetMenu = () => {
                 </Col>
               </Row>
             </div>
-            {(status === -1 && totalAshkash === 0) && (
-              <center>
-                <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
-                  <label style={{ fontSize: '800%', color: 'darkred' }}>
-                    <i class="fa-solid fa-hourglass-start"></i>
-                  </label>
-                  <br/><br/>
-                  <label style={{ fontSize: '120%', width:'50%' }}>Menu for this date has not yet been set. Please come when the admin has set the menu for the same</label>
-                </div>
-              </center>
-            )}
-            {(totalAshkash === 0 && status === 0) && (
-              <center>
-              <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
-                <label style={{ fontSize: '800%', color: 'darkred' }}>
-                  <i class="fa-solid fa-hourglass-start"></i>
-                </label>
-                <br/><br/>
-                <label style={{ fontSize: '120%', width:'50%' }}>It seems like no Mohalla has added the feed count. Please contact the mohalla admins or developer@vsbizz.com.</label>
-              </div>
-            </center>
-            )}
             <center>
               {status === 0 && totalAshkash > 0 && (
                 <Button
                   block
-                  disabled={pushToInventoryVisible}
                   style={{
                     width: "90%",
                     height: 80,
                     fontSize: 18,
                     backgroundColor: "#e08003",
-                    marginBottom: "14px"
                   }}
                   type="primary"
                   onClick={updateOperationPipeliinIngridient}
