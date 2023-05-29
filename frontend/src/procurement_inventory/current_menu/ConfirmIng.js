@@ -8,6 +8,7 @@ import {
   ConfigProvider,
   Modal,
   Alert,
+  Input,
 } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -46,7 +47,10 @@ const ConfirmIng = () => {
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
 
-  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false)
+  const [negativeInventoryReason, setNegativeInventoryReason] = useState();
+  const [isNegativeIventory, setIsNegativeIventory] = useState(false);
+
+  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false);
 
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
@@ -81,6 +85,16 @@ const ConfirmIng = () => {
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
   };
+
+  useEffect(() => {
+    if (procureIngridients) {
+      procureIngridients.forEach((ele, index) => {
+        if (ele.sufficient === false) {
+          setIsNegativeIventory(true);
+        }
+      });
+    }
+  }, [procureIngridients]);
 
   useEffect(() => {
     const getStatus = async () => {
@@ -131,6 +145,9 @@ const ConfirmIng = () => {
     getFood();
   }, [selectedDate]);
 
+  console.log(negativeInventoryReason);
+  console.log(isNegativeIventory);
+
   useEffect(() => {
     const getInventory = async () => {
       if (selectedDate) {
@@ -150,6 +167,8 @@ const ConfirmIng = () => {
             const res = await data.json();
             if (res._id) {
               setProcureIngridients(res.procure_items);
+              console.log(res);
+              setNegativeInventoryReason(res.negativ_inventory_reason);
             }
             if (res.message) {
               if (menuFoodId) {
@@ -185,6 +204,7 @@ const ConfirmIng = () => {
     getInventory();
   }, [menuFoodId, selectedDate]);
 
+  console.log(negativeInventoryReason);
   const markProcureIngridients = async () => {
     try {
       const data = await fetch("/api/pai/procurement", {
@@ -198,6 +218,7 @@ const ConfirmIng = () => {
           type: "procure_ingridient",
           date: selectedDate,
           procure_items: procureIngridients,
+          negativ_inventory_reason: negativeInventoryReason,
         }),
       });
 
@@ -223,9 +244,14 @@ const ConfirmIng = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button key="ok" type="primary" onClick={() => {
-            setFinalizeBtnVisible(true)            
-            setVisible(false)}}>
+          <Button
+            key="ok"
+            type="primary"
+            onClick={() => {
+              setFinalizeBtnVisible(true);
+              setVisible(false);
+            }}
+          >
             OK
           </Button>,
         ]}
@@ -347,6 +373,35 @@ const ConfirmIng = () => {
                   />
                 )}
 
+                {isNegativeIventory && (
+                  <div style={{ margin: "2rem", display: "block" }}>
+                    <label style={{ fontSize: "120%" }}>
+                      Reason For Negative Inventory =
+                    </label>
+                    {operationalPipelineStatus >= 2 &&
+                      negativeInventoryReason && (
+                        <label style={{ fontSize: "120%", margin: "2rem" }}>
+                          {negativeInventoryReason}
+                        </label>
+                      )}
+                    {operationalPipelineStatus &&
+                      operationalPipelineStatus < 2 &&
+                      operationalPipelineStatus !== 0 && (
+                        <Input
+                          value={negativeInventoryReason}
+                          onChange={(e) =>
+                            setNegativeInventoryReason(e.target.value)
+                          }
+                          placeholder="Eg: 2,3,15, etc"
+                          style={{
+                            width: "50%",
+                            height: "5rem",
+                            margin: "20px",
+                          }}
+                        ></Input>
+                      )}
+                  </div>
+                )}
                 {operationalPipelineStatus &&
                   operationalPipelineStatus < 2 &&
                   operationalPipelineStatus !== 0 && (

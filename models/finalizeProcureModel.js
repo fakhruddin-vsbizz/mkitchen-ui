@@ -10,6 +10,10 @@ const finalizeProcure = mongoose.Schema(
       type: String,
       required: [true, "please add the contact email"],
     },
+    negativ_inventory_reason: {
+      type: String,
+      required: [true, "please add the contact email"],
+    },
   },
   {
     timestamps: true,
