@@ -5,7 +5,14 @@ const Inventory = require("../models/inventoryItemsModel");
 const FinalizeProcure = require("../models/finalizeProcureModel");
 
 const procumentoryOperation = expressAsyncHandler(async (req, res) => {
-  const { menu_id, type, documents, procure_items, date } = req.body;
+  const {
+    menu_id,
+    type,
+    documents,
+    procure_items,
+    date,
+    negativ_inventory_reason,
+  } = req.body;
 
   const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
 
@@ -87,6 +94,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
     const procureData = await FinalizeProcure.create({
       procure_items,
       date,
+      negativ_inventory_reason,
     });
     if (updatePipeline) {
       return res.json({ message: "pipeline  updated successfully" });
