@@ -114,7 +114,7 @@ const Purchases = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -124,30 +124,33 @@ const Purchases = () => {
           <div style={{ width: "100%" }}>
             <Header comp={<center>
                 <Link to="/pai/purchases/new">
-                  <Button style={{ backgroundColor: "white", color: "orange" }}>
+                  <Button style={{ backgroundColor: "white", color: "darkred" }}>
                     <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     New Purchase
                   </Button>
                 </Link>
               </center>} title="Purchases" />
             <div style={{ padding: 0 }}>
-              <Col xs={24} xl={24} style={{ width: "100%", padding: "2%" }}>
-                <table style={{ width: "100%" }} cellPadding={10}>
+              <Col xs={24} xl={17} style={{ width: "100%", padding: "0 2% 2%" }}>
+                <table cellPadding={10}>
                   <tbody>
                   <tr>
-                    <td>
+                  <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600', paddingRight: '1rem'}}>
+                    <span style={{marginBottom: '.5rem', display: 'block'}}>
                       Ingredient name:
-                      <br />
-                      <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                    </span>
+                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
-                    <td>
-                      Date of purchase:
-                      <br />
-                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
+                    <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600', width: '21%'}}>
+                      <span style={{marginBottom: '.5rem', display: 'block'}}>
+                        Date of purchase:
+                      </span>
+                      <DatePicker style={{ fontSize: '18px'}} onChange={value => setFilterByDate(value)}></DatePicker>
                     </td>
-                    <td>
-                      Filter By Price:
-                      <br />
+                    <td style={{paddingLeft: "10px", fontSize: '20px', fontWeight: '600', width: '24%'}}>
+                      <span style={{marginBottom: '.5rem', display: 'block', marginTop: '1.6rem'}}>
+                        Filter By Price: {filterByVolume}
+                      </span>
                       <Slider
                         value={filterByVolume}
                         onChange={value => setFilterByVolume(value)}
@@ -155,10 +158,11 @@ const Purchases = () => {
                         max={1000}
                       ></Slider>
                       <br />
-                      <InputNumber
+                      
+                      {/* <InputNumber
                         value={filterByVolume}
                         onChange={value => setFilterByVolume(value)}
-                      ></InputNumber>
+                      ></InputNumber> */}
                     </td>
                   </tr>
                   </tbody>

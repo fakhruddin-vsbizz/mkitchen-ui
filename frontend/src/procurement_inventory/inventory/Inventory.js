@@ -243,7 +243,7 @@ const Inventory = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -253,27 +253,22 @@ const Inventory = () => {
           <div style={{ width: "100%" }}>
             <Header title="Inventory" />
             <div style={{ padding: 0 }}>
-              <Col xs={24} xl={20} style={{ width: "100%", padding: "2%" }}>
+              <Col xs={24} xl={20} style={{ width: "100%"}}>
                 <table
-                  style={{ width: "80vw", marginLeft: 50 }}
+                  style={{ width: "100%", marginLeft: 30 }}
                   cellPadding={10}
                 >
                   <tbody>
-                    <tr>
-                      <td>
-                        Filter by ingredients name:
-                        <br />
-                        <Input
-                          value={filterByName}
-                          onChange={(e) => setFilterByName(e.target.value)}
-                          placeholder="Filter by name..."
-                          style={{ width: "70%" }}
-                        ></Input>
-                      </td>
-                      <td>
-                        Volume Range:
+                  <tr>
+                    <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600'}}>
+                    Filter by ingredients name:
+                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                    </td>
+                      <td style={{ fontSize: '20px', fontWeight: '600', paddingLeft: '1rem'}}>
+                        Volume Range: {filterByVolume !== 0 ? filterByVolume : null}
                         <Slider
                           value={filterByVolume}
+                          style={{ fontSize: '18px'}}
                           onChange={(value) => setFilterByVolume(value)}
                           min={0}
                           max={1000}
@@ -283,6 +278,7 @@ const Inventory = () => {
                         <center>
                           <Button
                             type="primary"
+                            style={{marginTop: '1rem'}}
                             onClick={(e) => setIsModalOpen(true)}
                           >
                             <i className="fa-solid fa-circle-plus"></i>{" "}
@@ -401,11 +397,7 @@ const Inventory = () => {
                               <tr>
                                 <td>Unit for measurement</td>
                                 <td>
-                                  <Input
-                                    value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    placeholder="Eg: 2,3,4, etc"
-                                  ></Input>
+                                  <label>{unit}</label>
                                 </td>
                               </tr>
                               <tr>
@@ -475,7 +467,7 @@ const Inventory = () => {
                 {inventoryItems && (
                   <Card
                     style={{
-                      height: "60vh",
+                      height: "65vh",
                       width: "85vw",
                       overflowY: "scroll",
                       backgroundColor: "transparent",
@@ -488,52 +480,57 @@ const Inventory = () => {
                         <List.Item
                           style={{
                             margin: 5,
-                            padding: 5,
+                            padding: "10px 20px",
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
-                            width: "98%",
+                            border: "2px solid darkred",
+                            width: "100%",
                           }}
                         >
                           <Row
                             style={{
                               width: "100%",
-                              textAlign: "left",
+                              justifyContent: "space-evenly",
                               display: "flex",
                               alignItems: "center",
                             }}
                           >
-                            <Col
-                              xs={4}
-                              xl={4}
-                              style={{ fontSize: "150%", color: "#e08003" }}
+                            <Col xs={4} xl={3}
+                              style={{ fontSize: "150%", color: "darkred" }}
                             >
                               {item.ingridient_name}
                             </Col>
-                            <Col xs={6} xl={6}>
-                              Ingredient Expiry period: <br />
+                            <Col xs={6} xl={4} style={{display: 'flex',flexDirection: 'column', alignItems: 'flex-start', rowGap: '5px'}}>
+                              <span>
+                              Ingredient Expiry period:
+                              </span>
+                              <span>
                               {item.ingridient_expiry_amount}{" "}
                               {item.ingridient_expiry_period}
+                              </span>
                             </Col>
-                            <Col xs={6} xl={6}>
-                              Ingredient total Volume: <br />
-                              {item.total_volume} {item.ingridient_measure_unit}
+                            <Col xs={6} xl={4} style={{display: 'flex',flexDirection: 'column', alignItems: 'flex-start', rowGap: '5px'}}>
+                              <span>
+                              Ingredient total Volume:
+                              </span>
+                              <span style={{textTransform: 'capitalize'}}>
+                              {(item.total_volume).toFixed(2)} {item.ingridient_measure_unit}
+                              </span>
                             </Col>
                             <Col xs={4} xl={4}>
                               {item.total_volume <= item.baseline ? (
-                                <div style={{ color: "#e08003" }}>
+                                <div style={{ color: "darkred", display: 'flex',flexDirection: 'column', alignItems: 'flex-start', rowGap: '5px' }}>
+                                  <span>
                                   <i
                                     className="fa-solid fa-circle-exclamation"
-                                    style={{ marginLeft: "-50px" }}
-                                  ></i>{" "}
-                                  You are short on items
-                                  <br />
+                                    
+                                  ></i> You are short on items
+                                  </span>
                                   <Button
                                     onClick={() => onRestock(item._id)}
                                     style={{
                                       backgroundColor: "green",
-                                      marginLeft: "-50px",
                                     }}
                                     type="primary"
                                   >
@@ -541,45 +538,42 @@ const Inventory = () => {
                                   </Button>
                                 </div>
                               ) : (
-                                <div
+                                <span
                                   style={{
-                                    fontSize: "130%",
+                                    fontSize: "1.2rem",
                                     color: "green",
-                                    marginLeft: "-50px",
                                   }}
                                 >
                                   <i
                                     className="fa-solid fa-circle-check"
-                                    style={{ fontSize: "130%" }}
+                                    style={{ fontSize: "1.2rem" }}
                                   ></i>{" "}
-                                  SUFFICIENT
-                                </div>
+                                  Sufficient
+                                </span>
                               )}
                             </Col>
-                            <Col xs={4} xl={4}>
+                            <Col xs={4} xl={5} style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
                               <Link to={`/pai/inventory/purchases/${item._id}`}>
                                 <Button
                                   type="primary"
                                   style={{
                                     fontSize: "110%",
-                                    marginLeft: "-60px",
                                   }}
                                 >
                                   View Purchases
                                 </Button>
                               </Link>
-                            </Col>
                             <Button
                               onClick={(e) => updateIngridientHandler(item._id)}
                               type="primary"
                               style={{
                                 fontSize: "110%",
-                                marginLeft: "-110px",
-                                backgroundColor: "gray",
+                                backgroundColor: "#607d8b",
                               }}
                             >
                               Update
                             </Button>
+                            </Col>
                           </Row>
                           {/* <Card
                       style={{

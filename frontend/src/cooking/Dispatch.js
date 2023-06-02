@@ -26,10 +26,15 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1 < 10) ? `0${dateObj.getMonth() + 1}` : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
-  return formattedDate
-}
+    (dateObj.getMonth() + 1) < 10
+      ? `0${dateObj.getMonth() + 1}`
+      : dateObj.getMonth() + 1
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
+  console.log(formattedDate);
+  return formattedDate;
+};
 
 const dateFormatter = () => {
   const dateObj = new Date();
@@ -344,7 +349,6 @@ const Dispatch = () => {
         onCancel={() => setVisible(false)}
         footer={[
           <Button key="ok" type="primary" onClick={() => {
-            
             setVisible(false)}}>
             OK
           </Button>,
@@ -358,7 +362,7 @@ const Dispatch = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -443,7 +447,7 @@ const Dispatch = () => {
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                borderBottom: "2px solid orange",
+                                border: "2px solid darkred",
                                 width: "100%",
                               }}
                             >
@@ -520,19 +524,20 @@ const Dispatch = () => {
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "98%",
                           }}
                         >
                           <Card
-                            title={item.food_name}
                             style={{
                               width: "100%",
                               backgroundColor: "transparent",
                               border: "none",
                             }}
+                            bodyStyle={{padding: '10px 10px 10px'}}
                             bordered={false}
                           >
+                            <span style={{ fontSize: '1.5rem', margin: '1rem .5rem'}}>{item.food_name}</span>
                             <Row>
                               {finaldipatchData &&
                               finaldipatchData.filter(
@@ -559,66 +564,33 @@ const Dispatch = () => {
                                     ></Input>
                                   </Col>
                                 </>
-                              ) : null}
-
-                              <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                                <br />
-                                <br />
-                                {finaldipatchData &&
-                                  finaldipatchData
-                                    .filter(
-                                      (batch) =>
-                                        batch.food_item_id === item.food_item_id
-                                    )
-                                    .map((item) => (
-                                      <div>
-                                        <Row>
-                                          <Col xs={24} xl={12}>
-                                            Number of Daigs: <br />
-                                            <label style={{ fontSize: "150%" }}>
-                                              {item.no_of_deigh}
-                                            </label>
-                                          </Col>
-                                          <Col xs={24} xl={12}>
-                                            Total Weight: <br />
-                                            <label style={{ fontSize: "150%" }}>
-                                              {item.total_weight} Kg
-                                            </label>
-                                          </Col>
-                                        </Row>
-                                      </div>
-                                    ))}
-                                {finaldipatchData &&
-                                finaldipatchData.filter(
-                                  (batch) =>
-                                    batch.food_item_id === item.food_item_id
-                                ).length <= 0 ? (
-                                  <Button
-                                    type="primary"
-                                    onClick={(e) =>
-                                      {
-                                        if (!daigs && !totalWeight) {
-                                          return;
-                                        }
-                                        
-                                        dispatchData(
-                                        item.food_item_id,
-                                        item.food_name
-                                      )}
-                                    }
-                                  >
-                                    Dispatch Food
-                                  </Button>
-                                ) : (
-                                  <label>
-                                    <br />
-                                    <Tag color="green">DISPATCHED</Tag>
-                                  </label>
-                                )}
-                              </Col>
-                              <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                                <br />
-                                <br />
+                              ) : <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                              {finaldipatchData &&
+                                finaldipatchData
+                                  .filter(
+                                    (batch) =>
+                                      batch.food_item_id === item.food_item_id
+                                  )
+                                  .map((item) => (
+                                    <div>
+                                      <Row>
+                                        <Col xs={24} xl={12}>
+                                          Number of Daigs: <br />
+                                          <label style={{ fontSize: "150%" }}>
+                                            {item.no_of_deigh}
+                                          </label>
+                                        </Col>
+                                        <Col xs={24} xl={12}>
+                                          Total Weight: <br />
+                                          <label style={{ fontSize: "150%" }}>
+                                            {item.total_weight} Kg
+                                          </label>
+                                        </Col>
+                                      </Row>
+                                    </div>
+                                  ))}
+                                  </Col>}
+                                  <Col xs={12} xl={12} style={{ padding: "1%" }}>
                                 {finaldipatchData &&
                                   finaldipatchData
                                     .filter(
@@ -650,6 +622,39 @@ const Dispatch = () => {
                                       </div>
                                     ))}
                               </Col>
+                              <Col xs={24} xl={24}>
+                              
+                              {finaldipatchData &&
+                              finaldipatchData.filter(
+                                (batch) =>
+                                  batch.food_item_id === item.food_item_id
+                              ).length <= 0 ? (
+                                  <Button
+                                  type="primary"
+                                  style={{marginTop: '10px'}}
+                                  onClick={(e) =>
+                                    {
+                                      if (!daigs && !totalWeight) {
+                                        return;
+                                      }
+                                      dispatchData(
+                                      item.food_item_id,
+                                      item.food_name
+                                    )}
+                                  }
+                                >
+                                  Pack Food
+                                </Button>
+                              ) : (
+                                <label >
+                                  <Tag 
+                                  style={{marginTop: '10px'}} color="green">Food Packed</Tag>
+                                </label>
+                              )}
+                              </Col>
+
+                              
+                              
                             </Row>
                             {/* <Row>
                             <Col xs={12} xl={12}>
@@ -735,7 +740,7 @@ const Dispatch = () => {
                     type="primary"
                     onClick={DispatchDone}
                   >
-                    Mark Dispatch Done
+                    Sent for Delivery
                   </Button>
                 )}
             </Row>

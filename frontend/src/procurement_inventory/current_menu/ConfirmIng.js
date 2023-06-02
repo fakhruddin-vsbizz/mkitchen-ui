@@ -8,7 +8,6 @@ import {
   ConfigProvider,
   Modal,
   Alert,
-  Input,
 } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -20,10 +19,12 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
   return formattedDate;
 };
 
@@ -41,16 +42,13 @@ const TodaysDate = dateFormatterForToday();
 const newTodaysDate = dateFormatter();
 
 const ConfirmIng = () => {
-  const [menuFoodId, setMenuFoodId] = useState();
+  const [menuFoodId, setMenuFoodId] = useState("");
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [procureIngridients, setProcureIngridients] = useState([]);
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
 
-  const [negativeInventoryReason, setNegativeInventoryReason] = useState();
-  const [isNegativeIventory, setIsNegativeIventory] = useState(false);
-
-  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false);
+  const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false)
 
   const navigate = useNavigate();
   /**************Restricting PandI Route************************* */
@@ -85,16 +83,6 @@ const ConfirmIng = () => {
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
   };
-
-  useEffect(() => {
-    if (procureIngridients) {
-      procureIngridients.forEach((ele, index) => {
-        if (ele.sufficient === false) {
-          setIsNegativeIventory(true);
-        }
-      });
-    }
-  }, [procureIngridients]);
 
   useEffect(() => {
     const getStatus = async () => {
@@ -145,9 +133,6 @@ const ConfirmIng = () => {
     getFood();
   }, [selectedDate]);
 
-  console.log(negativeInventoryReason);
-  console.log(isNegativeIventory);
-
   useEffect(() => {
     const getInventory = async () => {
       if (selectedDate) {
@@ -167,8 +152,6 @@ const ConfirmIng = () => {
             const res = await data.json();
             if (res._id) {
               setProcureIngridients(res.procure_items);
-              console.log(res);
-              setNegativeInventoryReason(res.negativ_inventory_reason);
             }
             if (res.message) {
               if (menuFoodId) {
@@ -204,7 +187,6 @@ const ConfirmIng = () => {
     getInventory();
   }, [menuFoodId, selectedDate]);
 
-  console.log(negativeInventoryReason);
   const markProcureIngridients = async () => {
     try {
       const data = await fetch("/api/pai/procurement", {
@@ -218,7 +200,7 @@ const ConfirmIng = () => {
           type: "procure_ingridient",
           date: selectedDate,
           procure_items: procureIngridients,
-          negativ_inventory_reason: negativeInventoryReason,
+          procured_status: true
         }),
       });
 
@@ -244,14 +226,9 @@ const ConfirmIng = () => {
         onOk={() => setVisible(false)}
         onCancel={() => setVisible(false)}
         footer={[
-          <Button
-            key="ok"
-            type="primary"
-            onClick={() => {
-              setFinalizeBtnVisible(true);
-              setVisible(false);
-            }}
-          >
+          <Button key="ok" type="primary" onClick={() => {
+            setFinalizeBtnVisible(true)            
+            setVisible(false)}}>
             OK
           </Button>,
         ]}
@@ -264,14 +241,14 @@ const ConfirmIng = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
         <div style={{ display: "flex" }}>
           <Sidebar k="3" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Header
               title="Confirm Ingredient"
               comp={
@@ -305,7 +282,7 @@ const ConfirmIng = () => {
                   <List
                     size="small"
                     style={{
-                      height: "60vh",
+                      maxHeight: "70vh",
                       width: "100%",
                       overflowY: "scroll",
                       backgroundColor: "transparent",
@@ -317,14 +294,12 @@ const ConfirmIng = () => {
                           style={{
                             margin: 5,
                             width: "100%",
-
                             backgroundColor: "white",
-                            padding: "2%",
+                            padding: "1%",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                           }}
                         >
-                          <br />
                           <Row>
                             <Col xs={8} xl={8}>
                               <label style={{ fontSize: "140%" }}>
@@ -332,7 +307,7 @@ const ConfirmIng = () => {
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>
-                              Amount Procured: <br />
+                              Amount Procured:{" "}
                               <label
                                 style={{
                                   color: item.sufficient ? "green" : "red",
@@ -372,51 +347,22 @@ const ConfirmIng = () => {
                     )}
                   />
                 )}
-
-                {isNegativeIventory && (
-                  <div style={{ margin: "2rem", display: "block" }}>
-                    <label style={{ fontSize: "120%" }}>
-                      Reason For Negative Inventory =
-                    </label>
-                    {operationalPipelineStatus >= 2 &&
-                      negativeInventoryReason && (
-                        <label style={{ fontSize: "120%", margin: "2rem" }}>
-                          {negativeInventoryReason}
-                        </label>
-                      )}
-                    {operationalPipelineStatus &&
-                      operationalPipelineStatus < 2 &&
-                      operationalPipelineStatus !== 0 && (
-                        <Input
-                          value={negativeInventoryReason}
-                          onChange={(e) =>
-                            setNegativeInventoryReason(e.target.value)
-                          }
-                          placeholder="Eg: 2,3,15, etc"
-                          style={{
-                            width: "50%",
-                            height: "5rem",
-                            margin: "20px",
-                          }}
-                        ></Input>
-                      )}
-                  </div>
-                )}
-                {operationalPipelineStatus &&
-                  operationalPipelineStatus < 2 &&
-                  operationalPipelineStatus !== 0 && (
-                    <Button
-                      onClick={markProcureIngridients}
-                      disabled={finalizeBtnVisible}
-                      block
-                      type="primary"
-                      style={{ fontSize: "200%", height: "10%" }}
-                    >
-                      FINALIZE AND PUSH TO INVENTORY
-                    </Button>
-                  )}
               </div>
             </div>
+        {operationalPipelineStatus &&
+          operationalPipelineStatus < 2 &&
+          operationalPipelineStatus !== 0 && (
+            <Button
+              onClick={markProcureIngridients}
+              disabled={finalizeBtnVisible}
+              block
+              type="primary"
+              style={{ fontSize: "200%", height: "10%",width: "97%",
+              alignSelf: "center" }}
+            >
+              FINALIZE AND PUSH TO INVENTORY
+            </Button>
+        )}
           </div>
         </div>
       </ConfigProvider>

@@ -5,14 +5,7 @@ const Inventory = require("../models/inventoryItemsModel");
 const FinalizeProcure = require("../models/finalizeProcureModel");
 
 const procumentoryOperation = expressAsyncHandler(async (req, res) => {
-  const {
-    menu_id,
-    type,
-    documents,
-    procure_items,
-    date,
-    negativ_inventory_reason,
-  } = req.body;
+  const { menu_id, type, documents, procure_items, date } = req.body;
 
   const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
 
@@ -52,7 +45,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         return {
           inventoryItemId,
           ingridientName: group.ingridientName,
-          total_quantity: (inventory.total_volume - requiredVolume).toFixed(2),
+          total_quantity: (inventory.total_volume - requiredVolume),
           unit: group.unit ?? inventory.ingridient_measure_unit,
           requiredVolume,
           sufficient: inventory.total_volume >= requiredVolume,
@@ -70,7 +63,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         filter: { _id: inventory.inventoryItemId },
         update: {
           $set: {
-            total_volume: inventory.total_quantity,
+            total_volume: Number(inventory.total_quantity),
           },
         },
       },
@@ -94,7 +87,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
     const procureData = await FinalizeProcure.create({
       procure_items,
       date,
-      negativ_inventory_reason,
+      menu_id
     });
     if (updatePipeline) {
       return res.json({ message: "pipeline  updated successfully" });

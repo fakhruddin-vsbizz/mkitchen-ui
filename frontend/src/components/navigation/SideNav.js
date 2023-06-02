@@ -1,3 +1,4 @@
+import './sidenavbar.css'
 import {
   FileOutlined,
   PieChartOutlined,
@@ -14,6 +15,7 @@ import { useState } from "react";
 import Logo from "../../res/img/MKWhiteLogo.png";
 import LogoMin from "../../res/img/MKWhiteLogoMin.png";
 import { Link } from "react-router-dom";
+import { Footer } from "antd/es/layout/layout";
 
 const { Sider } = Layout;
 function getItem(label, key, icon, children, link) {
@@ -53,7 +55,7 @@ const admin = [
     </Link>
   ),
   getItem(
-    <Link to="/admin/account_management">Accounts</Link>,
+    <Link to="/admin/account_management">User Accounts</Link>,
     "3",
     <Link to="/admin/account_management">
       <TeamOutlined style={{ fontSize: "20px" }} />
@@ -149,7 +151,7 @@ const pai = [
   ),
   getItem(
     <span onClick={logoutHandler}>Logout</span>,
-    "6",
+    "7",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
@@ -179,13 +181,13 @@ const SideNav = ({ k, userType }) => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
-            colorSecondary: "red",
+            colorPrimary: "darkred",
+            colorSecondary: "white",
           },
         }}
       >
         <Sider
-          style={{ backgroundColor: "orange" }}
+          style={{ backgroundColor: "darkred" }}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
@@ -211,15 +213,16 @@ const SideNav = ({ k, userType }) => {
           ))} */}
 
           <Menu
-            theme="light "
+            theme="light"
             defaultSelectedKeys={[k]}
             style={{
-              backgroundColor: "transparent",
+              backgroundColor: "darkred",
               marginTop: 32,
               color: "white",
               fontSize: 16,
               fontWeight: 500,
             }}
+            
             mode="inline"
             items={
               userType == "admin"

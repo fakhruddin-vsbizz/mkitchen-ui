@@ -67,16 +67,16 @@ const getReviewsForMKUser = expressAsyncHandler(async (req, res) => {
           mkuser_id,
           review,
           remark,
-          date_of_cooking: menuFood.date_of_cooking,
-          food_list: menuFood.food_list,
+          date_of_cooking: menuFood?.date_of_cooking,
+          food_list: menuFood?.food_list,
         };
       })
     );
 
-    res.status(200).json(data);
+    return res.status(200).json(data);
   } catch (error) {
     console.error("Failed to retrieve documents:", error);
-    res.status(500).json({ error: "Failed to retrieve documents" });
+    return res.status(500).json({ error: "Failed to retrieve documents "+error });
   }
 });
 

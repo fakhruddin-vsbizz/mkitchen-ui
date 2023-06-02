@@ -29,10 +29,13 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
+  console.log(formattedDate);
   return formattedDate;
 };
 
@@ -343,13 +346,16 @@ const Cooking = () => {
     updateReorderLog();
   }, [update, reorderLogs]);
 
-  const reorderIngridient = async (ing) => {
+  const reorderIngridient = async (ing, unit) => {
     let obj = {
       ingridient_name: ing,
       inventory_id: inventoryId,
+      unit: unit,
       quantity_requireds: +reorderQuantity,
       reorder_delivery_status: true,
     };
+
+    console.log(unit);
 
     setReorderLogs([...reorderLogs, obj]);
     setUpdate(true);
@@ -451,7 +457,7 @@ const Cooking = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -469,6 +475,7 @@ const Cooking = () => {
                     <DatePicker
                       defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                       onChange={handleDateChange}
+                      disabledDate={(current) => current > dayjs().endOf('day')}
                     />
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -557,7 +564,7 @@ const Cooking = () => {
                     dataSource={getFoodList}
                     renderItem={(item, index) => (
                       <List.Item>
-                        <Card style={{ width: "100%" }}>
+                        <Card style={{ width: "100%" }} bodyStyle={{padding: '10px'}}>
                           <Row>
                             <Col xs={12} xl={8}>
                               <label style={{ fontSize: "130%" }}>
@@ -571,8 +578,9 @@ const Cooking = () => {
                           <hr></hr>
                           <Row>
                             <Col xs={24} xl={24} style={{ padding: "1%" }}>
+                              <span style={{padding: '5px 5px 10px', fontSize:'1.2rem'}}>
                               Here are the required ingredients for the cooking:
-                              <br />
+                              </span>
                               <List
                                 dataSource={ingredientLists[index]}
                                 renderItem={(ing, index) => (
@@ -583,47 +591,108 @@ const Cooking = () => {
                                         backgroundColor: "transparent",
                                         border: "none",
                                       }}
+                                      bodyStyle={{padding: '0'}}
                                     >
                                       <Row
                                         style={{
-                                          padding: 20,
+                                          padding: 10,
                                           display: "flex",
                                           backgroundColor: "#fff6ed",
                                           borderRadius: 10,
-                                          borderBottom: "2px solid orange",
-                                          width: "100%",
+                                          border: "2px solid darkred",
+                                          width: "100%",  
+                                          margin: '4px 0'
                                         }}
                                       >
                                         <Col
                                           xs={24}
-                                          xl={24}
-                                          style={{ padding: "2%" }}
+                                          xl={8}
+                                          style={{ padding: "10px" }}
                                         >
-                                          <label
+                                          <div
                                             style={{
-                                              fontSize: "110%",
+                                              fontSize: "1.2rem",
                                             }}
                                           >
-                                            <label style={{ fontSize: "140%" }}>
-                                              <i class="fa-solid fa-bowl-rice"></i>
+                                            <label style={{ fontSize: "1.2rem" }}>
+                                              <i className="fa-solid fa-bowl-rice"></i>
                                               &nbsp;&nbsp;{ing.ingredient_name}
                                             </label>
-                                          </label>
-                                        </Col>
+                                          </div>
+                                          </Col>
+                                                                            
                                         <Col
                                           xs={12}
-                                          xl={8}
-                                          style={{ padding: "2%" }}
+                                          xl={16}
+                                          style={{ padding: "10px 10px 0" }}
                                         >
-                                          Amount procured:
-                                          <br />
-                                          <label style={{ fontSize: "120%" }}>
-                                            <i class="fa-solid fa-scale-unbalanced"></i>
+                                          <div style={{display: "flex", alignItems: "baseline", columnGap: '10px'}}>
+                                          <span>
+                                          Re-order:
+                                          {/* Re-order {ing.ingredient_name} items: */}
+                                          </span>
+                                          <Input
+                                            style={{
+                                              width: "30%",
+                                              marginBottom: "10px",
+                                            }}
+                                            onChange={(e) =>
+                                              handleIngridientReOrder(
+                                                ing.inventory_item_id,
+                                                e.target.value,
+                                              )
+                                            }
+                                            placeholder="Eg: 1L, 12KG, etc"
+                                          ></Input>
+                                          <span style={{textTransform: 'capitalize'}}>
+                                          {inventoryItems &&
+                                            inventoryItems
+                                              .filter(
+                                                (itemNew) =>
+                                                  itemNew._id ===
+                                                  ing.inventory_item_id
+                                              )
+                                              .map(
+                                                (ele) =>
+                                                  ele.ingridient_measure_unit
+                                              )}
+                                          </span>
+                                          &nbsp;
+                                          <Button
+                                            disabled={status >= 3 || cookingDoneStatus}
+                                            onClick={(e) =>
+                                              reorderIngridient(
+                                                ing.ingredient_name,
+                                                inventoryItems &&
+                                            inventoryItems
+                                              .filter(
+                                                (itemNew) =>
+                                                  itemNew._id ===
+                                                  ing.inventory_item_id
+                                              )
+                                              .map(
+                                                (ele) =>
+                                                  ele.ingridient_measure_unit
+                                              )
+                                              )
+                                            }
+                                            type="primary"
+                                          >
+                                            Re-order
+                                          </Button>
+                                          </div>
+                                        </Col>
+                                        <Col xs={24}
+                                          xl={8}
+                                          style={{ padding: "10px" }}
+                                          >
+                                          <div style={{ fontSize: "1rem" }}>
+                                            <i style={{fontSize: '1rem'}} className="fa-solid fa-scale-unbalanced"></i>
                                             &nbsp;&nbsp;
                                             {totalAshkashCount && (
                                               <label
                                                 style={{
-                                                  fontSize: "120%",
+                                                  fontSize: "1rem",
                                                 }}
                                               >
                                                 {(
@@ -644,68 +713,20 @@ const Cooking = () => {
                                                     )}
                                               </label>
                                             )}
-                                          </label>
-                                        </Col>
+                                          </div>
+                                        </Col>  
                                         <Col
                                           xs={12}
-                                          xl={8}
-                                          style={{ padding: "2%" }}
+                                          xl={16}
+                                          style={{ padding: "10px 10px 0" }}
                                         >
-                                          You can re-order the items here too if
-                                          needed:
-                                          <br />
+                                          <div style={{display: "flex", alignItems: "baseline", columnGap: '10px'}}>
+                                          <span>
+                                          Leftover:
+                                          </span>
                                           <Input
                                             style={{
-                                              width: "70%",
-                                              marginBottom: "10px",
-                                            }}
-                                            onChange={(e) =>
-                                              handleIngridientReOrder(
-                                                ing.inventory_item_id,
-                                                e.target.value
-                                              )
-                                            }
-                                            placeholder="Eg: 1L, 12KG, etc"
-                                          ></Input>
-                                          &nbsp;
-                                          {inventoryItems &&
-                                            inventoryItems
-                                              .filter(
-                                                (itemNew) =>
-                                                  itemNew._id ===
-                                                  ing.inventory_item_id
-                                              )
-                                              .map(
-                                                (ele) =>
-                                                  ele.ingridient_measure_unit
-                                              )}
-                                          <Button
-                                            disabled={status >= 3}
-                                            onClick={(e) =>
-                                              reorderIngridient(
-                                                ing.ingredient_name
-                                              )
-                                            }
-                                            size="small"
-                                            type="primary"
-                                          >
-                                            Re-order Item
-                                          </Button>
-                                        </Col>
-                                        <Col
-                                          xs={12}
-                                          xl={8}
-                                          style={{
-                                            padding: "2%",
-                                          }}
-                                        >
-                                          Leftover amount of{" "}
-                                          {ing.ingredient_name}
-                                          <br />
-                                          <br />
-                                          <Input
-                                            style={{
-                                              width: "70%",
+                                              width: "30%",
                                               marginBottom: "10px",
                                             }}
                                             onChange={(e) =>
@@ -716,7 +737,7 @@ const Cooking = () => {
                                             }
                                             placeholder="Eg: 1L, 12KG, etc"
                                           ></Input>
-                                          &nbsp;
+                                          <span style={{textTransform: 'capitalize'}}>
                                           {inventoryItems &&
                                             inventoryItems
                                               .filter(
@@ -728,19 +749,21 @@ const Cooking = () => {
                                                 (ele) =>
                                                   ele.ingridient_measure_unit
                                               )}
+                                          </span>
+                                              &nbsp;
                                           <Button
-                                            disabled={status >= 3}
+                                            disabled={status >= 3 || cookingDoneStatus}
                                             onClick={(e) =>
                                               returnIngToInventory(
                                                 ing.inventory_item_id,
                                                 ing.ingredient_name
                                               )
                                             }
-                                            size="small"
                                             type="primary"
                                           >
-                                            Return to inventory
+                                            Return Leftovers
                                           </Button>
+                                          </div>
                                         </Col>
                                       </Row>
                                     </Card>
@@ -783,7 +806,7 @@ const Cooking = () => {
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                borderBottom: "2px solid orange",
+                                border: "2px solid darkred",
                                 width: "100%",
                               }}
                             >
@@ -791,7 +814,7 @@ const Cooking = () => {
                                 <label
                                   style={{
                                     fontSize: "120%",
-                                    color: "#e08003",
+                                    color: "darkred",
                                   }}
                                 >
                                   {item.ingridient_name}
@@ -800,7 +823,7 @@ const Cooking = () => {
                               <Col xs={12} xl={8}>
                                 Amount re-ordered:
                                 <br />
-                                <b style={{ color: "#e08003" }}>
+                                <b style={{ color: "darkred" }}>
                                   {item.quantity_requireds}{" "}
                                   {inventoryItems &&
                                     inventoryItems
@@ -843,7 +866,7 @@ const Cooking = () => {
                     type="primary"
                     onClick={cookingDone}
                   >
-                    Mark Cooking Done
+                    Cooking Done
                   </Button>
                 )}
             </Row>

@@ -26,6 +26,10 @@ const userModel = mongoose.Schema(
       type: String,
       required: false,
     },
+    reason_for_reconfirming_menu: {
+      type: String,
+      default: ""
+    },
     jaman_coming: {
       type: Boolean,
       required: false,
