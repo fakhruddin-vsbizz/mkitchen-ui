@@ -31,10 +31,13 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
+  console.log(formattedDate);
   return formattedDate;
 };
 
@@ -233,7 +236,7 @@ const SetMenu = () => {
         setIngredientItems((prevState) =>
           prevState === undefined
             ? [newIngredient]
-            : [...prevState, newIngredient]
+            : [newIngredient, ...prevState]
         );
         setUpdateAshkash(true);
         setIngredientName("");
@@ -267,7 +270,7 @@ const SetMenu = () => {
             setIngredientItems((prevState) =>
               prevState === undefined
                 ? [newIngredient]
-                : [...prevState, newIngredient]
+                : [newIngredient, ...prevState]
             );
             setIngredientName("");
           }
@@ -284,7 +287,7 @@ const SetMenu = () => {
         // if the ingredient name matches, update its perAshkash value
         return {
           ...ingredient,
-          perAshkash: +value,
+          perAshkash: value,
         };
       }
       return ingredient; // return the unchanged ingredient object
@@ -339,10 +342,13 @@ const SetMenu = () => {
         setVisible(true);
         setFoodIndex("");
         setIngredientItems([]);
+        setStatus(1);
       }
     } catch (error) {
       console.log(error);
     }
+    console.log("allIngridients", allIngridients);
+    console.log("allIngridients type", typeof allIngridients[0]?.perAshkash);
   };
 
   // Compare arrays and get the final array with unique objects
@@ -360,14 +366,18 @@ const SetMenu = () => {
       }
     }
     setFinalArrayForData(finalArray);
+    console.log(finalArray);
   }, [ingredientItems, inventoryItems]);
 
   // Output the final array
-  console.log(finalArrayForData);
 
   const logIngredientForFood = async () => {
-    const foodIngMapObj = { ingridients: ingredientItems };
-    setFoodIngredientMap([...foodIngredientMap, foodIngMapObj]);
+    const newFoodIngredient = ingredientItems.map(item => ({
+      ...item,
+      perAshkash: +item.perAshkash,
+    }))
+    const foodIngMapObj = { ingridients: newFoodIngredient };
+    setFoodIngredientMap([foodIngMapObj, ...foodIngredientMap]);
 
     if (foodIndex) {
       try {
@@ -379,13 +389,13 @@ const SetMenu = () => {
           body: JSON.stringify({
             type: "update_food_ingridient",
             food_id: foodIndex,
-            ingridient_list: ingredientItems,
+            ingridient_list: newFoodIngredient,
           }),
         });
 
         if (data) {
           const res = await data.json();
-          setAllIngridients([...allIngridients, ...ingredientItems]);
+          setAllIngridients([...allIngridients, ...newFoodIngredient]);
           setVisible(true);
           setFoodIndex("");
           setIngredientItems([]);
@@ -394,10 +404,11 @@ const SetMenu = () => {
         console.log(error);
       }
     }
+    console.log(newFoodIngredient);
+    console.log(ingredientItems);
   };
 
-  console.log(ingredientItems);
-  console.log(inventoryItems);
+  // console.log(inventoryItems);
 
   const handleSelect = (value, option) => {
     setInventoryItemId(option.id);
@@ -435,7 +446,7 @@ const SetMenu = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -448,7 +459,7 @@ const SetMenu = () => {
               comp={
                 <Row>
                   <Col style={{ marginRight: 10, fontSize: 18 }}>
-                    Select date for showing history:{" "}
+                    Select date:{" "}
                   </Col>
                   <Col>
                     <DatePicker
@@ -461,8 +472,8 @@ const SetMenu = () => {
             />
             <div style={{ padding: 20 }}>
               <Row>
-                <Col xs={24} xl={24} style={{ padding: "0px 50px" }}>
-                  <h3 style={{ color: "#e08003" }}>
+                <Col xs={24} xl={24} style={{ padding: "0px 15px" }}>
+                  <h3 style={{ color: "darkred", fontSize:'1.5rem', marginBottom: '0' }}>
                     Total count: {totalAshkash} People
                   </h3>
                   {/* Select Client: &nbsp;&nbsp;&nbsp;
@@ -480,7 +491,6 @@ const SetMenu = () => {
                 <Col xs={24} xl={12} style={{ padding: "1%" }}>
                   {totalAshkash === 0 && (
                     <Alert
-                      style={{ margin: "0.5rem" }}
                       message="Message"
                       description="Mohalla Count Not set"
                       type="error"
@@ -489,7 +499,6 @@ const SetMenu = () => {
                   )}
                   {status === -1 && (
                     <Alert
-                      style={{ margin: "0.5rem" }}
                       message="Message"
                       description="Menu not set for the selected date"
                       type="error"
@@ -498,9 +507,8 @@ const SetMenu = () => {
                   )}
                   {status >= 1 && (
                     <Alert
-                      style={{ margin: "0.5rem" }}
                       message="Message"
-                      description="Ingridient Items have already added"
+                      description="Ingredient Items have already added"
                       type="success"
                       closable
                     />
@@ -512,13 +520,14 @@ const SetMenu = () => {
                       itemLayout="horizontal"
                       dataSource={getFoodList}
                       renderItem={(item, index) => (
-                        <List.Item>
+                        <List.Item style={{padding: '10px 0'}}>
                           <Card
                             style={{
                               width: "100%",
                               backgroundColor: "transparent",
                               border: "none",
                             }}
+                            bodyStyle={{padding: '0'}}
                           >
                             <Row
                               style={{
@@ -526,14 +535,22 @@ const SetMenu = () => {
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                borderBottom: "2px solid orange",
+                                border: "2px solid darkred",
                                 width: "100%",
                               }}
                             >
-                              <Col xs={16} xl={16}>
+                              <Col xs={16} xl={16} style={{
+                                display: "flex",
+                                columnGap: "5px",
+                                alignItems: "center",
+                                justifyContent: "flex-start",
+                                fontSize: '1.3rem',
+                                color: 'rgb(64, 64, 64)'
+                              }}>
+                                <span>
                                 Food Name:
-                                <br />
-                                <label style={{ fontSize: "125%" }}>
+                                </span>
+                                <label>
                                   {item.food_name}
                                 </label>
                               </Col>
@@ -557,24 +574,32 @@ const SetMenu = () => {
                     />
                   )}
                 </Col>
-                <Col xs={24} xl={12} style={{ padding: "1% 3%" }}>
+                <Col xs={24} xl={12} style={{ padding: "1%" }}>
                   {status >= 0 && totalAshkash > 0 && (
                     <Card
                       style={{
                         width: "100%",
                         backgroundColor: "white",
                         border: "none",
+                        border: '2px solid darkred'
                       }}
                     >
+                      {status === 0 ?
                       <label
-                        style={{ fontSize: "200%", color: "#e08003" }}
+                        style={{ fontSize: "200%", color: "darkred" }}
                         className="dongle-font-class"
                       >
-                        Select the items
-                      </label>
-                      <hr></hr>
-                      <span style={{ fontSize: 16, color: "#e08003" }}>
-                        Select the ingredients to add:
+                        Select the ingredients
+                      </label>: <label
+                        style={{ fontSize: "200%", color: "darkred" }}
+                        className="dongle-font-class"
+                      >
+                        Selected ingredients
+                      </label>}
+                      <br />
+                      {status === 0 && foodIndex && <>
+                      <span style={{ fontSize: 16, color: "darkred" }}>
+                        Add Ingredients:
                       </span>
                       <Row
                         style={{
@@ -614,13 +639,13 @@ const SetMenu = () => {
                             // size="large"
                           />
                         </Col>
-                      </Row>
-                      <List
+                      </Row></>}
+                      {ingredientItems.length !== 0 ? <List
                         size="small"
                         style={{
                           width: "100%",
                           padding: 5,
-                          height: "30vh",
+                          maxHeight: "35vh",
                           overflowY: "scroll",
                           overflowX: "hidden",
                           backgroundColor: "#fff6ed",
@@ -635,7 +660,7 @@ const SetMenu = () => {
                               display: "flex",
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              border: "2px solid darkred",
                               width: "98%",
                             }}
                           >
@@ -644,64 +669,80 @@ const SetMenu = () => {
                                 width: "100%",
                                 backgroundColor: "transparent",
                                 border: "none",
+                                display: 'flex',
+                                flexDirection: 'column',
+                                justifyContent: 'center'
                               }}
-                              title={
-                                <Row>
-                                  <Col xs={12} xl={12}>
-                                    {item.ingredient_name}
-                                  </Col>
-                                  <Col xs={6} xl={6}>
-                                    <Button
-                                      type="primary"
-                                      onClick={() =>
-                                        OnDelete(item.inventory_item_id)
-                                      }
-                                      shape="circle"
-                                      icon={<DeleteOutlined />}
-                                      style={{ margin: "0px 10px" }}
-                                      // size="large"
-                                    />
-                                  </Col>
-                                </Row>
-                              }
-                              bordered={false}
+                              bodyStyle={{padding: '10px 24px'}}
                             >
                               <Row>
-                                <Col xs={12} xl={12}>
-                                  Per Ashkhaas count
+                              <Col xs={12} xl={8}  style={{alignSelf: 'center'}}>
+                                <span style={{fontSize: '1.3rem', textTransform: 'capitalize'}}>
+                                    {item.ingredient_name}
+                                </span>
+                                  </Col>
+                                <Col xs={12} xl={7} style={{alignSelf: 'center'}}>
+                                <span style={{fontSize: '1.3rem'}}>
+                                  Per person:
+                                  </span>
                                 </Col>
-                                <Col xs={12} xl={12}>
-                                  <Row>
-                                    <Col xs={16} xl={16}>
+                                <Col xs={12} xl={9} style={{display: 'flex', justifyContent: 'center', columnGap: '5px', alignSelf: 'center'}}>
+
+                                  <div style={{ display: 'flex', columnGap: '4px', alignSelf: 'center'}}>
+                                      {status === 0 ?
                                       <Input
-                                        // min="0"
-                                        type="number"
-                                        value={item.perAshkash}
-                                        onChange={(e) => {
-                                          handlePerAshkashChange(
-                                            e.target.value,
-                                            item.ingredient_name
+                                      style={{fontSize: '1.3rem'}}
+                                      value={item.perAshkash}
+                                      onChange={(e) => {
+                                        handlePerAshkashChange(
+                                          e.target.value,
+                                          item.ingredient_name
                                           );
                                         }}
                                         placeholder="Eg: 1200,200,etc.."
-                                      />
-                                    </Col>
-                                    <Col xs={8} xl={8}>
-                                      <label>
+                                        /> : <span style={{fontSize: '1.3rem'}}>{item.perAshkash}</span>
+                        }
+                                        <span style={{fontSize: '1.3rem', textTransform: 'capitalize', alignSelf: 'center'}}>
+                                        &nbsp;
                                         {inventoryItems.find(
                                           (inv) =>
-                                            inv.ingridient_name ===
-                                            item.ingredient_name
-                                        )?.ingridient_measure_unit || "kg"}
-                                      </label>
+                                          inv.ingridient_name ===
+                                          item.ingredient_name
+                                          )?.ingridient_measure_unit || "kg"}
+                                      </span>
+                                          </div>
+                                      {status === 0 &&
+                                        <Button
+                                        type="primary"
+                                        onClick={() =>
+                                          OnDelete(item.inventory_item_id)
+                                        }
+                                        shape="circle"
+                                        icon={<DeleteOutlined />}
+                                        style={{ margin: "0px 15px", alignSelf: 'center' }}
+                                        // size="large"
+                                      />
+                                      }
                                     </Col>
+
                                   </Row>
-                                </Col>
-                              </Row>
                             </Card>
                           </List.Item>
                         )}
-                      />
+                      />: <div style={{width: "100%",
+                      padding: 5,
+                      height: "35vh",
+                      display: 'flex',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      flexDirection: 'column'
+                      }}>
+             
+                        <i style={{fontSize: '6rem', color: "darkred"}} class="fa-solid fa-square-xmark"></i>
+                        <span style={{fontSize: '1.8rem', letterSpacing: 2}}>
+                        Add Ingredient or select food item
+                        </span>
+                        </div>}
                       {/* <IngredientList
                         ingredientItems={ingredientItems}
                         OnDelete={OnDelete}
@@ -709,7 +750,7 @@ const SetMenu = () => {
                         handlePerAshkashChange={handlePerAshkashChange}
                         foodIndex={foodIndex}
                       /> */}
-                      {status === 0 && (
+                      {status === 0 && foodIndex && (
                         <Button
                           block
                           type="primary"
@@ -730,9 +771,9 @@ const SetMenu = () => {
                   block
                   style={{
                     width: "90%",
-                    height: 80,
+                    height: 60,
                     fontSize: 18,
-                    backgroundColor: "#e08003",
+                    backgroundColor: "darkred",
                   }}
                   type="primary"
                   onClick={updateOperationPipeliinIngridient}

@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import './menu.css'
 
 import {
   Row,
@@ -22,6 +23,7 @@ import styles from "../admin.module.css";
 import Header from "../../components/navigation/Header.js";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context.js";
+import TextArea from "antd/es/input/TextArea";
 const { useToken } = theme;
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
@@ -38,9 +40,10 @@ const Menu = () => {
   const [foodItemId, setFoodItemId] = useState();
 
   const [selectedFood, setSelectedFood] = useState("");
-  const [AddedFoodItems, setAddedFoodItems] = useState();
+  const [AddedFoodItems, setAddedFoodItems] = useState([]);
   const [isMenu, setIsMenu] = useState(false);
   const [status, setStatus] = useState();
+  const [reasonForReconfirmingMenu, setReasonForReconfirmingMenu] = useState("")
 
   const [ingridientList, setIngridientList] = useState([]);
   const [menuConfimStatus, setMenuConfimStatus] = useState(false);
@@ -181,7 +184,13 @@ const Menu = () => {
   }, []);
 
   const addFoodItem = async () => {
-    if (selectedFood === "") {
+
+    const itemExists = foodItems.find((item) => item.food_name === selectedFood)
+
+    console.log(itemExists, foodItems);
+
+    if (selectedFood === "" || itemExists) {
+      setSelectedFood("");
       return;
     } else {
       if (AddedFoodItems.find((item) => item.name === selectedFood)) {
@@ -203,7 +212,7 @@ const Menu = () => {
               // total_weight: 0,
               food_name: selectedFood,
             };
-            setFoodItems([...foodItems, newFoodItem]);
+            setFoodItems([newFoodItem, ...foodItems]);
           });
       } else {
         try {
@@ -229,7 +238,7 @@ const Menu = () => {
                 // total_weight: 0,
                 food_name: selectedFood,
               };
-              setFoodItems([...foodItems, newFoodItem]);
+              setFoodItems([newFoodItem, ...foodItems]);
             });
         } catch (error) {
           console.log(error);
@@ -238,6 +247,41 @@ const Menu = () => {
       setSelectedFood("");
     }
   };
+
+  const reCreateMenu = async () => {
+    try {
+      await fetch("/api/admin/menu/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          add_type: "add_menu",
+          food_list: foodItems,
+          total_ashkhaas: 0,
+          date_of_cooking: dateValue,
+          client_name: "mk admin",
+          jaman_coming: true,
+          reason_for_undelivered: null,
+          mohalla_wise_ashkhaas: [],
+          ingridient_list: [],
+          status: 0,
+          reorder_logs: [],
+          reason_for_reconfirming_menu: reasonForReconfirmingMenu,
+          dispatch: [],
+          leftover: [],
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setVisible(true);
+          setStatus(0)
+          setFoodItemId("");
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   const createMenu = async () => {
     try {
@@ -265,6 +309,7 @@ const Menu = () => {
         .then((res) => res.json())
         .then((data) => {
           setVisible(true);
+          setStatus(0);
           setFoodItemId("");
         });
     } catch (error) {
@@ -412,11 +457,12 @@ const Menu = () => {
                 />
               </ConfigProvider>
             </Col>
-            <Col xs={12} xl={12} style={{ padding: "2%" }}>
+            <Col xs={12} xl={12} style={{ padding: "0 2% 0 0" }}>
               <Card
                 bordered={true}
                 className="w-full"
-                style={{ border: "1px solid lightgray" }}
+                style={{ border: "1px solid lightgray", minHeight: "55vh" }}
+                bodyStyle={{padding: '24px 24px 10px'}}
               >
                 <Row
                   style={{
@@ -427,7 +473,7 @@ const Menu = () => {
                   }}
                 >
                   <Col xs={24} xl={12}>
-                    Menu selection for:
+                    Menu for:
                     <br />
                     <i class="fa-solid fa-calendar"></i> &nbsp;&nbsp;{" "}
                     <span style={{ fontSize: "1.2rem" }}>
@@ -451,17 +497,18 @@ const Menu = () => {
                 <hr style={{ borderColor: "lightgrey" }}></hr>
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
-                <div
-                  style={{ marginTop: 10, marginBottom: 20, display: "flex" }}
+                {(new Date(dateValue) >
+                  new Date().setDate(new Date().getDate() - 1)) && status < 3 && <><div
+                  style={{ marginTop: 10, marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: 'baseline' }}
                 >
-                  <div style={{ width: "80%" }}>
-                    <label>Search menu by name:</label> &nbsp;&nbsp;
-                    {AddedFoodItems && status !== 4 && (
+                  <div style={{ width: "83%", display: 'flex' }}>
+                    <label className="label">Search menu by name:</label> &nbsp;&nbsp;
                       <AutoComplete
                         id="food-item-selected"
                         style={{
                           width: "50%",
-                          border: "2px solid orange",
+                          border: "2px solid darkred",
+                          flexGrow: 1,
                           borderRadius: 8,
                         }}
                         value={selectedFood}
@@ -475,19 +522,17 @@ const Menu = () => {
                             .toUpperCase()
                             .indexOf(inputValue.toUpperCase()) !== -1
                         }
-                      />
-                    )}
+                      />               
                   </div>
                   <div
                     style={{
-                      width: "20%",
+                      width: "fit-content",
                       display: "flex",
                       alignContent: "center",
                       justifyContent: "center",
                       alignItems: "flex-end",
                     }}
                   >
-                    {status !== 4 && (
                       <Button
                         style={{
                           backgroundColor: "black",
@@ -499,23 +544,25 @@ const Menu = () => {
                         onClick={addFoodItem}
                       >
                         <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
-                      </Button>
-                    )}
-                  </div>
-                </div>
+                      </Button>                 
+                  </div></div></>}
+                
 
                 <List
                   // size="small"
                   // bordered
+                  style={{overflowY: 'scroll', height: "33vh", padding: ".5rem .3rem"}}
                   dataSource={foodItems}
                   renderItem={(item) => (
                     <div
                       style={{
-                        padding: 30,
+                        padding: 15,
                         display: "flex",
+                        alignItems: 'center',
                         backgroundColor: "rgb(255 246 237)",
                         borderRadius: 5,
-                        border: "2px solid orange",
+                        marginBottom: '.5rem',
+                        border: "2px solid darkred",
                       }}
                     >
                       <div style={{ width: "60%" }}>
@@ -560,6 +607,7 @@ const Menu = () => {
                                 {newItem.ingridient_list.map(
                                   (ing, ingIndex) => (
                                     <Tag color="darkred" key={ingIndex}>
+                                      <i class="fa-solid fa-plate-wheat"></i> &nbsp;
                                       {ing.ingredient_name}
                                     </Tag>
                                     // <span key={ingIndex}>
@@ -570,7 +618,7 @@ const Menu = () => {
                               </div>
                             ))}
                       </div>
-                      <div
+                      {(new Date(dateValue) > new Date().setDate(new Date().getDate() - 1)) && status < 3 && <div
                         style={{
                           width: "20%",
                           display: "flex",
@@ -581,7 +629,7 @@ const Menu = () => {
                       >
                         <Button
                           style={{
-                            backgroundColor: "#E86800",
+                            backgroundColor: "red",
                             borderRadius: 50,
                             color: "white",
                             fontSize: 9,
@@ -591,7 +639,7 @@ const Menu = () => {
                         >
                           <i class="fa-solid fa-trash"></i>
                         </Button>
-                      </div>
+                      </div>}
                     </div>
 
                     // <List.Item>
@@ -635,11 +683,13 @@ const Menu = () => {
                   )}
                 />
                 <hr style={{ borderColor: "lightgrey" }}></hr>
-                {foodItems.length !== 0 &&
+                {status >= 3 || (new Date(dateValue) <
+                  new Date().setDate(new Date().getDate() - 1)) ?
+              <p className="done-tag">
+                Food Already Cooked
+              </p> : <>{ foodItems.length !== 0
                 /*status === -1 &&*/
-                status !== 4 &&
-                new Date(dateValue) >
-                  new Date().setDate(new Date().getDate() - 1) ? (
+                 ? <> {status < 0 ? (
                   <div style={{ width: "100%", textAlign: "right" }}>
                     <Button
                       onClick={createMenu}
@@ -653,10 +703,28 @@ const Menu = () => {
                         fontWeight: 600,
                       }}
                     >
-                      Finalize and Confirm Menu
+                      Confirm Menu
                     </Button>
                   </div>
-                ) : null}
+                ) : (status <3 && <div style={{ width: "100%", textAlign: "left", marginTop: '1rem' }}>
+                  <label htmlFor="reason" className="label">Reason for changing menu : </label>
+                  <TextArea rows={2} name="reason" id="reason" style={{marginBlock: '.5rem', fontSize: '1.1rem'}} value={reasonForReconfirmingMenu} onChange={(e) => setReasonForReconfirmingMenu(e.target.value)} />
+                <Button
+                  onClick={reCreateMenu}
+                  disabled={!reasonForReconfirmingMenu}
+                  style={{
+                    width: "100%",
+                    backgroundColor: "maroon",
+                    color: "white",
+                    height: "170%",
+                    fontSize: "120%",
+                    fontWeight: 600,
+                  }}
+                >
+                  Change Menu
+                </Button>
+              </div>)}</>: null
+               }</>}
               </Card>
             </Col>
           </Row>

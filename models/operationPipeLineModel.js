@@ -21,7 +21,7 @@ const OperationPipeLine = new mongoose.Schema(
     },
     leftover: {
       type: mongoose.Schema.Types.Mixed,
-      required: false,
+      default: []
     },
     status: {
       type: Number,

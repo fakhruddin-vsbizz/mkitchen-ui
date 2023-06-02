@@ -523,35 +523,33 @@ const Accounts = () => {
         <div style={{ width: "100%" }}>
           <Header
             title="Account Management"
-            comp=<Button
+            comp={<Button
               style={{
                 // marginLeft: "60%",
                 backgroundColor: "white",
-                color: "orange",
+                color: "darkred",
                 fontWeight: 600,
               }}
               onClick={showNMModal}
             >
               Add New MK User
-            </Button>
+            </Button>}
           />
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "orange",
+                colorPrimary: "darkred",
                 colorDanger: "",
               },
             }}
           >
             <Modal
-              title=<h3 style={{ color: "#E86800" }}>Add new account</h3>
+              title={<h3 style={{ color: "darkred" }}>Add New Account</h3>}
               open={newMohallaPopup}
               onOk={handleNMOk}
               onCancel={handleNMCancel}
               footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
-              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={handleSubmit} type="primary" block>
-                      Create new MK Account
-              </Button>
+              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={handleSubmit} type="primary" block>Create new Account</Button>
               <Button style={{width: "40%"}} onClick={handleNMCancel}>Cancel</Button>
               </div>}
             >
@@ -665,30 +663,31 @@ const Accounts = () => {
             </Modal>
 
             <div className="" style={{ padding: 10 }}>
-              <Tabs centered style={{ color: "#E86800" }}>
+              <Tabs centered style={{ color: "darkred" }}>
                 <Tabs.TabPane tab="Mohalla Accounts" key="1">
                   <div
                     style={{
-                      borderBottomWidth: 2,
-                      borderBottomColor: "#E86800",
+                      borderWidth: 2,
+                      border: "darkred",
                     }}
                   >
                     <label
                       style={{
                         fontSize: "130%",
                         padding: 20,
-                        color: "#E86800",
+                        color: "darkred",
                       }}
                     >
                       <b>Mohalla Accounts</b>
                     </label>
 
                     <Card
+                    bodyStyle={{padding: "0 14px 24px 24px"}}
                       style={{
                         margin: 10,
                         overflowY: "scroll",
                         backgroundColor: "transparent",
-                        height: "70vh",
+                        height: "68vh",
                         // border: '1px 0px',
                         // borderColor: '#E86800',
                       }}
@@ -704,35 +703,43 @@ const Accounts = () => {
                                   display: "flex",
                                   backgroundColor: "#fff",
                                   borderRadius: 5,
-                                  border: "2px solid orange",
+                                  border: "2px solid darkred",
+                                  marginBottom: "4px",
                                   width: "100%",
                                 }}
                               >
                                 <Col
                                   xs={24}
-                                  xl={24}
-                                  style={{ padding:'1%' }}
+                                  xl={6}
+                                  style={{ padding:'1%', display: 'flex', alignItems: 'center', columnGap: '3px' }}
                                 >
-                                  <label style={{ fontSize:'150%' }}><i class="fa-solid fa-house-user"></i>&nbsp;&nbsp;{item.username}</label>
+                                  <i style={{ fontSize:'150%' }} className="fa-solid fa-house-user"></i>&nbsp;&nbsp;
+                                  <label style={{ fontSize:'150%' }}>{item.username}</label>
                                 </Col>
-                                <Col xs={8} xl={8}>
-                                  Verification status: <br />
+                                <Col xs={8} xl={4} style={{marginLeft: '12px', display: 'flex', flexDirection: 'column', rowGap: '5px', justifyContent: 'center'}}>
+                                  <span>
+                                  Verification status:
+                                  </span>
                                   {item.usertype ? (
                                     <label style={{ fontSize:'120%' }}><i class="fa-solid fa-toggle-on"></i> &nbsp;&nbsp; <Tag color="green">ACTIVE</Tag></label>
                                   ) : (
                                     <label style={{ fontSize:'120%' }}><i class="fa-solid fa-toggle-off"></i> &nbsp;&nbsp; <Tag color="red">DISABLED</Tag></label>
                                   )}
                                 </Col>
-                                <Col xs={8} xl={8}>
-                                  Email address: <br />
+                                <Col xs={8} xl={6} style={{display: 'flex', flexDirection: 'column', rowGap: '5px', justifyContent: 'center'}}>
+                                  <span>
+                                  Email address:
+                                  </span>
                                   <label style={{ fontSize:'120%' }}><i class="fa-solid fa-envelope"></i>&nbsp;&nbsp;{item.email}</label>
                                 </Col>
-                                <Col xs={8} xl={8}>
-                                  Change Mohalla account's email and password: <br />
+                                <Col xs={8} xl={7} style={{display: 'flex', flexDirection: 'column', rowGap: '5px', justifyContent: 'center'}}>
+                                  <span>
+                                  Change Mohalla account's email and password:
+                                  </span>
                                   <Button
                                     size="small"
                                     type="primary"
-                                    style={{ backgroundColor:'darkred', height:'60%' }}
+                                    style={{ backgroundColor:'darkred', height:'34px' }}
                                     onClick={() =>
                                       showModal(item.username, item.email)
                                     }
@@ -748,18 +755,23 @@ const Accounts = () => {
                     </Card>
 
                     <Modal
-                      title={<h3 style={{ color: "#E86800" }}>
-                        Account setting
+                      title={<h3 style={{ color: "darkred" }}>
+                        Reset Password
                       </h3>}
                       open={isModalOpen}
                       onOk={handleOk}
                       onCancel={handleCancel}
+                      footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
+              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={() => updateUserPasswordMohalla("Mohalla Admin")} type="primary" block>Change Password</Button>
+              <Button style={{width: "40%"}} onClick={handleCancel}>Cancel</Button>
+              </div>}
                     >
-                      <p>Change Email</p>
+                      {/* <p>Change Email</p> */}
                       <table style={{ width: "100%" }}>
                         <tr>
-                          <td style={{ width: "75%" }}>
-                            <Input
+                          <td style={{ width: "75%", display: 'flex', alignItems: 'baseline', columnGap: '1rem' }}>
+                      <span style={{fontSize: '1.1rem'}}>Change Email: </span>
+                            {/* <Input
                               value={newEmailMohalla}
                               onChange={(e) =>
                                 setNewEmailMohalla(e.target.value)
@@ -768,20 +780,21 @@ const Accounts = () => {
                               suffix={
                                 <Tooltip title="Change only in case needed.">
                                   <InfoCircleOutlined
-                                    style={{ color: "orange" }}
+                                    style={{ color: "darkred" }}
                                   />
                                 </Tooltip>
                               }
-                            />
+                            /> */}
+                            <label style={{fontSize: '1.3rem', borderBottom: '2px solid darkred' , padding: '5px 8px', borderRadius: '5px'}}>{newEmailMohalla}</label>
                           </td>
-                          <td style={{ width: "25%" }}>
+                          {/* <td style={{ width: "25%" }}>
                             <Button
                               onClick={updateMohallAdminEmail}
                               type="primary"
                             >
                               Change Email
                             </Button>
-                          </td>
+                          </td> */}
                         </tr>
                         {emailError && (
                           <tr>
@@ -798,8 +811,7 @@ const Accounts = () => {
                           </tr>
                         )}
                       </table>
-                      <Divider style={{ backgroundColor: "#000" }}></Divider>
-                      <p>Reset Password</p>
+                      <hr />
                       <table style={{ width: "100%" }}>
                         <tr>
                           <td>New Password</td>
@@ -826,7 +838,7 @@ const Accounts = () => {
                           </td>
                         </tr>
                         <tr>
-                          <td colSpan={2}>
+                          {/* <td colSpan={2}>
                             <br />
                             <Button
                               onClick={() =>
@@ -837,7 +849,7 @@ const Accounts = () => {
                             >
                               Change Password
                             </Button>
-                          </td>
+                          </td> */}
                         </tr>
                         {error && (
                           <tr>
@@ -891,7 +903,7 @@ const Accounts = () => {
                             marginBottom: 20,
                             backgroundColor: "white",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "85%",
                           }}
                         >
@@ -932,11 +944,6 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
-                          
-                          
-
-                          
-
                           <table style={{ width: "100%" }}>
                             <tr>
                               <td style={{ width: "100%" }}>
@@ -949,7 +956,7 @@ const Accounts = () => {
                                   suffix={
                                     <Tooltip title="Change only in case needed.">
                                       <InfoCircleOutlined
-                                        style={{ color: "rgba(0,0,0,.45)" }}
+                                        style={{ color: "darkred" }}
                                       />
                                     </Tooltip>
                                   }
@@ -993,7 +1000,7 @@ const Accounts = () => {
                             display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "100%",
                           }}
                         >
@@ -1137,7 +1144,7 @@ const Accounts = () => {
                             marginBottom: 20,
                             backgroundColor: "white",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "80%",
                           }}
                         >
@@ -1191,7 +1198,7 @@ const Accounts = () => {
                                   suffix={
                                     <Tooltip title="Change only in case needed.">
                                       <InfoCircleOutlined
-                                        style={{ color: "rgba(0,0,0,.45)" }}
+                                        style={{ color: "darkred" }}
                                       />
                                     </Tooltip>
                                   }
@@ -1234,7 +1241,7 @@ const Accounts = () => {
                             display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "100%",
                           }}
                         >
@@ -1318,7 +1325,7 @@ const Accounts = () => {
                         display: "flex",
                         backgroundColor: "white",
                         borderRadius: 10,
-                        borderBottom: "2px solid orange",
+                        border: "2px solid darkred",
                         width: "100%",
                       }}
                     >
@@ -1337,9 +1344,9 @@ const Accounts = () => {
                           <p>User Detail Updated Successfully.</p>
                         </div>
                       </Modal>
-                      <h3 style={{ color: "#E86800" }}>
+                      <h3 style={{ color: "darkred" }}>
                         {" "}
-                        Reset Password of P&I Department
+                        Admin Reset Password
                       </h3>
                       <table style={{ width: "35vw" }}>
                         <tr>

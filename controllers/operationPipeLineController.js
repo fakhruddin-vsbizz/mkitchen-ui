@@ -1,6 +1,8 @@
 const expressAsyncHandler = require("express-async-handler");
 const FoodMenu = require("../models/menuFoodModel");
 const OperationPipeLine = require("../models/operationPipeLineModel");
+const FinalizeProcureModel = require( "../models/finalizeProcureModel" );
+const InventoryItemsModel = require( "../models/inventoryItemsModel" );
 
 const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   const {
@@ -143,7 +145,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     const dispatchDoc = await OperationPipeLine.findOne({
       menu_food_id: menu_id,
     });
-    const dispatchArr = dispatchDoc.dispatch;
+    const dispatchArr = await dispatchDoc.dispatch;
 
     const newDispatchObj = {
       food_item_id: food_item_id,
@@ -173,7 +175,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     } else {
       // find the existing `dispatch` object with the matching `mk_id`, if any
 
-      const targetDispatchObj = dispatchArr.find(
+      const targetDispatchObj = await dispatchArr.find(
         (dispatch) => dispatch.mk_id === mk_id
       );
 
@@ -239,13 +241,68 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
         reorderArr[index].reorder_delivery_status = false;
       }
     });
+
     await operationId.updateOne({ reorder_logs: reorderArr });
-    return res.json({ message: "reOrderLog  updated successfully" });
+
+    const newInventoryItem = await InventoryItemsModel.findOneAndUpdate({_id: req.body.inventory_id},{
+      $inc: {
+        total_volume: -req.body.procured_Amount
+      }
+    })
+    
+    const procuredItem = await FinalizeProcureModel.findOne({menu_id: req.body.menu_id}).lean()
+
+    console.log("procuredItem",procuredItem);
+  
+      const newProcuredItems = await procuredItem?.procure_items.map(item => item?.inventoryItemId === req.body.inventory_id? ({
+          ...item,
+          requiredVolume: item.requiredVolume + req.body.procured_Amount,
+          total_quantity: item.total_quantity -req.body.procured_Amount
+        }): item
+      )
+  
+    console.log("newProcuredItems",newProcuredItems);
+    
+    const something = await FinalizeProcureModel.findOneAndUpdate({menu_id: req.body.menu_id}, {procure_items: newProcuredItems});
+
+    return res.status(200).json({ message: "reOrderLog  updated successfully" });
   }
+});
+
+const changeInventoryAmount = expressAsyncHandler(async (req, res) => {
+  const newInventoryItem = await InventoryItemsModel.findOneAndUpdate({_id: req.body.inventory_id},{
+    $inc: {
+      total_volume: -req.body.procured_Amount
+    }
+  })
+  return res.status(200).json(newInventoryItem);
+});
+
+const changeProcurementAmount = expressAsyncHandler(async (req, res) => {
+  const procuredItem = await FinalizeProcureModel.findOne({menu_id: req.body.menu_id}).lean()
+
+  console.log("procuredItem",procuredItem);
+
+    const newProcuredItems = await procuredItem?.procure_items.map(item => item?.inventoryItemId === req.body.inventory_id? ({
+        ...item,
+        requiredVolume: item.requiredVolume + req.body.procured_Amount,
+        total_quantity: item.total_quantity -req.body.procured_Amount
+      }): item
+    )
+
+  console.log("newProcuredItems",newProcuredItems);
+  
+  const something = await FinalizeProcureModel.findOneAndUpdate({menu_id: req.body.menu_id}, {procure_items: newProcuredItems});
+  
+  console.log("something",something);
+   
+  return res.status(200).json(something);
 });
 
 module.exports = {
   addOperationPipeline,
   getOperationPipeline,
   updateOperationPipeline,
+  changeInventoryAmount,
+  changeProcurementAmount
 };

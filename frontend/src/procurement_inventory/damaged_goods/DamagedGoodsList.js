@@ -175,7 +175,7 @@ const DamagedGoodsList = () => {
           const res = await data.json();
           if (res) {
             setExpiredItems(res);
-
+            console.log(res);
             setFilteredExpiredItems(res);
           }
         }
@@ -335,10 +335,16 @@ const DamagedGoodsList = () => {
                           >
                             <Col
                               xs={24}
-                              xl={6}
+                              xl={4}
                               style={{ fontSize: "150%", color: "#e08003" }}
                             >
                               {item.ingredient_name}
+                            </Col>
+                            <Col xs={12} xl={4}>
+                              Quantity: <br />
+                              {item.quantity_loaded} {" "} <span style={{textTransform: 'capitalize'}}>
+                                {item?.inventoryInfo[0]?.ingridient_measure_unit}
+                                </span> 
                             </Col>
                             <Col xs={12} xl={4}>
                               Expired on: <br />
@@ -348,7 +354,7 @@ const DamagedGoodsList = () => {
                               Date of purchase: <br />
                               {new Date(item.createdAt).toDateString()}
                             </Col>
-                            <Col xs={12} xl={6}>
+                            <Col xs={12} xl={4}>
                               Days after expiry: <br />
                               {daysAfterExpiry(item.expiry_date)} days
                             </Col>

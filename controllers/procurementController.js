@@ -45,7 +45,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         return {
           inventoryItemId,
           ingridientName: group.ingridientName,
-          total_quantity: (inventory.total_volume - requiredVolume).toFixed(2),
+          total_quantity: (inventory.total_volume - requiredVolume),
           unit: group.unit ?? inventory.ingridient_measure_unit,
           requiredVolume,
           sufficient: inventory.total_volume >= requiredVolume,
@@ -63,7 +63,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         filter: { _id: inventory.inventoryItemId },
         update: {
           $set: {
-            total_volume: inventory.total_quantity,
+            total_volume: Number(inventory.total_quantity),
           },
         },
       },
@@ -87,6 +87,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
     const procureData = await FinalizeProcure.create({
       procure_items,
       date,
+      menu_id
     });
     if (updatePipeline) {
       return res.json({ message: "pipeline  updated successfully" });

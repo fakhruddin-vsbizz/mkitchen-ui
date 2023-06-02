@@ -19,13 +19,16 @@ import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 
+
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
   return formattedDate;
 };
 
@@ -155,7 +158,7 @@ const PostConfirmOps = () => {
     getData();
   }, [selectedDate, menuFoodId, update]);
 
-  const updateReorderStatus = async (id) => {
+  const updateReorderStatus = async (id, quantity_requireds) => {
     try {
       const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
@@ -166,15 +169,50 @@ const PostConfirmOps = () => {
           menu_id: menuFoodId,
           type: "update_operation_pipeline_reorder_status",
           inventory_id: id,
+          procured_Amount: +quantity_requireds
         }),
-      });
+      }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
+              console.log("fetch1", err)})
 
-      if (data) {
-        const res = await data.json();
-        if (res) {
-          setUpdate((prev) => !prev);
-        }
-      }
+  //     Promise.all([fetch("/api/operation_pipeline", {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         menu_id: menuFoodId,
+  //         type: "update_operation_pipeline_reorder_status",
+  //         inventory_id: id,
+  //         procured_Amount: +quantity_requireds
+  //       }),
+  //     }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
+  //       console.log("fetch1", err);
+  //   }),
+  //   fetch("/api/operation_pipeline/updateInventoryAmount", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       inventory_id: id,
+  //       procured_Amount: +quantity_requireds
+  //     }),
+  //   }).catch(err => {
+  //     console.log("fetch1", err);
+  // }),
+  //   fetch("/api/operation_pipeline/changeProcurementAmount", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       menu_id: menuFoodId,
+  //       inventory_id: id,
+  //       procured_Amount: +quantity_requireds
+  //     }),
+  //   }).catch(err => {
+  //     console.log("fetch1", err);
+  // })])
     } catch (error) {
       console.log(error);
     }
@@ -194,7 +232,7 @@ const PostConfirmOps = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
@@ -204,10 +242,10 @@ const PostConfirmOps = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Post Procurement"
-              comp=<DatePicker
+              comp={<DatePicker
                 defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                 onChange={handleDateChange}
-              />
+              />}
             />
             {status < 2 ? (
               <center>
@@ -243,7 +281,6 @@ const PostConfirmOps = () => {
                         renderItem={(item) => (
                           <List.Item>
                             <Card
-                              title={item.food_name}
                               style={{
                                 margin: 5,
                                 width: "100%",
@@ -251,9 +288,11 @@ const PostConfirmOps = () => {
                                 backgroundColor: "white",
                                 padding: "2%",
                                 borderRadius: 10,
-                                borderBottom: "2px solid orange",
+                                border: "2px solid darkred",
                               }}
+                              bodyStyle={{padding: '12px'}}
                             >
+                              <span style={{fontSize: "1.3rem", fontWeight: '600'}}>{item.food_name}</span>
                              
                             </Card>
                           </List.Item>
@@ -280,27 +319,34 @@ const PostConfirmOps = () => {
                           dataSource={reorderLogs}
                           renderItem={(item) => (
                             <List.Item>
-                              <Card style={{ margin: "0px 10px", width: "100%" }}>
+                              <Card style={{ margin: "0px 10px", width: "100%", border: '2px solid darkred' }}
+                              bodyStyle={{padding: '12px'}}
+                              >
                                 <Row>
-                                  <Col xs={8} xl={8}>
+                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center',  fontSize: '1.3rem'}}>
+                                    <span>
                                     {item.ingridient_name}
+                                    </span>
                                   </Col>
-                                  <Col xs={8} xl={8}>
-                                    Required quantity: {item.quantity_requireds}{" "}
-                                    {item.unit}
+                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center',  fontSize: '1.3rem'}}>
+                                    <span>
+                                    Required quantity: {item.quantity_requireds}{" "}<span style={{textTransform: 'capitalize'}}>
+                                      {item.unit}
+                                      </span> 
+                                    </span>
                                   </Col>
-                                  <Col xs={8} xl={8}>
+                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center'}}>
                                     {item.reorder_delivery_status ? (
-                                      <>
+  
                                         <Button
                                           onClick={(e) =>
-                                            updateReorderStatus(item.inventory_id)
+                                            updateReorderStatus(item.inventory_id, item.quantity_requireds)
                                           }
                                           type="primary"
                                         >
                                           FULLFILL ORDER
                                         </Button>
-                                      </>
+                                      
                                     ) : (
                                       <Tag color="green">FULFILLED</Tag>
                                     )}

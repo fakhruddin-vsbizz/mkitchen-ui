@@ -125,7 +125,21 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
     const { date } = req.body;
     const parsedDate = new Date(date);
 
-    const purchases = await Purchase.find({ unshelf: false });
+    // const purchases = await Purchase.find({ unshelf: false });
+    const purchases = await Purchase.aggregate([
+      {
+        $match: { unshelf: false }
+      },
+      {
+        $lookup: {
+          from: "inventoryitems",
+          localField: "inventory_id",
+          foreignField: "_id",
+          as: "inventoryInfo",
+        },
+      }
+    ]);
+    console.log(purchases);
 
     const filteredPurchases = purchases.filter((purchase) => {
       const [month, day, year] = purchase.expiry_date.split("/");
@@ -133,9 +147,10 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
       return expiryDate < parsedDate;
     });
 
-    res.status(200).json(filteredPurchases);
+
+    return res.status(200).json(filteredPurchases);
   } catch (error) {
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 });
 

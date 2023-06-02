@@ -91,25 +91,25 @@ const Vendors = () => {
             />
             <div style={{ width: "100%", padding: 0 }}>
 
-            <Col xs={12} xl={12} style={{ padding: "2%" }}>
+            <Col xs={12} xl={12} style={{ padding: "0 2% 0" }}>
                 <table style={{ width: "100%" }} cellPadding={10}>
                   <tbody>
                   <tr>
-                    <td>
+                    <td style={{fontWeight: '600', fontSize: '20px'}}>
                       Vendor name:
                       <br />
-                      <Input value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                      <Input style={{marginTop: '12px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter By Name"></Input>
                     </td>
                   </tr>
                   </tbody>
                     </table>
-                    </Col>
-              <div style={{ width: "95%", padding: "2%" }}>
+            </Col>
+              <div style={{ width: "95%", padding: "0 2% 2%" }}>
                 <label
-                  style={{ fontSize: "200%" }}
+                  style={{ fontSize: "42px", marginLeft: '10px' }}
                   className="dongle-font-class"
                 >
-                  All vendors
+                  All Vendors
                 </label>
                 {vendors && (
                   <List
@@ -121,23 +121,23 @@ const Vendors = () => {
                   }}
                     dataSource={filteredVendors}
                     renderItem={(item) => (
-                      <List.Item>
+                      <List.Item style={{padding: '4px 0'}}>
                         <Card
                           style={{
                             margin: 5,
                             width: "100%",
-
                             backgroundColor: "white",
-                            padding: "2%",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                           }}
+                          bodyStyle={{padding: "10px", borderRadius: '0'}}
                         >
-                          <Row>
+                          <Row style={{padding: "10px", borderRadius: '0'}}>
                             <Col xs={4} xl={4}>
                               <span>Vendor's Name:</span>
                               <br />
-                              <label style={{ color: "#e08003", fontSize: "130%" }}>
+                              {/* #e08003 */}
+                              <label style={{ color: "darkred", fontSize: "130%", textTransform: 'capitalize' }}>
                                 <b>{item.vendor_name}</b>
                               </label>
                             </Col>
@@ -170,16 +170,19 @@ const Vendors = () => {
                               </label>
                             </Col>
                             <Col xs={4} xl={4}>
-                              <label style={{ color: "#e08003" }}>
-                                Approval Status: <br />
+                              
+                                Approval Status:
+                                
+                                 <br />
                                 <Tag
                                   color={item.approval_status ? "green" : "red"}
+                                  style={{marginLeft: '15px', marginTop: '4px'}}
                                 >
                                   {item.approval_status
                                     ? "Approved"
                                     : "Pending"}
                                 </Tag>
-                              </label>
+                              
                             </Col>
                           </Row>
                         </Card>

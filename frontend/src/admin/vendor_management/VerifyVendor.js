@@ -29,8 +29,12 @@ const VerifyVendor = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [newMohallaPopup, setNewMohallaPopup] = useState(false);
   const [update, setUpdate] = useState(false);
-
+	const [filterByName, setFilterByName] = useState("");
+  const [filteredVendors, setFilteredVendors] = useState([])
   const [vendors, setVendors] = useState();
+
+
+
 
   const navigate = useNavigate();
 
@@ -64,6 +68,7 @@ const VerifyVendor = () => {
       if (data) {
         const res = await data.json();
         setVendors(res);
+        setFilteredVendors(res);
       }
     };
     getVendors();
@@ -90,6 +95,18 @@ const VerifyVendor = () => {
     }
   };
 
+  useEffect(() => {
+		const filterList = () => {
+      if (filterByName) {
+				return vendors.filter(item =>
+					item.vendor_name.toLowerCase().includes(filterByName.toLowerCase()))
+			} 
+			return vendors
+		};
+		const filteredList = filterList();
+		setFilteredVendors(filteredList);
+	}, [filterByName, vendors]);
+
   return (
     <div
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
@@ -98,19 +115,32 @@ const VerifyVendor = () => {
         <SideNav k="4" userType="admin" />
         <div style={{ width: "100%" }}>
           <Header title="Verify Vendors" />
-          <div style={{ padding: "2%" }}>
-            <Card style={{ width: "100%", backgroundColor: "transparent" }}>
+          <div style={{ padding: "0 2% 2%" }}>
+            <Card style={{ width: "100%", backgroundColor: "transparent" }} bodyStyle={{padding: '0'}}>
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "orange",
+                    colorPrimary: "darkred",
                     colorDanger: "",
                   },
                 }}
               >
+                <Col xs={12} xl={12} style={{ padding: "0" }}>
+                <table style={{ width: "100%" }} cellPadding={10}>
+                  <tbody>
+                  <tr>
+                    <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600'}}>
+                      Vendor name:
+                      <br />
+                      <Input style={{marginTop: '5px', height: '45px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                    </td>
+                  </tr>
+                  </tbody>
+                    </table>
+            </Col>
                 {vendors && (
                   <List
-                    dataSource={vendors}
+                    dataSource={filteredVendors}
                     renderItem={(item) => (
                       <List.Item
                         style={{
@@ -125,25 +155,25 @@ const VerifyVendor = () => {
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            border: "2px solid orange",
+                            border: "2px solid darkred",
                             width: "100%",
                             marginBottom:'4px'
                           }}
                         >
                           <Col
                             xs={24}
-                            xl={24}
-                            style={{ fontSize: "150%", padding:'1%' }}
+                            xl={5}
+                            style={{ fontSize: "150%", padding:'0 20px 5px', display: 'flex', alignItems: 'center' }}
                           >
-                            <i class="fa-solid fa-store"></i> &nbsp;&nbsp; {item.vendor_name}
+                            <i class="fa-solid fa-store"></i>&nbsp;<span style={{textTransform: 'capitalize'}}>{item.vendor_name}</span>
                           </Col>
-                          <Col xs={12} xl={6}>
+                          <Col xs={12} xl={3} style={{marginLeft: '17px' }}>
                             Shop opening time: <br />
-                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-door-open"></i> &nbsp;&nbsp;{item.opening_time}</label>
+                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-door-open"></i>&nbsp;{item.opening_time}</label>
                           </Col>
-                          <Col xs={12} xl={6}>
+                          <Col xs={12} xl={3} >
                             Shop closing time: <br />
-                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-door-closed"></i> &nbsp;&nbsp;{item.closing_time}</label>
+                            <label style={{ fontSize:'120%'}}><i class="fa-solid fa-door-closed"></i>&nbsp;{item.closing_time}</label>
                           </Col>
                           {/* <Col xs={6} xl={6}>
                         Created on: <br />
@@ -151,13 +181,13 @@ const VerifyVendor = () => {
                       </Col> */}
                           <Col xs={12} xl={6}>
                             Address: <br />
-                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-location-dot"></i>&nbsp;&nbsp;{item.address}</label>
+                            <label style={{ fontSize:'120%' }}><i class="fa-solid fa-location-dot"></i>&nbsp;{item.address}</label>
                           </Col>
                           <Col xs={12} xl={6}>
                             Approval Status: <br/>
                             {!item.approval_status ? 
-                            <label style={{ fontSize:"120%", color:'orange' }}><i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Pending&nbsp;&nbsp;&nbsp;|</label> : 
-                            <label style={{ fontSize:"120%", color:'green' }}><i class="fa-solid fa-person-circle-check"></i>&nbsp;&nbsp;Verified</label>}
+                            <label style={{ fontSize:"120%", color:'darkred' }}><i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Pending&nbsp;&nbsp;|</label> : 
+                            <label style={{ fontSize:"120%", color:'green' }}><i class="fa-solid fa-person-circle-check"></i>&nbsp;Verified</label>}
                             
                               
                             
@@ -167,7 +197,7 @@ const VerifyVendor = () => {
                                 onClick={(e) => markVendorVerified(item._id)}
                                 style={{ backgroundColor:'lightgreen' }}
                               >
-                                <i class="fa-solid fa-list-check"></i> &nbsp;&nbsp; Confirm and Verify
+                                <i class="fa-solid fa-list-check"></i> &nbsp;&nbsp;Confirm and Verify
                               </Button>
                             ) : null}
                           </Col>

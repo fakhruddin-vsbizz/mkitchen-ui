@@ -19,10 +19,12 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
   return formattedDate;
 };
 
@@ -40,7 +42,7 @@ const TodaysDate = dateFormatterForToday();
 const newTodaysDate = dateFormatter();
 
 const ConfirmIng = () => {
-  const [menuFoodId, setMenuFoodId] = useState();
+  const [menuFoodId, setMenuFoodId] = useState("");
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [procureIngridients, setProcureIngridients] = useState([]);
   const [visible, setVisible] = useState(false);
@@ -198,6 +200,7 @@ const ConfirmIng = () => {
           type: "procure_ingridient",
           date: selectedDate,
           procure_items: procureIngridients,
+          procured_status: true
         }),
       });
 
@@ -238,14 +241,14 @@ const ConfirmIng = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
           },
         }}
       >
         <div style={{ display: "flex" }}>
           <Sidebar k="3" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
             <Header
               title="Confirm Ingredient"
               comp={
@@ -279,7 +282,7 @@ const ConfirmIng = () => {
                   <List
                     size="small"
                     style={{
-                      height: "60vh",
+                      maxHeight: "70vh",
                       width: "100%",
                       overflowY: "scroll",
                       backgroundColor: "transparent",
@@ -291,14 +294,12 @@ const ConfirmIng = () => {
                           style={{
                             margin: 5,
                             width: "100%",
-
                             backgroundColor: "white",
-                            padding: "2%",
+                            padding: "1%",
                             borderRadius: 10,
-                            borderBottom: "2px solid orange",
+                            border: "2px solid darkred",
                           }}
                         >
-                          <br />
                           <Row>
                             <Col xs={8} xl={8}>
                               <label style={{ fontSize: "140%" }}>
@@ -306,7 +307,7 @@ const ConfirmIng = () => {
                               </label>
                             </Col>
                             <Col xs={8} xl={8}>
-                              Amount Procured: <br />
+                              Amount Procured:{" "}
                               <label
                                 style={{
                                   color: item.sufficient ? "green" : "red",
@@ -346,22 +347,22 @@ const ConfirmIng = () => {
                     )}
                   />
                 )}
-
-                {operationalPipelineStatus &&
-                  operationalPipelineStatus < 2 &&
-                  operationalPipelineStatus !== 0 && (
-                    <Button
-                      onClick={markProcureIngridients}
-                      disabled={finalizeBtnVisible}
-                      block
-                      type="primary"
-                      style={{ fontSize: "200%", height: "10%" }}
-                    >
-                      FINALIZE AND PUSH TO INVENTORY
-                    </Button>
-                  )}
               </div>
             </div>
+        {operationalPipelineStatus &&
+          operationalPipelineStatus < 2 &&
+          operationalPipelineStatus !== 0 && (
+            <Button
+              onClick={markProcureIngridients}
+              disabled={finalizeBtnVisible}
+              block
+              type="primary"
+              style={{ fontSize: "200%", height: "10%",width: "97%",
+              alignSelf: "center" }}
+            >
+              FINALIZE AND PUSH TO INVENTORY
+            </Button>
+        )}
           </div>
         </div>
       </ConfigProvider>

@@ -10,10 +10,13 @@ import dayjs from "dayjs";
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    dateObj.getMonth() + 1 < 10
+    (dateObj.getMonth() + 1) < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${(dateObj.getDate()) < 10
+    ? `0${dateObj.getDate()}`
+    : dateObj.getDate()}/${dateObj.getFullYear()}`;
+  console.log(formattedDate);
   return formattedDate;
 };
 
@@ -306,52 +309,42 @@ const ProcedureLogs = () => {
             <ConfigProvider
               theme={{
                 token: {
-                  colorPrimary: "orange",
+                  colorPrimary: "darkred",
                   colorDanger: "",
                 },
               }}
             >
-              <Tabs centered style={{ color: "#E86800", border: "none" }}>
+              <Tabs centered style={{ color: "darkred", border: "none" }}>
                 <Tabs.TabPane
                   style={{ border: "none" }}
                   tab="Menu Decision & Delivery"
                   key="1"
                 >
                   <Card
-                    style={{
-                      width: "95%",
-                      marginLeft: "2%",
-                      backgroundColor: "transparent",
-                      border: "none",
-                    }}
+                    style={{ width: "85%", marginLeft: "4%" }}
+                    bodyStyle={{padding: '0'}}
                   >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Menu Decision & Delivery
                     </h2> */}
                     {reviewData.length > 0 ? (
                       <List
-                        style={{ width: "100%" }}
                         dataSource={reviewData}
                         renderItem={(item, index) => (
                           <List.Item
-                            style={{
-                              padding: 15,
-                              display: "flex",
-                              backgroundColor: "#fff",
-                              borderRadius: 10,
-                              borderBottom: "2px solid orange",
-                              width: "100%",
-                              margin: "10px 0px",
-                            }}
+                            style={{ border: "none", padding: "0px" }}
                           >
-                            <Card
+                            <div
                               style={{
+                                padding: 10,
+                                backgroundColor: "#fff",
+                                borderRadius: 5,
+                                border: "2px solid darkred",
                                 width: "100%",
-                                borderColor: "transparent",
                               }}
                             >
                               <Row style={{ width: "100%" }}>
-                                <Col xs={12} xl={24} style={{ padding: "1%" }}>
+                                <Col xs={12} xl={24} style={{ padding: "1%"}}>
                                   <label
                                     style={{
                                       fontSize: "150%",
@@ -359,16 +352,16 @@ const ProcedureLogs = () => {
                                     }}
                                   >
                                     <span>
-                                      <i class="fa-solid fa-house-user"></i>
+                                      <i className="fa-solid fa-house-user"></i>
                                       &nbsp;&nbsp;{item.username}
                                     </span>
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={4}>
+                                <Col xs={6} xl={4} style={{marginLeft: "12px" }}>
                                   Total Daigh:
                                   <br />
                                   <label style={{ fontSize: "130%" }}>
-                                    <i class="fa-solid fa-flask"></i>{" "}
+                                    <i className="fa-solid fa-flask"></i>{" "}
                                     &nbsp;&nbsp;{" "}
                                     {daigData &&
                                       daigData[index] &&
@@ -378,7 +371,7 @@ const ProcedureLogs = () => {
                                 <Col xs={6} xl={4}>
                                   Total Weight : <br />
                                   <label style={{ fontSize: "130%" }}>
-                                    <i class="fa-solid fa-scale-unbalanced-flip"></i>
+                                    <i className="fa-solid fa-scale-unbalanced-flip"></i>
                                     &nbsp;&nbsp;
                                     {daigData &&
                                       daigData[index] &&
@@ -389,14 +382,14 @@ const ProcedureLogs = () => {
                                 <Col xs={6} xl={4}>
                                   Ratings (out of 5) : <br />
                                   <label style={{ fontSize: "130%" }}>
-                                    <i class="fa-solid fa-star"></i>&nbsp;&nbsp;
+                                    <i className="fa-solid fa-star"></i>&nbsp;&nbsp;
                                     {item.review}
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={6}>
+                                <Col xs={6} xl={5}>
                                   Review for the food : <br />
                                   <label style={{ fontSize: "130%" }}>
-                                    <i class="fa-solid fa-magnifying-glass"></i>
+                                    <i className="fa-solid fa-magnifying-glass"></i>
                                     &nbsp;&nbsp;{item.remark}
                                   </label>
                                 </Col>
@@ -405,16 +398,16 @@ const ProcedureLogs = () => {
                                     Has the daigs been delivered?
                                     <br />
                                     <label style={{ fontSize: "130%" }}>
-                                      <i class="fa-solid fa-truck-ramp-box"></i>{" "}
+                                      <i className="fa-solid fa-truck-ramp-box"></i>{" "}
                                       &nbsp;&nbsp;&nbsp;&nbsp;
                                       {item.review ? (
                                         <label style={{ color: "green" }}>
-                                          <i class="fa-solid fa-circle-check"></i>{" "}
+                                          <i className="fa-solid fa-circle-check"></i>{" "}
                                           Delivered
                                         </label>
                                       ) : (
                                         <label style={{ color: "orange" }}>
-                                          <i class="fa-regular fa-clock"></i>{" "}
+                                          <i className="fa-regular fa-clock"></i>{" "}
                                           Pending
                                         </label>
                                       )}
@@ -422,19 +415,19 @@ const ProcedureLogs = () => {
                                   </center>
                                 </Col>
                               </Row>
-                            </Card>
+                            </div>
                           </List.Item>
                         )}
                       />
                     ) : (
                       <center>
-                        <div style={{ marginTop: "8%" }}>
+                        <div style={{ marginTop: "8%", marginBottom: "8%" }}>
                           <label style={{ fontSize: "800%", color: "darkred" }}>
-                            <i class="fa-solid fa-hourglass-start"></i>
+                            <i className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
                           <label style={{ fontSize: "120%", width: "50%" }}>
-                            Review has not yet been set. Please visit after some
+                            There are no reviews from customers. Please visit after some
                             time.
                           </label>
                         </div>
@@ -471,18 +464,18 @@ const ProcedureLogs = () => {
 
                                 <Col xs={6} xl={6}>
                                     <div>
-                                      <i class="fa-solid fa-circle-check"></i>{" "}
+                                      <i className="fa-solid fa-circle-check"></i>{" "}
                                       Delivered
                                     </div>
                                  
                                     <div>
-                                      <i class="fa-regular fa-clock"></i>{" "}
+                                      <i className="fa-regular fa-clock"></i>{" "}
                                       Pending
                                     </div>
                                
                                 </Col>
                                 <Col xs={6} xl={6}>
-                                  <i class="fa-solid fa-star"></i>{" "}
+                                  <i className="fa-solid fa-star"></i>{" "}
                                   &nbsp;&nbsp;&nbsp; 5/5
                                 </Col>
                               </Row>
@@ -493,7 +486,7 @@ const ProcedureLogs = () => {
                   </Card>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
-                  <Card style={{ width: "85%", marginLeft: "4%" }}>
+                  <Card style={{ width: "85%", marginLeft: "4%", backgroundColor: 'transparent' }} bodyStyle={{ padding: '0'}}>
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
@@ -501,28 +494,28 @@ const ProcedureLogs = () => {
                       <List
                         dataSource={ingridientList}
                         renderItem={(item, index) => (
-                          <List.Item style={{ border: "none", padding: "0px" }}>
+                          <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
                             <div
                               style={{
                                 padding: 10,
                                 backgroundColor: "#fff",
                                 borderRadius: 5,
-                                border: "2px solid orange",
+                                border: "2px solid darkred",
                                 width: "100%",
                               }}
                             >
                               <Row>
-                                <Col xs={12} xl={24} style={{ padding: "1%" }}>
+                                <Col xs={12} xl={6} style={{ padding: "1%" }}>
                                   <label style={{ fontSize: "160%" }}>
-                                    <i class="fa-solid fa-mortar-pestle"></i>{" "}
-                                    &nbsp;&nbsp;{item.ingredient_name}
+                                    <i className="fa-solid fa-mortar-pestle"></i>{" "}
+                                    &nbsp;{item.ingredient_name}
                                   </label>
                                 </Col>
-                                <Col xs={12} xl={8}>
+                                <Col xs={12} xl={6}>
                                   Required Amount: <br />
                                   <label style={{ fontSize: "120%" }}>
-                                    <i class="fa-solid fa-scale-unbalanced"></i>{" "}
-                                    &nbsp;&nbsp;
+                                    <i className="fa-solid fa-scale-unbalanced"></i>{" "}
+                                    &nbsp;
                                     {(item.perAshkash * totalAshkash).toFixed(
                                       2
                                     )}{" "}
@@ -537,12 +530,12 @@ const ProcedureLogs = () => {
                                       )}
                                   </label>
                                 </Col>
-                                <Col xs={12} xl={8}>
+                                <Col xs={12} xl={6}>
                                   Leftover amount:
                                   <br />
                                   <label style={{ fontSize: "120%" }}>
-                                    <i class="fa-solid fa-chart-pie"></i>{" "}
-                                    &nbsp;&nbsp;
+                                    <i className="fa-solid fa-chart-pie"></i>{" "}
+                                    &nbsp;
                                     {leftOverItems && leftOverItems[index] ? (
                                       leftOverItems[index].leftover_amount
                                     ) : (
@@ -561,12 +554,12 @@ const ProcedureLogs = () => {
                                         )}
                                   </label>
                                 </Col>
-                                <Col xs={12} xl={8}>
-                                  Total procurement amount:
+                                <Col xs={12} xl={6}>
+                                  Procurement Cost:
                                   <br />
                                   <label style={{ fontSize: "120%" }}>
-                                    <i class="fa-solid fa-indian-rupee-sign"></i>
-                                    &nbsp;&nbsp;
+                                    <i className="fa-solid fa-indian-rupee-sign"></i>
+                                    &nbsp;
                                     {inventoryItems
                                       .filter(
                                         (inventory) =>
@@ -593,11 +586,11 @@ const ProcedureLogs = () => {
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>
                           <label style={{ fontSize: "800%", color: "darkred" }}>
-                            <i class="fa-solid fa-hourglass-start"></i>
+                            <i className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
                           <label style={{ fontSize: "120%", width: "50%" }}>
-                            Review has not yet been set. Please visit after some
+                            Food is not cooked yet. Please visit after some
                             time.
                           </label>
                         </div>

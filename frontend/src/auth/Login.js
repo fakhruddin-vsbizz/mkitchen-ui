@@ -53,6 +53,15 @@ const Login = () => {
     },
   ];
 
+  useEffect(()=>{
+    const unset = setTimeout(() => {
+      setError(false)
+    }, 3000);
+
+    return () => clearTimeout(unset)
+
+  },[error])
+
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
@@ -166,7 +175,7 @@ const Login = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: "darkred",
             colorDanger: "",
           },
         }}
@@ -202,6 +211,7 @@ const Login = () => {
                   description="Invalid Email Or Password"
                   type="error"
                   closable
+                  onClose={() => setError(false)}
                 />
               </td>
             </tr>
@@ -214,6 +224,7 @@ const Login = () => {
                   style={{ margin: "0.5rem" }}
                   message="Validation Error"
                   description="Email dont exists"
+                  onClose={() => setError(false)}
                   type="error"
                   closable
                 />
@@ -261,9 +272,10 @@ const Login = () => {
             <label style={{ height: 150, textAlign: "center" }}></label>
             <Card
               bordered={true}
+              bodyStyle={{padding: "24px 0"}}
               style={{
-                width: "60%",
-                border: "2px solid #e08003",
+                width: "50%",
+                border: "2px solid darkred",
                 marginTop: 50,
               }}
               className="dongle-font-class"
@@ -273,7 +285,7 @@ const Login = () => {
             </label>
             <Divider style={{ backgroundColor: "#000" }}></Divider> */}
               <table
-                style={{ width: "100%", height: "50vh", fontSize: "150%" }}
+                style={{ width: "100%", minHeight: "38vh", fontSize: "150%" }}
                 className="dongle-font-class"
               >
                 {/* <Image width={"50%"} preview={false} src={logo} /> */}
@@ -282,18 +294,17 @@ const Login = () => {
                     width={"40%"}
                     preview={false}
                     src={whiteLogo}
-                    style={{ filter: "invert(3)", margin: "40px 30px" }}
+                    style={{ filter: "invert(3)", margin: "20px 0" }}
                   />
                 </center>
-                <center style={{ width: "100%", marginBottom: -50 }}>
+                <center style={{ width: "100%", marginBottom: -10 }}>
                   <tr
                     style={{
                       textAlign: "left",
-                      height: "6vh",
-                      marginBottom: 10,
+                      height: "6vh"
                     }}
                   >
-                    <td style={{ width: "8vw" }}>Email:</td>
+                    <td style={{ width: "65px" }}>Email:</td>
                     <td>
                       <Input
                         value={email}
@@ -344,28 +355,24 @@ const Login = () => {
                       </Button>
                     </td>
                   </tr>
-
                   <Link onClick={(e) => setOpen(true)}>
                     Forget Password
                   </Link>
-
-                  {error && (
-                    <tr>
-                      <td colSpan={2}>
-                        <br />
-                        <Alert
-                          style={{ margin: "0.5rem" }}
-                          message="Validation Error"
-                          description="Invalid Email Or Password"
-                          type="error"
-                          closable
-                        />
-                      </td>
-                    </tr>
-                  )}
                 </center>
               </table>
             </Card>
+            {error && (
+              <div style={{width: '50%', display: "flex", alignItems: 'center', justifyContent: "center"}}>
+                <Alert
+                  onClose={() => setError(false)}
+                  style={{ margin: "0.5rem", width: '45%' }}
+                  message="Validation Error"
+                  description="Invalid Email Or Password"
+                  type="error"
+                  closable
+                />
+              </div>
+              )}
           </Col>
           <Col xs={24} xl={2} style={{ padding: "5%" }}></Col>
         </Row>
