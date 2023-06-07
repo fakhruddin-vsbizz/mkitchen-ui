@@ -157,8 +157,15 @@ const pai = [
     </Link>
   ),
   getItem(
-    <span onClick={logoutHandler}>Logout</span>,
+    <Link to="/pai/donations">Donations</Link>,
     "7",
+    <Link to="/pai/donations">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "8",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>

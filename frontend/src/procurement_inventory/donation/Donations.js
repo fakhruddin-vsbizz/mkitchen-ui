@@ -59,7 +59,7 @@ const VerifyVendor = () => {
       style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
     >
       <div style={{ display: "flex" }}>
-        <SideNav k="4" userType="pai" />
+        <SideNav k="7" userType="pai" />
         <div style={{ width: "100%" }}>
           <Header
             title="Donations"
