@@ -69,8 +69,15 @@ const admin = [
     </Link>
   ),
   getItem(
-    <span onClick={logoutHandler}>Logout</span>,
+    <Link to="/admin/report">Report</Link>,
     "5",
+    <Link to="/admin/report">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "6",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
