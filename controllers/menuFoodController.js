@@ -51,8 +51,14 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   }
 
   if (add_type === "get_mohalla_ashkash") {
-    const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
-    return res.json(foodMenu);
+    try {
+      const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
+      if (!foodMenu) return res.status(404).json({msg: "not found"})
+      
+      return res.json(foodMenu);
+    } catch (error) {
+      return res.status(500).json({err: "internal server error"})
+    }
   }
 
   if (add_type === "add_menu") {

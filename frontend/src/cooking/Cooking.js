@@ -64,6 +64,7 @@ const Cooking = () => {
   const [leftOverQuantity, setLeftOverQuantity] = useState();
 
   const [isDisabled, setIsDisabled] = useState(false);
+  const [leftoverLogs, setLeftoverLogs] = useState([])
 
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(false);
@@ -230,8 +231,9 @@ const Cooking = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            setMenuFoodId(res[0]._id);
-            setGetFoodList(res[0].food_list);
+            setMenuFoodId(res[0]?._id);
+            setGetFoodList(res[0]?.food_list);
+            console.log(res[0]?.food_list);
           }
         }
       }
@@ -248,20 +250,38 @@ const Cooking = () => {
 
   // Call the API endpoint and retrieve the ingredient lists
   useEffect(() => {
-    if (getFoodList) {
+    // if (getFoodList) {
+    //   axios
+    //     .post("/api/cooking/ingredients", {
+    //       food_item_ids: getFoodList,
+    //       type: "get_food_and_ingridient",
+    //     })
+    //     .then((response) => {
+    //       setIngredientLists(response.data);
+    //     })
+    //     .catch((error) => {
+    //       console.error(error);
+    //     });
+    // }
+    
+    if(getFoodList){
       axios
-        .post("/api/cooking/ingredients", {
-          food_item_ids: getFoodList,
-          type: "get_food_and_ingridient",
+        .post("/api/operation_pipeline/getIngredients", {
+          menu_food_id: menuFoodId,
         })
         .then((response) => {
-          setIngredientLists(response.data);
+          setIngredientLists(response.data?.ingridient_list);
+          console.log("list",response.data?.ingridient_list);
         })
         .catch((error) => {
           console.error(error);
         });
+
+        console.log(menuFoodId);
+        console.log(getFoodList);
     }
-  }, [getFoodList]);
+    
+  }, [menuFoodId, getFoodList]);
 
   const handleIngridientReOrder = async (inventoryId, quantity) => {
     setInventoryId(inventoryId);
@@ -308,6 +328,8 @@ const Cooking = () => {
           if (res) {
             if (selectedDate !== "1/1/1970") {
               setReorderLogs(res.reorder_logs);
+              setLeftoverLogs(res.leftover);
+              console.log(res?.reorder_logs);
             } else {
               setReorderLogs([]);
             }
@@ -346,11 +368,13 @@ const Cooking = () => {
     updateReorderLog();
   }, [update, reorderLogs]);
 
-  const reorderIngridient = async (ing, unit) => {
+  const reorderIngridient = async (ing, unit, foodItemId, foodName) => {
     let obj = {
+      foodId: foodItemId,
+      foodName: foodName,
       ingridient_name: ing,
       inventory_id: inventoryId,
-      unit: unit,
+      unit: unit[0] !== undefined ? unit[0]: "Unit" ,
       quantity_requireds: +reorderQuantity,
       reorder_delivery_status: true,
     };
@@ -384,7 +408,7 @@ const Cooking = () => {
     }
   };
 
-  const returnIngToInventory = async (inventory_id, ingName) => {
+  const returnIngToInventory = async (inventory_id, ingName, foodItemId, foodName) => {
     try {
       const data = await fetch("/api/cooking/add_leftover", {
         method: "POST",
@@ -392,21 +416,24 @@ const Cooking = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          foodId: foodItemId,
+          foodName: foodName,
           menu_id: menuFoodId,
           inventory_id: inventory_id,
           ingredient_name: ingName,
-          leftover_amount: leftOverQuantity,
+          leftover_amount: +leftOverQuantity,
         }),
       });
 
       if (data) {
         const res = await data.json();
-        console.log(res);
+        setLeftoverLogs(res.leftover);
+        setIngredientLists(res.ingridient_list)
+
       }
     } catch (error) {
       console.log(error);
     }
-
     try {
       const data = await fetch("/api/inventory/addinventory", {
         method: "PUT",
@@ -475,7 +502,7 @@ const Cooking = () => {
                     <DatePicker
                       defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                       onChange={handleDateChange}
-                      disabledDate={(current) => current > dayjs().endOf('day')}
+                      // disabledDate={(current) => current > dayjs().endOf('day')}
                     />
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -496,7 +523,7 @@ const Cooking = () => {
             />
 
             <Row style={{ padding: 10 }}>
-              <Col xs={24} xl={16} style={{ padding: "2%" }}>
+              <Col xs={24} xl={16} style={{ padding: "0 2% 2%" }}>
                 {status === -1 && (
                   <tr>
                     <td colSpan={2}>
@@ -582,9 +609,9 @@ const Cooking = () => {
                               Here are the required ingredients for the cooking:
                               </span>
                               <List
-                                dataSource={ingredientLists[index]}
-                                renderItem={(ing, index) => (
-                                  <List.Item style={{ padding: "0px" }}>
+                                dataSource={ingredientLists.filter(newItem => newItem?.foodId === item?.food_item_id)}
+                                renderItem={(ing, index) =>  (
+                                    <List.Item style={{ padding: "0px" }}>
                                     <Card
                                       style={{
                                         width: "100%",
@@ -673,7 +700,9 @@ const Cooking = () => {
                                               .map(
                                                 (ele) =>
                                                   ele.ingridient_measure_unit
-                                              )
+                                              ),
+                                              item.food_item_id,
+                                              ing.foodName
                                               )
                                             }
                                             type="primary"
@@ -695,11 +724,9 @@ const Cooking = () => {
                                                   fontSize: "1rem",
                                                 }}
                                               >
-                                                {(
-                                                  ing.perAshkash *
-                                                  totalAshkashCount
-                                                ).toFixed(2)}
+                                                <label>{ing?.procure_amount.toFixed(2)}</label>
                                                 &nbsp;
+                                                <span style={{textTransform: 'capitalize'}}>
                                                 {inventoryItems &&
                                                   inventoryItems
                                                     .filter(
@@ -711,7 +738,8 @@ const Cooking = () => {
                                                       (ele) =>
                                                         ele.ingridient_measure_unit
                                                     )}
-                                              </label>
+                                                </span>
+                                              </label> 
                                             )}
                                           </div>
                                         </Col>  
@@ -720,6 +748,21 @@ const Cooking = () => {
                                           xl={16}
                                           style={{ padding: "10px 10px 0" }}
                                         >
+                                          {leftoverLogs && leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0] !== undefined  ? <div>
+                                            <span>Leftover Amount: </span>
+                                            <span style={{color: 'darkred', textTransform: 'capitalize'}}>{leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0]}&nbsp;{inventoryItems &&
+                                                  inventoryItems
+                                                    .filter(
+                                                      (itemNew) =>
+                                                        itemNew._id ===
+                                                        ing.inventory_item_id
+                                                    )
+                                                    .map(
+                                                      (ele) =>
+                                                        ele.ingridient_measure_unit
+                                                    )}</span>
+                                          </div> :
+                                          status < 3 && !cookingDoneStatus ? 
                                           <div style={{display: "flex", alignItems: "baseline", columnGap: '10px'}}>
                                           <span>
                                           Leftover:
@@ -752,23 +795,28 @@ const Cooking = () => {
                                           </span>
                                               &nbsp;
                                           <Button
-                                            disabled={status >= 3 || cookingDoneStatus}
+                                            disabled={status >= 3 || cookingDoneStatus || (leftOverQuantity > Number(ing?.procure_amount.toFixed(2)) && (ing.foodId === item.food_item_id && ing.inventory_item_id === inventoryId))}
                                             onClick={(e) =>
                                               returnIngToInventory(
                                                 ing.inventory_item_id,
-                                                ing.ingredient_name
+                                                ing.ingredient_name,
+                                                item.food_item_id,
+                                                ing.foodName
                                               )
                                             }
                                             type="primary"
                                           >
                                             Return Leftovers
                                           </Button>
-                                          </div>
+                                          </div>: <span>No Leftovers</span>
+                                          }
                                         </Col>
                                       </Row>
                                     </Card>
                                   </List.Item>
-                                )}
+                                  
+                    )
+                                }
                               />
                             </Col>
                           </Row>
@@ -778,7 +826,7 @@ const Cooking = () => {
                   />
                 )}
               </Col>
-              <Col xs={12} xl={8} style={{ padding: "2%" }}>
+              <Col xs={12} xl={8} style={{ padding: "0 2% 2%" }}>
                 {reorderLogs && status >= 2 && (
                   <div>
                     <label style={{ fontSize: "150%" }}>Reorder Log:</label>
@@ -810,6 +858,9 @@ const Cooking = () => {
                                 width: "100%",
                               }}
                             >
+                              <Col xs={12} xl={24} style={{fontSize: "1.2rem", fontWeight: 600, letterSpacing: "1.5px"}}>
+                              {item?.foodName}
+                              </Col>
                               <Col xs={12} xl={8}>
                                 <label
                                   style={{

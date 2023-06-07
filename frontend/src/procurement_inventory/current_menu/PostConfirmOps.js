@@ -158,7 +158,8 @@ const PostConfirmOps = () => {
     getData();
   }, [selectedDate, menuFoodId, update]);
 
-  const updateReorderStatus = async (id, quantity_requireds) => {
+  const updateReorderStatus = async (id, quantity_requireds, foodId) => {
+    console.log(id, quantity_requireds, foodId);
     try {
       const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
@@ -169,50 +170,50 @@ const PostConfirmOps = () => {
           menu_id: menuFoodId,
           type: "update_operation_pipeline_reorder_status",
           inventory_id: id,
-          procured_Amount: +quantity_requireds
+          foodId: foodId,
+          procured_Amount: Number(quantity_requireds.toFixed(2))
         }),
-      }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
-              console.log("fetch1", err)})
+      }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {console.log("fetch1", err)})
 
-  //     Promise.all([fetch("/api/operation_pipeline", {
-  //       method: "PUT",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         menu_id: menuFoodId,
-  //         type: "update_operation_pipeline_reorder_status",
-  //         inventory_id: id,
-  //         procured_Amount: +quantity_requireds
-  //       }),
-  //     }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
-  //       console.log("fetch1", err);
-  //   }),
-  //   fetch("/api/operation_pipeline/updateInventoryAmount", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       inventory_id: id,
-  //       procured_Amount: +quantity_requireds
-  //     }),
-  //   }).catch(err => {
-  //     console.log("fetch1", err);
-  // }),
-  //   fetch("/api/operation_pipeline/changeProcurementAmount", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       menu_id: menuFoodId,
-  //       inventory_id: id,
-  //       procured_Amount: +quantity_requireds
-  //     }),
-  //   }).catch(err => {
-  //     console.log("fetch1", err);
-  // })])
+  // //     Promise.all([fetch("/api/operation_pipeline", {
+  // //       method: "PUT",
+  // //       headers: {
+  // //         "Content-Type": "application/json",
+  // //       },
+  // //       body: JSON.stringify({
+  // //         menu_id: menuFoodId,
+  // //         type: "update_operation_pipeline_reorder_status",
+  // //         inventory_id: id,
+  // //         procured_Amount: Number(quantity_requireds.toFixed(2))
+  // //       }),
+  // //     }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
+  // //       console.log("fetch1", err);
+  // //   }),
+  // //   fetch("/api/operation_pipeline/updateInventoryAmount", {
+  // //     method: "POST",
+  // //     headers: {
+  // //       "Content-Type": "application/json",
+  // //     },
+  // //     body: JSON.stringify({
+  // //       inventory_id: id,
+  // //       procured_Amount: +quantity_requireds
+  // //     }),
+  // //   }).catch(err => {
+  // //     console.log("fetch1", err);
+  // // }),
+  // //   fetch("/api/operation_pipeline/changeProcurementAmount", {
+  // //     method: "POST",
+  // //     headers: {
+  // //       "Content-Type": "application/json",
+  // //     },
+  // //     body: JSON.stringify({
+  // //       menu_id: menuFoodId,
+  // //       inventory_id: id,
+  // //       procured_Amount: +quantity_requireds
+  // //     }),
+  // //   }).catch(err => {
+  // //     console.log("fetch1", err);
+  // // })])
     } catch (error) {
       console.log(error);
     }
@@ -260,7 +261,7 @@ const PostConfirmOps = () => {
             ) : (
                 <div style={{ width: "100%", padding: 0 }}>
                   <div style={{ padding: "3%" }}>
-                    <label
+                    {/* <label
                       style={{ fontSize: "180%" }}
                       className="dongle-font-class"
                     >
@@ -300,7 +301,7 @@ const PostConfirmOps = () => {
                       />
                     )}
                     <br />
-                    <br />
+                    <br /> */}
                     <label
                       style={{ fontSize: "180%" }}
                       className="dongle-font-class"
@@ -323,24 +324,39 @@ const PostConfirmOps = () => {
                               bodyStyle={{padding: '12px'}}
                               >
                                 <Row>
-                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center',  fontSize: '1.3rem'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.5rem'}}>
                                     <span>
+                                      For:&nbsp;
+                                    </span>
+                                    <span style={{color: 'darkred'}}>
+                                    {item?.foodName}
+                                    </span>
+                                  </Col>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'0',  fontSize: '1.5rem'}}>
+                                    <span>
+                                      Ingredient:&nbsp;
+                                    </span>
+                                    <span style={{color: 'darkred'}}>
                                     {item.ingridient_name}
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center',  fontSize: '1.3rem'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.3rem'}}>
                                     <span>
-                                    Required quantity: {item.quantity_requireds}{" "}<span style={{textTransform: 'capitalize'}}>
+                                    Required quantity:&nbsp;
+                                    <span style={{color: "darkred"}}>
+                                    {item.quantity_requireds}
+                                    </span>
+                                    {" "}<span style={{textTransform: 'capitalize', color: "darkred"}}>
                                       {item.unit}
                                       </span> 
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={8} style={{alignSelf: 'center', textAlign: 'center'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', textAlign: 'center'}}>
                                     {item.reorder_delivery_status ? (
   
                                         <Button
                                           onClick={(e) =>
-                                            updateReorderStatus(item.inventory_id, item.quantity_requireds)
+                                            updateReorderStatus(item.inventory_id, item.quantity_requireds, item.foodId)
                                           }
                                           type="primary"
                                         >

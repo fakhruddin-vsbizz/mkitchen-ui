@@ -5,53 +5,70 @@ const OperationPipeLine = require("../models/operationPipeLineModel");
 const addLeftOverData = expressAsyncHandler(async (req, res) => {
   const {
     menu_id,
-
-    //add dispatch data
+    foodId,
+    foodName,
     inventory_id,
     ingredient_name,
     leftover_amount,
   } = req.body;
 
-  const operationId = await OperationPipeLine.findOne({
-    menu_food_id: menu_id,
-  });
+  try {
 
-  if (leftover_amount === undefined) {
-    return res
-      .status(403)
-      .json({ invalidData: "total weight and daigh cannot be empty" });
-  }
-
-  const leftoverDoc = await OperationPipeLine.findOne({
-    menu_food_id: menu_id,
-  });
-
-  const leftOverArr = leftoverDoc.leftover;
-
-  const newLeftOverObj = {
-    inventory_id: inventory_id,
-    ingredient_name: ingredient_name,
-    leftover_amount: +leftover_amount,
-  };
-
-  if (leftOverArr.length === 0) {
-    // add the new object to the collection
-    const updatePipeline = await OperationPipeLine.findByIdAndUpdate(
-      { _id: Object(operationId._id) },
-      { $set: { leftover: [newLeftOverObj] } },
-      { new: true }
-    );
-    if (updatePipeline) {
-      return res.json({ message: "pipeline  updated successfully" });
+    const operationId = await OperationPipeLine.findOne({
+      menu_food_id: menu_id,
+    });
+  
+    if (leftover_amount === undefined) {
+      return res
+        .status(403)
+        .json({ invalidData: "total weight and daigh cannot be empty" });
     }
-  } else {
-    leftOverArr.push(newLeftOverObj);
+  
+    // const leftoverDoc = await OperationPipeLine.findOne({
+    //   menu_food_id: menu_id,
+    // });
+  
+    const leftOverArr = operationId.leftover;
+  
+    const ingredientLs = operationId.ingridient_list;
+  
+    const newLeftOverObj = {
+      foodId,
+      foodName,
+      inventory_id: inventory_id,
+      ingredient_name: ingredient_name,
+      leftover_amount: +leftover_amount,
+    };
+  
+    // if (leftOverArr.length === 0) {
+    //   // add the new object to the collection
+    //   const updatePipeline = await OperationPipeLine.findByIdAndUpdate(
+    //     { _id: Object(operationId._id) },
+    //     { $set: { leftover: [newLeftOverObj] } },
+    //     { new: true }
+    //   );
+  
+    //   if (updatePipeline) {
+    //     return res.json({ message: "pipeline  updated successfully" });
+    //   }
+    // } else {
+      leftOverArr.push(newLeftOverObj);
+      // }
+  
+      ingredientLs.forEach((item)=> {
+        if (item.inventory_item_id === inventory_id && item.foodId === foodId) {
+          item.procure_amount = Number((item.procure_amount - Number(leftover_amount.toFixed(2))).toFixed(2));
+        }
+      })
+  
+    // update the document in MongoDB with the modified `dispatch` array
+    await operationId.updateOne({  leftover: leftOverArr, ingridient_list: ingredientLs });
+  
+    return res.json(operationId);    
+  } catch (err) {
+    console.log(err);
   }
 
-  // update the document in MongoDB with the modified `dispatch` array
-  await leftoverDoc.updateOne({ $set: { leftover: leftOverArr } });
-
-  return res.json({ message: "operationPipeLine  added" });
 });
 
 const getReorderLeftOverData = expressAsyncHandler(async (req, res) => {
