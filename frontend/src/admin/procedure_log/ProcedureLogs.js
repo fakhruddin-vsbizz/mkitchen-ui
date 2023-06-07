@@ -45,6 +45,8 @@ const ProcedureLogs = () => {
 
   const [ingridientList, setIngridientList] = useState([]);
 
+  const [pipelineData, setPipelineData] = useState({});
+
   console.log(ingridientList);
   const navigate = useNavigate();
   /**************Restricting Admin Route************************* */
@@ -217,6 +219,7 @@ const ProcedureLogs = () => {
           if (res) {
             setIngridientList(res.data);
             setLeftOverItems(res.leftover);
+            console.log(res.leftover);
           }
         }
       }
@@ -247,6 +250,29 @@ const ProcedureLogs = () => {
     };
     getFood();
   }, [selectedDate]);
+
+  useEffect(()=>{
+    const getPipeline = async() => {
+    try {
+      const res = await fetch("/api/operation_pipeline", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "get_full_pipeline",
+          menu_id: menuFoodId,
+        }),
+      })
+      const data = await res.json()
+      setPipelineData(data)
+      console.log(data)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  getPipeline();
+  },[menuFoodId])
 
   useEffect(() => {
     const getData = async () => {
@@ -314,7 +340,7 @@ const ProcedureLogs = () => {
                 },
               }}
             >
-              <Tabs centered style={{ color: "darkred", border: "none" }}>
+              <Tabs centered style={{ color: "darkred", border: "none", overflowY: "scroll", maxHeight: "70vh" }}>
                 <Tabs.TabPane
                   style={{ border: "none" }}
                   tab="Menu Decision & Delivery"
@@ -322,7 +348,7 @@ const ProcedureLogs = () => {
                 >
                   <Card
                     style={{ width: "85%", marginLeft: "4%" }}
-                    bodyStyle={{padding: '0'}}
+                    bodyStyle={{padding: '0', width: '80vw'}}
                   >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Menu Decision & Delivery
@@ -486,13 +512,14 @@ const ProcedureLogs = () => {
                   </Card>
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
-                  <Card style={{ width: "85%", marginLeft: "4%", backgroundColor: 'transparent' }} bodyStyle={{ padding: '0'}}>
+                  <Card
+                   style={{ width: "85%", marginLeft: "4%", backgroundColor: 'transparent' }} bodyStyle={{ padding: '0', width: '80vw'}} >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
                     {ingridientList.length > 0 ? (
                       <List
-                        dataSource={ingridientList}
+                        dataSource={pipelineData?.ingridient_list}
                         renderItem={(item, index) => (
                           <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
                             <div
@@ -506,7 +533,7 @@ const ProcedureLogs = () => {
                             >
                               <Row>
                                 <Col xs={12} xl={6} style={{ padding: "1%" }}>
-                                  <label style={{ fontSize: "160%" }}>
+                                  <label style={{ fontSize: "1.3rem" }}>
                                     <i className="fa-solid fa-mortar-pestle"></i>{" "}
                                     &nbsp;{item.ingredient_name}
                                   </label>
@@ -516,9 +543,7 @@ const ProcedureLogs = () => {
                                   <label style={{ fontSize: "120%" }}>
                                     <i className="fa-solid fa-scale-unbalanced"></i>{" "}
                                     &nbsp;
-                                    {(item.perAshkash * totalAshkash).toFixed(
-                                      2
-                                    )}{" "}
+                                    {item.procure_amount}{" "}
                                     {inventoryItems
                                       .filter(
                                         (inventory) =>
@@ -528,7 +553,9 @@ const ProcedureLogs = () => {
                                       .map(
                                         (ele) => ele.ingridient_measure_unit
                                       )}
-                                  </label>
+                                  </label><br/>
+                                  <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/>
+                                  <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/>
                                 </Col>
                                 <Col xs={12} xl={6}>
                                   Leftover amount:
@@ -536,14 +563,12 @@ const ProcedureLogs = () => {
                                   <label style={{ fontSize: "120%" }}>
                                     <i className="fa-solid fa-chart-pie"></i>{" "}
                                     &nbsp;
-                                    {leftOverItems && leftOverItems[index] ? (
-                                      leftOverItems[index].leftover_amount
-                                    ) : (
-                                      <label>No Leftovers</label>
-                                    )}
-                                    {leftOverItems &&
-                                      leftOverItems[index] &&
-                                      inventoryItems
+                                    {leftOverItems && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                      )[0]?.leftover_amount !== undefined ? (
+                                      <>
+                                      <span>
+                                      {leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                      )[0]?.leftover_amount}&nbsp;{inventoryItems
                                         .filter(
                                           (inventory) =>
                                             inventory._id ===
@@ -552,6 +577,12 @@ const ProcedureLogs = () => {
                                         .map(
                                           (ele) => ele.ingridient_measure_unit
                                         )}
+                                      </span>
+                                      </>
+                                    ) : (
+                                      <label>No Leftovers</label>
+                                    )}
+                                    
                                   </label>
                                 </Col>
                                 <Col xs={12} xl={6}>
@@ -568,10 +599,7 @@ const ProcedureLogs = () => {
                                       )
                                       .map((filteredItem) =>
                                         (
-                                          filteredItem.price *
-                                          (
-                                            item.perAshkash * totalAshkash
-                                          ).toFixed(2)
+                                          filteredItem.price * item.procure_amount
                                         ).toFixed(2)
                                       )}
                                     &nbsp; / -

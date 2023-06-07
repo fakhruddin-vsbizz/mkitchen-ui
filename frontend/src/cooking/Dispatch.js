@@ -14,6 +14,7 @@ import {
   Modal,
   ConfigProvider,
   Alert,
+  Dropdown,
 } from "antd";
 import { useState } from "react";
 import { CaretRightOutlined, RightSquareFilled } from "@ant-design/icons";
@@ -70,10 +71,17 @@ const Dispatch = () => {
   //validation stats
   const [userSelectedError, setUserSelectedError] = useState(false);
   const [inputError, setInputError] = useState(false);
+  const [unitValueType, setUnitValueType] = useState("")
+  const [containerType, setContainerType] = useState("")
 
   const [status, setStatus] = useState();
 
   const navigate = useNavigate();
+
+
+  const handleChange = (value) => {
+    setUnitValueType(value)
+  }
 
   /**************Restricting Cooking Route************************* */
 
@@ -291,6 +299,8 @@ const Dispatch = () => {
           menu_id: menuFoodId,
           food_item_id: food_id,
           total_weight: totalWeight,
+          unitValueType,
+          containerType,
           no_of_deigh: daigs,
           mk_id: mohallaUserId,
           food_name: name,
@@ -300,6 +310,10 @@ const Dispatch = () => {
 
       if (data) {
         const res = await data.json();
+
+        setFinalDispatchData(res.data)
+        console.log(res);
+
 
         if (res.invalidData) {
           setInputError(true);
@@ -546,7 +560,15 @@ const Dispatch = () => {
                               ).length <= 0 ? (
                                 <>
                                   <Col xs={12} xl={12}>
-                                    Number of Daigs: <br />
+                                    <span style={{fontSize: '1.1rem'}}>
+                                    Number of 
+                                    </span>
+                                    <Input 
+                                    placeholder="container"
+                                    style={{width: '40%', margin: '8px', border: "none", borderBottom: '2px solid darkred'}}
+                                    onChange={(e) => setContainerType(e.target.value)}
+                                    />
+                                    :<br />
                                     <Input
                                       placeholder="Eg: 2, 3, 15, etc."
                                       onChange={(e) => setDaigs(e.target.value)}
@@ -554,7 +576,30 @@ const Dispatch = () => {
                                     ></Input>
                                   </Col>
                                   <Col xs={12} xl={12}>
-                                    Total Weight (Kg): <br />
+                                    <span style={{fontSize: '1.1rem'}}>
+                                    Total
+                                    </span>
+                                    <Select
+                                        defaultValue="weight"
+                                        onChange={handleChange}
+                                        style={{
+                                          width: 120, margin: '8px 1px',
+                                          borderBottom: '2px solid darkred',
+                                          borderRadius: "10px"
+                                        }}
+                                        bordered={false}
+                                        options={[
+                                          {
+                                            value: 'weight',
+                                            label: 'Weight (Kg)',
+                                          },
+                                          {
+                                            value: 'count',
+                                            label: 'Count',
+                                          },
+                                        ]}
+                                      />
+                                    : <br />
                                     <Input
                                       placeholder="Eg: 2, 3, 15, etc."
                                       style={{ fontSize: "140%", width: "70%" }}
@@ -575,13 +620,13 @@ const Dispatch = () => {
                                     <div>
                                       <Row>
                                         <Col xs={24} xl={12}>
-                                          Number of Daigs: <br />
+                                          Number of {item?.containerType}: <br />
                                           <label style={{ fontSize: "150%" }}>
                                             {item.no_of_deigh}
                                           </label>
                                         </Col>
                                         <Col xs={24} xl={12}>
-                                          Total Weight: <br />
+                                          Total {item?.unitValueType}: <br />
                                           <label style={{ fontSize: "150%" }}>
                                             {item.total_weight} Kg
                                           </label>

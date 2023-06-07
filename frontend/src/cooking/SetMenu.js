@@ -60,6 +60,7 @@ const SetMenu = () => {
   const [getMkUserId, setGetMkUserId] = useState();
   //date filter
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
+  const [selectedFoodName, setSelectedFoodName] = useState("")
 
   const [ingredientItems, setIngredientItems] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -77,7 +78,7 @@ const SetMenu = () => {
   const [totalAshkash, setTotalAshkhaas] = useState(0);
 
   const [ashkaasCountInput, setAshkaasCountInput] = useState(0);
-  const [foodIndex, setFoodIndex] = useState();
+  const [foodIndex, setFoodIndex] = useState("");
   const [foodIngredientMap, setFoodIngredientMap] = useState([]);
   const [validationError, setValidationError] = useState(false);
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
@@ -229,6 +230,9 @@ const SetMenu = () => {
         inventoryItems.some((item) => item.ingridient_name === ingredientName)
       ) {
         const newIngredient = {
+          foodId: foodIndex,
+          foodName: selectedFoodName,
+          procure_amount: 0,
           inventory_item_id: inventoryItemId,
           ingredient_name: ingredientName,
           perAshkash: 0, // set initial perAshkash value as empty string
@@ -263,6 +267,9 @@ const SetMenu = () => {
             setDataAdded((prev) => !prev);
             const res = await data.json();
             const newIngredient = {
+              foodId: foodIndex,
+              foodName: selectedFoodName,
+              procure_amount: 0,
               inventory_item_id: res._id,
               ingredient_name: ingredientName,
               perAshkash: 0, // set initial perAshkash value as empty string
@@ -374,6 +381,7 @@ const SetMenu = () => {
   const logIngredientForFood = async () => {
     const newFoodIngredient = ingredientItems.map(item => ({
       ...item,
+      procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(2)),
       perAshkash: +item.perAshkash,
     }))
     const foodIngMapObj = { ingridients: newFoodIngredient };
@@ -406,6 +414,7 @@ const SetMenu = () => {
     }
     console.log(newFoodIngredient);
     console.log(ingredientItems);
+    setSelectedFoodName("")
   };
 
   // console.log(inventoryItems);
@@ -560,6 +569,7 @@ const SetMenu = () => {
                                   id={"set_index_" + item.food_item_id}
                                   onClick={() => {
                                     setFoodReference(item.food_item_id);
+                                    setSelectedFoodName(item.food_name);
                                     setIsSelected(true);
                                   }}
                                   shape="circle"
@@ -589,7 +599,7 @@ const SetMenu = () => {
                         style={{ fontSize: "200%", color: "darkred" }}
                         className="dongle-font-class"
                       >
-                        Select the ingredients
+                        Select the ingredients for : <span>{selectedFoodName}</span>
                       </label>: <label
                         style={{ fontSize: "200%", color: "darkred" }}
                         className="dongle-font-class"
