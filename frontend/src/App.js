@@ -22,10 +22,12 @@ import PostConfirmOps from "./procurement_inventory/current_menu/PostConfirmOps"
 import Vendors from "./procurement_inventory/vendors/Vendors";
 import NewVendor from "./procurement_inventory/vendors/NewVendor";
 import VendorPurchase from "./procurement_inventory/vendors/VendorPurchase";
+import Donations from "./procurement_inventory/donation/Donations";
 import DamagedGoodsList from "./procurement_inventory/damaged_goods/DamagedGoodsList";
 import ProcedureLogs from "./admin/procedure_log/ProcedureLogs";
 import IngredientPurchase from "./procurement_inventory/inventory/IngredientPurchase";
 import ResetPassword from "./auth/ResetPasswor";
+import Report from "./admin/reports/Report";
 function App() {
   return (
     <AuthContextProvider>
@@ -37,6 +39,7 @@ function App() {
         <Route exact path="/admin/menu/history" element={<ProcedureLogs />} />
         <Route path="/admin/account_management" element={<Accounts />} />
         <Route path="/admin/verifyvendor" element={<VerifyVendor />} />
+        <Route path="/admin/report" element={<Report />} />
         <Route path="/reset-password/:id" element={<ResetPassword />} />
 
         {/*  ------------------------------- Cooking Route --------------------------  */}
@@ -63,6 +66,7 @@ function App() {
         <Route path="/pai/vendors/new" element={<NewVendor />} />
         <Route path="/pai/vendors/purchases" element={<VendorPurchase />} />
         <Route path="/pai/expiries" element={<DamagedGoodsList />} />
+        <Route path="/pai/donations" element={<Donations />} />
       </Routes>
     </AuthContextProvider>
   );
