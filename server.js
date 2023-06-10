@@ -6,6 +6,7 @@ const CORS = require("cors");
 const { menuHistory } = require("./controllers/menuHistory");
 const path = require("path");
 connectDb();
+const donationRouter = require('./routes/donationRoutes')
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -37,6 +38,7 @@ app.use("/api/review", require("./routes/menuDeliveryReviewRoute"));
 app.use("/api/vendor", require("./routes/vendorRoutes"));
 app.use("/api/purchase", require("./routes/purchaseRoutes"));
 app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
+app.use('/api/', donationRouter.router)
 
 app.use(express.static("./frontend/build"));
 
