@@ -8,13 +8,16 @@ const {
   updateInventoryVolume,
   updateInventoryAllItems,
   getNegativeInventory,
+  getBaseValues
 } = require("../controllers/inventoryItemsController");
 
 const router = express.Router();
 
 router.post("/", addInventoryItems);
+router.post("/get_data_with_ids", getBaseValues);
 router.get("/", getInventoryItems);
 router.get("/negative_inventory", getNegativeInventory);
+
 
 router.put("/", updateInventoryItems);
 router.put("/update_volume", updateInventoryVolume);

@@ -334,7 +334,7 @@ const NewPurchase = () => {
           <div style={{ width: "100%" }}>
             <Header title={<p>
                 <Link
-                  to="/pai/inventory"
+                  to="/pai/purchases"
                   style={{ color: "white", textDecoration: "none" }}
                 >
                   <ArrowLeftOutlined />

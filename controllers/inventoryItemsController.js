@@ -4,6 +4,15 @@ const InventoryModel = require("../models/inventoryItemsModel");
 const TransectionLogs = require("../models/transectionLogsInventoryModel");
 const FoodMenu = require("../models/menuFoodModel");
 
+const getBaseValues = expressAsyncHandler(async (req, res) => {
+  const {idList} = req.body
+  const data = await InventoryModel.find({_id: { $in: idList }}, "price")
+  if (!data) return res.status(404).json({msg: 'no data for this IDs'})
+
+  return res.status(200).json(data)
+})
+
+
 const addInventoryItems = expressAsyncHandler(async (req, res) => {
   const {
     mkuser_email,
@@ -28,7 +37,6 @@ const addInventoryItems = expressAsyncHandler(async (req, res) => {
 
   if (mkUser) {
     if (
-      ingridient_measure_unit === "" ||
       ingridient_expiry_period === "" ||
       ingridient_expiry_amount === "" ||
       ingridient_name === "" ||
@@ -202,4 +210,5 @@ module.exports = {
   updateInventoryVolume,
   updateInventoryAllItems,
   getNegativeInventory,
+  getBaseValues
 };

@@ -12,7 +12,7 @@ const InventoryItems = mongoose.Schema(
     },
     ingridient_measure_unit: {
       type: String,
-      required: true,
+      default: ""
     },
     ingridient_expiry_period: {
       type: String,

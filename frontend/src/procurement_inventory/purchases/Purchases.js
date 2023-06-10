@@ -175,7 +175,6 @@ const Purchases = () => {
                   Recent Purchases
                 </label>
                 <br />
-                <br />
                 {purchases && (
                   <List
                     style={{

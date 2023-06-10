@@ -1,5 +1,6 @@
-import { ConfigProvider, DatePicker, Tabs } from "antd";
 import React, { useEffect, useState } from "react";
+import './procedurelog.css';
+import { ConfigProvider, DatePicker, Rate, Tabs } from "antd";
 import { Card, List, Row, Col } from "antd";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
@@ -36,7 +37,7 @@ const newTodaysDate = dateFormatter();
 
 const ProcedureLogs = () => {
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
-  const [menuFoodId, setMenuFoodId] = useState();
+  const [menuFoodId, setMenuFoodId] = useState("");
   const [reviewData, setReviewData] = useState([]);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -44,10 +45,15 @@ const ProcedureLogs = () => {
   const [daigData, setDaigData] = useState([]);
 
   const [ingridientList, setIngridientList] = useState([]);
+  const [foodList, setFoodList] = useState([]);
 
   const [pipelineData, setPipelineData] = useState({});
 
-  console.log(ingridientList);
+  const [totalPrice, setTotalPrice] = useState([]);
+
+  const [dispatchData, setDispatchData] = useState([])
+
+  // console.log(ingridientList);
   const navigate = useNavigate();
   /**************Restricting Admin Route************************* */
 
@@ -91,7 +97,8 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            setReviewData(res);
+            setReviewData(res?.menuDelivery);
+            setDispatchData(res?.dispatchData);
             console.log(res);
           }
         }
@@ -243,7 +250,7 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            setMenuFoodId(res[0]._id);
+            setMenuFoodId(res[0]?._id ? res[0]._id: "");
           }
         }
       }
@@ -266,7 +273,25 @@ const ProcedureLogs = () => {
       })
       const data = await res.json()
       setPipelineData(data)
+      setFoodList(data?.menu_food_data[0].food_list)
+      console.log(data?.menu_food_data[0].food_list);
       console.log(data)
+      try {
+        const res = await fetch("/api/operation_pipeline/getTotalPrices", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            menu_id: menuFoodId,
+          }),
+        })
+        const data = await res.json()
+        setTotalPrice(data);
+        console.log("priceList", data);
+      } catch (error) {
+        
+      }
     } catch (error) {
       console.log(error);
     }
@@ -274,31 +299,31 @@ const ProcedureLogs = () => {
   getPipeline();
   },[menuFoodId])
 
-  useEffect(() => {
-    const getData = async () => {
-      if (selectedDate && menuFoodId) {
-        const data = await fetch("/api/review", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_review",
-            // date: selectedDate,
-            menu_id: menuFoodId,
-          }),
-        });
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     if (selectedDate && menuFoodId) {
+  //       const data = await fetch("/api/review", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           type: "get_review",
+  //           // date: selectedDate,
+  //           menu_id: menuFoodId,
+  //         }),
+  //       });
 
-        if (data) {
-          const res = await data.json();
-          if (res) {
-            setReviewData(res);
-          }
-        }
-      }
-    };
-    getData();
-  }, [selectedDate, menuFoodId]);
+  //       if (data) {
+  //         const res = await data.json();
+  //         if (res) {
+  //           setReviewData(res);
+  //         }
+  //       }
+  //     }
+  //   };
+  //   getData();
+  // }, [selectedDate, menuFoodId]);
 
   const handleDateChange = (date) => {
     const dateObj = new Date(date);
@@ -320,7 +345,7 @@ const ProcedureLogs = () => {
             comp={
               <Row>
                 <Col style={{ marginRight: 10, fontSize: 18 }}>
-                  Select date for showing history:{" "}
+                  Select date:{" "}
                 </Col>
                 <Col>
                   <DatePicker
@@ -340,15 +365,15 @@ const ProcedureLogs = () => {
                 },
               }}
             >
-              <Tabs centered style={{ color: "darkred", border: "none", overflowY: "scroll", maxHeight: "70vh" }}>
+              <Tabs centered style={{ color: "darkred", border: "none", maxHeight: "70vh" }}>
                 <Tabs.TabPane
                   style={{ border: "none" }}
                   tab="Menu Decision & Delivery"
                   key="1"
                 >
                   <Card
-                    style={{ width: "85%", marginLeft: "4%" }}
-                    bodyStyle={{padding: '0', width: '80vw'}}
+                    style={{width: "96%", marginLeft: "1%", overflowY: "scroll", overflowX: "hidden", maxHeight:'68vh' }}
+                    bodyStyle={{padding: '0', width: '80vw', backgroundColor:'transparent'}}
                   >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Menu Decision & Delivery
@@ -369,8 +394,8 @@ const ProcedureLogs = () => {
                                 width: "100%",
                               }}
                             >
-                              <Row style={{ width: "100%" }}>
-                                <Col xs={12} xl={24} style={{ padding: "1%"}}>
+                              <Row style={{ display: "flex", alignItems: 'center'}}>
+                                <Col xs={12} xl={7} style={{ padding: "1%"}}>
                                   <label
                                     style={{
                                       fontSize: "150%",
@@ -383,50 +408,44 @@ const ProcedureLogs = () => {
                                     </span>
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={4} style={{marginLeft: "12px" }}>
-                                  Total Daigh:
-                                  <br />
-                                  <label style={{ fontSize: "130%" }}>
-                                    <i className="fa-solid fa-flask"></i>{" "}
-                                    &nbsp;&nbsp;{" "}
-                                    {daigData &&
-                                      daigData[index] &&
-                                      daigData[index].no_of_deigh}
+                                <Col xs={6} xl={7}>
+                                <i className="fa-solid fa-star"></i>&nbsp;&nbsp;Ratings (out of 5):
+                                  <Rate disabled allowHalf defaultValue={+item.review} />
+                                </Col>
+                                <Col xs={6} xl={9}>
+                                <i className="fa-solid fa-magnifying-glass"></i>
+                                    &nbsp;&nbsp;Review :
+                                  <label style={{}}>
+                                    {item.remark}
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={4}>
-                                  Total Weight : <br />
-                                  <label style={{ fontSize: "130%" }}>
-                                    <i className="fa-solid fa-scale-unbalanced-flip"></i>
-                                    &nbsp;&nbsp;
-                                    {daigData &&
-                                      daigData[index] &&
-                                      daigData[index].total_weight}{" "}
-                                    Kg
+                              </Row>
+                                {dispatchData.filter(filterDispatch => filterDispatch?.mk_id === item.user_data[0]?.email)[0]?.dispatch.map(newItem => (
+                                  <Row>
+                                  <Col xs={6} xl={5} style={{marginLeft: "12px" }}>
+                                  Food Name:&nbsp;
+                                  <label style={{}}>
+                                    {newItem.food_name}
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={4}>
-                                  Ratings (out of 5) : <br />
-                                  <label style={{ fontSize: "130%" }}>
-                                    <i className="fa-solid fa-star"></i>&nbsp;&nbsp;
-                                    {item.review}
+                                  <Col xs={6} xl={5} style={{marginLeft: "12px" }}>
+                                  <i className="fa-solid fa-flask"></i>&nbsp;&nbsp;Total Shipment:&nbsp;
+                                  <label style={{}}>
+                                    {newItem?.no_of_deigh}&nbsp;<span style={{textTransform: 'capitalize'}}>{newItem?.containerType}</span>
                                   </label>
                                 </Col>
                                 <Col xs={6} xl={5}>
-                                  Review for the food : <br />
-                                  <label style={{ fontSize: "130%" }}>
-                                    <i className="fa-solid fa-magnifying-glass"></i>
-                                    &nbsp;&nbsp;{item.remark}
+                                <i className="fa-solid fa-scale-unbalanced-flip"></i>&nbsp;&nbsp;Total <span style={{textTransform: 'capitalize'}}>{newItem?.unitValueType}</span> :&nbsp; 
+                                  <label style={{}}>
+                                    {newItem?.total_weight}&nbsp;{newItem?.unitValueType === "weight" ? "Kg": newItem?.newItem?.unitValueType === "liters" ? "Liters" : "Piece"}
                                   </label>
                                 </Col>
-                                <Col xs={6} xl={6}>
+                                <Col xs={6} xl={8}>
                                   <center>
-                                    Has the daigs been delivered?
-                                    <br />
-                                    <label style={{ fontSize: "130%" }}>
-                                      <i className="fa-solid fa-truck-ramp-box"></i>{" "}
-                                      &nbsp;&nbsp;&nbsp;&nbsp;
-                                      {item.review ? (
+                                  <i className="fa-solid fa-truck-ramp-box"></i>&nbsp;&nbsp;Delivery Status:&nbsp;
+                                    <label style={{}}>
+                                      
+                                      {newItem?.delivery_status === "completed" ? (
                                         <label style={{ color: "green" }}>
                                           <i className="fa-solid fa-circle-check"></i>{" "}
                                           Delivered
@@ -440,7 +459,8 @@ const ProcedureLogs = () => {
                                     </label>
                                   </center>
                                 </Col>
-                              </Row>
+                                  </Row>
+                    ))}
                             </div>
                           </List.Item>
                         )}
@@ -513,103 +533,131 @@ const ProcedureLogs = () => {
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
                   <Card
-                   style={{ width: "85%", marginLeft: "4%", backgroundColor: 'transparent' }} bodyStyle={{ padding: '0', width: '80vw'}} >
+                   style={{ width: "96%", marginLeft: "1%", backgroundColor: 'transparent', overflowY: "scroll", overflowX: "hidden", overflowX: "hidden", maxHeight:'68vh' }} bodyStyle={{ padding: '0', width: '80vw'}} >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
                     {ingridientList.length > 0 ? (
-                      <List
-                        dataSource={pipelineData?.ingridient_list}
-                        renderItem={(item, index) => (
-                          <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
-                            <div
-                              style={{
-                                padding: 10,
-                                backgroundColor: "#fff",
-                                borderRadius: 5,
-                                border: "2px solid darkred",
-                                width: "100%",
-                              }}
-                            >
-                              <Row>
-                                <Col xs={12} xl={6} style={{ padding: "1%" }}>
+                        foodList.map(foodItem => (
+                          <div key={foodItem.food_item_id}>
+                            <Row>
+                                <Col xs={12} xl={12} style={{ padding: "1%" }}>
                                   <label style={{ fontSize: "1.3rem" }}>
-                                    <i className="fa-solid fa-mortar-pestle"></i>{" "}
-                                    &nbsp;{item.ingredient_name}
+                                    {foodItem.food_name}
                                   </label>
                                 </Col>
-                                <Col xs={12} xl={6}>
-                                  Required Amount: <br />
-                                  <label style={{ fontSize: "120%" }}>
-                                    <i className="fa-solid fa-scale-unbalanced"></i>{" "}
-                                    &nbsp;
-                                    {item.procure_amount}{" "}
-                                    {inventoryItems
-                                      .filter(
-                                        (inventory) =>
-                                          inventory._id ===
-                                          item.inventory_item_id
-                                      )
-                                      .map(
-                                        (ele) => ele.ingridient_measure_unit
-                                      )}
-                                  </label><br/>
-                                  <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/>
-                                  <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/>
-                                </Col>
-                                <Col xs={12} xl={6}>
-                                  Leftover amount:
-                                  <br />
-                                  <label style={{ fontSize: "120%" }}>
-                                    <i className="fa-solid fa-chart-pie"></i>{" "}
-                                    &nbsp;
-                                    {leftOverItems && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
-                                      )[0]?.leftover_amount !== undefined ? (
-                                      <>
-                                      <span>
-                                      {leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
-                                      )[0]?.leftover_amount}&nbsp;{inventoryItems
-                                        .filter(
-                                          (inventory) =>
-                                            inventory._id ===
-                                            item.inventory_item_id
-                                        )
-                                        .map(
-                                          (ele) => ele.ingridient_measure_unit
-                                        )}
-                                      </span>
-                                      </>
-                                    ) : (
-                                      <label>No Leftovers</label>
-                                    )}
-                                    
+                                <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                                  <label style={{ fontSize: "1.3rem" }}>
+                                    {totalPrice.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;₹
                                   </label>
                                 </Col>
-                                <Col xs={12} xl={6}>
-                                  Procurement Cost:
-                                  <br />
-                                  <label style={{ fontSize: "120%" }}>
-                                    <i className="fa-solid fa-indian-rupee-sign"></i>
-                                    &nbsp;
-                                    {inventoryItems
-                                      .filter(
-                                        (inventory) =>
-                                          inventory._id ===
-                                          item.inventory_item_id
-                                      )
-                                      .map((filteredItem) =>
-                                        (
-                                          filteredItem.price * item.procure_amount
-                                        ).toFixed(2)
-                                      )}
-                                    &nbsp; / -
-                                  </label>
-                                </Col>
-                              </Row>
-                            </div>
-                          </List.Item>
-                        )}
-                      />
+                            </Row>
+                            <List
+                              dataSource={pipelineData?.ingridient_list.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id)}
+                              renderItem={(item, index) => (
+                                <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
+                                  <div
+                                    style={{
+                                      padding: 10,
+                                      backgroundColor: "#fff",
+                                      borderRadius: 5,
+                                      border: "2px solid darkred",
+                                      width: "100%",
+                                    }}
+                                  >
+                                    <Row>
+                                      <Col xs={12} xl={6} style={{ padding: "1%" }}>
+                                        <label style={{ fontSize: "1.3rem" }}>
+                                          <i className="fa-solid fa-mortar-pestle"></i>{" "}
+                                          &nbsp;{item.ingredient_name}
+                                        </label>
+                                      </Col>
+                                      <Col xs={12} xl={6}>
+                                        Required Amount: <br />
+                                        <label style={{ fontSize: "120%" }}>
+                                          <i className="fa-solid fa-scale-unbalanced"></i>{" "}
+                                          &nbsp;
+                                          {item.procure_amount}{" "}
+                                          {inventoryItems
+                                            .filter(
+                                              (inventory) =>
+                                                inventory._id ===
+                                                item.inventory_item_id
+                                            )
+                                            .map(
+                                              (ele) => ele.ingridient_measure_unit
+                                            )}
+                                        </label>
+                                        
+                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a.quantity_requireds + b.quantity_requireds)}&nbsp;{inventoryItems
+                                            .filter(
+                                              (inventory) =>
+                                                inventory._id ===
+                                                item.inventory_item_id
+                                            )
+                                            .map(
+                                              (ele) => ele.ingridient_measure_unit
+                                            )}</span> : null}
+                                        
+                                        {/* <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/>
+                                        <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/> */}
+                                      </Col>
+                                      <Col xs={12} xl={6}>
+                                        Leftover amount:
+                                        <br />
+                                        <label style={{ fontSize: "120%" }}>
+                                          <i className="fa-solid fa-chart-pie"></i>{" "}
+                                          &nbsp;
+                                          {leftOverItems && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                            )[0]?.leftover_amount !== undefined ? (
+                                            <>
+                                            <span style={{fontSize: '1rem', color:'green'}}>
+                                            {leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                            )[0]?.leftover_amount}&nbsp;{inventoryItems
+                                              .filter(
+                                                (inventory) =>
+                                                  inventory._id ===
+                                                  item.inventory_item_id
+                                              )
+                                              .map(
+                                                (ele) => ele.ingridient_measure_unit
+                                              )}
+                                            </span>
+                                            </>
+                                          ) : (
+                                            <label>No Leftovers</label>
+                                          )}
+                                          
+                                        </label>
+                                      </Col>
+                                      <Col xs={12} xl={6}>
+                                        Procurement Cost:
+                                        <br />
+                                        <label style={{ fontSize: "120%" }}>
+                                          <i className="fa-solid fa-indian-rupee-sign"></i>
+                                          &nbsp;
+                                          {inventoryItems
+                                            .filter(
+                                              (inventory) =>
+                                                inventory._id ===
+                                                item.inventory_item_id
+                                            )
+                                            .map((filteredItem) =>{
+                                              return (
+                                                filteredItem.price * item.procure_amount
+                                              ).toFixed(2)}
+                                            )}
+                                          &nbsp; / -
+                                        </label>
+                                      </Col>
+                                    </Row>
+                                  </div>
+                                </List.Item>
+                              )}
+                            />
+                          </div>
+                        ))
+                      
                     ) : (
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>

@@ -276,6 +276,7 @@ const Login = () => {
               style={{
                 width: "50%",
                 border: "2px solid darkred",
+                backgroundColor: '#fff',
                 marginTop: 50,
               }}
               className="dongle-font-class"

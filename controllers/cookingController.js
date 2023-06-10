@@ -58,6 +58,7 @@ const addLeftOverData = expressAsyncHandler(async (req, res) => {
       ingredientLs.forEach((item)=> {
         if (item.inventory_item_id === inventory_id && item.foodId === foodId) {
           item.procure_amount = Number((item.procure_amount - Number(leftover_amount.toFixed(2))).toFixed(2));
+          item.leftover = newLeftOverObj;
         }
       })
   

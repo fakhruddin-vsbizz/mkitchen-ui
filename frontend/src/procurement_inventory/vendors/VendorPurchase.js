@@ -18,13 +18,14 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
+
 const VendorPurchase = () => {
   const [purchaseList, setPurchaseList] = useState();
 
   const [filteredPurchases, setFilteredPurchases] = useState([]);
 	const [filterByName, setFilterByName] = useState("");
   const [filterByDate, setFilterByDate] = useState(null);
-  const [filterByStatus, setFilterByStatus] = useState(null)
+  const [filterByStatus, setFilterByStatus] = useState("all")
   const [inventoryItems, setInventoryItems] = useState([]);
   
   const [inputValue, setInputValue] = useState(1);
@@ -80,11 +81,11 @@ const VendorPurchase = () => {
 
   useEffect(() => {
 		const filterList = () => {
-      if (filterByName && filterByStatus !== null && filterByDate !== null) {
+      if (filterByName && filterByStatus !== "all" && filterByDate !== null) {
 				return purchaseList.filter(item =>
 					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
 				);
-			} else if (filterByName && filterByStatus !== null) {
+			} else if (filterByName && filterByStatus !== "all") {
 				return purchaseList.filter(item =>
 					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus
 				);
@@ -94,7 +95,7 @@ const VendorPurchase = () => {
 					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
 				);
 			} else 
-      if (filterByStatus !== null && filterByDate !== null) {
+      if (filterByStatus !== "all" && filterByDate !== null) {
 				return purchaseList.filter(item =>
 					item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
 				);
@@ -105,7 +106,7 @@ const VendorPurchase = () => {
 			} else if (filterByDate !== null) {
 				return purchaseList.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
 			} 
-      else if (filterByStatus !== null) {
+      else if (filterByStatus !== "all") {
 				return purchaseList.filter(item => item.paid === filterByStatus
 				);
 			}
@@ -182,12 +183,12 @@ const VendorPurchase = () => {
 
           <div style={{ width: "100%" }}>
             <Header
-              title="Add New Vendor"
-              comp={<center>
-                <Button style={{ backgroundColor: "white", color: "orange" }}>
-                  Cancel
-                </Button>
-              </center>}
+              title="Vendor"
+              // comp={<center>
+              //   <Button style={{ backgroundColor: "white", color: "orange" }}>
+              //     Cancel
+              //   </Button>
+              // </center>}
             />
             <div style={{ width: "100%", padding: 0 }}>
               <center>
@@ -215,18 +216,18 @@ const VendorPurchase = () => {
                     <Col xs={12} xl={6}>
                       Paid status: <br />
                       <Select
-                        defaultValue={null}
+                        defaultValue="all"
                         value={filterByStatus}
                         onChange={value => setFilterByStatus(value)}
                         style={{ width: "70%" }}
                         options={[
                           { value: true, label: "PAID" },
                           { value: false, label: "UNPAID" },
-                          { value: null, label: "ALL" },
+                          { value: "all", label: "ALL" },
                         ]}
                       ></Select>
                     </Col>
-                    <Col xs={12} xl={6}>
+                    {/* <Col xs={12} xl={6}>
                       Price Range: <br />
                       <Row>
                         <Col xs={12} xl={12}>
@@ -250,7 +251,7 @@ const VendorPurchase = () => {
                           />
                         </Col>
                       </Row>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Card>
                 {purchaseList && (
