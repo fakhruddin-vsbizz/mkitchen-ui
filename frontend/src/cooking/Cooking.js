@@ -67,6 +67,8 @@ const Cooking = () => {
   const [leftoverLogs, setLeftoverLogs] = useState([])
 
   const [reorderLogs, setReorderLogs] = useState([]);
+  const [reorderFoodId, setReorderFoodId] = useState("");
+
   const [update, setUpdate] = useState(false);
   const [visible, setVisible] = useState(false);
   const [totalAshkashCount, setTotalAshkashCount] = useState();
@@ -353,6 +355,8 @@ const Cooking = () => {
               type: "update_operation_pipeline_reorder_logs",
               menu_id: menuFoodId,
               reorder_logs: reorderLogs,
+              foodId: reorderFoodId,
+              inventory_id: inventoryId
             }),
           });
 
@@ -378,6 +382,9 @@ const Cooking = () => {
       quantity_requireds: +reorderQuantity,
       reorder_delivery_status: true,
     };
+
+    setReorderFoodId(foodItemId);
+    
 
     console.log(unit);
 

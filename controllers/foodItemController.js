@@ -133,13 +133,32 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
   }
 
   if (type === "update_operation_pipeline_reorder_logs") {
-    const updatePipeline = await OperationPipeLine.findByIdAndUpdate(
-      { _id: Object(operationId._id) },
-      { $set: { reorder_logs: reorder_logs } },
-      { new: true }
-    );
-    if (updatePipeline) {
-      return res.json({ message: "pipeline  updated successfully" });
+
+    try {
+      
+          const updatePipeline = await OperationPipeLine.findOne(
+            { _id: Object(operationId._id) }
+          );
+      
+          const ingredientLs = updatePipeline.ingridient_list;
+      
+          const filteredLog = reorder_logs.filter(item => item.foodId === req.body.foodId && item.inventory_id === req.body.inventory_id)
+      
+          ingredientLs.forEach((item)=> {
+            if (item.inventory_item_id === req.body?.inventory_id && item.foodId === req.body?.foodId) {
+              item.reorders = filteredLog;
+            }
+          })
+      
+          await updatePipeline.updateOne({ reorder_logs: reorder_logs, ingridient_list: ingredientLs });
+      
+      
+          if (updatePipeline) {
+            return res.status(200).json({ message: "pipeline  updated successfully" });
+          }
+      
+    } catch (error) {
+      console.log(error);
     }
   }
 });

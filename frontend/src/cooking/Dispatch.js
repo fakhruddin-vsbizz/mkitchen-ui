@@ -81,6 +81,7 @@ const Dispatch = () => {
 
   const handleChange = (value) => {
     setUnitValueType(value)
+    console.log(value);
   }
 
   /**************Restricting Cooking Route************************* */
@@ -551,7 +552,7 @@ const Dispatch = () => {
                             bodyStyle={{padding: '10px 10px 10px'}}
                             bordered={false}
                           >
-                            <span style={{ fontSize: '1.5rem', margin: '1rem .5rem'}}>{item.food_name}</span>
+                            <span style={{ fontSize: '1.5rem', margin: '1rem .5rem'}}>Food: {item.food_name}</span>
                             <Row>
                               {finaldipatchData &&
                               finaldipatchData.filter(
@@ -581,7 +582,7 @@ const Dispatch = () => {
                                     </span>
                                     <Select
                                         defaultValue="weight"
-                                        onChange={handleChange}
+                                        onSelect={handleChange}
                                         style={{
                                           width: 120, margin: '8px 1px',
                                           borderBottom: '2px solid darkred',
@@ -596,6 +597,10 @@ const Dispatch = () => {
                                           {
                                             value: 'count',
                                             label: 'Count',
+                                          },
+                                          {
+                                            value: 'liters',
+                                            label: 'Liters',
                                           },
                                         ]}
                                       />
@@ -628,7 +633,7 @@ const Dispatch = () => {
                                         <Col xs={24} xl={12}>
                                           Total {item?.unitValueType}: <br />
                                           <label style={{ fontSize: "150%" }}>
-                                            {item.total_weight} Kg
+                                            {item.total_weight} {item?.unitValueType === "weight" ? "Kg": item?.item?.unitValueType === "liters" ? "Liters" : "Piece"}
                                           </label>
                                         </Col>
                                       </Row>

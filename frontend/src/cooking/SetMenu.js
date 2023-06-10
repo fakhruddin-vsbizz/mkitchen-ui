@@ -84,6 +84,8 @@ const SetMenu = () => {
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
   const [finalArrayForData, setFinalArrayForData] = useState([]);
 
+  const [filteredAutoCompleted, setFilteredAutoCompleted] = useState([])
+
   const [status, setStatus] = useState();
   const navigate = useNavigate();
 
@@ -217,7 +219,9 @@ const SetMenu = () => {
             setupdatedIngredientsList(res);
           }
         }
-      } catch (error) {}
+      } catch (error) {
+        console.log(error);
+      }
     };
     getInventory();
   }, [dataAdded]);
@@ -236,6 +240,8 @@ const SetMenu = () => {
           inventory_item_id: inventoryItemId,
           ingredient_name: ingredientName,
           perAshkash: 0, // set initial perAshkash value as empty string
+          reorders: [],
+          leftover: {}
         };
         setIngredientItems((prevState) =>
           prevState === undefined
@@ -254,7 +260,7 @@ const SetMenu = () => {
             body: JSON.stringify({
               mkuser_email: email,
               ingridient_name: ingredientName,
-              ingridient_measure_unit: "gram",
+              ingridient_measure_unit: "",
               ingridient_expiry_period: "Days",
               ingridient_expiry_amount: "5",
               price: 0,
@@ -263,9 +269,12 @@ const SetMenu = () => {
               baseline: 1,
             }),
           });
-          if (data) {
-            setDataAdded((prev) => !prev);
+          
+            // setDataAdded((prev) => !prev);
             const res = await data.json();
+            setInventoryItems(prev => [...prev, res])
+            console.log(res, "res");
+            console.log(finalArrayForData, "finalArrayForData");
             const newIngredient = {
               foodId: foodIndex,
               foodName: selectedFoodName,
@@ -273,14 +282,21 @@ const SetMenu = () => {
               inventory_item_id: res._id,
               ingredient_name: ingredientName,
               perAshkash: 0, // set initial perAshkash value as empty string
+              reorders: [],
+              leftover: {}
             };
+            // setFinalArrayForData([...finalArrayForData, res])
+            // setFilteredAutoCompleted(finalArrayForData.map((item) => ({
+            //   value: item.ingridient_name,
+            //   id: item._id,
+            // })))
             setIngredientItems((prevState) =>
               prevState === undefined
                 ? [newIngredient]
                 : [newIngredient, ...prevState]
             );
             setIngredientName("");
-          }
+
         } catch (error) {
           console.log(error);
         }
@@ -372,8 +388,13 @@ const SetMenu = () => {
         finalArray.push(inventoryItem);
       }
     }
+
     setFinalArrayForData(finalArray);
-    console.log(finalArray);
+    // setFilteredAutoCompleted(finalArray.map((item) => ({
+    //   value: item.ingridient_name,
+    //   id: item._id,
+    // })))
+    console.log("finalArray", finalArray);
   }, [ingredientItems, inventoryItems]);
 
   // Output the final array
@@ -604,7 +625,7 @@ const SetMenu = () => {
                         style={{ fontSize: "200%", color: "darkred" }}
                         className="dongle-font-class"
                       >
-                        Selected ingredients
+                        Selected ingredients: <span>{selectedFoodName}</span> 
                       </label>}
                       <br />
                       {status === 0 && foodIndex && <>
@@ -624,9 +645,9 @@ const SetMenu = () => {
                               id="ingredient-item-selected"
                               style={{ width: "100%" }}
                               options={finalArrayForData.map((item) => ({
-                                value: item.ingridient_name,
-                                id: item._id,
-                              }))}
+                                  value: item.ingridient_name,
+                                  id: item._id,
+                                }))}
                               value={ingredientName}
                               onChange={(value) => setIngredientName(value)}
                               onSelect={handleSelect}

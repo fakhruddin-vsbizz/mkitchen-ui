@@ -5,7 +5,8 @@ const {
 	updateOperationPipeline,
 	changeInventoryAmount,
 	changeProcurementAmount,
-	getIngredients
+	getIngredients,
+	addTotalPriceToFood
 } = require("../controllers/operationPipeLineController");
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.post("/getIngredients", getIngredients);
 router.post("/updateInventoryAmount", changeInventoryAmount);
 router.post("/changeProcurementAmount", changeProcurementAmount);
 router.get("/", getOperationPipeline);
+router.post("/getTotalPrices", addTotalPriceToFood);
 router.put("/", updateOperationPipeline);
 
 module.exports = router;

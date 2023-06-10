@@ -42,11 +42,11 @@ app.use('/api/', donationRouter.router)
 
 app.use(express.static("./frontend/build"));
 
-// app.get("*", (req, res) => {
-//   res
-//     .status(200)
-//     .sendFile(path.join(__dirname, "frontend/build", "index.html"));
-// });
+app.get("*", (req, res) => {
+  res
+    .status(200)
+    .sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));

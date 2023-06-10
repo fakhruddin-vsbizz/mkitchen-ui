@@ -397,7 +397,13 @@ const Inventory = () => {
                               <tr>
                                 <td>Unit for measurement</td>
                                 <td>
+                                  {unit === "" ? <><Input
+                                    value={unit}
+                                    onChange={(e) => setUnit(e.target.value)}
+                                    placeholder="Eg: 250, 100"
+                                  ></Input></>:
                                   <label>{unit}</label>
+                                  }
                                 </td>
                               </tr>
                               <tr>

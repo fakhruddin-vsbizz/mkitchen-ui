@@ -2,6 +2,9 @@ const expressAsyncHandler = require("express-async-handler");
 const MKUser = require("../models/mkUserModel");
 const FoodMenu = require("../models/menuFoodModel");
 const MenuDelivery = require("../models/menuDeliveryReviewModel");
+const  OperationPipeline = require("../models/operationPipeLineModel");
+const { ObjectId } = require("mongodb");
+
 
 const addDeliveryReview = expressAsyncHandler(async (req, res) => {
   const {
@@ -45,8 +48,26 @@ const addDeliveryReview = expressAsyncHandler(async (req, res) => {
 
   if (type === "get_review") {
     const { menu_id } = req.body;
-    const menuDelivery = await MenuDelivery.find({ menu_food_id: menu_id });
-    return res.json(menuDelivery);
+    const menuDelivery = await MenuDelivery.aggregate([
+      {
+        $match: { menu_food_id: new ObjectId(menu_id) }    
+      },
+      {
+        $lookup: {
+          from: "mkusers",
+          localField: "mkuser_id",
+          foreignField: "_id",
+          as: "user_data",
+        }
+      }
+    ]);
+    const operation_pipeline = await OperationPipeline.findOne({ menu_food_id: menu_id });
+
+    const dispatchData = operation_pipeline?.dispatch
+
+    // const customData = 
+
+    return res.json({menuDelivery, dispatchData});
   }
 });
 

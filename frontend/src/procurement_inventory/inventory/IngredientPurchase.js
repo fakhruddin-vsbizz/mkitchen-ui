@@ -239,7 +239,7 @@ const IngredientPurchase = () => {
                         ]}
                       ></Select>
                     </Col>
-                    <Col xs={12} xl={6}>
+                    {/* <Col xs={12} xl={6}>
                       Price Range: <br />
                       <Row>
                         <Col xs={12} xl={12}>
@@ -263,7 +263,7 @@ const IngredientPurchase = () => {
                           />
                         </Col>
                       </Row>
-                    </Col>
+                    </Col> */}
                   </Row>
                 </Card>
                 {itemPurchase && (
@@ -299,15 +299,15 @@ const IngredientPurchase = () => {
                               getVendor(item.vendor_id)}
                           </Col>
                           <Col xs={8} xl={4}>
-                            Required quantity: <br />
+                            Required quantity:&nbsp;
                             {item.quantity_loaded} {item.unit}
                           </Col>
                           <Col xs={8} xl={4}>
-                            Price: <br />
+                            Price:&nbsp;
                             Rs. {item.quantity_loaded * item.rate_per_unit}/-
                           </Col>
                           <Col xs={8} xl={6}>
-                            Date of purchase: <br />
+                            Date of purchase:&nbsp;
                             {new Date(item.createdAt).toDateString()}
                           </Col>
                           <Col xs={8} xl={4}>
