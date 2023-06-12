@@ -14,6 +14,9 @@ const donationSchema = new Schema(
         ingredientName: {
             type: String,
         },
+        donarName: {
+            type: String,
+        },
         donationQty: {
             type: Number,
             required: true,

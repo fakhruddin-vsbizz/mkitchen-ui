@@ -17,6 +17,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
+import { colorBlack, colorGreen } from "../../colors";
 
 const Inventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -223,7 +224,7 @@ const Inventory = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       {/* <Modal
         visible={visible}
@@ -243,7 +244,7 @@ const Inventory = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -262,7 +263,7 @@ const Inventory = () => {
                   <tr>
                     <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600'}}>
                     Filter by ingredients name:
-                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px' }} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
                       <td style={{ fontSize: '20px', fontWeight: '600', paddingLeft: '1rem'}}>
                         Volume Range: {filterByVolume !== 0 ? filterByVolume : null}
@@ -478,6 +479,7 @@ const Inventory = () => {
                       overflowY: "scroll",
                       backgroundColor: "transparent",
                     }}
+                    bodyStyle={{padding: '5px 20px'}}
                   >
                     <List
                       size="small"
@@ -485,12 +487,14 @@ const Inventory = () => {
                       renderItem={(item) => (
                         <List.Item
                           style={{
-                            margin: 5,
+                            // margin: 5,
                             padding: "10px 20px",
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 2px lightgray',
+                            margin: '8px',
                             width: "100%",
                           }}
                         >
@@ -503,7 +507,7 @@ const Inventory = () => {
                             }}
                           >
                             <Col xs={4} xl={3}
-                              style={{ fontSize: "150%", color: "darkred" }}
+                              style={{ fontSize: "150%", color: colorGreen }}
                             >
                               {item.ingridient_name}
                             </Col>
@@ -526,7 +530,7 @@ const Inventory = () => {
                             </Col>
                             <Col xs={4} xl={4}>
                               {item.total_volume <= item.baseline ? (
-                                <div style={{ color: "darkred", display: 'flex',flexDirection: 'column', alignItems: 'flex-start', rowGap: '5px' }}>
+                                <div style={{ color: colorGreen, display: 'flex',flexDirection: 'column', alignItems: 'flex-start', rowGap: '5px' }}>
                                   <span>
                                   <i
                                     className="fa-solid fa-circle-exclamation"

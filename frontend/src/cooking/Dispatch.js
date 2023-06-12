@@ -23,6 +23,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { colorGreen } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -356,7 +357,7 @@ const Dispatch = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <Modal
         open={visible}
@@ -377,7 +378,8 @@ const Dispatch = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
+            colorLink: colorGreen
           },
         }}
       >
@@ -387,10 +389,9 @@ const Dispatch = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Dispatch"
-              comp={<Row>
+              comp={<Row style={{justifyContent: 'flex-end'}}>
                 <Col xs={24} xl={12}>
-                  Select the date:
-                  <br />
+                  Select the date:&nbsp;
                   <DatePicker defaultValue={dayjs(TodaysDate, 'MM/DD/YYYY')} onChange={handleDateChange} />
                 </Col>
                 {/* <Col xs={24} xl={12}>
@@ -412,7 +413,7 @@ const Dispatch = () => {
             {status < 3 && (
               <center>
                 <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
-                  <label style={{ fontSize: '800%', color: 'darkred' }}>
+                  <label style={{ fontSize: '800%', color: colorGreen }}>
                     <i class="fa-solid fa-hourglass-start"></i>
                   </label>
                   <br/><br/>
@@ -462,7 +463,8 @@ const Dispatch = () => {
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                border: "2px solid darkred",
+                                // border: "2px solid darkred",
+                                boxShadow: '1px 1px 4px 4px lightgray',
                                 width: "100%",
                               }}
                             >
@@ -534,12 +536,14 @@ const Dispatch = () => {
                       renderItem={(item, index) => (
                         <List.Item
                           style={{
-                            margin: 5,
+                            // margin: 5,
                             padding: 0,
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 2px lightgray',
+                            margin: '8px auto',
                             width: "98%",
                           }}
                         >
@@ -566,7 +570,7 @@ const Dispatch = () => {
                                     </span>
                                     <Input 
                                     placeholder="container"
-                                    style={{width: '40%', margin: '8px', border: "none", borderBottom: '2px solid darkred'}}
+                                    style={{width: '40%', margin: '8px', border: "none", borderBottom: `2px solid ${colorGreen}`}}
                                     onChange={(e) => setContainerType(e.target.value)}
                                     />
                                     :<br />

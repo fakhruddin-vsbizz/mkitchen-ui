@@ -23,6 +23,7 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { colorBlack, colorGreen } from "../../colors";
 
 const VerifyVendor = () => {
   const { Column, ColumnGroup } = Table;
@@ -109,7 +110,7 @@ const VerifyVendor = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <div style={{ display: "flex" }}>
         <SideNav k="4" userType="admin" />
@@ -120,7 +121,7 @@ const VerifyVendor = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "darkred",
+                    colorPrimary: colorGreen,
                     colorDanger: "",
                   },
                 }}
@@ -132,7 +133,7 @@ const VerifyVendor = () => {
                     <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600'}}>
                       Vendor name:
                       <br />
-                      <Input style={{marginTop: '5px', height: '45px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                      <Input style={{marginTop: '5px', height: '45px', fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
                   </tr>
                   </tbody>
@@ -141,12 +142,15 @@ const VerifyVendor = () => {
                 {vendors && (
                   <List
                     dataSource={filteredVendors}
+                    style={{height: "65vh",
+                    overflowY: 'scroll'}}
                     renderItem={(item) => (
                       <List.Item
                         style={{
-                          width: "100%",
+                          // width: "100%",
                           backgroundColor: "transparent",
-                          padding: '0px'
+                          padding: '0px',
+                          margin: '8px'
                         }}
                       >
                         <Row
@@ -155,7 +159,8 @@ const VerifyVendor = () => {
                             display: "flex",
                             backgroundColor: "#fff",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                             width: "100%",
                             marginBottom:'4px'
                           }}
@@ -186,7 +191,7 @@ const VerifyVendor = () => {
                           <Col xs={12} xl={6}>
                             Approval Status: <br/>
                             {!item.approval_status ? 
-                            <label style={{ fontSize:"120%", color:'darkred' }}><i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Pending&nbsp;&nbsp;|</label> : 
+                            <label style={{ fontSize:"120%", color: colorGreen }}><i class="fa-solid fa-spinner"></i>&nbsp;&nbsp;Pending&nbsp;&nbsp;|</label> : 
                             <label style={{ fontSize:"120%", color:'green' }}><i class="fa-solid fa-person-circle-check"></i>&nbsp;Verified</label>}
                             
                               

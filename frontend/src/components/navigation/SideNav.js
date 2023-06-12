@@ -16,6 +16,7 @@ import Logo from "../../res/img/MKWhiteLogo.png";
 import LogoMin from "../../res/img/MKWhiteLogoMin.png";
 import { Link } from "react-router-dom";
 import { Footer } from "antd/es/layout/layout";
+import { colorBlack, colorGreen } from '../../colors';
 
 const { Sider } = Layout;
 function getItem(label, key, icon, children, link) {
@@ -189,19 +190,20 @@ const SideNav = ({ k, userType }) => {
   return (
     <Layout
       style={{
-        minHeight: "100vh",
+        height: "100vh",
+        boxShadow: '1px 1px 5px 4px lightgray',
       }}
     >
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
             colorSecondary: "white",
           },
         }}
       >
         <Sider
-          style={{ backgroundColor: "darkred" }}
+          style={{ backgroundColor: colorBlack, height: '100%' }}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
@@ -230,7 +232,7 @@ const SideNav = ({ k, userType }) => {
             theme="light"
             defaultSelectedKeys={[k]}
             style={{
-              backgroundColor: "darkred",
+              backgroundColor: colorBlack,
               marginTop: 32,
               color: "white",
               fontSize: 16,

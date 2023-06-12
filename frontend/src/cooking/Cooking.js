@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import './cooking.css';
 import {
   Row,
   Col,
@@ -25,6 +26,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { colorBlack, colorGreen } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -464,7 +466,7 @@ const Cooking = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <Modal
         open={visible}
@@ -491,7 +493,8 @@ const Cooking = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
+            colorLink: colorGreen
           },
         }}
       >
@@ -502,10 +505,11 @@ const Cooking = () => {
             <Header
               title="Cooking Operation"
               comp={
-                <Row>
+                <Row style={{justifyContent: 'flex-end'}}>
                   <Col xs={24} xl={12}>
-                    Select the date:
-                    <br />
+                  <span style={{fontSize: '1.1rem'}}>
+                    Select the date:&nbsp;
+                    </span>
                     <DatePicker
                       defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                       onChange={handleDateChange}
@@ -530,7 +534,7 @@ const Cooking = () => {
             />
 
             <Row style={{ padding: 10 }}>
-              <Col xs={24} xl={16} style={{ padding: "0 2% 2%" }}>
+              <Col xs={24} xl={16} style={{ padding: "0 1% 2% 2%" }}>
                 {status === -1 && (
                   <tr>
                     <td colSpan={2}>
@@ -602,18 +606,18 @@ const Cooking = () => {
                           <Row>
                             <Col xs={12} xl={8}>
                               <label style={{ fontSize: "130%" }}>
-                                <label style={{ fontSize: "160%" }}>
-                                  <i class="fa-solid fa-plate-wheat"></i>
+                                <label style={{ fontSize: "160%", color: colorBlack }}>
+                                  <i style={{color: colorGreen}} class="fa-solid fa-plate-wheat"></i>
                                   &nbsp;&nbsp;{item.food_name}
                                 </label>
                               </label>
                             </Col>
                           </Row>
-                          <hr></hr>
+                          <hr className="separator"></hr>
                           <Row>
                             <Col xs={24} xl={24} style={{ padding: "1%" }}>
                               <span style={{padding: '5px 5px 10px', fontSize:'1.2rem'}}>
-                              Here are the required ingredients for the cooking:
+                              Ingredients details for the <span style={{color: colorGreen}}>{item?.food_name}</span>:
                               </span>
                               <List
                                 dataSource={ingredientLists.filter(newItem => newItem?.foodId === item?.food_item_id)}
@@ -633,7 +637,8 @@ const Cooking = () => {
                                           display: "flex",
                                           backgroundColor: "#fff6ed",
                                           borderRadius: 10,
-                                          border: "2px solid darkred",
+                                          // border: "2px solid darkred",
+                                          boxShadow: '1px 1px 4px 4px lightgray',
                                           width: "100%",  
                                           margin: '4px 0'
                                         }}
@@ -757,7 +762,7 @@ const Cooking = () => {
                                         >
                                           {leftoverLogs && leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0] !== undefined  ? <div>
                                             <span>Leftover Amount: </span>
-                                            <span style={{color: 'darkred', textTransform: 'capitalize'}}>{leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0]}&nbsp;{inventoryItems &&
+                                            <span style={{color: colorGreen, textTransform: 'capitalize'}}>{leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0]}&nbsp;{inventoryItems &&
                                                   inventoryItems
                                                     .filter(
                                                       (itemNew) =>
@@ -833,11 +838,10 @@ const Cooking = () => {
                   />
                 )}
               </Col>
-              <Col xs={12} xl={8} style={{ padding: "0 2% 2%" }}>
+              <Col xs={12} xl={8} style={{ padding: "0 2% 2% 1%" }}>
                 {reorderLogs && status >= 2 && (
                   <div>
                     <label style={{ fontSize: "150%" }}>Reorder Log:</label>
-                    <br />
                     <br />
                     <List
                       style={{
@@ -847,21 +851,23 @@ const Cooking = () => {
                       }}
                       dataSource={reorderLogs}
                       renderItem={(item) => (
-                        <List.Item>
+                        <List.Item style={{padding: 0}}>
                           <Card
                             style={{
                               width: "100%",
                               backgroundColor: "transparent",
                               border: "none",
                             }}
+                            bodyStyle={{padding: '10px'}}
                           >
                             <Row
                               style={{
-                                padding: 20,
+                                padding: 15,
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                border: "2px solid darkred",
+                                // border: "2px solid darkred",
+                                boxShadow: '1px 1px 4px 4px lightgray',
                                 width: "100%",
                               }}
                             >
@@ -872,16 +878,16 @@ const Cooking = () => {
                                 <label
                                   style={{
                                     fontSize: "120%",
-                                    color: "darkred",
+                                    color: colorGreen,
                                   }}
                                 >
                                   {item.ingridient_name}
                                 </label>
                               </Col>
                               <Col xs={12} xl={8}>
-                                Amount re-ordered:
+                                Amount:
                                 <br />
-                                <b style={{ color: "darkred" }}>
+                                <span style={{ color: colorGreen, fontWeight: '600' }}>
                                   {item.quantity_requireds}{" "}
                                   {inventoryItems &&
                                     inventoryItems
@@ -893,7 +899,7 @@ const Cooking = () => {
                                       .map(
                                         (ele) => ele.ingridient_measure_unit
                                       )}
-                                </b>
+                                </span>
                               </Col>
                               <Col xs={12} xl={8}>
                                 Delivery Status: <br />

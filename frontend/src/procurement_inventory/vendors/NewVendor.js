@@ -120,7 +120,7 @@ const NewVendor = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <ConfigProvider
         theme={{

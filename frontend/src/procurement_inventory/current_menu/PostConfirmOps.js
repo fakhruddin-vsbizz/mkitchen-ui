@@ -18,6 +18,7 @@ import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
+import { colorGreen } from "../../colors";
 
 
 const dateFormatterForToday = () => {
@@ -228,12 +229,12 @@ const PostConfirmOps = () => {
   };
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -243,15 +244,24 @@ const PostConfirmOps = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Post Procurement"
-              comp={<DatePicker
+              comp={
+                <Row style={{justifyContent: 'flex-end'}}>
+                <Col xs={24} xl={12}>
+                  <span style={{fontSize: '1.1rem'}}>
+                  Select the date:&nbsp;
+                  </span>
+              <DatePicker
                 defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                 onChange={handleDateChange}
-              />}
+              />
+              </Col>
+              </Row>
+              }
             />
             {status < 2 ? (
               <center>
               <div style={{ marginTop: '8%', marginBottom: '8%' }}>
-                <label style={{ fontSize: '800%', color: 'darkred' }}>
+                <label style={{ fontSize: '800%', color: colorGreen }}>
                   <i class="fa-solid fa-hourglass-start"></i>
                 </label>
                 <br/>
@@ -320,7 +330,10 @@ const PostConfirmOps = () => {
                           dataSource={reorderLogs}
                           renderItem={(item) => (
                             <List.Item>
-                              <Card style={{ margin: "0px 10px", width: "100%", border: '2px solid darkred' }}
+                              <Card style={{ margin: "0px 10px", width: "100%", 
+                              // border: '2px solid darkred'
+                                boxShadow: '1px 1px 4px 4px lightgray',
+                             }}
                               bodyStyle={{padding: '12px'}}
                               >
                                 <Row>
@@ -328,7 +341,7 @@ const PostConfirmOps = () => {
                                     <span>
                                       For:&nbsp;
                                     </span>
-                                    <span style={{color: 'darkred'}}>
+                                    <span style={{color: colorGreen}}>
                                     {item?.foodName}
                                     </span>
                                   </Col>
@@ -336,17 +349,17 @@ const PostConfirmOps = () => {
                                     <span>
                                       Ingredient:&nbsp;
                                     </span>
-                                    <span style={{color: 'darkred'}}>
+                                    <span style={{color: colorGreen}}>
                                     {item.ingridient_name}
                                     </span>
                                   </Col>
                                   <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.3rem'}}>
                                     <span>
                                     Required quantity:&nbsp;
-                                    <span style={{color: "darkred"}}>
+                                    <span style={{color: colorGreen}}>
                                     {item.quantity_requireds}
                                     </span>
-                                    {" "}<span style={{textTransform: 'capitalize', color: "darkred"}}>
+                                    {" "}<span style={{textTransform: 'capitalize', color: colorGreen}}>
                                       {item.unit}
                                       </span> 
                                     </span>
@@ -376,7 +389,7 @@ const PostConfirmOps = () => {
                     ) : (
                       <div style={{ marginBottom: '8%', width:'30%', border:'0.5px solid black', padding:'5%', borderRadius:'10px' }}>
                         <center>
-                          <label style={{ fontSize: '200%', color: 'darkred' }}>
+                          <label style={{ fontSize: '200%', color: colorGreen }}>
                           <i class="fa-brands fa-creative-commons-zero"></i>
                           </label>
                           <br/>

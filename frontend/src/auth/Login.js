@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
+import './login.css'
 import {
   Row,
   Col,
@@ -20,6 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import whiteLogo from "../res/img/MKWhiteLogo.png";
 import { CheckCircleFilled } from "@ant-design/icons";
+import { colorBlack, colorGreen } from "../colors";
 
 const Login = () => {
   const [open, setOpen] = useState(false);
@@ -53,14 +55,14 @@ const Login = () => {
     },
   ];
 
-  useEffect(()=>{
-    const unset = setTimeout(() => {
-      setError(false)
-    }, 3000);
+  // useEffect(()=>{
+  //   const unset = setTimeout(() => {
+  //     setError(false)
+  //   }, 3000);
 
-    return () => clearTimeout(unset)
+  //   return () => clearTimeout(unset)
 
-  },[error])
+  // },[error])
 
   /**************Restricting Admin Route************************* */
 
@@ -166,7 +168,6 @@ const Login = () => {
       style={{
         margin: 0,
         padding: 0,
-        backgroundImage: `url(${DeshboardBg})`,
         height: "100vh ",
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",
@@ -175,7 +176,7 @@ const Login = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
             colorDanger: "",
           },
         }}
@@ -232,18 +233,18 @@ const Login = () => {
             </tr>
           )}
         </Modal>
-        <Row style={{ height: "10%" }}>
-          <Col xs={24} xl={6}>
-              <Image width={"50%"} preview={false} src={logo} />
-              {/* <Divider
+        <Row style={{ height: "100vh", flexDirection: 'column' }}>
+          {/* <Col xs={24} xl={6}>
+              <Image width="40%" preview={false} src={logo} />
+              <Divider
                 plain
                 style={{
                   backgroundColor: "orange",
                   height: 5,
                   borderRadius: 20,
                 }}
-              ></Divider> */}
-              {/* <Radio.Group
+              ></Divider>
+             <Radio.Group
               defaultValue={0}
               // size="small"
               style={{ marginTop: 16 }}
@@ -257,10 +258,10 @@ const Login = () => {
               <Radio.Button value={2} className="ubuntu-font-class">
                 Cooking
               </Radio.Button>
-            </Radio.Group> */}
-       
-          </Col>
-          <Col xs={24} xl={18} style={{ padding: "5%" }}>
+            </Radio.Group> 
+
+          </Col> */}
+          <Col xs={24} xl={24} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
             {linkSent && (
               <h3>
                 <CheckCircleFilled
@@ -269,15 +270,15 @@ const Login = () => {
                 Password Reset Link Shared To your Email
               </h3>
             )}
-            <label style={{ height: 150, textAlign: "center" }}></label>
             <Card
               bordered={true}
-              bodyStyle={{padding: "24px 0"}}
+              bodyStyle={{padding: "0 0 24px"}}
               style={{
-                width: "50%",
-                border: "2px solid darkred",
+                width: "35%",
+                // border: "2px solid darkred",
+                boxShadow: '1px 1px 4px 4px lightgray',
                 backgroundColor: '#fff',
-                marginTop: 50,
+                // marginTop: 50,
               }}
               className="dongle-font-class"
             >
@@ -292,10 +293,10 @@ const Login = () => {
                 {/* <Image width={"50%"} preview={false} src={logo} /> */}
                 <center>
                   <Image
-                    width={"40%"}
+                    width="35%"
                     preview={false}
-                    src={whiteLogo}
-                    style={{ filter: "invert(3)", margin: "20px 0" }}
+                    src={logo}
+                    style={{ margin: "0" }}
                   />
                 </center>
                 <center style={{ width: "100%", marginBottom: -10 }}>
@@ -305,11 +306,11 @@ const Login = () => {
                       height: "6vh"
                     }}
                   >
-                    <td style={{ width: "65px" }}>Email:</td>
+                    <td style={{ width: "65px",fontSize: '2rem', verticalAlign: 'bottom' }}>Email:</td>
                     <td>
                       <Input
                         value={email}
-                        style={{ width: "24vw" }}
+                        style={{ width: "24vw", height: '2.4rem', border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                         onChange={(e) => setUserEmail(e.target.value)}
                         placeholder="your email here...."
                         allowClear
@@ -323,11 +324,11 @@ const Login = () => {
                       marginBottom: 10,
                     }}
                   >
-                    <td>Password:</td>
+                    <td style={{fontSize: '2rem', paddingRight: '1rem', verticalAlign: 'bottom'}}>Password:</td>
                     <td style={{ width: "8vw" }}>
                       <Input.Password
                         value={password}
-                        style={{ width: "24vw" }}
+                        style={{ width: "24vw", height: '2.4rem', border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                         onChange={(e) => setUserPassword(e.target.value)}
                         placeholder="input password"
                       />
@@ -348,7 +349,8 @@ const Login = () => {
                         style={{
                           marginTop: "2%",
                           // backgroundColor: "#801801",
-                          fontSize: "100%",
+                          fontSize: "1.8rem",
+                          height: '45px'
                         }}
                         block
                       >
@@ -356,17 +358,17 @@ const Login = () => {
                       </Button>
                     </td>
                   </tr>
-                  <Link onClick={(e) => setOpen(true)}>
+                  <Link style={{color: colorGreen, fontSize: '1.5rem'}} onClick={(e) => setOpen(true)}>
                     Forget Password
                   </Link>
                 </center>
               </table>
             </Card>
             {error && (
-              <div style={{width: '50%', display: "flex", alignItems: 'center', justifyContent: "center"}}>
+              <div style={{width: '100%', display: "flex", alignItems: 'center', justifyContent: "center"}}>
                 <Alert
                   onClose={() => setError(false)}
-                  style={{ margin: "0.5rem", width: '45%' }}
+                  style={{ margin: "1rem 0.5rem 0.5rem", width: '16%' }}
                   message="Validation Error"
                   description="Invalid Email Or Password"
                   type="error"
@@ -375,7 +377,6 @@ const Login = () => {
               </div>
               )}
           </Col>
-          <Col xs={24} xl={2} style={{ padding: "5%" }}></Col>
         </Row>
       </ConfigProvider>
     </div>

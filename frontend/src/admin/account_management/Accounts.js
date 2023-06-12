@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import "./accounts.css";
 
 import {
   Row,
@@ -19,12 +20,13 @@ import {
   Tabs,
   ConfigProvider,
 } from "antd";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import { InfoCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import AuthContext from "../../components/context/auth-context";
 import { useNavigate } from "react-router-dom";
+import { colorBlack, colorGreen } from "../../colors";
 
 const Accounts = () => {
   const [usertype, setUserType] = useState(0);
@@ -516,7 +518,7 @@ const Accounts = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <div style={{ display: "flex" }}>
         <SideNav k="3" userType="admin" />
@@ -524,11 +526,13 @@ const Accounts = () => {
           <Header
             title="Account Management"
             comp={<Button
+            icon={<PlusCircleOutlined style={{color: colorGreen}} />}
               style={{
                 // marginLeft: "60%",
                 backgroundColor: "white",
-                color: "darkred",
+                color: colorBlack,
                 fontWeight: 600,
+
               }}
               onClick={showNMModal}
             >
@@ -538,7 +542,7 @@ const Accounts = () => {
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "darkred",
+                colorPrimary: colorGreen,
                 colorDanger: "",
               },
             }}
@@ -663,19 +667,18 @@ const Accounts = () => {
             </Modal>
 
             <div className="" style={{ padding: 10 }}>
-              <Tabs centered style={{ color: "darkred" }}>
+              <Tabs centered style={{ color: colorBlack, fontWeight: '600' }}>
                 <Tabs.TabPane tab="Mohalla Accounts" key="1">
                   <div
                     style={{
                       borderWidth: 2,
-                      border: "darkred",
                     }}
                   >
                     <label
                       style={{
                         fontSize: "130%",
                         padding: 20,
-                        color: "darkred",
+                        color: colorGreen,
                       }}
                     >
                       <b>Mohalla Accounts</b>
@@ -687,7 +690,7 @@ const Accounts = () => {
                         margin: 10,
                         overflowY: "scroll",
                         backgroundColor: "transparent",
-                        height: "68vh",
+                        height: "65vh",
                         // border: '1px 0px',
                         // borderColor: '#E86800',
                       }}
@@ -703,7 +706,9 @@ const Accounts = () => {
                                   display: "flex",
                                   backgroundColor: "#fff",
                                   borderRadius: 5,
-                                  border: "2px solid darkred",
+                                  // border: "2px solid darkred",
+                                  boxShadow: '1px 1px 4px 4px lightgray',
+                                  margin: "8px auto",
                                   marginBottom: "4px",
                                   width: "100%",
                                 }}
@@ -739,7 +744,7 @@ const Accounts = () => {
                                   <Button
                                     size="small"
                                     type="primary"
-                                    style={{ backgroundColor:'darkred', height:'34px' }}
+                                    style={{ backgroundColor: colorGreen, height:'34px' }}
                                     onClick={() =>
                                       showModal(item.username, item.email)
                                     }
@@ -872,7 +877,7 @@ const Accounts = () => {
                 <Tabs.TabPane tab="Cooking Department" key="2">
                   <div>
                     {" "}
-                    <label style={{ fontSize: "130%", padding: 20 }}>
+                    <label style={{ fontSize: "130%", padding: 20, color: colorGreen, letterSpacing: 1.1 }}>
                       <b>Cooking Department</b>
                     </label>
                     <Modal
@@ -903,25 +908,27 @@ const Accounts = () => {
                             marginBottom: 20,
                             backgroundColor: "white",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                             width: "85%",
                           }}
                         >
-                          <label style={{ fontSize: '120%', color: "darkred" }}>
-                            <u>Change Email of Cooking Department</u>
+                          <label style={{ fontSize: '120%', color: colorBlack }}>
+                            Change Email of Cooking Department
                           </label>
                           <br/>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          <hr className="separator"></hr>
                           
                           <table style={{ width:'100%' }}>
                             <tr>
                               <td colSpan={2}>
-                              <i class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                              <i style={{color: colorGreen}} class="fa-solid fa-user"></i> &nbsp;&nbsp;
                               
                               {cookingDepartmentUser && (
                                 <Select
-                                  defaultValue={"-- SELECT USER FOR ACTION ---"}
-                                  style={{ width: "80%" }}
+                                  // defaultValue={"-- SELECT USER ---"}
+                                  placeholder="Select User"
+                                  style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                                   block
                                     options={cookingDepartmentUser.map((item) => ({
                                       value: item.username,
@@ -948,15 +955,16 @@ const Accounts = () => {
                             <tr>
                               <td style={{ width: "100%" }}>
                                 <Input
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                                   value={newEmailCooking}
                                   onChange={(e) =>
                                     setNewEmailCooking(e.target.value)
                                   }
-                                  placeholder="Enter new email"
+                                  placeholder="Type your username"
                                   suffix={
                                     <Tooltip title="Change only in case needed.">
                                       <InfoCircleOutlined
-                                        style={{ color: "darkred" }}
+                                        style={{ color: colorGreen }}
                                       />
                                     </Tooltip>
                                   }
@@ -966,7 +974,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updateCookingDepartmentEmail}
                                   type="primary"
-                                  style={{ backgroundColor: 'darkred' }}
+                                  style={{ backgroundColor: colorGreen, marginLeft: "5px"}}
                                 >
                                   Change Email
                                 </Button>
@@ -987,7 +995,6 @@ const Accounts = () => {
                               </tr>
                             )}
                           </table>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                       <Col xs={24} xl={12} style={{ padding: "2%" }}>
@@ -1000,20 +1007,21 @@ const Accounts = () => {
                             display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                             width: "100%",
                           }}
                         >
-                          <label style={{ fontSize: '120%', color: "darkred" }}>
-                            <u>Reset Password for cooking department.</u>
+                          <label style={{ fontSize: '120%', color: colorBlack}}>
+                            Reset Password for cooking department
                           </label>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
-                          <br/>
+                          <hr className="separator"></hr>
                           <table style={{ width: "35vw" }}>
                             <tr>
                               <td style={{ width: "30%" }}>New Password</td>
                               <td style={{ width: "70%" }}>
                                 <Input.Password
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                                   value={newpassword}
                                   onChange={(e) =>
                                     setNewpassword(e.target.value)
@@ -1022,10 +1030,12 @@ const Accounts = () => {
                                 />
                               </td>
                             </tr>
+                            <br/>
                             <tr>
                               <td>Confirm Password</td>
                               <td>
                                 <Input.Password
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                                   value={newconfirmpassword}
                                   onChange={(e) =>
                                     setNewConfirmpassword(e.target.value)
@@ -1048,13 +1058,13 @@ const Accounts = () => {
                                 </td>
                               </tr>
                             )}
+                            <br/>
                             <tr>
                               <td></td>
                               <td>
-                                <br />
                                 <Button
                                   onClick={() => updateUserPassword("Cooking")}
-                                  style={{ width: "100%", backgroundColor: 'darkred' }}
+                                  style={{ width: "100%", backgroundColor: colorGreen }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1062,8 +1072,6 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
-                          <br/>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                     </Row>
@@ -1071,10 +1079,9 @@ const Accounts = () => {
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="P&I Department" key="3">
                   <div>
-                    <label style={{ fontSize: "130%", padding: 20 }}>
+                    <label style={{ fontSize: "130%", padding: 20, color: colorGreen }}>
                       <b>P&I Department</b>
                     </label>
-
                     <Row>
                       <Col xs={24} xl={12} style={{ padding: "2%" }}>
                         {/* <Card
@@ -1144,23 +1151,25 @@ const Accounts = () => {
                             marginBottom: 20,
                             backgroundColor: "white",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                             width: "80%",
                           }}
                         >
-                          <label style={{ fontSize: '120%', color: "darkred" }}>
-                            <u>Change Email of Cooking Department</u>
+                          <label style={{ fontSize: '120%', color: colorBlack }}>
+                            Change Email of Cooking Department
                           </label>
                           <br/>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
+                          <hr className="separator"></hr>
                           <table style={{ width:'100%' }}>
                             <tr>
                               <td colspan={2}>
-                                <i class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                                <i style={{color: colorGreen}} class="fa-solid fa-user"></i> &nbsp;&nbsp;
                                 {pandiDepartmentUser && (
                               <Select
-                                defaultValue={"select user"}
-                                style={{ width: "80%" }}
+                                // defaultValue={"select user"}
+                                placeholder="Select User"
+                                style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px'  }}
                                 block
                                 options={pandiDepartmentUser.map((item) => ({
                                   value: item.username,
@@ -1190,15 +1199,16 @@ const Accounts = () => {
                             <tr>
                               <td style={{ width: "100%" }}>
                                 <Input
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                                   value={newEmailPandI}
                                   onChange={(e) =>
                                     setNewEmailPandI(e.target.value)
                                   }
-                                  placeholder="Enter your username"
+                                  placeholder="Enter your email"
                                   suffix={
                                     <Tooltip title="Change only in case needed.">
                                       <InfoCircleOutlined
-                                        style={{ color: "darkred" }}
+                                        style={{ color: colorGreen }}
                                       />
                                     </Tooltip>
                                   }
@@ -1208,7 +1218,7 @@ const Accounts = () => {
                                 <Button
                                   onClick={updatePandIEmail}
                                   type="primary"
-                                  style={{ backgroundColor:'darkred' }}
+                                  style={{ backgroundColor:colorGreen, marginLeft: "5px" }}
                                 >
                                   Change Email
                                 </Button>
@@ -1241,20 +1251,21 @@ const Accounts = () => {
                             display: "flex",
                             backgroundColor: "white",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                             width: "100%",
                           }}
                         >
-                          <label style={{ fontSize: '120%', color: "darkred" }}>
-                            <u>Reset Password for P&I department.</u>
+                          <label style={{ fontSize: '120%', color: colorBlack }}>
+                            Reset Password for P&I department.
                           </label>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
-                          <br/>
+                          <hr className="separator"></hr>
                           <table style={{ width: "35vw" }}>
                             <tr>
                               <td style={{ width: "30%" }}>New Password</td>
                               <td style={{ width: "70%" }}>
                                 <Input.Password
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                                   value={newpasswordPandI}
                                   onChange={(e) =>
                                     setNewpasswordPandI(e.target.value)
@@ -1263,11 +1274,12 @@ const Accounts = () => {
                                 />
                               </td>
                             </tr>
+                            <br />
                             <tr>
                               <td>Confirm Password</td>
                               <td>
                                 <Input.Password
-                                  v
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                                   value={newconfirmpasswordPandI}
                                   onChange={(e) =>
                                     setNewConfirmpasswordPandI(e.target.value)
@@ -1290,15 +1302,15 @@ const Accounts = () => {
                                 </td>
                               </tr>
                             )}
+                            <br />
                             <tr>
                               <td></td>
                               <td>
-                                <br />
                                 <Button
                                   onClick={() =>
                                     updateUserPassword("Procurement Inventory")
                                   }
-                                  style={{ width: "100%", backgroundColor:'darkred' }}
+                                  style={{ width: "100%", backgroundColor: colorGreen }}
                                   type="primary"
                                 >
                                   Change Password
@@ -1306,8 +1318,6 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
-                          <br/>
-                          <hr style={{ borderColor:'lightgrey' }}></hr>
                         </Card>
                       </Col>
                     </Row>
@@ -1325,7 +1335,8 @@ const Accounts = () => {
                         display: "flex",
                         backgroundColor: "white",
                         borderRadius: 10,
-                        border: "2px solid darkred",
+                        // border: "2px solid darkred",
+                        boxShadow: '1px 1px 4px 4px lightgray',
                         width: "100%",
                       }}
                     >
@@ -1344,15 +1355,16 @@ const Accounts = () => {
                           <p>User Detail Updated Successfully.</p>
                         </div>
                       </Modal>
-                      <h3 style={{ color: "darkred" }}>
-                        {" "}
+                      <label style={{ color: colorBlack }}>
                         Admin Reset Password
-                      </h3>
+                      </label>
+                      <hr className="separator" />
                       <table style={{ width: "35vw" }}>
                         <tr>
                           <td style={{ width: "30%" }}>Old Password</td>
                           <td style={{ width: "70%" }}>
                             <Input.Password
+                              style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={oldAdminPassword}
                               onChange={(e) =>
                                 setOldAdminPassword(e.target.value)
@@ -1361,10 +1373,12 @@ const Accounts = () => {
                             />
                           </td>
                         </tr>
+                        <br/>
                         <tr>
                           <td style={{ width: "30%" }}>New Password</td>
                           <td style={{ width: "70%" }}>
                             <Input.Password
+                              style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={newpasswordPandI}
                               onChange={(e) =>
                                 setNewpasswordPandI(e.target.value)
@@ -1373,11 +1387,12 @@ const Accounts = () => {
                             />
                           </td>
                         </tr>
+                        <br />
                         <tr>
                           <td>Confirm Password</td>
                           <td>
                             <Input.Password
-                              v
+                              style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={newconfirmpasswordPandI}
                               onChange={(e) =>
                                 setNewConfirmpasswordPandI(e.target.value)
@@ -1386,6 +1401,7 @@ const Accounts = () => {
                             />
                           </td>
                         </tr>
+                        <br />
                         {emailErrorPandIPassword && (
                           <tr>
                             <td colSpan={2}>
@@ -1431,10 +1447,9 @@ const Accounts = () => {
                         <tr>
                           <td></td>
                           <td>
-                            <br />
                             <Button
                               onClick={updatePasswordAdmin}
-                              style={{ width: "100%", backgroundColor:'darkred'
+                              style={{ width: "100%", backgroundColor: colorGreen
                              }}
                               type="primary"
                             >
