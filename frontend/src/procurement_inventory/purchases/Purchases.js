@@ -17,6 +17,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
+import { colorBlack, colorGreen } from "../../colors";
 
 const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
@@ -106,15 +107,15 @@ const Purchases = () => {
       style={{
         margin: 0,
         padding: 0,
-        backgroundImage: `url(${DeshboardBg})`,
-        height: "100%  ",
-        overflowY: "hidden",
+        // backgroundImage: `url(${DeshboardBg})`,
+        height: "100%",
+        // overflowY: "hidden",
       }}
     >
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -122,9 +123,9 @@ const Purchases = () => {
           <Sidebar k="2" userType="pai" />
 
           <div style={{ width: "100%" }}>
-            <Header comp={<center>
+            <Header comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Link to="/pai/purchases/new">
-                  <Button style={{ backgroundColor: "white", color: "darkred" }}>
+                  <Button style={{ backgroundColor: "white", color: colorGreen }}>
                     <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     New Purchase
                   </Button>
@@ -139,20 +140,32 @@ const Purchases = () => {
                     <span style={{marginBottom: '.5rem', display: 'block'}}>
                       Ingredient name:
                     </span>
-                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
+                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
                     </td>
                     <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600', width: '21%'}}>
                       <span style={{marginBottom: '.5rem', display: 'block'}}>
                         Date of purchase:
                       </span>
-                      <DatePicker style={{ fontSize: '18px'}} onChange={value => setFilterByDate(value)}></DatePicker>
+                      <ConfigProvider
+                        theme={{
+                          token: {
+                            colorPrimary: colorGreen,
+                            colorLink: colorGreen
+                          },
+                        }}
+                      >
+                      <DatePicker style={{ fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} onChange={value => setFilterByDate(value)} />
+                    </ConfigProvider>
                     </td>
                     <td style={{paddingLeft: "10px", fontSize: '20px', fontWeight: '600', width: '24%'}}>
                       <span style={{marginBottom: '.5rem', display: 'block', marginTop: '1.6rem'}}>
-                        Filter By Price: {filterByVolume}
+                        Filter By Price: <span style={{color: colorGreen}}>
+                        {filterByVolume !== 1 ? filterByVolume : null}
+                          </span>
                       </span>
                       <Slider
                         value={filterByVolume}
+                        style={{color: colorBlack}}
                         onChange={value => setFilterByVolume(value)}
                         min={1}
                         max={1000}
@@ -236,16 +249,14 @@ const Purchases = () => {
                     )}
                   />
                 )}
+                {/* <br />
                 <br />
-                <br />
-                <br />
-
+                <br /> */}
                 {/* <label style={{ fontSize: "180%" }} className="dongle-font-class">
             Short-on ingredients
           </label> */}
-
-                <br />
-                <br />
+                {/* <br />
+                <br /> */}
                 {/* <List
             grid={{
               gutter: 16,

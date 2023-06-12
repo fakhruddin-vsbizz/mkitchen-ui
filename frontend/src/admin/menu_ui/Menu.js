@@ -24,6 +24,7 @@ import Header from "../../components/navigation/Header.js";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context.js";
 import TextArea from "antd/es/input/TextArea";
+import { colorBlack, colorGreen } from "../../colors";
 const { useToken } = theme;
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
@@ -396,7 +397,7 @@ const Menu = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <Modal
         open={visible}
@@ -443,14 +444,14 @@ const Menu = () => {
               <ConfigProvider
                 theme={{
                   token: {
-                    colorPrimary: "darkred",
+                    colorPrimary: colorGreen,
                   },
                 }}
               >
                 <Calendar
                   style={{
                     border: "1px solid lightgray",
-                    backgroundColor: "darkred",
+                    backgroundColor: colorGreen,
                   }}
                   onSelect={onSelectDate}
                   fullscreen={false}
@@ -466,7 +467,7 @@ const Menu = () => {
               >
                 <Row
                   style={{
-                    backgroundColor: "#CA3F21",
+                    backgroundColor: colorGreen,
                     padding: "2%",
                     color: "white",
                     borderRadius: 5,
@@ -494,20 +495,21 @@ const Menu = () => {
                     </Button>
                   </Col> */}
                 </Row>
-                <hr style={{ borderColor: "lightgrey" }}></hr>
+                <hr className="separator"></hr>
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                 {(new Date(dateValue) >
                   new Date().setDate(new Date().getDate() - 1)) && status < 3 && <><div
                   style={{ marginTop: 10, marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: 'baseline' }}
                 >
-                  <div style={{ width: "83%", display: 'flex' }}>
-                    <label className="label">Search menu by name:</label> &nbsp;&nbsp;
+                  <div style={{ width: "83%", display: 'flex', columnGap: '6px' }}>
+                    <label className="label">Menu:</label> &nbsp;&nbsp;
                       <AutoComplete
                         id="food-item-selected"
                         style={{
                           width: "50%",
-                          border: "2px solid darkred",
+                          // border: "2px solid darkred",
+                          boxShadow: '1px 1px 4px 3px lightgray',
                           flexGrow: 1,
                           borderRadius: 8,
                         }}
@@ -543,7 +545,7 @@ const Menu = () => {
                         }}
                         onClick={addFoodItem}
                       >
-                        <i className="fa-solid fa-plus"></i> &nbsp;&nbsp;Select
+                        <i className="fa-solid fa-plus"></i>&nbsp;&nbsp;Add
                       </Button>                 
                   </div></div></>}
                 
@@ -559,10 +561,11 @@ const Menu = () => {
                         padding: 15,
                         display: "flex",
                         alignItems: 'center',
-                        backgroundColor: "rgb(255 246 237)",
+                        // backgroundColor: "rgb(255 246 237)",
                         borderRadius: 5,
                         marginBottom: '.5rem',
-                        border: "2px solid darkred",
+                        // border: "2px solid darkred",
+                        boxShadow: '1px 1px 2px 2px lightgray',
                       }}
                     >
                       <div style={{ width: "60%" }}>
@@ -606,7 +609,7 @@ const Menu = () => {
                               <div key={index}>
                                 {newItem.ingridient_list.map(
                                   (ing, ingIndex) => (
-                                    <Tag color="darkred" key={ingIndex}>
+                                    <Tag color={colorGreen} key={ingIndex}>
                                       <i class="fa-solid fa-plate-wheat"></i> &nbsp;
                                       {ing.ingredient_name}
                                     </Tag>
@@ -682,7 +685,7 @@ const Menu = () => {
                     // </List.Item>
                   )}
                 />
-                <hr style={{ borderColor: "lightgrey" }}></hr>
+                <hr className="separator"></hr>
                 {status >= 3 || (new Date(dateValue) <
                   new Date().setDate(new Date().getDate() - 1)) ?
               <p className="done-tag">
@@ -696,7 +699,7 @@ const Menu = () => {
                       disabled={menuConfimStatus}
                       style={{
                         width: "100%",
-                        backgroundColor: "maroon",
+                        backgroundColor: colorGreen,
                         color: "white",
                         height: "170%",
                         fontSize: "120%",
@@ -714,7 +717,7 @@ const Menu = () => {
                   disabled={!reasonForReconfirmingMenu}
                   style={{
                     width: "100%",
-                    backgroundColor: "maroon",
+                    backgroundColor: colorGreen,
                     color: "white",
                     height: "170%",
                     fontSize: "120%",

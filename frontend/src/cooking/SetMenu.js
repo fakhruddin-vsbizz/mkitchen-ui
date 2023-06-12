@@ -27,6 +27,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/auth-context";
 import IngredientList from "./Input";
 import dayjs from "dayjs";
+import { colorBlack, colorGreen } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -456,7 +457,7 @@ const SetMenu = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <Modal
         open={visible}
@@ -476,7 +477,8 @@ const SetMenu = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
+            colorLink: colorGreen
           },
         }}
       >
@@ -487,7 +489,7 @@ const SetMenu = () => {
             <Header
               title="Set Ingredients"
               comp={
-                <Row>
+                <Row style={{justifyContent: 'flex-end'}}>
                   <Col style={{ marginRight: 10, fontSize: 18 }}>
                     Select date:{" "}
                   </Col>
@@ -503,8 +505,8 @@ const SetMenu = () => {
             <div style={{ padding: 20 }}>
               <Row>
                 <Col xs={24} xl={24} style={{ padding: "0px 15px" }}>
-                  <h3 style={{ color: "darkred", fontSize:'1.5rem', marginBottom: '0' }}>
-                    Total count: {totalAshkash} People
+                  <h3 style={{ color: colorBlack, fontSize:'1.5rem', marginBottom: '0' }}>
+                    Total count: <span style={{color: colorGreen}}>{totalAshkash}</span> People
                   </h3>
                   {/* Select Client: &nbsp;&nbsp;&nbsp;
                       <Select
@@ -565,7 +567,8 @@ const SetMenu = () => {
                                 display: "flex",
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
-                                border: "2px solid darkred",
+                                // border: "2px solid darkred",
+                                boxShadow: '1px 1px 4px 4px lightgray',
                                 width: "100%",
                               }}
                             >
@@ -575,12 +578,13 @@ const SetMenu = () => {
                                 alignItems: "center",
                                 justifyContent: "flex-start",
                                 fontSize: '1.3rem',
-                                color: 'rgb(64, 64, 64)'
+                                color: colorBlack,
+                                fontWeight: '600'
                               }}>
                                 <span>
                                 Food Name:
                                 </span>
-                                <label>
+                                <label style={{color: colorGreen}}>
                                   {item.food_name}
                                 </label>
                               </Col>
@@ -612,24 +616,25 @@ const SetMenu = () => {
                         width: "100%",
                         backgroundColor: "white",
                         border: "none",
-                        border: '2px solid darkred'
+                        // border: '2px solid darkred'
+                        boxShadow: '1px 1px 4px 4px lightgray',
                       }}
                     >
                       {status === 0 ?
                       <label
-                        style={{ fontSize: "200%", color: "darkred" }}
+                        style={{ fontSize: "200%", color: colorGreen }}
                         className="dongle-font-class"
                       >
                         Select the ingredients for : <span>{selectedFoodName}</span>
                       </label>: <label
-                        style={{ fontSize: "200%", color: "darkred" }}
+                        style={{ fontSize: "200%", color: colorGreen }}
                         className="dongle-font-class"
                       >
                         Selected ingredients: <span>{selectedFoodName}</span> 
                       </label>}
                       <br />
                       {status === 0 && foodIndex && <>
-                      <span style={{ fontSize: 16, color: "darkred" }}>
+                      <span style={{ fontSize: 16, color: colorGreen }}>
                         Add Ingredients:
                       </span>
                       <Row
@@ -679,19 +684,21 @@ const SetMenu = () => {
                           maxHeight: "35vh",
                           overflowY: "scroll",
                           overflowX: "hidden",
-                          backgroundColor: "#fff6ed",
+                          // backgroundColor: "#fff6ed",
                         }}
                         bordered
                         dataSource={ingredientItems}
                         renderItem={(item, index) => (
                           <List.Item
                             style={{
-                              margin: 5,
+                              // margin: 5,
                               padding: 0,
                               display: "flex",
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              border: "2px solid darkred",
+                              // border: "2px solid darkred",
+                              boxShadow: '1px 1px 4px 2px lightgray',
+                              margin: '8px auto',
                               width: "98%",
                             }}
                           >
@@ -769,7 +776,7 @@ const SetMenu = () => {
                       flexDirection: 'column'
                       }}>
              
-                        <i style={{fontSize: '6rem', color: "darkred"}} class="fa-solid fa-square-xmark"></i>
+                        <i style={{fontSize: '6rem', color: colorGreen}} class="fa-solid fa-square-xmark"></i>
                         <span style={{fontSize: '1.8rem', letterSpacing: 2}}>
                         Add Ingredient or select food item
                         </span>
@@ -804,7 +811,7 @@ const SetMenu = () => {
                     width: "90%",
                     height: 60,
                     fontSize: 18,
-                    backgroundColor: "darkred",
+                    backgroundColor: colorGreen,
                   }}
                   type="primary"
                   onClick={updateOperationPipeliinIngridient}

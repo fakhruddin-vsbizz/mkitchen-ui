@@ -409,7 +409,7 @@ const Accounts = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <div style={{ display: "flex" }}>
         <SideNav k='3' userType='admin' />

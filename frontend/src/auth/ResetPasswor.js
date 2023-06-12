@@ -111,7 +111,6 @@ const ResetPassword = () => {
       style={{
         margin: 0,
         padding: 0,
-        backgroundImage: `url(${DeshboardBg})`,
         height: "100vh ",
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",

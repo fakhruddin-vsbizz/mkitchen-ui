@@ -5,6 +5,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
+import { colorBlack, colorGreen } from "../../colors";
 
 const Vendors = () => {
   const [vendors, setVendors] = useState([]);
@@ -65,12 +66,12 @@ const Vendors = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -80,9 +81,9 @@ const Vendors = () => {
           <div style={{ width: "100%" }}>
             <Header
               title="Vendor"
-              comp={<center>
+              comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Link to="/pai/vendors/new">
-                  <Button style={{ backgroundColor: "white", color: "orange" }}>
+                  <Button style={{ backgroundColor: "white", color: colorGreen }}>
                     <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     Add Vendor
                   </Button>
@@ -98,7 +99,7 @@ const Vendors = () => {
                     <td style={{fontWeight: '600', fontSize: '20px'}}>
                       Vendor name:
                       <br />
-                      <Input style={{marginTop: '12px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter By Name"></Input>
+                      <Input style={{marginTop: '12px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter By Name"></Input>
                     </td>
                   </tr>
                   </tbody>
@@ -128,7 +129,8 @@ const Vendors = () => {
                             width: "100%",
                             backgroundColor: "white",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                           }}
                           bodyStyle={{padding: "10px", borderRadius: '0'}}
                         >
@@ -137,7 +139,7 @@ const Vendors = () => {
                               <span>Vendor's Name:</span>
                               <br />
                               {/* #e08003 */}
-                              <label style={{ color: "darkred", fontSize: "130%", textTransform: 'capitalize' }}>
+                              <label style={{ color: colorGreen, fontSize: "130%", textTransform: 'capitalize' }}>
                                 <b>{item.vendor_name}</b>
                               </label>
                             </Col>

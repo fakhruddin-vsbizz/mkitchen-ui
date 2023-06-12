@@ -7,6 +7,7 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { colorBlack, colorGreen } from "../../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -335,7 +336,7 @@ const ProcedureLogs = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <div style={{ display: "flex" }}>
         <SideNav k="2" userType="admin" />
@@ -343,15 +344,24 @@ const ProcedureLogs = () => {
           <Header
             title="Process Log"
             comp={
-              <Row>
+              <Row style={{justifyContent: 'flex-end'}}>
                 <Col style={{ marginRight: 10, fontSize: 18 }}>
                   Select date:{" "}
                 </Col>
                 <Col>
+                <ConfigProvider
+            theme={{
+              token: {
+                colorPrimary: colorGreen,
+                colorLink: colorGreen,
+              },
+            }}
+          >
                   <DatePicker
                     defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                     onChange={handleDateChange}
                   />
+          </ConfigProvider>
                 </Col>
               </Row>
             }
@@ -360,12 +370,12 @@ const ProcedureLogs = () => {
             <ConfigProvider
               theme={{
                 token: {
-                  colorPrimary: "darkred",
+                  colorPrimary: colorGreen,
                   colorDanger: "",
                 },
               }}
             >
-              <Tabs centered style={{ color: "darkred", border: "none", maxHeight: "70vh" }}>
+              <Tabs centered style={{ color: colorBlack, border: "none", maxHeight: "70vh", fontWeight: '600' }}>
                 <Tabs.TabPane
                   style={{ border: "none" }}
                   tab="Menu Decision & Delivery"
@@ -468,8 +478,8 @@ const ProcedureLogs = () => {
                     ) : (
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>
-                          <label style={{ fontSize: "800%", color: "darkred" }}>
-                            <i className="fa-solid fa-hourglass-start"></i>
+                          <label style={{ fontSize: "800%" }}>
+                            <i style={{color: colorGreen}} className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
                           <label style={{ fontSize: "120%", width: "50%" }}>

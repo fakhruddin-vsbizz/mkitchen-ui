@@ -15,6 +15,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import { colorGreen } from "../../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -82,6 +83,10 @@ const ConfirmIng = () => {
       dateObj.getMonth() + 1
     }/${dateObj.getDate()}/${dateObj.getFullYear()}`;
     setSelectedDate(formattedDate);
+  };
+
+  const onRestock = (id) => {
+    navigate(`/pai/purchases/new/${id}`);
   };
 
   useEffect(() => {
@@ -219,7 +224,7 @@ const ConfirmIng = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0 }}
     >
       <Modal
         open={visible}
@@ -241,7 +246,7 @@ const ConfirmIng = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "darkred",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -252,10 +257,17 @@ const ConfirmIng = () => {
             <Header
               title="Confirm Ingredient"
               comp={
+                <Row style={{justifyContent: 'flex-end'}}>
+                  <Col xs={24} xl={12}>
+                    <span style={{fontSize: '1.1rem'}}>
+                    Select the date:&nbsp;
+                    </span>
                 <DatePicker
                   defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                   onChange={handleDateChange}
                 />
+                </Col>
+                </Row>
               }
             />
             {operationalPipelineStatus === 0 && (
@@ -297,7 +309,8 @@ const ConfirmIng = () => {
                             backgroundColor: "white",
                             padding: "1%",
                             borderRadius: 10,
-                            border: "2px solid darkred",
+                            // border: "2px solid darkred",
+                            boxShadow: '1px 1px 4px 4px lightgray',
                           }}
                         >
                           <Row>
@@ -325,12 +338,29 @@ const ConfirmIng = () => {
                               }}
                             >
                               {!item.sufficient ? (
-                                <div style={{ fontSize: "120%" }}>
-                                  <MinusCircleFilled
-                                    style={{ fontSize: "130%" }}
-                                  />
-                                  &nbsp;&nbsp;&nbsp;FULFILLED THROUGH NEGATIVE
-                                  INVENTORY
+                                // <div style={{ fontSize: "120%" }}>
+                                //   <MinusCircleFilled
+                                //     style={{ fontSize: "130%" }}
+                                //   />
+                                //   &nbsp;&nbsp;&nbsp;FULFILLED THROUGH NEGATIVE
+                                //   INVENTORY
+                                // </div>
+                                <div style={{ color: "darkred", display: 'flex', columnGap: '1rem', alignItems: 'center', rowGap: '5px' }}>
+                                  <span>
+                                  <i
+                                    className="fa-solid fa-circle-exclamation"
+                                    
+                                  ></i> You are short on items
+                                  </span>
+                                  <Button
+                                    onClick={() => onRestock(item._id)}
+                                    style={{
+                                      backgroundColor: "green",
+                                    }}
+                                    type="primary"
+                                  >
+                                    Restock Ingredient
+                                  </Button>
                                 </div>
                               ) : (
                                 <div style={{ fontSize: "120%" }}>
@@ -354,13 +384,13 @@ const ConfirmIng = () => {
           operationalPipelineStatus !== 0 && (
             <Button
               onClick={markProcureIngridients}
-              disabled={finalizeBtnVisible}
+              disabled={finalizeBtnVisible && procureIngridients.filter(item => item?.sufficient === false).length !== 0}
               block
               type="primary"
               style={{ fontSize: "200%", height: "10%",width: "97%",
               alignSelf: "center" }}
             >
-              FINALIZE AND PUSH TO INVENTORY
+              FINALIZE AND PUSH TO COOKING
             </Button>
         )}
           </div>

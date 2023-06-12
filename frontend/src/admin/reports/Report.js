@@ -442,7 +442,6 @@ const Report = () => {
       style={{
         margin: 0,
         padding: 0,
-        backgroundImage: `url(${DeshboardBg})`,
         backgroundSize: "cover",
       }}
     >

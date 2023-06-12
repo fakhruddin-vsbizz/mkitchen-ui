@@ -17,6 +17,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
+import { colorBlack, colorGreen } from "../../colors";
 const DamagedGoodsList = () => {
   const [todayDate, setTodayDate] = useState("");
 
@@ -251,12 +252,13 @@ const DamagedGoodsList = () => {
 
   return (
     <div
-      style={{ margin: 0, padding: 0, backgroundImage: `url(${DeshboardBg})` }}
+      style={{ margin: 0, padding: 0}}
     >
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: colorGreen,
+            colorLink: colorGreen
           },
         }}
       >
@@ -282,12 +284,13 @@ const DamagedGoodsList = () => {
                           value={filterByName}
                           onChange={(e) => setFilterByName(e.target.value)}
                           placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
-                          style={{ width: "70%" }}
+                          style={{ width: "70%", border: `1px solid ${colorBlack}`, borderRadius: '5px'  }}
                         ></Input>
                       </Col>
                       <Col xs={12} xl={6}>
                         Date of Purchase: <br />
                         <DatePicker
+                        style={{border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                           onChange={(value) => setFilterByDate(value)}
                         ></DatePicker>
                       </Col>
@@ -296,6 +299,7 @@ const DamagedGoodsList = () => {
                         <Row>
                           <Col xs={6} xl={3}>
                             <InputNumber
+                              style={{border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                               min={0}
                               value={filterByDaysAfterExpiry}
                               onChange={(value) =>
@@ -319,7 +323,7 @@ const DamagedGoodsList = () => {
                   </Card>
                   {expiredItems && (
                     <List
-                      style={{ width: "85%" }}
+                      style={{ width: "85%", height: '64vh', overflowY: 'scroll' }}
                       dataSource={filteredExpiredItems}
                       renderItem={(item, idx) => (
                         <List.Item>
@@ -330,13 +334,14 @@ const DamagedGoodsList = () => {
                               backgroundColor: "white",
                               padding: "2%",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                              boxShadow: '1px 1px 4px 4px lightgray',
                             }}
                           >
                             <Col
                               xs={24}
                               xl={4}
-                              style={{ fontSize: "150%", color: "#e08003" }}
+                              style={{ fontSize: "150%", color: colorGreen }}
                             >
                               {item.ingredient_name}
                             </Col>
@@ -396,7 +401,7 @@ const DamagedGoodsList = () => {
                     <br />
                     <Row>
                       <Col xs={12} xl={12}>
-                        <Button type="primary">KEEP IN INVENTORY</Button>
+                        <Button type="primary" onClick={handleCancel}>KEEP IN INVENTORY</Button>
                       </Col>
                       <Col xs={12} xl={12}>
                         <Button
