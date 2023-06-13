@@ -15,7 +15,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -250,10 +250,11 @@ const ConfirmIng = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="3" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="11" userType="superadmin" /> :
+          <Sidebar k="3" userType="pai" />}
 
-          <div style={{ width: "100%", display: "flex", flexDirection: "column" }}>
+          <div style={{ width: "100%", display: "flex", flexDirection: "column" , backgroundColor: colorBackgroundColor}}>
             <Header
               title="Confirm Ingredient"
               comp={
@@ -265,6 +266,7 @@ const ConfirmIng = () => {
                 <DatePicker
                   defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                   onChange={handleDateChange}
+                  disabledDate={(current) => current - 1 > dayjs().endOf('day')}
                 />
                 </Col>
                 </Row>
@@ -384,7 +386,7 @@ const ConfirmIng = () => {
           operationalPipelineStatus !== 0 && (
             <Button
               onClick={markProcureIngridients}
-              disabled={finalizeBtnVisible && procureIngridients.filter(item => item?.sufficient === false).length !== 0}
+              disabled={finalizeBtnVisible || procureIngridients.filter(item => item?.sufficient === false).length !== 0}
               block
               type="primary"
               style={{ fontSize: "200%", height: "10%",width: "97%",

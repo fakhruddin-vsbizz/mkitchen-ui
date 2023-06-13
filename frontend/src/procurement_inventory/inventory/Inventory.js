@@ -17,7 +17,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const Inventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -248,10 +248,11 @@ const Inventory = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="1" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="9" userType="superadmin" /> :
+          <Sidebar k="1" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title="Inventory" />
             <div style={{ padding: 0 }}>
               <Col xs={24} xl={20} style={{ width: "100%"}}>

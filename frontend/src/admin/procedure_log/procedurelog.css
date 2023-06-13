@@ -1,3 +1,10 @@
 :where(.css-dev-only-do-not-override-cdl427).ant-card {
     background: transparent;
 }
+
+.separator {
+    margin: 14px 0;
+    height: 1px;
+    border: none;
+    background: -webkit-gradient(linear, 0 0, 100% 0, from(transparent), to(transparent), color-stop(50%, black));
+}

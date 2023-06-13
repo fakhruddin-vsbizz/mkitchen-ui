@@ -186,10 +186,10 @@ const NewPurchase = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
           <Sidebar k="2" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title="New Purchases" />
             <div style={{ padding: 0 }}>
               <center>

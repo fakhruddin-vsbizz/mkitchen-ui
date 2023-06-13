@@ -27,7 +27,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
-import { colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 // import { Link, useNavigate } from "react-router-dom";
 
 const VerifyVendor = () => {
@@ -47,7 +47,8 @@ const VerifyVendor = () => {
   const [inventoryItemId, setInventoryItemId] = useState([]);
   const [measureUnit, setMeasureUnit] = useState("");
   const [itsValue, setItsValue] = useState("");
-  const [donarName, setDonarName] = useState("")
+  const [donarName, setDonarName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
   const [donations, setDonations] = useState([]);
 
 
@@ -62,6 +63,7 @@ const VerifyVendor = () => {
       ingredientId: inventoryItemId,
       ingredientName: donationIngredient,
       donarName,
+      contactNumber,
       donationQty: +quantityValue,
       ingridient_measure_unit: measureUnit,
       its_id: +itsValue,
@@ -73,7 +75,9 @@ const VerifyVendor = () => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(bodyData),
-        }).then(res => res.json()).then((data) => setDonations(prev => [...prev, data])).catch(err => console.log(err))
+        }).then(res => res.json()).then((data) => {
+          setDonations(prev => [...prev, data])
+        }).catch(err => console.log(err)).finally(() => handleOk())
 
   }
 
@@ -166,9 +170,11 @@ const VerifyVendor = () => {
     <div
       style={{ margin: 0, padding: 0}}
     >
-      <div style={{ display: "flex" }}>
-        <SideNav k="7" userType="pai" />
-        <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="15" userType="superadmin" /> :
+        <SideNav k="7" userType="pai" />}
+
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header
             title="Donations"
             comp={
@@ -217,12 +223,29 @@ const VerifyVendor = () => {
                           fontSize: 16,
                         }}
                       >
-                        Name of the donor <br />
+                        Name<br />
                         <Input
                           style={{ marginTop: "10px", padding: "10px 5px" }}
                           placeholder="Basic usage"
                           value={donarName}
                           onChange={(e)=> setDonarName(e.target.value)}
+                        />
+                      </div>
+                    </Col>
+                    <Col xs={24} xl={12}>
+                      <div
+                        style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          fontSize: 16,
+                        }}
+                      >
+                        Contact Number<br />
+                        <Input
+                          style={{ marginTop: "10px", padding: "10px 5px" }}
+                          placeholder="Basic usage"
+                          value={contactNumber}
+                          onChange={(e)=> setContactNumber(e.target.value)}
                         />
                       </div>
                     </Col>
@@ -235,7 +258,7 @@ const VerifyVendor = () => {
                           fontSize: 16,
                         }}
                       >
-                        ITS ID <br />
+                        ITS ID<br />
                         <Input
                           style={{ marginTop: "10px", padding: "10px 5px" }}
                           placeholder="Basic usage"
@@ -464,7 +487,7 @@ const VerifyVendor = () => {
                         size="default"
                         onClick={onSubmit}
                       >
-                        CONFIRM DONATIONS AND SUBMIT
+                        CONFIRM DONATIONS
                       </Button>
                     </center>
                   </Col>
@@ -493,26 +516,37 @@ const VerifyVendor = () => {
                           marginBottom: "4px",
                         }}
                       >
-                        <Col xs={12} xl={6} style={{ marginLeft: "17px" }}>
-                          Ingredient Donated: <br />
+                        <Col xs={12} xl={5} style={{ marginLeft: "17px" }}>
+                          Ingredient: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-box"></i>&nbsp;{item?.ingredientName}
+                            <i class="fa-solid fa-box"></i>&nbsp;
+                            <span style={{textTransform: 'capitalize'}}>
+                            {item?.ingredientName}
+                            </span>
                           </label>
                         </Col>
                         <Col xs={12} xl={5}>
-                          Donor Name: <br />
+                          Donor's Name: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-hands-praying"></i>&nbsp;{item?.donarName}
+                            <i class="fa-solid fa-hands-praying"></i>&nbsp;
+                            <span style={{textTransform: 'capitalize'}}>
+                            {item?.donarName}
+                            </span>
                           </label>
                         </Col>
-
-                        <Col xs={12} xl={6}>
+                        <Col xs={12} xl={5}>
+                          Donor's Contact: <br />
+                          <label style={{ fontSize: "120%" }}>
+                          <i class="fa-solid fa-phone"></i>&nbsp;{item?.contactNumber}
+                          </label>
+                        </Col>
+                        <Col xs={12} xl={4}>
                           ITS ID: <br />
                           <label style={{ fontSize: "120%" }}>
                             <i class="fa-solid fa-id-card"></i>&nbsp;{item?.its_id}
                           </label>
                         </Col>
-                        <Col xs={12} xl={6}>
+                        <Col xs={12} xl={4}>
                           Quantity Donated: <br />
                           <label style={{ fontSize: "120%" }}>
                             <i class="fa-solid fa-weight-scale"></i>&nbsp;{" "}

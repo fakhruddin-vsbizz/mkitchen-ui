@@ -31,12 +31,17 @@ import { useNavigate } from "react-router-dom";
 // import SearchTable from "../../components/elements/SearchTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
+import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
 
 
 const Report = () => {
   const [username, setUsername] = useState();
   const [searchText, setSearchText] = useState("");
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [totalIngredients, setTotalIngredients] = useState(0);
+  const [totalDamagedGoods, setTotalDamagedGoods] = useState(0);
+  const [totalInventoryCost, setTotalInventoryCost] = useState(0);
+  const [inventoryDetails, setInventoryDetails] = useState([]);
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -47,6 +52,23 @@ const Report = () => {
     clearFilters();
     setSearchText("");
   };
+
+  useEffect(()=> {
+    const getReports = async() => {
+      const res = await fetch('/api/report/total-inventory');
+      const data = await res.json();
+      setTotalIngredients(data?.totatItem)
+      setTotalDamagedGoods(data?.totalExpiredItem)
+      setTotalInventoryCost(data?.totalCost)
+      const secondRes = await fetch('/api/report/total-purchases');
+      const secondData = await secondRes.json();
+      setInventoryDetails(secondData);
+      console.log(secondData);
+    }
+    getReports();
+  },[])
+
+
   const getColumnSearchProps = (dataIndex) => ({
     filterDropdown: ({
       setSelectedKeys,
@@ -445,9 +467,10 @@ const Report = () => {
         backgroundSize: "cover",
       }}
     >
-      <div style={{ display: "flex" }}>
-        <SideNav k="5" userType="admin" />
-        <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="5" userType="superadmin" /> :
+        <SideNav k="5" userType="admin" />}
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Reports" />
           <ConfigProvider
             theme={{
@@ -508,7 +531,7 @@ const Report = () => {
                             }}
                           >
                             <h5>Total Ingredients</h5>
-                            <h1>124</h1>
+                            <h1>{totalIngredients}</h1>
                           </div>
                         </Col>
                         <Col
@@ -534,7 +557,7 @@ const Report = () => {
                             }}
                           >
                             <h5>Total damaged goods</h5>
-                            <h1>420</h1>
+                            <h1>{totalDamagedGoods}</h1>
                           </div>
                         </Col>
                         <Col
@@ -559,41 +582,11 @@ const Report = () => {
                             }}
                           >
                             <h5>Total inventory cost</h5>
-                            <h1>12000</h1>
+                            <h1>₹ {totalInventoryCost}</h1>
                           </div>
                         </Col>
                       </Row>
-                      <Row>
-                        <Col
-                          xs={24}
-                          xl={12}
-                          style={{
-                            padding: 10,
-                            // textAlign: "center",
-                            width: "80%",
-                          }}
-                        >
-                          <h3 style={{ color: "#e08003" }}>Damaged Goods</h3>
-                          {/* <SearchTable columns={columns} dataSource={data} /> */}
-                          <Table columns={demandGoodsCols} dataSource={demandGoodsData} />
-                        </Col>
-                        <Col
-                          xs={24}
-                          xl={12}
-                          style={{
-                            padding: 10,
-                            // textAlign: "center",
-                            width: "80%",
-                          }}
-                        >
-                          <h3 style={{ color: "#e08003" }}>
-                            Negative Inventory
-                          </h3>
-                          {/* <SearchTable /> */}
-                          <Table columns={negativeInventoryCols} dataSource={negativeInventoryData} />
-
-                        </Col>
-                      </Row>
+                      
                       <label
                         style={{
                           fontSize: "130%",
@@ -615,7 +608,7 @@ const Report = () => {
                         }}
                       >
                         <List
-                          dataSource={dataList}
+                          dataSource={inventoryDetails}
                           renderItem={(item) => (
                             <>
                               <List.Item>
@@ -637,7 +630,7 @@ const Report = () => {
                                       color: "#E86800",
                                     }}
                                   >
-                                    <h3>{item.Ingredient}</h3>
+                                    <h3>{item?.name}</h3>
                                     <hr
                                       style={{
                                         backgroundColor: "orange",
@@ -646,31 +639,31 @@ const Report = () => {
                                       }}
                                     />
                                   </Col>
-                                  <Col xs={6} xl={6}>
+                                  <Col xs={6} xl={8}>
                                     Total Purchases: <br />{" "}
-                                    <h1>{item.totalPurchases}</h1>
+                                    <h1>{item?.totalPurchases}</h1>
                                     {/* {item.usertype ? (
                                     <Tag color="green">ACITVE</Tag>
                                   ) : (
                                     <Tag color="red">DISABLED</Tag>
                                   )} */}
                                   </Col>
-                                  <Col xs={6} xl={6}>
+                                  <Col xs={6} xl={8}>
                                     Total Cost of ingredient purchase: <br />{" "}
-                                    <h1>{item.cost}</h1>
+                                    <h1>₹ {item?.totalCost}</h1>
                                   </Col>
-                                  <Col xs={6} xl={6}>
+                                  {/* <Col xs={6} xl={6}>
                                     Times used in menus: <br />{" "}
-                                    <h1>{item.totalPurchases}</h1>
-                                    {/* {item.usertype ? (
+                                    <h1>{item?.basePrice}</h1>
+                                     {item.usertype ? (
                                     <Tag color="green">ACITVE</Tag>
                                   ) : (
                                     <Tag color="red">DISABLED</Tag>
-                                  )} */}
-                                  </Col>
-                                  <Col xs={6} xl={6}>
+                                  )} 
+                                  </Col> */}
+                                  <Col xs={6} xl={8}>
                                     Average Market rate: <br />{" "}
-                                    <h1>{item.rate}</h1>
+                                    <h1>₹ {item?.basePrice}</h1>
                                   </Col>
                                 </Row>
                               </List.Item>
@@ -877,5 +870,37 @@ const Report = () => {
     </div>
   );
 };
+
+/* <Row>
+                        <Col
+                          xs={24}
+                          xl={12}
+                          style={{
+                            padding: 10,
+                            // textAlign: "center",
+                            width: "80%",
+                          }}
+                        >
+                          <h3 style={{ color: "#e08003" }}>Damaged Goods</h3>
+                          {/* <SearchTable columns={columns} dataSource={data} /> }
+                          <Table columns={demandGoodsCols} dataSource={demandGoodsData} />
+                        </Col>
+                        <Col
+                          xs={24}
+                          xl={12}
+                          style={{
+                            padding: 10,
+                            // textAlign: "center",
+                            width: "80%",
+                          }}
+                        >
+                          <h3 style={{ color: "#e08003" }}>
+                            Negative Inventory
+                          </h3>
+                          {/* <SearchTable /> }
+                          <Table columns={negativeInventoryCols} dataSource={negativeInventoryData} />
+
+                        </Col>
+</Row> */
 
 export default Report;

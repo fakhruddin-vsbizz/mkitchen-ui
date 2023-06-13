@@ -17,7 +17,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 const DamagedGoodsList = () => {
   const [todayDate, setTodayDate] = useState("");
 
@@ -262,10 +262,11 @@ const DamagedGoodsList = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="6" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="14" userType="superadmin" /> :
+          <Sidebar k="6" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title="Expries" />
             <div style={{ width: "100%", padding: "20px 0px" }}>
               <div style={{ width: "100%" }}>
@@ -326,10 +327,10 @@ const DamagedGoodsList = () => {
                       style={{ width: "85%", height: '64vh', overflowY: 'scroll' }}
                       dataSource={filteredExpiredItems}
                       renderItem={(item, idx) => (
-                        <List.Item>
+                        <List.Item style={{padding: '8px 0'}}>
                           <Row
                             style={{
-                              margin: 5,
+                              margin: "0 8px",
                               width: "100%",
                               backgroundColor: "white",
                               padding: "2%",
@@ -341,7 +342,7 @@ const DamagedGoodsList = () => {
                             <Col
                               xs={24}
                               xl={4}
-                              style={{ fontSize: "150%", color: colorGreen }}
+                              style={{ fontSize: "150%", color: colorGreen, alignSelf: "center" }}
                             >
                               {item.ingredient_name}
                             </Col>
@@ -363,7 +364,7 @@ const DamagedGoodsList = () => {
                               Days after expiry: <br />
                               {daysAfterExpiry(item.expiry_date)} days
                             </Col>
-                            <Col xs={12} xl={4}>
+                            <Col xs={12} xl={4} style={{ alignSelf: "center" }}>
                               <Button
                                 type="primary"
                                 onClick={(e) =>
