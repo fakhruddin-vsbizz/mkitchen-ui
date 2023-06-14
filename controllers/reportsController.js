@@ -13,32 +13,28 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
         const inventory = await Inventory.find()
         const totatItem = inventory.length;
 
-<<<<<<< Updated upstream
+
         // const totalCost = inventory.reduce((a,b)=> a+b.price, 0) 
 
         const purchases = await Purchases.find();
 
-=======
+
         // totalCost = inventory.reduce((a,b)=> a+b.price, 0)
     
         const purchases = await Purchases.find();
 
-
-    
->>>>>>> Stashed changes
         const filteredPurchases = purchases.filter((purchase) => {
             const [month, day, year] = purchase.expiry_date.split("/");
             const expiryDate = new Date(`${month}/${day}/20${year}`);
             return expiryDate < today && purchase?.unshelf === false;
         });
 
-<<<<<<< Updated upstream
+
         console.log(filteredPurchases);
         const response = {
             totatItem: totatItem,
             totalCost: Number(totalCost?.toFixed(2)),
             totalExpiredItem: filteredPurchases.length
-=======
 
     
         // console.log(filteredPurchases);
@@ -46,7 +42,6 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
         totatItem: totatItem,
         // totalCost: Number(totalCost?.toFixed(2)),
         totalExpiredItem: filteredPurchases.length
->>>>>>> Stashed changes
         }
 
         return res.status(200).json(response)
@@ -92,14 +87,11 @@ exports.getPurchaseReport = expressAsyncHandler(async (req, res) => {
 
     res.status(200).json({purchase, inventoryCost});
 
-<<<<<<< Updated upstream
-=======
     } catch (error) {
         console.log(error);
     }
 
 
->>>>>>> Stashed changes
 })
 
 exports.getPurchsedByVendorReport = async (req, res) => {
