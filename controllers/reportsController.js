@@ -1,5 +1,6 @@
 const Inventory = require('../models/inventoryItemsModel');
 const Purchases = require('../models/purchasesModel');
+const Vendor = require('../models/vendorModel');
 
 
 exports.getTotalItems = async (req, res) => {
@@ -59,7 +60,48 @@ exports.getPurchaseReport = async (req, res) => {
 
     res.status(200).json(purchase);
 
+}
 
+exports.getPurchsedByVendorReport = async (req, res) => {
+
+    let report = []
+    const vendors = await Vendor.find();
+    const purchases = await Purchases.find({}, `createdAt vendor_id ingredient_name 
+    quantity_loaded rate_per_unit paid total_amount`);
+
+
+    vendors.forEach(item => {
+
+        const id = item._id.toString();
+
+        const vendorPurchase = purchases.filter(p => {
+            return p.vendor_id == id
+        })
+
+        // inventory.forEach(item => {
+        //    const _id = item._id.toString();
+        //    const itemName = item.ingredient_name
+        //     var totalQty = 0;
+        //     var 
+
+
+        //     const newVendorPurchase = vendorPurchase.filter(vp => {
+        //         return vp.ingredient_name = itemName
+        //     }).forEach(el =>{
+        //     });
+        // });
+
+
+        const purchaseDetails = {
+            vendorName: item.vendor_name,
+            isVerified: item.approval_status,
+            purchases: vendorPurchase
+        }
+
+        report.push(purchaseDetails);
+    });
+
+    res.status(200).json(report);
 
 }
 
