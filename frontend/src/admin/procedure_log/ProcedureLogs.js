@@ -106,7 +106,7 @@ const ProcedureLogs = () => {
       }
     };
     getData();
-  }, [menuFoodId, selectedDate]);
+  }, [menuFoodId]);
 
   useEffect(() => {
     const getData = async () => {
@@ -230,6 +230,9 @@ const ProcedureLogs = () => {
             console.log(res.leftover);
           }
         }
+      }else{
+        setIngridientList([]);
+        setLeftOverItems([]);
       }
     };
     getFood();
@@ -251,7 +254,7 @@ const ProcedureLogs = () => {
         if (data) {
           const res = await data.json();
           if (res) {
-            setMenuFoodId(res[0]?._id ? res[0]._id: "");
+            setMenuFoodId(res[0]?._id ? res[0]._id: undefined);
           }
         }
       }
@@ -261,6 +264,7 @@ const ProcedureLogs = () => {
 
   useEffect(()=>{
     const getPipeline = async() => {
+      if (menuFoodId) {
     try {
       const res = await fetch("/api/operation_pipeline", {
         method: "POST",
@@ -276,7 +280,18 @@ const ProcedureLogs = () => {
       setPipelineData(data)
       setFoodList(data?.menu_food_data[0].food_list)
       console.log(data?.menu_food_data[0].food_list);
-      console.log(data)
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
+    getPipeline();
+
+  },[menuFoodId])
+
+  useEffect(()=>{
+    const getPrice = async () => {
       try {
         const res = await fetch("/api/operation_pipeline/getTotalPrices", {
           method: "POST",
@@ -289,15 +304,11 @@ const ProcedureLogs = () => {
         })
         const data = await res.json()
         setTotalPrice(data);
-        console.log("priceList", data);
       } catch (error) {
-        
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
-  }
-  getPipeline();
+    getPrice();
   },[menuFoodId])
 
   // useEffect(() => {
@@ -401,7 +412,9 @@ const ProcedureLogs = () => {
                                 padding: 10,
                                 backgroundColor: "#fff",
                                 borderRadius: 5,
-                                border: "2px solid darkred",
+                                // border: "2px solid darkred",
+                boxShadow: '1px 1px 4px 3px lightgray',
+
                                 width: "100%",
                               }}
                             >
@@ -577,7 +590,9 @@ const ProcedureLogs = () => {
                                       padding: 10,
                                       backgroundColor: "#fff",
                                       borderRadius: 5,
-                                      border: "2px solid darkred",
+                                      // border: "2px solid darkred",
+                boxShadow: '1px 1px 4px 3px lightgray',
+                                      margin: 8,
                                       width: "100%",
                                     }}
                                   >
@@ -593,7 +608,7 @@ const ProcedureLogs = () => {
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-scale-unbalanced"></i>{" "}
                                           &nbsp;
-                                          {(item?.procure_amount).toFixed(2)}{" "}
+                                          {Number((item?.procure_amount).toFixed(3))}{" "}
                                           {inventoryItems
                                             .filter(
                                               (inventory) =>
@@ -677,7 +692,7 @@ const ProcedureLogs = () => {
                     ) : (
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>
-                          <label style={{ fontSize: "800%", color: "darkred" }}>
+                          <label style={{ fontSize: "800%", color: colorGreen }}>
                             <i className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
@@ -716,6 +731,8 @@ const ProcedureLogs = () => {
 											</Row>
 										</Card> */}
                   </Card>
+                  {totalPrice.length !== 0 && 
+                  <>
                   <hr className="separator" />
                   <div style={{padding: '8px',
                       margin: '10px',
@@ -724,7 +741,10 @@ const ProcedureLogs = () => {
                       width: '94%',
                       display: 'flex',
                       justifyContent: 'flex-end'}}>
-                    <div style={{border: '2px solid darkred',
+                    <div style={{
+                      // border: '2px solid darkred',
+                boxShadow: '1px 1px 4px 2px lightgray',
+
                       borderRadius: '5px', padding: '8px 14px'}}>
                       <span>Today's Total Cost: </span>
                   <span style={{color: colorGreen}}>
@@ -733,6 +753,8 @@ const ProcedureLogs = () => {
                     <span>₹</span>
                     </div>
                   </div>
+                  </>
+                  }
                 </Tabs.TabPane>
               </Tabs>
             </ConfigProvider>

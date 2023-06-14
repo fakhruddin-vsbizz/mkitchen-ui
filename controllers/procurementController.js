@@ -3,6 +3,8 @@ const MenuFood = require("../models/menuFoodModel");
 const OperationPipeLine = require("../models/operationPipeLineModel");
 const Inventory = require("../models/inventoryItemsModel");
 const FinalizeProcure = require("../models/finalizeProcureModel");
+// const { ObjectId } = require("mongodb");
+
 
 const procumentoryOperation = expressAsyncHandler(async (req, res) => {
   const { menu_id, type, documents, procure_items, date } = req.body;
@@ -95,12 +97,17 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
   }
 
   if (type === "get_procure_history") {
-    const procure = await FinalizeProcure.findOne({ date: date });
-
-    if (procure) {
-      res.status(200).json(procure);
-    } else {
-      res.status(200).json({ message: "no procure data" });
+    try {
+      
+      const procure = await FinalizeProcure.findOne({ menu_id: menu_id });
+  
+      if (procure) {
+        res.status(200).json(procure);
+      } else {
+        res.status(200).json({ message: "no procure data" });
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 });

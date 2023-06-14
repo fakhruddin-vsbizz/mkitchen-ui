@@ -266,7 +266,7 @@ const Menu = () => {
           reason_for_undelivered: null,
           mohalla_wise_ashkhaas: [],
           ingridient_list: [],
-          status: -2,
+          status: 0,
           reorder_logs: [],
           reason_for_reconfirming_menu: reasonForReconfirmingMenu,
           dispatch: [],
@@ -432,7 +432,6 @@ const Menu = () => {
       <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
         {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="1" userType="superadmin" /> :
         <Sidebar k="1" userType="admin" />}
-
         
         <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Set Today's Menu" />

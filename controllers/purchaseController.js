@@ -243,6 +243,21 @@ const getPurchaseWithExpiry = expressAsyncHandler(async (req, res) => {
   return res.status(200).json(newPurchase);
 });
 
+const changePaymentStatus = expressAsyncHandler(async (req, res) => {
+
+  const {id} = req.body;
+
+  const purchase = await Purchase.findOneAndUpdate({_id: id}, {paid: true});
+
+  if(!purchase) {
+    return res.status(404).json({msg : "not found"})
+  }
+
+  return res.status(200).json(purchase)
+
+})
+
+
 module.exports = {
   addPurchase,
   getPurchase,
@@ -252,4 +267,5 @@ module.exports = {
   updateShelfStatus,
   getExpiredInventoryItems,
   getVendorWisePurchase,
+  changePaymentStatus
 };

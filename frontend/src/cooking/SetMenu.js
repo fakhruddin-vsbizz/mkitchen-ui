@@ -309,7 +309,7 @@ const SetMenu = () => {
     }
   };
 
-  const handlePerAshkashChange = (value, ingredientName) => {
+  const handlePerAshkashChange = (value, ingredientName, unit) => {
     const updatedIngredients = ingredientItems.map((ingredient) => {
       if (ingredient.ingredient_name === ingredientName) {
         // if the ingredient name matches, update its perAshkash value
@@ -407,7 +407,7 @@ const SetMenu = () => {
   const logIngredientForFood = async () => {
     const newFoodIngredient = ingredientItems.map(item => ({
       ...item,
-      procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(2)),
+      procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(3)),
       perAshkash: +item.perAshkash,
     }))
     const foodIngMapObj = { ingridients: newFoodIngredient };
@@ -747,7 +747,12 @@ const SetMenu = () => {
                                       onChange={(e) => {
                                         handlePerAshkashChange(
                                           e.target.value,
-                                          item.ingredient_name
+                                          item.ingredient_name,
+                                          inventoryItems.find(
+                                            (inv) =>
+                                            inv.ingridient_name ===
+                                            item.ingredient_name
+                                            )?.ingridient_measure_unit
                                           );
                                         }}
                                         placeholder="Eg: 1200,200,etc.."

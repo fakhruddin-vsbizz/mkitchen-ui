@@ -662,40 +662,42 @@ const Dispatch = () => {
                                               </div>
                                             )}
                                      
-                                   
-                              </Col>
-                              </Row>
+                                   </Col>
+                                   </Row>
                                 ))}
+                                </Col>}
+                                </Row>
+                                <Row>
                               <Col xs={24} xl={24}>
                               {finaldipatchData &&
                               finaldipatchData.filter(
                                 (batch) =>
                                   batch.food_item_id === item.food_item_id
                               ).length <= 0 ? (
-                                  <Button
-                                  type="primary"
-                                  style={{marginTop: '10px'}}
-                                  onClick={(e) =>
-                                    {
-                                      if (!daigs && !totalWeight) {
-                                        return;
-                                      }
-                                      dispatchData(
-                                      item.food_item_id,
-                                      item.food_name
-                                    )}
-                                  }
-                                >
-                                  Pack Food
-                                </Button>
-                              ) : (
-                                <label >
-                                  <Tag 
-                                  style={{marginTop: '10px'}} color="green">Food Packed</Tag>
-                                </label>
-                              )}
+                                <Button
+                                type="primary"
+                                style={{marginTop: '10px'}}
+                                onClick={(e) =>
+                                  {
+                                    if (!daigs && !totalWeight) {
+                                      return;
+                                    }
+                                    dispatchData(
+                                    item.food_item_id,
+                                    item.food_name
+                                  )}
+                                }
+                              >
+                                Pack Food
+                              </Button>
+                            ) : (
+                              <label >
+                                <Tag 
+                                style={{marginTop: '10px'}} color="green">Food Packed</Tag>
+                              </label>
+                            )}
+                          
                               </Col>
-                              </Col>}
                             </Row>
                             {/* <Row>
                             <Col xs={12} xl={12}>

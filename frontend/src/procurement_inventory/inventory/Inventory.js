@@ -12,7 +12,7 @@ import {
   ConfigProvider,
   Alert,
 } from "antd";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
@@ -43,6 +43,9 @@ const Inventory = () => {
   const email = authCtx.userEmail;
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
 
   /**************Restricting PandI Route************************* */
 
@@ -156,8 +159,10 @@ const Inventory = () => {
   };
 
   const onRestock = (id) => {
-    navigate(`/pai/purchases/new/${id}`);
+    navigate(`/pai/purchases/new/${id}`, { state: { prevPath: location.pathname}});
+    // console.log(id);
   };
+
 
   const updateIngridientItem = async () => {
     try {
@@ -526,7 +531,7 @@ const Inventory = () => {
                               Ingredient total Volume:
                               </span>
                               <span style={{textTransform: 'capitalize'}}>
-                              {(item.total_volume).toFixed(2)} {item.ingridient_measure_unit}
+                              {Number((item.total_volume).toFixed(3))} {item.ingridient_measure_unit}
                               </span>
                             </Col>
                             <Col xs={4} xl={4}>

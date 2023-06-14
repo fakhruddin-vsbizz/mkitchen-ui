@@ -31,7 +31,7 @@ import { useNavigate } from "react-router-dom";
 // import SearchTable from "../../components/elements/SearchTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 
 const Report = () => {
@@ -59,11 +59,10 @@ const Report = () => {
       const data = await res.json();
       setTotalIngredients(data?.totatItem)
       setTotalDamagedGoods(data?.totalExpiredItem)
-      setTotalInventoryCost(data?.totalCost)
       const secondRes = await fetch('/api/report/total-purchases');
       const secondData = await secondRes.json();
-      setInventoryDetails(secondData);
-      console.log(secondData);
+      setInventoryDetails(secondData?.purchase);
+      setTotalInventoryCost(parseInt(secondData?.inventoryCost))
     }
     getReports();
   },[])
@@ -475,25 +474,25 @@ const Report = () => {
           <ConfigProvider
             theme={{
               token: {
-                colorPrimary: "orange",
+                colorPrimary: colorGreen,
                 colorDanger: "",
               },
             }}
           >
             <div className="" style={{ padding: 10 }}>
-              <Tabs centered style={{ color: "#E86800" }}>
+              <Tabs centered style={{ color: colorGreen }}>
                 <Tabs.TabPane tab="Inventory" key="1">
                   <div
                     style={{
                       borderBottomWidth: 2,
-                      borderBottomColor: "#E86800",
+                      borderBottomColor: colorGreen,
                     }}
                   >
                     {/* <label
                       style={{
                         fontSize: "130%",
                         padding: 20,
-                        color: "#E86800",
+                        color: colorGreen,
                       }}
                     >
                       <b>Mohalla Accounts</b>
@@ -506,15 +505,16 @@ const Report = () => {
                         backgroundColor: "transparent",
                         // height: "70vh",
                         border: "none",
-                        // borderColor: '#E86800',
+                        // borderColor: colorGreen,
                       }}
+                      bodyStyle={{padding: '0 24px'}}
                     >
                       <Row>
                         <Col
                           xs={8}
                           xl={8}
                           style={{
-                            padding: 10,
+                            // padding: 10,
                             textAlign: "center",
                             width: "80%",
                           }}
@@ -522,23 +522,24 @@ const Report = () => {
                           <div
                             style={{
                               fontSize: "120%",
-                              color: "#E86800",
+                              color: colorGreen,
                               margin: 10,
                               padding: 10,
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                              boxShadow: '1px 1px 4px 4px lightgray',
                             }}
                           >
-                            <h5>Total Ingredients</h5>
-                            <h1>{totalIngredients}</h1>
+                            <h5 style={{marginBlock: '1px'}}>Total Ingredients</h5>
+                            <h1 style={{marginBlock: '1px'}}>{totalIngredients}</h1>
                           </div>
                         </Col>
                         <Col
                           xs={8}
                           xl={8}
                           style={{
-                            padding: 10,
+                            // padding: 10,
                             textAlign: "center",
 
                             width: "80%",
@@ -547,24 +548,26 @@ const Report = () => {
                           <div
                             style={{
                               fontSize: "120%",
-                              color: "#E86800",
+                              color: colorGreen,
                               padding: 10,
 
                               margin: 10,
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                boxShadow: '1px 1px 4px 4px lightgray',
+
                             }}
                           >
-                            <h5>Total damaged goods</h5>
-                            <h1>{totalDamagedGoods}</h1>
+                            <h5 style={{marginBlock: '1px'}}>Total damaged goods</h5>
+                            <h1 style={{marginBlock: '1px'}}>{totalDamagedGoods}</h1>
                           </div>
                         </Col>
                         <Col
                           xs={8}
                           xl={8}
                           style={{
-                            padding: 10,
+                            // padding: 10,
                             textAlign: "center",
 
                             width: "80%",
@@ -573,29 +576,31 @@ const Report = () => {
                           <div
                             style={{
                               fontSize: "120%",
-                              color: "#E86800",
+                              color: colorGreen,
                               padding: 10,
                               margin: 10,
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                              boxShadow: '1px 1px 4px 4px lightgray',
                             }}
                           >
-                            <h5>Total inventory cost</h5>
-                            <h1>₹ {totalInventoryCost}</h1>
+                            <h5 style={{marginBlock: '1px'}}>Total inventory cost</h5>
+                            <h1 style={{marginBlock: '1px'}}>₹ {totalInventoryCost}</h1>
                           </div>
                         </Col>
                       </Row>
                       
-                      <label
-                        style={{
-                          fontSize: "130%",
-                          padding: 20,
-                          color: "#E86800",
-                        }}
-                      >
-                        <b>Inventory Details</b>
-                      </label>
+                      <Row>
+                        <Col xs={24}
+                          xl={12} style={{
+                            color: colorGreen,
+                            fontSize: '1.4rem',
+                            fontWeight: 700,
+                            marginTop: '12px'
+                          }} >Inventory Details</Col>
+                      </Row>
+                      <hr className="separator" />
 
                       <Card
                         style={{
@@ -604,8 +609,9 @@ const Report = () => {
                           backgroundColor: "transparent",
                           height: "70vh",
                           // border: '1px 0px',
-                          // borderColor: '#E86800',
+                          // borderColor: colorGreen,
                         }}
+                      bodyStyle={{padding: '0 24px'}}
                       >
                         <List
                           dataSource={inventoryDetails}
@@ -614,11 +620,13 @@ const Report = () => {
                               <List.Item>
                                 <Row
                                   style={{
-                                    padding: 10,
+                                    padding: "10px 2rem",
                                     display: "flex",
                                     backgroundColor: "#fff",
                                     borderRadius: 10,
-                                    borderBottom: "2px solid orange",
+                                    // borderBottom: "2px solid orange",
+                boxShadow: '1px 1px 4px 4px lightgray',
+
                                     width: "100%",
                                   }}
                                 >
@@ -627,20 +635,22 @@ const Report = () => {
                                     xl={24}
                                     style={{
                                       fontSize: "120%",
-                                      color: "#E86800",
+                                      color: colorGreen,
                                     }}
                                   >
-                                    <h3>{item?.name}</h3>
+                                    <h3 style={{marginBlock: '.5rem',
+marginInline: '1rem',
+fontSize: '1.5rem'}}>{item?.name}</h3>
                                     <hr
-                                      style={{
-                                        backgroundColor: "orange",
-                                        height: 2,
-                                        border: "none",
-                                      }}
+                                      className="separator"
                                     />
                                   </Col>
-                                  <Col xs={6} xl={8}>
-                                    Total Purchases: <br />{" "}
+                                  <Col xs={6} xl={8} style={{display: 'flex',
+alignItems: 'center',
+flexDirection: 'column',
+rowGap: '0.5rem',
+justifyContent: 'center'}}>
+                                    Total Purchases:{" "}
                                     <h1>{item?.totalPurchases}</h1>
                                     {/* {item.usertype ? (
                                     <Tag color="green">ACITVE</Tag>
@@ -648,8 +658,12 @@ const Report = () => {
                                     <Tag color="red">DISABLED</Tag>
                                   )} */}
                                   </Col>
-                                  <Col xs={6} xl={8}>
-                                    Total Cost of ingredient purchase: <br />{" "}
+                                  <Col xs={6} xl={8} style={{display: 'flex',
+alignItems: 'center',
+flexDirection: 'column',
+rowGap: '0.5rem',
+justifyContent: 'center'}}>
+                                    Total Cost of ingredient purchase:{" "}
                                     <h1>₹ {item?.totalCost}</h1>
                                   </Col>
                                   {/* <Col xs={6} xl={6}>
@@ -661,8 +675,12 @@ const Report = () => {
                                     <Tag color="red">DISABLED</Tag>
                                   )} 
                                   </Col> */}
-                                  <Col xs={6} xl={8}>
-                                    Average Market rate: <br />{" "}
+                                  <Col xs={6} xl={8} style={{display: 'flex',
+alignItems: 'center',
+flexDirection: 'column',
+rowGap: '0.5rem',
+justifyContent: 'center'}}>
+                                    Average Market rate:{" "}
                                     <h1>₹ {item?.basePrice}</h1>
                                   </Col>
                                 </Row>
@@ -678,14 +696,14 @@ const Report = () => {
                   <div
                     style={{
                       borderBottomWidth: 2,
-                      borderBottomColor: "#E86800",
+                      borderBottomColor: colorGreen,
                     }}
                   >
                     {/* <label
                       style={{
                         fontSize: "130%",
                         padding: 20,
-                        color: "#E86800",
+                        color: colorGreen,
                       }}
                     >
                       <b>Mohalla Accounts</b>
@@ -698,15 +716,16 @@ const Report = () => {
                         backgroundColor: "transparent",
                         // height: "70vh",
                         border: "none",
-                        // borderColor: '#E86800',
+                        // borderColor: colorGreen,
                       }}
+                      bodyStyle={{padding: '0 24px'}}
                     >
                       <Row>
                         <Col
                           xs={8}
                           xl={8}
                           style={{
-                            padding: 10,
+                            // padding: 10,
                             textAlign: "center",
                             width: "80%",
                           }}
@@ -714,23 +733,25 @@ const Report = () => {
                           <div
                             style={{
                               fontSize: "120%",
-                              color: "#E86800",
+                              color: colorGreen,
                               margin: 10,
                               padding: 10,
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                boxShadow: '1px 1px 4px 4px lightgray',
+
                             }}
                           >
-                            <h5>Item purchases</h5>
-                            <h1>124</h1>
+                            <h5 style={{marginBlock: '1px'}}>Item purchases</h5>
+                            <h1 style={{marginBlock: '1px'}}>124</h1>
                           </div>
                         </Col>
                         <Col
                           xs={8}
                           xl={8}
                           style={{
-                            padding: 10,
+                            // padding: 10,
                             textAlign: "center",
 
                             width: "80%",
@@ -739,17 +760,19 @@ const Report = () => {
                           <div
                             style={{
                               fontSize: "120%",
-                              color: "#E86800",
+                              color: colorGreen,
                               padding: 10,
 
                               margin: 10,
                               backgroundColor: "#fff",
                               borderRadius: 10,
-                              borderBottom: "2px solid orange",
+                              // borderBottom: "2px solid orange",
+                boxShadow: '1px 1px 4px 4px lightgray',
+
                             }}
                           >
-                            <h5>Purchase cost</h5>
-                            <h1>420</h1>
+                            <h5 style={{marginBlock: '1px'}}>Purchase cost</h5>
+                            <h1 style={{marginBlock: '1px'}}>420</h1>
                           </div>
                         </Col>
                       </Row>
@@ -763,9 +786,15 @@ const Report = () => {
                             width: "80%",
                           }}
                         >
-                          <h3 style={{ color: "#e08003" }}>
-                            Paid / Unpaid Vendors
-                          </h3>
+                          <Row>
+                        <Col xs={24}
+                          xl={12} style={{
+                            color: colorGreen,
+                            fontSize: '1.4rem',
+                            fontWeight: 700,
+                            marginBlock: '12px'
+                          }} >Paid / Unpaid Vendors</Col>
+                      </Row>
                           {/* <SearchTable /> */}
                           <Table columns={vendorsCols} dataSource={vendorsData} />
 
@@ -773,7 +802,7 @@ const Report = () => {
                         style={{
                           fontSize: "130%",
                           padding: 20,
-                          color: "#E86800",
+                          color: colorGreen,
                         }}
                       >
                         <b>Vendor Chart</b>
@@ -786,8 +815,8 @@ const Report = () => {
                           backgroundColor: "transparent",
                           height: "70vh",
                           // border: '1px 0px',
-                          // borderColor: '#E86800',
-                        }}x
+                          // borderColor: colorGreen,
+                        }}
                       >
                         <List
                           dataSource={vendorChartList}
@@ -800,7 +829,8 @@ const Report = () => {
                                     display: "flex",
                                     backgroundColor: "#fff",
                                     borderRadius: 10,
-                                    borderBottom: "2px solid orange",
+                                    // borderBottom: "2px solid orange",
+                                    boxShadow: '1px 1px 4px 4px lightgray',
                                     width: "100%",
                                   }}
                                 >
@@ -809,7 +839,7 @@ const Report = () => {
                                     xl={24}
                                     style={{
                                       fontSize: "120%",
-                                      color: "#E86800",
+                                      color: colorGreen,
                                     }}
                                   >
                                     <h3>{item.name}</h3>

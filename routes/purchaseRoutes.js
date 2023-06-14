@@ -8,11 +8,13 @@ const {
   updateShelfStatus,
   getExpiredInventoryItems,
   getVendorWisePurchase,
+  changePaymentStatus
 } = require("../controllers/purchaseController");
 
 const router = express.Router();
 
 router.post("/", addPurchase);
+router.post("/payment_done", changePaymentStatus);
 router.post("/expired_items", getExpiredInventoryItems);
 
 router.put("/", updatePaidStatusPurchase);

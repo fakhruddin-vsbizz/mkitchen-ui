@@ -392,6 +392,7 @@ const Cooking = () => {
 
     setReorderLogs([...reorderLogs, obj]);
     setUpdate(true);
+    
   };
 
   const cookingDone = async () => {
@@ -737,7 +738,7 @@ const Cooking = () => {
                                                   fontSize: "1rem",
                                                 }}
                                               >
-                                                <label>{ing?.procure_amount.toFixed(2)}</label>
+                                                <label>{Number(ing?.procure_amount.toFixed(3))}</label>
                                                 &nbsp;
                                                 <span style={{textTransform: 'capitalize'}}>
                                                 {inventoryItems &&
@@ -808,7 +809,7 @@ const Cooking = () => {
                                           </span>
                                               &nbsp;
                                           <Button
-                                            disabled={status >= 3 || cookingDoneStatus || (leftOverQuantity > Number(ing?.procure_amount.toFixed(2)) && (ing.foodId === item.food_item_id && ing.inventory_item_id === inventoryId))}
+                                            disabled={status >= 3 || cookingDoneStatus || (leftOverQuantity > Number(ing?.procure_amount.toFixed(3)) && (ing.foodId === item.food_item_id && ing.inventory_item_id === inventoryId))}
                                             onClick={(e) =>
                                               returnIngToInventory(
                                                 ing.inventory_item_id,
