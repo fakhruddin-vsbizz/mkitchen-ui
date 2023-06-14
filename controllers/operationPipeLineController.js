@@ -9,10 +9,17 @@ const addTotalPriceToFood = expressAsyncHandler(async (req, res) => {
 
   const {menu_id} = req.body;
 
+  let newList = [];
+
   try {
     const ingredientList = await OperationPipeLine.findOne({ menu_food_id : menu_id}, 'ingridient_list.foodId ingridient_list.inventory_item_id ingridient_list.procure_amount');
 
+    if (!ingredientList) {
+      return res.status(200).json(newList);
+    }
+
     const menu = await FoodMenu.findOne({_id: menu_id}, 'food_list')
+
 
     const inventoryIdList = ingredientList.ingridient_list.map(item => item.inventory_item_id)
 
@@ -27,7 +34,7 @@ const addTotalPriceToFood = expressAsyncHandler(async (req, res) => {
       }
     })
 
-    const newList = menu.food_list.map(food => {
+    newList = menu.food_list.map(food => {
       const temp = priceList.filter(filterItem => filterItem.foodId === food.food_item_id).reduce((a,b) =>  Number((a + b.price).toFixed(2)), 0);
       return {
         foodId: food.food_item_id,
@@ -327,7 +334,7 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
 
     ingredientLs.forEach((item)=> {
       if (item.inventory_item_id === inventory_id && item.foodId === req.body?.foodId) {
-        item.procure_amount = Number((item.procure_amount + req.body?.procured_Amount).toFixed(2));
+        item.procure_amount = Number((item.procure_amount + req.body?.procured_Amount).toFixed(3));
       }
     })
 

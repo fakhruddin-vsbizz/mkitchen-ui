@@ -16,7 +16,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams, useHistory } from "react-router-dom";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
@@ -43,6 +43,10 @@ const NewPurchase = () => {
   const navigate = useNavigate();
 
   const {id} = useParams();
+
+  const location = useLocation();
+
+
 
   /**************Restricting PandI Route************************* */
 
@@ -342,7 +346,7 @@ const NewPurchase = () => {
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title={<p>
                 <Link
-                  to="/pai/purchases"
+                  to={location?.state?.prevPath || '/pai/purchases'}
                   style={{ color: "white", textDecoration: "none" }}
                 >
                   <ArrowLeftOutlined />

@@ -59,14 +59,14 @@ const Login = () => {
     },
   ];
 
-  // useEffect(()=>{
-  //   const unset = setTimeout(() => {
-  //     setError(false)
-  //   }, 3000);
+  useEffect(()=>{
+    const unset = setTimeout(() => {
+      setError(false)
+    }, 3000);
 
-  //   return () => clearTimeout(unset)
+    return () => clearTimeout(unset)
 
-  // },[error])
+  },[error])
 
   /**************Restricting Admin Route************************* */
 
@@ -285,7 +285,8 @@ const Login = () => {
               bordered={true}
               bodyStyle={{padding: "0 0 24px"}}
               style={{
-                width: "35%",
+                width: "50%",
+                maxWidth: '650px',
                 // border: "2px solid darkred",
                 boxShadow: '1px 1px 4px 4px lightgray',
                 backgroundColor: '#fff',

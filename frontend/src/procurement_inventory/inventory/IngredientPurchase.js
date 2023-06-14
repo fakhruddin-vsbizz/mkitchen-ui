@@ -27,8 +27,9 @@ const IngredientPurchase = () => {
   const [filteredPurchases, setFilteredPurchases] = useState([]);
 	const [filterByName, setFilterByName] = useState("");
   const [filterByDate, setFilterByDate] = useState(null);
-  const [filterByStatus, setFilterByStatus] = useState(null)
+  const [filterByStatus, setFilterByStatus] = useState(null);
   const [inventoryItems, setInventoryItems] = useState([]);
+  const [paidStatusUpdated, setPaidStatusUpdated] = useState(true);
 
   const { id } = useParams();
 
@@ -84,13 +85,14 @@ const IngredientPurchase = () => {
               (item, index) => item.inventory_id === id
             );
             setItemPurchase(purchaseData);
-            setFilteredPurchases(purchaseData)
+            setFilteredPurchases(purchaseData);
+            console.log(purchaseData);
           }
         }
       }
     };
     getInventory();
-  }, [id]);
+  }, [id, paidStatusUpdated]);
 
 
 
@@ -177,6 +179,19 @@ const IngredientPurchase = () => {
     return vendors.filter((itemNew) => itemNew._id === vendor_id)[0]?.vendor_name
   }
 
+  const paymentDone = (id) => {
+    fetch("/api/purchase/payment_done", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: id
+      }),
+    }).then(res => res.json()).then(data => setPaidStatusUpdated(prev => !prev))
+   
+  }
+
   return (
     <div
       style={{ margin: 0, padding: 0}}
@@ -228,7 +243,7 @@ const IngredientPurchase = () => {
                       <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
                     </Col>
                     <Col xs={12} xl={6}>
-                      Paid status: <br />
+                      Payment status: <br />
                       <Select
                         defaultValue={null}
                         value={filterByStatus}
@@ -302,7 +317,7 @@ const IngredientPurchase = () => {
                               getVendor(item.vendor_id)}
                           </Col>
                           <Col xs={8} xl={4}>
-                            Required quantity:&nbsp;
+                            Ordered quantity:&nbsp;
                             {item.quantity_loaded} {item.unit}
                           </Col>
                           <Col xs={8} xl={4}>
@@ -314,9 +329,16 @@ const IngredientPurchase = () => {
                             {new Date(item.createdAt).toDateString()}
                           </Col>
                           <Col xs={8} xl={4}>
-                            <Tag color={item.paid ? "green" : "red"}>
-                              {item.paid ? "PAID" : "UNPAID"}
+                            {item?.paid === true ? <Tag color="green">
+                              PAID
+                            </Tag>: <div>
+                            <Tag color="red">
+                              UNPAID
                             </Tag>
+                            <Button onClick={() => paymentDone(item._id)}>
+                              Payment Done
+                            </Button>
+                            </div>}
                           </Col>
                         </Row>
                       </List.Item>

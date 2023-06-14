@@ -13,7 +13,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
@@ -52,6 +52,9 @@ const ConfirmIng = () => {
   const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false)
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
   /**************Restricting PandI Route************************* */
 
   console.log(procureIngridients);
@@ -86,7 +89,8 @@ const ConfirmIng = () => {
   };
 
   const onRestock = (id) => {
-    navigate(`/pai/purchases/new/${id}`);
+    navigate(`/pai/purchases/new/${id}`, { state: { prevPath: location.pathname}});
+    // console.log(id);
   };
 
   useEffect(() => {
@@ -149,6 +153,7 @@ const ConfirmIng = () => {
             },
             body: JSON.stringify({
               date: selectedDate,
+              menu_id: menuFoodId,
               type: "get_procure_history",
             }),
           });
@@ -158,7 +163,7 @@ const ConfirmIng = () => {
             if (res._id) {
               setProcureIngridients(res.procure_items);
             }
-            if (res.message) {
+            if (res?.message) {
               if (menuFoodId) {
                 try {
                   const data = await fetch("/api/pai/procurement", {
@@ -329,7 +334,7 @@ const ConfirmIng = () => {
                                   fontSize: "130%",
                                 }}
                               >
-                                {item.requiredVolume.toFixed(2)} {item.unit}
+                                {Number(item.requiredVolume.toFixed(3))} {item.unit}
                               </label>
                             </Col>
                             <Col
@@ -355,7 +360,7 @@ const ConfirmIng = () => {
                                   ></i> You are short on items
                                   </span>
                                   <Button
-                                    onClick={() => onRestock(item._id)}
+                                    onClick={() => onRestock(item?.inventoryItemId)}
                                     style={{
                                       backgroundColor: "green",
                                     }}

@@ -172,7 +172,7 @@ const PostConfirmOps = () => {
           type: "update_operation_pipeline_reorder_status",
           inventory_id: id,
           foodId: foodId,
-          procured_Amount: Number(quantity_requireds.toFixed(2))
+          procured_Amount: Number(quantity_requireds.toFixed(3))
         }),
       }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {console.log("fetch1", err)})
 
