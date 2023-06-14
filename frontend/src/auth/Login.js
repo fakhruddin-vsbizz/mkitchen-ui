@@ -4,8 +4,8 @@ import {
   Row,
   Col,
   Image,
-  Divider,
-  Radio,
+  // Divider,
+  // Radio,
   Card,
   Input,
   Button,
@@ -18,8 +18,8 @@ import logo from "../res/img/logo.png";
 import axios from "axios";
 import AuthContext from "../components/context/auth-context";
 import { Link, useNavigate } from "react-router-dom";
-import DeshboardBg from "../res/img/DeshboardBg.png";
-import whiteLogo from "../res/img/MKWhiteLogo.png";
+// import DeshboardBg from "../res/img/DeshboardBg.png";
+// import whiteLogo from "../res/img/MKWhiteLogo.png";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { colorBlack, colorGreen } from "../colors";
 
@@ -53,6 +53,10 @@ const Login = () => {
       label: "Cooking",
       value: 2,
     },
+    {
+      label: "superadmin",
+      value: 4,
+    },
   ];
 
   // useEffect(()=>{
@@ -74,7 +78,11 @@ const Login = () => {
     }
 
     const typeAdmin = type === "mk admin" ? true : false;
+    const typeSuperAdmin = type === "mk superadmin" ? true : false;
 
+    if (typeSuperAdmin) {
+      navigate("/admin/menu");
+    }
     if (typeAdmin) {
       navigate("/admin/menu");
     }
@@ -123,6 +131,9 @@ const Login = () => {
       if (userType === "mk admin") {
         navigate("/admin/menu");
       }
+      if (userType === "mk superadmin") {
+        navigate("/admin/menu");
+      }
     } catch (error) {
       console.error(error);
       setUserEmail("");
@@ -168,7 +179,7 @@ const Login = () => {
       style={{
         margin: 0,
         padding: 0,
-        height: "100vh ",
+        height: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",
       }}

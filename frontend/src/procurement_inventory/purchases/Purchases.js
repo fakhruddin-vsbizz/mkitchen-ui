@@ -17,7 +17,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
@@ -119,10 +119,11 @@ const Purchases = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="2" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="10" userType="superadmin" /> :
+          <Sidebar k="2" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Link to="/pai/purchases/new">
                   <Button style={{ backgroundColor: "white", color: colorGreen }}>

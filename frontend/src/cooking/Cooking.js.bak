@@ -290,10 +290,10 @@ const Cooking = () => {
 						colorPrimary: "orange",
 					},
 				}}>
-				<div style={{ display: "flex" }}>
+				<div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
 					<Sidebar k="2" userType="cooking" />
 
-					<div style={{ width: "100%" }}>
+					<div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
 						<Header
 							title="Cooking Operation"
 							comp=<Row>

@@ -7,7 +7,7 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -338,9 +338,10 @@ const ProcedureLogs = () => {
     <div
       style={{ margin: 0, padding: 0 }}
     >
-      <div style={{ display: "flex" }}>
-        <SideNav k="2" userType="admin" />
-        <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="2" userType="superadmin" /> :
+        <SideNav k="2" userType="admin" />}
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header
             title="Process Log"
             comp={
@@ -425,7 +426,7 @@ const ProcedureLogs = () => {
                                 <Col xs={6} xl={9}>
                                 <i className="fa-solid fa-magnifying-glass"></i>
                                     &nbsp;&nbsp;Review :
-                                  <label style={{}}>
+                                  <label>
                                     {item.remark}
                                   </label>
                                 </Col>
@@ -543,7 +544,7 @@ const ProcedureLogs = () => {
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
                   <Card
-                   style={{ width: "96%", marginLeft: "1%", backgroundColor: 'transparent', overflowY: "scroll", overflowX: "hidden", overflowX: "hidden", maxHeight:'68vh' }} bodyStyle={{ padding: '0', width: '80vw'}} >
+                   style={{ width: "96%", marginLeft: "1%", backgroundColor: 'transparent', overflowY: "scroll", overflowX: "hidden", overflowX: "hidden", maxHeight:'55vh' }} bodyStyle={{ padding: '0', width: '80vw'}} >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
@@ -552,14 +553,19 @@ const ProcedureLogs = () => {
                           <div key={foodItem.food_item_id}>
                             <Row>
                                 <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                                  <label style={{ fontSize: "1.3rem" }}>
-                                    {foodItem.food_name}
-                                  </label>
+                                  <div style={{ fontSize: "1.3rem" }}>
+                                    <span>Food: </span>
+                                    <span style={{color: colorGreen}}>{foodItem.food_name}</span>
+                                  </div>
                                 </Col>
-                                <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                                  <label style={{ fontSize: "1.3rem" }}>
-                                    {totalPrice.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;₹
-                                  </label>
+                                <Col xs={12} xl={12} style={{ padding: "1%", textAlign: 'end' }}>
+                                  <div style={{ fontSize: "1.3rem" }}>
+                                    <span>Total cost for {foodItem.food_name}: </span>
+                                    <span style={{color: colorGreen}}>
+                                    {totalPrice.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;
+                                    </span>
+                                    <span>₹</span>
+                                  </div>
                                 </Col>
                             </Row>
                             <List
@@ -587,7 +593,7 @@ const ProcedureLogs = () => {
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-scale-unbalanced"></i>{" "}
                                           &nbsp;
-                                          {item.procure_amount}{" "}
+                                          {(item?.procure_amount).toFixed(2)}{" "}
                                           {inventoryItems
                                             .filter(
                                               (inventory) =>
@@ -599,7 +605,7 @@ const ProcedureLogs = () => {
                                             )}
                                         </label>
                                         
-                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a.quantity_requireds + b.quantity_requireds)}&nbsp;{inventoryItems
+                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a + b.quantity_requireds,0)}&nbsp;{inventoryItems
                                             .filter(
                                               (inventory) =>
                                                 inventory._id ===
@@ -710,6 +716,23 @@ const ProcedureLogs = () => {
 											</Row>
 										</Card> */}
                   </Card>
+                  <hr className="separator" />
+                  <div style={{padding: '8px',
+                      margin: '10px',
+                      fontSize: '2rem',
+                      
+                      width: '94%',
+                      display: 'flex',
+                      justifyContent: 'flex-end'}}>
+                    <div style={{border: '2px solid darkred',
+                      borderRadius: '5px', padding: '8px 14px'}}>
+                      <span>Today's Total Cost: </span>
+                  <span style={{color: colorGreen}}>
+                    {(totalPrice.reduce((a,b) => a + b.price, 0)).toFixed(2)}&nbsp;
+                    </span>
+                    <span>₹</span>
+                    </div>
+                  </div>
                 </Tabs.TabPane>
               </Tabs>
             </ConfigProvider>

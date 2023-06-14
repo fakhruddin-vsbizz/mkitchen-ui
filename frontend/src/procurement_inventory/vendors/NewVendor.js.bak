@@ -108,10 +108,10 @@ const NewVendor = () => {
             <p>Vendor Added Successfully</p>
           </div>
         </Modal>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
           <Sidebar k="4" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title=<p><Link to="/pai/vendors" style={{color:'white', textDecoration: 'none'}} ><ArrowLeftOutlined /></Link> Add New Vendor</p>
               comp=<center>

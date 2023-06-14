@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/auth-context";
 import IngredientList from "./Input";
 import dayjs from "dayjs";
-import { colorBlack, colorGreen } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -85,7 +85,8 @@ const SetMenu = () => {
   const [updatedIngredientsList, setupdatedIngredientsList] = useState([]);
   const [finalArrayForData, setFinalArrayForData] = useState([]);
 
-  const [filteredAutoCompleted, setFilteredAutoCompleted] = useState([])
+  const [filteredAutoCompleted, setFilteredAutoCompleted] = useState([]);
+  const [reasonForChangingMenu, setReasonForChangingMenu] = useState("");
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
@@ -189,6 +190,9 @@ const SetMenu = () => {
             setGetFoodList(res[0].food_list);
             setIngredientItems([]);
             setStatus(res.status);
+
+            console.log("res[0]",res[0]);
+            setReasonForChangingMenu(res[0]?.reason_for_reconfirming_menu === undefined ? "" : res[0].reason_for_reconfirming_menu)
           } else {
             setGetFoodList([]);
             setIngredientItems([]);
@@ -482,10 +486,11 @@ const SetMenu = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="1" userType="cooking" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="6" userType="superadmin" /> :
+          <Sidebar k="1" userType="cooking" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Set Ingredients"
               comp={
@@ -525,6 +530,14 @@ const SetMenu = () => {
                     <Alert
                       message="Message"
                       description="Mohalla Count Not set"
+                      type="error"
+                      closable
+                    />
+                  )}
+                  {(reasonForChangingMenu !== "" && status === -2) && (
+                    <Alert
+                      message="Menu changed please change ingredients"
+                      description={"Reason: "+reasonForChangingMenu}
                       type="error"
                       closable
                     />
@@ -620,7 +633,7 @@ const SetMenu = () => {
                         boxShadow: '1px 1px 4px 4px lightgray',
                       }}
                     >
-                      {status === 0 ?
+                      {status < 3 ?
                       <label
                         style={{ fontSize: "200%", color: colorGreen }}
                         className="dongle-font-class"
@@ -633,10 +646,10 @@ const SetMenu = () => {
                         Selected ingredients: <span>{selectedFoodName}</span> 
                       </label>}
                       <br />
-                      {status === 0 && foodIndex && <>
-                      <span style={{ fontSize: 16, color: colorGreen }}>
+                      {status < 3 && foodIndex && <>
+                      {/* <span style={{ fontSize: 16, color: colorGreen }}>
                         Add Ingredients:
-                      </span>
+                      </span> */}
                       <Row
                         style={{
                           padding: 5,
@@ -727,7 +740,7 @@ const SetMenu = () => {
                                 <Col xs={12} xl={9} style={{display: 'flex', justifyContent: 'center', columnGap: '5px', alignSelf: 'center'}}>
 
                                   <div style={{ display: 'flex', columnGap: '4px', alignSelf: 'center'}}>
-                                      {status === 0 ?
+                                      {status < 3 ?
                                       <Input
                                       style={{fontSize: '1.3rem'}}
                                       value={item.perAshkash}
@@ -749,7 +762,7 @@ const SetMenu = () => {
                                           )?.ingridient_measure_unit || "kg"}
                                       </span>
                                           </div>
-                                      {status === 0 &&
+                                      {status < 3 &&
                                         <Button
                                         type="primary"
                                         onClick={() =>
@@ -788,7 +801,7 @@ const SetMenu = () => {
                         handlePerAshkashChange={handlePerAshkashChange}
                         foodIndex={foodIndex}
                       /> */}
-                      {status === 0 && foodIndex && (
+                      {status < 3 && foodIndex && (
                         <Button
                           block
                           type="primary"
@@ -804,7 +817,7 @@ const SetMenu = () => {
               </Row>
             </div>
             <center>
-              {status === 0 && totalAshkash > 0 && (
+              {status < 3 && totalAshkash > 0 && (
                 <Button
                   block
                   style={{

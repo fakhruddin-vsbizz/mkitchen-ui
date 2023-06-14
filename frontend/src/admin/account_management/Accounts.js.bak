@@ -411,9 +411,9 @@ const Accounts = () => {
     <div
       style={{ margin: 0, padding: 0}}
     >
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
         <SideNav k='3' userType='admin' />
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header
             title="Account Management"
             comp=<Button

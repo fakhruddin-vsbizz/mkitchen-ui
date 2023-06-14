@@ -270,7 +270,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   
         // update the document in MongoDB with the modified `dispatch` array
         await dispatchDoc.updateOne({ dispatch: dispatchArr });
-        return res.status(200).json({ message: "operationPipeLine  added", data: dispatchDoc.dispatch});
+        return res.status(200).json({ message: "operationPipeLine  added", data: dispatchDoc?.dispatch});
       }
   
       return res.json({ message: "operationPipeLine  added" });
@@ -327,7 +327,7 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
 
     ingredientLs.forEach((item)=> {
       if (item.inventory_item_id === inventory_id && item.foodId === req.body?.foodId) {
-        item.procure_amount = item.procure_amount + req.body?.procured_Amount;
+        item.procure_amount = Number((item.procure_amount + req.body?.procured_Amount).toFixed(2));
       }
     })
 

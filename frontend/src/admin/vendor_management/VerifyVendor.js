@@ -23,7 +23,7 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const VerifyVendor = () => {
   const { Column, ColumnGroup } = Table;
@@ -112,9 +112,10 @@ const VerifyVendor = () => {
     <div
       style={{ margin: 0, padding: 0 }}
     >
-      <div style={{ display: "flex" }}>
-        <SideNav k="4" userType="admin" />
-        <div style={{ width: "100%" }}>
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="4" userType="superadmin" /> :
+        <SideNav k="4" userType="admin" />}
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Verify Vendors" />
           <div style={{ padding: "0 2% 2%" }}>
             <Card style={{ width: "100%", backgroundColor: "transparent" }} bodyStyle={{padding: '0'}}>

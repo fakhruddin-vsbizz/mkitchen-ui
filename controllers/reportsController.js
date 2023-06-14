@@ -1,36 +1,44 @@
 const Inventory = require('../models/inventoryItemsModel');
 const Purchases = require('../models/purchasesModel');
+const expressAsyncHandler = require("express-async-handler");
 
 
-exports.getTotalItems = async (req, res) => {
+exports.getTotalItems = expressAsyncHandler(async (req, res) => {
     const today = new Date()
 
-    var totalCost = 0;
-    var totalExpiredItem = 0
-    const totatItem = await Inventory.estimatedDocumentCount()
-    inventory = await Inventory.find()
-    inventory.forEach(item => {
-        if (item.total_volume && today.getTime() > dateConverter(item.ingridient_expiry_period,
-            item.ingridient_expiry_amount, item.createdAt)) {
-            totalExpiredItem++
+    try {
+        var totalCost = 0;
+        // var totalExpiredItem = 0;
+        const inventory = await Inventory.find()
+        const totatItem = inventory.length;
 
-        }
-        const itemCost = item.total_volume * item.price
-        totalCost += itemCost;
-    });
-
-
-    const response = {
+        // const totalCost = inventory.reduce((a,b)=> a+b.price, 0) 
+    
+        const purchases = await Purchases.find();
+    
+        const filteredPurchases = purchases.filter((purchase) => {
+            const [month, day, year] = purchase.expiry_date.split("/");
+            const expiryDate = new Date(`${month}/${day}/20${year}`);
+            return expiryDate < today && purchase?.unshelf === false;
+        });
+    
+        console.log(filteredPurchases);
+        const response = {
         totatItem: totatItem,
-        totalCost: totalCost,
-        totalExpiredItem: totalExpiredItem
+        totalCost: Number(totalCost?.toFixed(2)),
+        totalExpiredItem: filteredPurchases.length
+        }
+    
+        return res.status(200).json(response)
+        
+    } catch (error) {
+        console.log(error);
     }
 
-    res.status(200).json(response)
-}
+})
 
 
-exports.getPurchaseReport = async (req, res) => {
+exports.getPurchaseReport = expressAsyncHandler(async (req, res) => {
     let purchase = [];
 
     const inventory = await Inventory.find();
@@ -61,7 +69,7 @@ exports.getPurchaseReport = async (req, res) => {
 
 
 
-}
+})
 
 
 function dateConverter(periodUnit, period, createdOn) {

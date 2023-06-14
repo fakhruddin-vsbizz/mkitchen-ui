@@ -23,7 +23,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorGreen } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -383,10 +383,11 @@ const Dispatch = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="3" userType="cooking" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="8" userType="superadmin" /> :
+          <Sidebar k="3" userType="cooking" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Dispatch"
               comp={<Row style={{justifyContent: 'flex-end'}}>
@@ -589,8 +590,9 @@ const Dispatch = () => {
                                         onSelect={handleChange}
                                         style={{
                                           width: 120, margin: '8px 1px',
-                                          borderBottom: '2px solid darkred',
-                                          borderRadius: "10px"
+                                          // borderBottom: '2px solid darkred',
+                                          borderRadius: "10px",
+                                          border: "none", borderBottom: `2px solid ${colorGreen}`
                                         }}
                                         bordered={false}
                                         options={[
@@ -618,7 +620,7 @@ const Dispatch = () => {
                                     ></Input>
                                   </Col>
                                 </>
-                              ) : <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                              ) : <Col xs={12} xl={24} style={{ padding: "1%" }}>
                               {finaldipatchData &&
                                 finaldipatchData
                                   .filter(
@@ -626,36 +628,24 @@ const Dispatch = () => {
                                       batch.food_item_id === item.food_item_id
                                   )
                                   .map((item) => (
-                                    <div>
+                                    
                                       <Row>
-                                        <Col xs={24} xl={12}>
+                                        <Col xs={24} xl={8}>
                                           Number of {item?.containerType}: <br />
                                           <label style={{ fontSize: "150%" }}>
-                                            {item.no_of_deigh}
+                                            {item.no_of_deigh} <span style={{textTransform: 'capitalize'}}>{item?.containerType}</span>
                                           </label>
                                         </Col>
-                                        <Col xs={24} xl={12}>
+                                        <Col xs={24} xl={8}>
                                           Total {item?.unitValueType}: <br />
                                           <label style={{ fontSize: "150%" }}>
-                                            {item.total_weight} {item?.unitValueType === "weight" ? "Kg": item?.item?.unitValueType === "liters" ? "Liters" : "Piece"}
+                                            {item.total_weight} {item?.unitValueType === "weight" ? "Kg" : item?.unitValueType === "liters" ? "Liters" : "Piece"}
                                           </label>
                                         </Col>
-                                      </Row>
-                                    </div>
-                                  ))}
-                                  </Col>}
-                                  <Col xs={12} xl={12} style={{ padding: "1%" }}>
-                                {finaldipatchData &&
-                                  finaldipatchData
-                                    .filter(
-                                      (batch) =>
-                                        batch.food_item_id === item.food_item_id
-                                    )
-                                    .map((ele) => (
-                                      <div>
-                                        <Row>
-                                          <Col xs={24} xl={12}>
-                                            {ele.delivery_status ===
+                                  <Col xs={12} xl={8} style={{ padding: "1%" }}>
+                 
+                                          
+                                            {item?.delivery_status ===
                                             "completed" ? (
                                               <div>
                                                 Confirm Delivery: <br />
@@ -671,13 +661,12 @@ const Dispatch = () => {
                                                 </Tag>
                                               </div>
                                             )}
-                                          </Col>
-                                        </Row>
-                                      </div>
-                                    ))}
+                                     
+                                   
                               </Col>
+                              </Row>
+                                ))}
                               <Col xs={24} xl={24}>
-                              
                               {finaldipatchData &&
                               finaldipatchData.filter(
                                 (batch) =>
@@ -706,9 +695,7 @@ const Dispatch = () => {
                                 </label>
                               )}
                               </Col>
-
-                              
-                              
+                              </Col>}
                             </Row>
                             {/* <Row>
                             <Col xs={12} xl={12}>
