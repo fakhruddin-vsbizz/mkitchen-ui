@@ -18,7 +18,7 @@ import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
-import { colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 
 const dateFormatterForToday = () => {
@@ -238,10 +238,11 @@ const PostConfirmOps = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="4" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="12" userType="superadmin" /> :
+          <Sidebar k="4" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Post Procurement"
               comp={
@@ -322,7 +323,7 @@ const PostConfirmOps = () => {
                       <div>
                         <List
                           style={{
-                            height: "35vh",
+                            maxHeight: "68vh",
                             width: "100%",
                             overflowY: "scroll",
                             backgroundColor: "transparent",

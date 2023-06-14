@@ -337,7 +337,7 @@ const Menu = () => {
             renderItem={(item) => <List.Item>{item}</List.Item>}
           /> */}
 			{/* </Col> */}
-			<div style={{ display: "flex" }}>
+			<div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
 				<Sidebar k="1" userType="admin" />
 
 				<div>

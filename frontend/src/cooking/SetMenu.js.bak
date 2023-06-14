@@ -320,10 +320,10 @@ const SetMenu = () => {
 						colorPrimary: "orange",
 					},
 				}}>
-				<div style={{ display: "flex" }}>
+				<div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
 					<Sidebar k="1" userType="cooking" />
 
-					<div style={{ width: "100%" }}>
+					<div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
 						<Header
 							title="Set Ingredients"
 							comp={

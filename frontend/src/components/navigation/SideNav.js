@@ -40,6 +40,125 @@ const logoutHandler = () => {
 
   window.location.href = "/";
 };
+
+
+
+const superAdmin = [
+  getItem(
+    <Link to="/admin/menu">Today's Menu</Link>,
+    "1",
+    <Link to="/admin/menu">
+      <UnorderedListOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/admin/menu/history">History</Link>,
+    "2",
+    <Link to="/admin/menu/history">
+      <HistoryOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/admin/account_management">User Accounts</Link>,
+    "3",
+    <Link to="/admin/account_management">
+      <TeamOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/admin/verifyvendor">Vendor</Link>,
+    "4",
+    <Link to="/admin/verifyvendor">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/admin/report">Report</Link>,
+    "5",
+    <Link to="/admin/report">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/cooking/ingredients">Set Ingredient</Link>,
+    "6",
+    <Link to="/cooking/ingredients">
+      <UnorderedListOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/cooking/cookfood">Cooking Food</Link>,
+    "7",
+    <Link to="/cooking/cookfood">
+      <HistoryOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/cooking/dispatch">Dispatch</Link>,
+    "8",
+    <Link to="/cooking/dispatch">
+      <TeamOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/inventory">Inventory</Link>,
+    "9",
+    <Link to="/pai/inventory">
+      <UnorderedListOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/purchases">Purchases</Link>,
+    "10",
+    <Link to="/pai/purchases">
+      <HistoryOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/procurement">Procurement</Link>,
+    "11",
+    <Link to="/pai/procurement">
+      <TeamOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/procurement/post">Post Procure</Link>,
+    "12",
+    <Link to="/pai/procurement/post">
+      <InfoOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/vendors">Vendor</Link>,
+    "13",
+    <Link to="/pai/vendors">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/expiries">Expiries</Link>,
+    "14",
+    <Link to="/pai/expiries">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <Link to="/pai/donations">Donations</Link>,
+    "15",
+    <Link to="/pai/donations">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "16",
+    <Link onClick={logoutHandler}>
+      <LogoutOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  // <div style={{"& *:hover": {cursor: ""}}}></div>
+  // ,
+];
 const admin = [
   getItem(
     <Link to="/admin/menu">Today's Menu</Link>,
@@ -190,7 +309,6 @@ const SideNav = ({ k, userType }) => {
   return (
     <Layout
       style={{
-        height: "100vh",
         boxShadow: '1px 1px 5px 4px lightgray',
       }}
     >
@@ -241,7 +359,7 @@ const SideNav = ({ k, userType }) => {
             
             mode="inline"
             items={
-              userType == "admin"
+              userType == "superadmin" ? superAdmin : userType == "admin"
                 ? admin
                 : userType == "cooking"
                 ? cooking

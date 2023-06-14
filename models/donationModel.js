@@ -17,6 +17,9 @@ const donationSchema = new Schema(
         donarName: {
             type: String,
         },
+        contactNumber: {
+            type: String,
+        },
         donationQty: {
             type: Number,
             required: true,

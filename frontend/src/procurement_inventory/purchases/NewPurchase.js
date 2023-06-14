@@ -17,7 +17,8 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeftOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 
 const NewPurchase = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -122,6 +123,10 @@ const NewPurchase = () => {
     setItemName(value);
   };
 
+  const deletePurchase = (id) => {
+    setIngredientForPurchase(prev => prev.filter(item => item.inventory_id !== id))
+  }
+
 
   useEffect(()=>{
     if (inventoryItems.length !== 0 && idFromPrams !== undefined) {
@@ -177,57 +182,59 @@ const NewPurchase = () => {
 
 
   const onAddIngredient = () => {
-    if (inventoryItemName === undefined) {
-      setValidationError(true);
-    } else {
-      setValidationError(false);
-      let currentDate = new Date();
-
-      const data = inventoryItems.filter(
-        (item) => item._id === inventoryItemId
-      );
-
-      const time = +data[0].ingridient_expiry_amount;
-      const period = data[0].ingridient_expiry_period;
-
-      // Get the current date
-
-      // Add the specified time and period to the current date
-      if (period === "Days") {
-        currentDate.setDate(currentDate.getDate() + time);
-      } else if (period === "Months") {
-        currentDate.setMonth(currentDate.getMonth() + time);
-      } else if (period === "Year") {
-        currentDate.setFullYear(currentDate.getFullYear() + time);
+    if(ingredientForPurchase.length === 0 || ingredientForPurchase.filter(item => item?.inventory_id === inventoryItemId).length === 0){
+      if (inventoryItemName === undefined) {
+        setValidationError(true);
+      } else {
+        setValidationError(false);
+        let currentDate = new Date();
+  
+        const data = inventoryItems.filter(
+          (item) => item._id === inventoryItemId
+        );
+  
+        const time = +data[0].ingridient_expiry_amount;
+        const period = data[0].ingridient_expiry_period;
+  
+        // Get the current date
+  
+        // Add the specified time and period to the current date
+        if (period === "Days") {
+          currentDate.setDate(currentDate.getDate() + time);
+        } else if (period === "Months") {
+          currentDate.setMonth(currentDate.getMonth() + time);
+        } else if (period === "Year") {
+          currentDate.setFullYear(currentDate.getFullYear() + time);
+        }
+        let formattedDateData = currentDate.toDateString();
+  
+        var date = new Date(formattedDateData);
+  
+        var formattedDate = date.toLocaleDateString("en-US", {
+          month: "numeric",
+          day: "numeric",
+          year: "2-digit",
+        });
+  
+        // Output the final date
+  
+        var ingredient_added = {
+          mkuser_id: userId,
+          ingredient_name: inventoryItemName,
+          vendor_id: selectedVendor,
+          inventory_id: inventoryItemId,
+          rate_per_unit: price,
+          quantity_loaded: quantity,
+          paid: false,
+          total_amount: price * quantity,
+          expiry_date: formattedDate,
+          unshelf: false,
+        };
+        setIngredientForPurchase([ingredient_added, ...ingredientForPurchase]);
+        
       }
-      let formattedDateData = currentDate.toDateString();
-
-      var date = new Date(formattedDateData);
-
-      var formattedDate = date.toLocaleDateString("en-US", {
-        month: "numeric",
-        day: "numeric",
-        year: "2-digit",
-      });
-
-      // Output the final date
-
-      var ingredient_added = {
-        mkuser_id: userId,
-        ingredient_name: inventoryItemName,
-        vendor_id: selectedVendor,
-        inventory_id: inventoryItemId,
-        rate_per_unit: price,
-        quantity_loaded: quantity,
-        paid: false,
-        total_amount: price * quantity,
-        expiry_date: formattedDate,
-        unshelf: false,
-      };
-      setIngredientForPurchase([...ingredientForPurchase, ingredient_added]);
-    setItemName("")
-
     }
+    setItemName("")
   };
 
   const handlePricePerIngridient = (value, ingredientName) => {
@@ -324,14 +331,15 @@ const NewPurchase = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: colorGreen,
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="2" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="10" userType="superadmin" /> :
+          <Sidebar k="2" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title={<p>
                 <Link
                   to="/pai/purchases"
@@ -350,12 +358,11 @@ const NewPurchase = () => {
                   <table style={{ width: "100%" }} cellPadding={20}>
                     <tr>
                       <td style={{ fontSize: "150%" }}>Select the item:</td>
-                      <td>
-                        {inventoryItems && (
-                          <center>
+                      <td style={{width: "30vw"}}>
+                        {inventoryItems.length !== 0 && (
                             <AutoComplete
                               id="ingredient-item-selected"
-                              style={{ width: "70%" }}
+                              style={{width: "100%"}}
                               value={itemName}
                               options={inventoryItems.map((item) => ({
                                 value: item.ingridient_name,
@@ -370,7 +377,6 @@ const NewPurchase = () => {
                                   .indexOf(inputValue.toUpperCase()) !== -1
                               }
                             />
-                          </center>
                         )}
                       </td>
                       <td>
@@ -448,8 +454,18 @@ const NewPurchase = () => {
                       <List.Item>
                         <Card style={{ width: "100%", textAlign: "left" }}>
                           <Row style={{ width: "100%", textAlign: "left" }}>
-                            <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
+                            <Col xs={24} xl={12} style={{ fontSize: "150%" }}>
                               {item.ingredient_name}
+                            </Col>
+                            <Col xs={24} xl={12} style={{ fontSize: "150%", textAlign: 'right' }}>
+                              <Button
+                              onClick={deletePurchase.bind(this, item?.inventory_id)}
+                              shape="circle"
+                              icon={<DeleteOutlined />}
+                              style={{ margin: "0px 15px", alignSelf: 'center', backgroundColor: 'red', color: "white" }}
+                              >
+                                
+                              </Button>
                             </Col>
                             <Col xs={8} xl={8}>
                               Search vendor:

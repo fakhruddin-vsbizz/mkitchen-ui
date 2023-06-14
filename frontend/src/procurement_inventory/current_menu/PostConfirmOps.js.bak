@@ -128,10 +128,10 @@ const PostConfirmOps = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
           <Sidebar k="3" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Post-Procument Ops"
               comp=<DatePicker onChange={handleDateChange} />

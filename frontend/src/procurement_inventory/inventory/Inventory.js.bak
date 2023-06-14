@@ -109,10 +109,10 @@ const Inventory = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
           <Sidebar k="1" userType="pai" />
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header title="Inventory" />
             <div style={{ padding: 0 }}>
               <Col xs={24} xl={20} style={{ width: "100%", padding: "2%" }}>

@@ -23,6 +23,7 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
+import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
 
 const NewVendor = () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -144,10 +145,11 @@ const NewVendor = () => {
             <p>Vendor Added Successfully</p>
           </div>
         </Modal>
-        <div style={{ display: "flex" }}>
-          <Sidebar k="4" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="12" userType="superadmin" /> :
+          <Sidebar k="4" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title={
                 <p>

@@ -26,7 +26,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBlack, colorGreen } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -498,10 +498,11 @@ const Cooking = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="2" userType="cooking" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+         {localStorage.getItem("type") === "mk superadmin" ?  <Sidebar k="7" userType="superadmin" /> :
+          <Sidebar k="2" userType="cooking" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Cooking Operation"
               comp={
@@ -513,7 +514,7 @@ const Cooking = () => {
                     <DatePicker
                       defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                       onChange={handleDateChange}
-                      // disabledDate={(current) => current > dayjs().endOf('day')}
+                      disabledDate={(current) => current > dayjs().endOf('day')}
                     />
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -845,7 +846,7 @@ const Cooking = () => {
                     <br />
                     <List
                       style={{
-                        height: "65vh",
+                        height: "70vh",
                         overflowY: "scroll",
                         padding: 0,
                       }}

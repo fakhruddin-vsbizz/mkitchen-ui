@@ -18,6 +18,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
+import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
 
 const VendorPurchase = () => {
   const [purchaseList, setPurchaseList] = useState();
@@ -178,10 +179,11 @@ const VendorPurchase = () => {
           },
         }}
       >
-        <div style={{ display: "flex" }}>
-          <Sidebar k="4" userType="pai" />
+        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="12" userType="superadmin" /> :
+          <Sidebar k="4" userType="pai" />}
 
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Vendor"
               // comp={<center>

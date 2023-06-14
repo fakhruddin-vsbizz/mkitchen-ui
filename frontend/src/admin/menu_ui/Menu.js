@@ -24,7 +24,7 @@ import Header from "../../components/navigation/Header.js";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context.js";
 import TextArea from "antd/es/input/TextArea";
-import { colorBlack, colorGreen } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
 const { useToken } = theme;
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
@@ -266,7 +266,7 @@ const Menu = () => {
           reason_for_undelivered: null,
           mohalla_wise_ashkhaas: [],
           ingridient_list: [],
-          status: 0,
+          status: -2,
           reorder_logs: [],
           reason_for_reconfirming_menu: reasonForReconfirmingMenu,
           dispatch: [],
@@ -429,10 +429,12 @@ const Menu = () => {
             renderItem={(item) => <List.Item>{item}</List.Item>}
           /> */}
       {/* </Col> */}
-      <div style={{ display: "flex" }}>
-        <Sidebar k="1" userType="admin" />
+      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="1" userType="superadmin" /> :
+        <Sidebar k="1" userType="admin" />}
 
-        <div>
+        
+        <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Set Today's Menu" />
           <Row>
             <Col xs={12} xl={12} style={{ padding: "3%" }}>
