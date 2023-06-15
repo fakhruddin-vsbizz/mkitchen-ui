@@ -14,11 +14,6 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
         const totatItem = inventory.length;
 
 
-        // const totalCost = inventory.reduce((a,b)=> a+b.price, 0) 
-
-        const purchases = await Purchases.find();
-
-
         // totalCost = inventory.reduce((a,b)=> a+b.price, 0)
     
         const purchases = await Purchases.find();
@@ -28,13 +23,6 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
             const expiryDate = new Date(`${month}/${day}/20${year}`);
             return expiryDate < today && purchase?.unshelf === false;
         });
-
-
-        console.log(filteredPurchases);
-        const response = {
-            totatItem: totatItem,
-            totalCost: Number(totalCost?.toFixed(2)),
-            totalExpiredItem: filteredPurchases.length
 
     
         // console.log(filteredPurchases);
