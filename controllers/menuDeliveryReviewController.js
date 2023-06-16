@@ -65,6 +65,10 @@ const addDeliveryReview = expressAsyncHandler(async (req, res) => {
 
     const dispatchData = operation_pipeline?.dispatch
 
+    if (menuDelivery.length === 0 || !operation_pipeline) {
+      return res.status(404).json({msg: "not found"})
+    }
+
     // const customData = 
 
     return res.json({menuDelivery, dispatchData});

@@ -19,6 +19,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useLocation, useNavigate, useParams, useHistory } from "react-router-dom";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const NewPurchase = () => {
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -80,7 +81,7 @@ const NewPurchase = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("/api/vendor");
+      const data = await fetch(baseURL+"/api/vendor");
       if (data) {
         const res = await data.json();
 
@@ -98,7 +99,7 @@ const NewPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -287,7 +288,7 @@ const NewPurchase = () => {
 
   const addPurchaseData = async () => {
     try {
-      const data = await fetch("/api/purchase", {
+      const data = await fetch(baseURL+"/api/purchase", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

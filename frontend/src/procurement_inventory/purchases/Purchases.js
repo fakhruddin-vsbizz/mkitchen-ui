@@ -17,7 +17,8 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 
 const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
@@ -57,17 +58,17 @@ const Purchases = () => {
   useEffect(() => {
     const getPurchases = async () => {
       const data = await fetch(
-        "/api/purchase/vendor_purchase"
+        baseURL+"/api/purchase/vendor_purchase"
       );
       if (data) {
         const res = await data.json();
         setPurchases(res.data);
-
-        setFilteredPurchases(res.data)
+        setFilteredPurchases(res.data);
       }
     };
     getPurchases();
   }, []);
+
   useEffect(() => {
 		const filterList = () => {
       if (filterByName && filterByVolume !== 1 && filterByDate !== null) {
@@ -181,14 +182,12 @@ const Purchases = () => {
                   </tr>
                   </tbody>
                 </table>
-
                 <label
-                  style={{ fontSize: "180%" }}
+                  style={{ fontSize: "2rem" }}
                   className="dongle-font-class"
                 >
                   Recent Purchases
                 </label>
-                <br />
                 {purchases && (
                   <List
                     style={{
@@ -200,10 +199,11 @@ const Purchases = () => {
                     dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item>
-                        <Card style={{ width: "100%" }}>
+                      
+                        <Card style={{ width: "100%", margin: '8px 10px', boxShadow: valueShadowBox}}>
                           <Row style={{ width: "100%", textAlign: "left" }}>
                             <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
-                              {item.ingredient_name}
+                              <span style={{color: colorGreen}}>{item.ingredient_name}</span>
                             </Col>
                             <Col xs={12} xl={6}>
                               Purchase Quantity: <br />

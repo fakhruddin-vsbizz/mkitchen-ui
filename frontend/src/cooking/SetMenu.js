@@ -28,6 +28,7 @@ import AuthContext from "../components/context/auth-context";
 import IngredientList from "./Input";
 import dayjs from "dayjs";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
+import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -127,7 +128,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/admin/menu", {
+        const data = await fetch(baseURL+"/api/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -150,7 +151,7 @@ const SetMenu = () => {
 
   useEffect(() => {
     const getUserId = async () => {
-      const data = await fetch("/api/cooking/ingredients", {
+      const data = await fetch(baseURL+"/api/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -171,7 +172,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getFood = async () => {
       if (getMkUserId) {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -207,7 +208,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -257,7 +258,7 @@ const SetMenu = () => {
         setIngredientName("");
       } else {
         try {
-          const data = await fetch("/api/inventory/addinventory", {
+          const data = await fetch(baseURL+"/api/inventory/addinventory", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -327,7 +328,7 @@ const SetMenu = () => {
   const setFoodReference = async (idx) => {
     if (idx) {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -351,7 +352,7 @@ const SetMenu = () => {
 
   const updateOperationPipeliinIngridient = async () => {
     try {
-      const data = await fetch("/api/cooking/ingredients", {
+      const data = await fetch(baseURL+"/api/cooking/ingredients", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -415,7 +416,7 @@ const SetMenu = () => {
 
     if (foodIndex) {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",

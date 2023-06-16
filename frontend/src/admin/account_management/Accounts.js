@@ -26,7 +26,8 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import AuthContext from "../../components/context/auth-context";
 import { useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import {baseURL} from '../../constants'; 
 
 const Accounts = () => {
   const [usertype, setUserType] = useState(0);
@@ -162,7 +163,7 @@ const Accounts = () => {
 
   const updateMohallAdminEmail = async () => {
     try {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -193,7 +194,7 @@ const Accounts = () => {
   };
   const updateCookingDepartmentEmail = async () => {
     try {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -224,7 +225,7 @@ const Accounts = () => {
 
   const updatePandIEmail = async () => {
     try {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -286,7 +287,7 @@ const Accounts = () => {
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
         console.log("updating 2");
-        const data = await fetch("/api/admin/account_management", {
+        const data = await fetch(baseURL+"/api/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -323,7 +324,7 @@ const Accounts = () => {
         let demoName =
           usertype === "Cooking" ? selectedCookingUser : selectedPandIUser;
 
-        const data = await fetch("/api/admin/account_management", {
+        const data = await fetch(baseURL+"/api/admin/account_management", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -351,7 +352,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getMohallas = async () => {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -370,7 +371,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getCookingUsers = async () => {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -388,7 +389,7 @@ const Accounts = () => {
 
   useEffect(() => {
     const getPandIUsers = async () => {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -408,7 +409,7 @@ const Accounts = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await fetch("/api/admin/account_management", {
+      const data = await fetch(baseURL+"/api/admin/account_management", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -472,7 +473,7 @@ const Accounts = () => {
   const updatePasswordAdmin = async () => {
     if (emailErrorPandIPassword === false) {
       const data = await fetch(
-        "/api/admin/account_management/update_admin_password",
+        baseURL+"/api/admin/account_management/update_admin_password",
         {
           method: "PUT",
           headers: {
@@ -550,22 +551,24 @@ const Accounts = () => {
             }}
           >
             <Modal
-              title={<h3 style={{ color: "darkred" }}>Add New Account</h3>}
+              title={<h3 style={{ color: colorGreen, marginBlock: '1px' }}>Add New Account</h3>}
               open={newMohallaPopup}
               onOk={handleNMOk}
               onCancel={handleNMCancel}
               footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
-              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={handleSubmit} type="primary" block>Create new Account</Button>
+              <Button style={{backgroundColor: colorGreen, width: "40%"}} onClick={handleSubmit} type="primary" block>Create new Account</Button>
               <Button style={{width: "40%"}} onClick={handleNMCancel}>Cancel</Button>
               </div>}
             >
               <table style={{ width: "100%" }}>
                 <tr>
                   <td colSpan={2}>
-                    Select User type:<br/>
+                    <span style={{display: "block", marginBottom: '8px'}}>
+                    Select User type:
+                    </span>
                     <Select
                       defaultValue={null}
-                      style={{ width: "100%", height:'70%', borderColor:'darkred' }}
+                      style={{ width: "100%", height:'70%',  border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
                       options={[
                         { value: "Mohalla Admin", label: "Mohalla Admin" },
                         {
@@ -576,34 +579,39 @@ const Accounts = () => {
                       ]}
                       onChange={handleUserTypeChange}
                     />
-                    <hr style={{ borderColor:'lightgrey' }}></hr>
+                    <hr className="separator"></hr>
                   </td>
                 </tr>
-                <tr>
-                  <td>Name of the user:</td>
-                  <td>
+                <tr className="flexBox">
+                  <td style={{width: '7rem', marginBottom: '1rem'}}>Name of the user:</td>
+                  <td style={{flexGrow: 1}}>
                     <Input
                       value={username}
+                      style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                       placeholder="Eg: Kalimi Mohalla, Noor Baug, etc"
                       onChange={(e) => setUserName(e.target.value)}
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td>Email of the user</td>
-                  <td>
+                <tr className="flexBox">
+                  <td style={{width: '7rem', marginBottom: '1rem'}}>Email of the user:</td>
+                  <td style={{flexGrow: 1}}>
                     <Input
                       value={email}
+                      style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+
                       placeholder="Eg: juzermakki@gmail.com, hakimburhan@hotmail.com., etc"
                       onChange={(e) => setUserEmail(e.target.value)}
                     />
                   </td>
                 </tr>
-                <tr>
-                  <td>New Password</td>
-                  <td>
+                <tr className="flexBox">
+                  <td style={{width: '7rem'}}>New Password:</td>
+                  <td style={{flexGrow: 1}}>
                     <Input.Password
                       value={password}
+                      style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+
                       placeholder="Initial password"
                       onChange={(e) => setUserPassword(e.target.value)}
                     />
@@ -709,7 +717,7 @@ const Accounts = () => {
                                   backgroundColor: "#fff",
                                   borderRadius: 5,
                                   // border: "2px solid darkred",
-                                  boxShadow: '1px 1px 4px 4px lightgray',
+                                  boxShadow: valueShadowBox,
                                   margin: "8px auto",
                                   marginBottom: "4px",
                                   width: "100%",
@@ -762,22 +770,22 @@ const Accounts = () => {
                     </Card>
 
                     <Modal
-                      title={<h3 style={{ color: "darkred" }}>
+                      title={<h3 style={{ color: colorGreen, marginBlock: '1px' }}>
                         Reset Password
                       </h3>}
                       open={isModalOpen}
                       onOk={handleOk}
                       onCancel={handleCancel}
-                      footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
-              <Button style={{backgroundColor: "darkred", width: "40%"}} onClick={() => updateUserPasswordMohalla("Mohalla Admin")} type="primary" block>Change Password</Button>
-              <Button style={{width: "40%"}} onClick={handleCancel}>Cancel</Button>
+                      footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-between"}}>
+              <Button style={{backgroundColor: colorGreen, width: "47%"}} onClick={() => updateUserPasswordMohalla("Mohalla Admin")} type="primary" block>Change Password</Button>
+              <Button style={{width: "47%"}} onClick={handleCancel}>Cancel</Button>
               </div>}
                     >
                       {/* <p>Change Email</p> */}
                       <table style={{ width: "100%" }}>
                         <tr>
                           <td style={{ width: "75%", display: 'flex', alignItems: 'baseline', columnGap: '1rem' }}>
-                      <span style={{fontSize: '1.1rem'}}>Change Email: </span>
+                      <span style={{fontSize: '1.1rem'}}>Email:</span>
                             {/* <Input
                               value={newEmailMohalla}
                               onChange={(e) =>
@@ -792,7 +800,7 @@ const Accounts = () => {
                                 </Tooltip>
                               }
                             /> */}
-                            <label style={{fontSize: '1.3rem', borderBottom: '2px solid darkred' , padding: '5px 8px', borderRadius: '5px'}}>{newEmailMohalla}</label>
+                            <label style={{fontSize: '1.3rem' , padding: '0 0px'}}>{newEmailMohalla}</label>
                           </td>
                           {/* <td style={{ width: "25%" }}>
                             <Button
@@ -818,12 +826,14 @@ const Accounts = () => {
                           </tr>
                         )}
                       </table>
-                      <hr />
+                      <hr className="separator" />
                       <table style={{ width: "100%" }}>
-                        <tr>
-                          <td>New Password</td>
-                          <td>
+                        <tr className="flexBox">
+                          <td style={{width: '7rem', marginBottom: '1rem'}}>New Password</td>
+                          <td style={{flexGrow: 1}}>
                             <Input.Password
+                      style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+
                               value={newPasswordMohalla}
                               onChange={(e) =>
                                 setNewpasswordMohalla(e.target.value)
@@ -832,10 +842,12 @@ const Accounts = () => {
                             />
                           </td>
                         </tr>
-                        <tr>
-                          <td>Confirm Password</td>
-                          <td>
+                        <tr className="flexBox">
+                          <td style={{width: '7rem', marginBottom: '1rem'}} >Confirm Password</td>
+                          <td style={{flexGrow: 1}}>
                             <Input.Password
+                      style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+
                               value={newConfirmpasswordMohalla}
                               onChange={(e) =>
                                 setNewConfirmpasswordMohalla(e.target.value)
@@ -898,7 +910,7 @@ const Accounts = () => {
                       </div>
                     </Modal>
                     <Row>
-                      <Col
+                      {/* <Col
                         xs={24}
                         xl={12}
                         style={{ padding: "2%", width: "100%" }}
@@ -911,7 +923,7 @@ const Accounts = () => {
                             backgroundColor: "white",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
+                            boxShadow: valueShadowBox,
                             width: "85%",
                           }}
                         >
@@ -998,8 +1010,10 @@ const Accounts = () => {
                             )}
                           </table>
                         </Card>
-                      </Col>
-                      <Col xs={24} xl={12} style={{ padding: "2%" }}>
+                      </Col> */}
+                      <Col xs={24} xl={24} style={{padding: '2%',
+display: 'flex',
+justifyContent: 'center'}}>
                         <Card
                           bordered={true}
                           style={{
@@ -1010,18 +1024,97 @@ const Accounts = () => {
                             backgroundColor: "white",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
-                            width: "100%",
+                            boxShadow: valueShadowBox,
+                            width: "573px",
                           }}
                         >
                           <label style={{ fontSize: '120%', color: colorBlack}}>
                             Reset Password for cooking department
                           </label>
                           <hr className="separator"></hr>
-                          <table style={{ width: "35vw" }}>
-                            <tr>
-                              <td style={{ width: "30%" }}>New Password</td>
-                              <td style={{ width: "70%" }}>
+                          <div style={{ width:'100%' }}>
+                            
+                              <div style={{display: 'flex',
+columnGap: '.2rem',
+alignItems: 'center'}}>
+                              <i style={{color: colorGreen}} class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                              
+                              {cookingDepartmentUser && (
+                                <Select
+                                  // defaultValue={"-- SELECT USER ---"}
+                                  placeholder="Select User"
+                                  style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px', flexGrow: 1 }}
+                                  block
+                                    options={cookingDepartmentUser.map((item) => ({
+                                      value: item.username,
+                                      label: item.username,
+                                      id: item.email,
+                                    }))}
+                                    onChange={(value, id) =>
+                                      handleCookingUser(value, id)
+                                    }
+                                  />
+                                )}
+                                
+                              </div>
+                            {/* <tr><td colSpan={2}>&nbsp;</td></tr> */}
+                            <div className="flexBox" style={{alignItems: "baseline"}}>
+                            <h4 style={{width: '8rem', marginBottom: '.5rem'}}><i style={{color: colorGreen}} class="fa-solid fa-envelope"></i>&nbsp;&nbsp;Current email: </h4>
+                            <p>{newEmailCooking == undefined ? <span style={{color: 'gray'}}>Please select user</span> : newEmailCooking}</p>
+                              {/* <td>
+                              <center>{newEmailCooking}</center>
+                              </td> */}
+                            </div>
+                          </div>
+                            {/* <tr>
+                              <td style={{ width: "100%" }}>
+                              <Input
+                              style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+                              value={newEmailCooking}
+                              onChange={(e) =>
+                                setNewEmailCooking(e.target.value)
+                              }
+                              placeholder="Type your username"
+                              suffix={
+                                <Tooltip title="Change only in case needed.">
+                                      <InfoCircleOutlined
+                                        style={{ color: colorGreen }}
+                                      />
+                                    </Tooltip>
+                                  }
+                                />
+                                <span>{newEmailCooking == undefined ? "Please select user" : newEmailCooking}</span>
+                              </td>
+                              <td style={{ width: "100%" }}>
+                                <Button
+                                  onClick={updateCookingDepartmentEmail}
+                                  type="primary"
+                                  style={{ backgroundColor: colorGreen, marginLeft: "5px"}}
+                                >
+                                  Change Email
+                                </Button>
+                              </td>
+                            </tr> */}
+                            {emailError && (
+                          <table style={{ width: "100%" }}>
+                              <tr>
+                                <td colSpan={2}>
+                                  <br />
+                                  <Alert
+                                    style={{ margin: "0.5rem" }}
+                                    message="Validation Error"
+                                    description="User not selected or invalid email !!"
+                                    type="error"
+                                    closable
+                                  />
+                                </td>
+                              </tr>
+                          </table>
+                            )}
+                          <div style={{ width: "35vw" }}>
+                            <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                              <h4 style={{width: '8rem', marginBlock: '1px'}}>New Password</h4>
+                              <p style={{flexGrow: 1, marginBlock: '5px'}}>
                                 <Input.Password
                                 style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                                   value={newpassword}
@@ -1030,12 +1123,11 @@ const Accounts = () => {
                                   }
                                   placeholder="New password to be set"
                                 />
-                              </td>
-                            </tr>
-                            <br/>
-                            <tr>
-                              <td>Confirm Password</td>
-                              <td>
+                              </p>
+                            </div>
+                            <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                              <h4 style={{width: '8rem', marginBlock: '1px'}}>Confirm Password</h4>
+                              <p style={{flexGrow: 1, marginBlock: '5px'}}>
                                 <Input.Password
                                 style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                                   value={newconfirmpassword}
@@ -1044,11 +1136,11 @@ const Accounts = () => {
                                   }
                                   placeholder="Confirm new password"
                                 />
-                              </td>
-                            </tr>
+                              </p>
+                            </div>
                             {error && (
-                              <tr>
-                                <td colSpan={2}>
+                              <>
+                                <div colSpan={2}>
                                   <br />
                                   <Alert
                                     style={{ margin: "0.5rem" }}
@@ -1057,23 +1149,21 @@ const Accounts = () => {
                                     type="error"
                                     closable
                                   />
-                                </td>
-                              </tr>
+                                </div>
+                              </>
                             )}
-                            <br/>
-                            <tr>
-                              <td></td>
-                              <td>
+                            <>
+                              
                                 <Button
                                   onClick={() => updateUserPassword("Cooking")}
-                                  style={{ width: "100%", backgroundColor: colorGreen }}
+                                  style={{ width: "100%", backgroundColor: colorGreen, marginTop: '5px' }}
                                   type="primary"
                                 >
                                   Change Password
                                 </Button>
-                              </td>
-                            </tr>
-                          </table>
+                              
+                            </>
+                          </div>
                         </Card>
                       </Col>
                     </Row>
@@ -1084,9 +1174,9 @@ const Accounts = () => {
                     <label style={{ fontSize: "130%", padding: 20, color: colorGreen }}>
                       <b>P&I Department</b>
                     </label>
-                    <Row>
-                      <Col xs={24} xl={12} style={{ padding: "2%" }}>
-                        {/* <Card
+                    <Row style={{justifyContent: 'center'}}>
+                      {/* <Col xs={24} xl={12} style={{ padding: "2%" }}>
+                        <Card
                           bordered={true}
                           style={{
                             marginTop: 10,
@@ -1102,13 +1192,13 @@ const Accounts = () => {
                           {pandiDepartmentUser && (
                             <Select
                               defaultValue={"select user"}
-                              style={{ width: 120 }}
-                              block
                               options={pandiDepartmentUser.map((item) => ({
                                 value: item.username,
                                 label: item.username,
                               }))}
                               onChange={(value) => setSelectedPandIUser(value)}
+                              block
+                              style={{ width: 120 }}
                             />
                           )}
                           <br />
@@ -1145,7 +1235,7 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
-                        </Card> */}
+                        </Card>
                         <Card
                           bordered={true}
                           style={{
@@ -1154,7 +1244,7 @@ const Accounts = () => {
                             backgroundColor: "white",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
+                            boxShadow: valueShadowBox,
                             width: "80%",
                           }}
                         >
@@ -1193,10 +1283,6 @@ const Accounts = () => {
                               </td>
                             </tr>
                           </table>
-                          
-                          
-
-
                           <table style={{ width: "100%" }}>
                             <tr>
                               <td style={{ width: "100%" }}>
@@ -1242,7 +1328,7 @@ const Accounts = () => {
                             )}
                           </table>
                         </Card>
-                      </Col>
+                      </Col> */}
                       <Col xs={24} xl={12} style={{ padding: "2%" }}>
                         <Card
                           bordered={true}
@@ -1254,7 +1340,7 @@ const Accounts = () => {
                             backgroundColor: "white",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
+                            boxShadow: valueShadowBox,
                             width: "100%",
                           }}
                         >
@@ -1262,7 +1348,109 @@ const Accounts = () => {
                             Reset Password for P&I department.
                           </label>
                           <hr className="separator"></hr>
-                          <table style={{ width: "35vw" }}>
+                          <div style={{ width:'100%' }}>
+                            
+                              <div style={{display: 'flex',
+columnGap: '.2rem',
+alignItems: 'center'}}>
+                              <i style={{color: colorGreen}} class="fa-solid fa-user"></i> &nbsp;&nbsp;
+                              
+                              {pandiDepartmentUser && (
+                                <Select
+                                  // defaultValue={"-- SELECT USER ---"}
+                                  // defaultValue={"select user"}
+                              options={pandiDepartmentUser.map((item) => ({
+                                value: item.username,
+                                label: item.username,
+                              }))}
+                              onChange={(value) => setSelectedPandIUser(value)}
+                                  placeholder="Select User"
+                                  style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px', flexGrow: 1 }}
+                                  block
+                                  />
+                                )}
+                              </div>
+                            {/* <tr><td colSpan={2}>&nbsp;</td></tr> */}
+                            <div className="flexBox" style={{alignItems: "baseline"}}>
+                            <h4 style={{width: '8rem', marginBottom: '.5rem'}}><i style={{color: colorGreen}} class="fa-solid fa-envelope"></i>&nbsp;&nbsp;Current email: </h4>
+                            <p>{newEmailPandI == undefined ? <span style={{color: 'gray'}}>Please select user</span> : newEmailPandI}</p>
+                              {/* <td>
+                              <center>{newEmailCooking}</center>
+                              </td> */}
+                            </div>
+                          </div>
+                          {emailErrorPI && (
+                          <table style={{ width: "100%" }}>
+                              <tr>
+                                <td colSpan={2}>
+                                  <br />
+                                  <Alert
+                                    style={{ margin: "0.5rem" }}
+                                    message="Validation Error"
+                                    description="User not selected or invalid email !!"
+                                    type="error"
+                                    closable
+                                  />
+                                </td>
+                              </tr>
+                              </table>
+                            )}
+                          <div style={{ width: "35vw" }}>
+                            <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                              <h4 style={{width: '8rem', marginBlock: '1px'}}>New Password</h4>
+                              <p style={{flexGrow: 1, marginBlock: '5px'}}>
+                                <Input.Password
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+                                value={newpasswordPandI}
+                                onChange={(e) =>
+                                  setNewpasswordPandI(e.target.value)
+                                }
+                                placeholder="New password to be set"
+                                />
+                              </p>
+                            </div>
+                            <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                              <h4 style={{width: '8rem', marginBlock: '1px'}}>Confirm Password</h4>
+                              <p style={{flexGrow: 1, marginBlock: '5px'}}>
+                                <Input.Password
+                                style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
+                                value={newconfirmpasswordPandI}
+                                onChange={(e) =>
+                                  setNewConfirmpasswordPandI(e.target.value)
+                                }
+                                placeholder="Confirm new password"
+                                />
+                              </p>
+                            </div>
+                            {emailErrorPandIPassword && (
+                              <>
+                                <div colSpan={2}>
+                                  <br />
+                                  <Alert
+                                    style={{ margin: "0.5rem" }}
+                                    message="Validation Error"
+                                    description="Password do not match or user not selected. Please try again"
+                                    type="error"
+                                    closable
+                                  />
+                                </div>
+                              </>
+                            )}
+                            <>
+                              
+                                <Button
+                                  onClick={() =>
+                                    updateUserPassword("Procurement Inventory")
+                                  }
+                                  style={{ width: "100%", backgroundColor: colorGreen, marginTop: '5px' }}
+                                  type="primary"
+                                >
+                                  Change Password
+                                </Button>
+                              
+                            </>
+                          </div>
+                          {/* <table style={{ width: "35vw" }}>
                             <tr>
                               <td style={{ width: "30%" }}>New Password</td>
                               <td style={{ width: "70%" }}>
@@ -1319,7 +1507,7 @@ const Accounts = () => {
                                 </Button>
                               </td>
                             </tr>
-                          </table>
+                          </table> */}
                         </Card>
                       </Col>
                     </Row>
@@ -1338,7 +1526,7 @@ const Accounts = () => {
                         backgroundColor: "white",
                         borderRadius: 10,
                         // border: "2px solid darkred",
-                        boxShadow: '1px 1px 4px 4px lightgray',
+                        boxShadow: valueShadowBox,
                         width: "100%",
                       }}
                     >
@@ -1361,10 +1549,10 @@ const Accounts = () => {
                         Admin Reset Password
                       </label>
                       <hr className="separator" />
-                      <table style={{ width: "35vw" }}>
-                        <tr>
-                          <td style={{ width: "30%" }}>Old Password</td>
-                          <td style={{ width: "70%" }}>
+                      <div style={{ width: "35vw" }}>
+                        <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                          <h4 style={{width: '8rem', marginBlock: '1px', textAlign: 'left'}}>Old Password</h4>
+                          <div style={{flexGrow: 1, marginBlock: '5px'}}>
                             <Input.Password
                               style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={oldAdminPassword}
@@ -1373,12 +1561,11 @@ const Accounts = () => {
                               }
                               placeholder="New password to be set"
                             />
-                          </td>
-                        </tr>
-                        <br/>
-                        <tr>
-                          <td style={{ width: "30%" }}>New Password</td>
-                          <td style={{ width: "70%" }}>
+                          </div>
+                        </div>
+                        <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                          <h4 style={{width: '8rem', marginBlock: '1px', textAlign: 'left'}}>New Password</h4>
+                          <div style={{flexGrow: 1, marginBlock: '5px'}}>
                             <Input.Password
                               style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={newpasswordPandI}
@@ -1387,12 +1574,11 @@ const Accounts = () => {
                               }
                               placeholder="New password to be set"
                             />
-                          </td>
-                        </tr>
-                        <br />
-                        <tr>
-                          <td>Confirm Password</td>
-                          <td>
+                          </div>
+                        </div>
+                        <div className="flexBox" style={{width: "100%", marginBottom: '.5rem', alignItems: 'center'}}>
+                          <h4 style={{width: '8rem', marginBlock: '1px', textAlign: 'left'}}>Confirm Password</h4>
+                          <div style={{flexGrow: 1, marginBlock: '5px'}}>
                             <Input.Password
                               style={{border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
                               value={newconfirmpasswordPandI}
@@ -1401,12 +1587,11 @@ const Accounts = () => {
                               }
                               placeholder="Confirm new password"
                             />
-                          </td>
-                        </tr>
-                        <br />
+                          </div>
+                        </div>
                         {emailErrorPandIPassword && (
-                          <tr>
-                            <td colSpan={2}>
+       
+                            <div >
                               <br />
                               <Alert
                                 style={{ margin: "0.5rem" }}
@@ -1415,12 +1600,12 @@ const Accounts = () => {
                                 type="error"
                                 closable
                               />
-                            </td>
-                          </tr>
+                            </div>
+                      
                         )}
                         {fieldError && (
-                          <tr>
-                            <td colSpan={2}>
+                          
+                            <div>
                               <br />
                               <Alert
                                 style={{ margin: "0.5rem" }}
@@ -1429,12 +1614,11 @@ const Accounts = () => {
                                 type="error"
                                 closable
                               />
-                            </td>
-                          </tr>
+                            </div>
                         )}
                         {oldPasswordError && (
-                          <tr>
-                            <td colSpan={2}>
+                          
+                            <div>
                               <br />
                               <Alert
                                 style={{ margin: "0.5rem" }}
@@ -1443,12 +1627,10 @@ const Accounts = () => {
                                 type="error"
                                 closable
                               />
-                            </td>
-                          </tr>
+                            </div>
                         )}
-                        <tr>
-                          <td></td>
-                          <td>
+                   
+                          <div className="flexBox">
                             <Button
                               onClick={updatePasswordAdmin}
                               style={{ width: "100%", backgroundColor: colorGreen
@@ -1457,9 +1639,9 @@ const Accounts = () => {
                             >
                               Change Password
                             </Button>
-                          </td>
-                        </tr>
-                      </table>
+                          </div>
+                       
+                      </div>
                     </Card>
                   </Col>
                   </center>

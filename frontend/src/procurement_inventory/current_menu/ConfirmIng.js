@@ -15,7 +15,8 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -96,7 +97,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -115,12 +116,12 @@ const ConfirmIng = () => {
       }
     };
     getStatus();
-  }, [menuFoodId, selectedDate]);
+  }, [menuFoodId]);
 
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -144,9 +145,9 @@ const ConfirmIng = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      if (selectedDate) {
+      if (operationalPipelineStatus >= 3 && selectedDate && menuFoodId) {
         try {
-          const data = await fetch("/api/pai/procurement", {
+          const data = await fetch(baseURL+"/api/pai/procurement", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -160,33 +161,62 @@ const ConfirmIng = () => {
 
           if (data) {
             const res = await data.json();
+            console.log(res);
             if (res._id) {
               setProcureIngridients(res.procure_items);
             }
             if (res?.message) {
-              if (menuFoodId) {
-                try {
-                  const data = await fetch("/api/pai/procurement", {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                      menu_id: menuFoodId,
-                      type: "get_procure_data",
-                    }),
-                  });
+              // if (menuFoodId) {
+              //   try {
+              //     const data = await fetch(baseURL+"/api/pai/procurement", {
+              //       method: "POST",
+              //       headers: {
+              //         "Content-Type": "application/json",
+              //       },
+              //       body: JSON.stringify({
+              //         menu_id: menuFoodId,
+              //         type: "get_procure_data",
+              //       }),
+              //     });
 
-                  if (data) {
-                    const res = await data.json();
-                    if (res) {
-                      setProcureIngridients(res);
-                    }
-                  }
-                } catch (error) {
-                  console.log(error);
+              //     if (data) {
+              //       const res = await data.json();
+              //       if (res) {
+              //         setProcureIngridients(res);
+              //       }
+              //     }
+              //   } catch (error) {
+              //     console.log(error);
+              //   }
+              // }
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }else{
+        try {
+          if (menuFoodId) {
+            try {
+              const data = await fetch(baseURL+"/api/pai/procurement", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  menu_id: menuFoodId,
+                  type: "get_procure_data",
+                }),
+              });
+
+              if (data) {
+                const res = await data.json();
+                if (res) {
+                  setProcureIngridients(res);
                 }
               }
+            } catch (error) {
+              console.log(error);
             }
           }
         } catch (error) {
@@ -195,11 +225,11 @@ const ConfirmIng = () => {
       }
     };
     getInventory();
-  }, [menuFoodId, selectedDate]);
+  }, [menuFoodId, selectedDate, operationalPipelineStatus]);
 
   const markProcureIngridients = async () => {
     try {
-      const data = await fetch("/api/pai/procurement", {
+      const data = await fetch(baseURL+"/api/pai/procurement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -271,7 +301,7 @@ const ConfirmIng = () => {
                 <DatePicker
                   defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                   onChange={handleDateChange}
-                  disabledDate={(current) => current - 1 > dayjs().endOf('day')}
+                  // disabledDate={(current) => current - 1 > dayjs().endOf('day')}
                 />
                 </Col>
                 </Row>
@@ -317,7 +347,7 @@ const ConfirmIng = () => {
                             padding: "1%",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
+                            boxShadow: valueShadowBox,
                           }}
                         >
                           <Row>

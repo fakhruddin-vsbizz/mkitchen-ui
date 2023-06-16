@@ -18,6 +18,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const Inventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +26,7 @@ const Inventory = () => {
 
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("");
+  const [fetchedUnit, setFetchedUnitUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [expiryType, setExpiryType] = useState("");
   const [price, setPrice] = useState("");
@@ -73,7 +75,7 @@ const Inventory = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("/api/inventory/addinventory");
+      const data = await fetch(baseURL+"/api/inventory/addinventory");
       if (data) {
         const res = await data.json();
         setInventoryItems(res);
@@ -114,7 +116,7 @@ const Inventory = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await fetch("/api/inventory/addinventory", {
+      const data = await fetch(baseURL+"/api/inventory/addinventory", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -166,7 +168,7 @@ const Inventory = () => {
 
   const updateIngridientItem = async () => {
     try {
-      const data = await fetch("/api/inventory/addinventory/update_inventory", {
+      const data = await fetch(baseURL+"/api/inventory/addinventory/update_inventory", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -208,7 +210,7 @@ const Inventory = () => {
     const data = inventoryItems.filter((item) => item._id === id);
     setName(data[0].ingridient_name);
     setExpiry(data[0].ingridient_expiry_amount);
-    setUnit(data[0].ingridient_measure_unit);
+    setFetchedUnitUnit(data[0].ingridient_measure_unit);
     setExpiryType(data[0].ingridient_expiry_period);
     setPrice(data[0].price);
     setbaseline(data[0].baseline);
@@ -316,12 +318,12 @@ const Inventory = () => {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Unit for measurement</td>
+                                <td>Measurement Unit</td>
                                 <td>
                                   <Input
                                     value={unit}
                                     onChange={(e) => setUnit(e.target.value)}
-                                    placeholder="Eg: 2,3,4, etc"
+                                    placeholder="Eg: kg, gram,.. etc"
                                   ></Input>
                                 </td>
                               </tr>
@@ -402,14 +404,14 @@ const Inventory = () => {
                                 </td>
                               </tr>
                               <tr>
-                                <td>Unit for measurement</td>
+                                <td>Measurement Unit</td>
                                 <td>
-                                  {unit === "" ? <><Input
+                                  {fetchedUnit === "" ? <><Input
                                     value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    placeholder="Eg: 250, 100"
+                                    onChange={(e) => setUnit(e.target.value.toLowerCase())}
+                                    placeholder="Eg: kg, gram,... etc"
                                   ></Input></>:
-                                  <label>{unit}</label>
+                                  <span style={{textTransform: 'capitalize'}}>{fetchedUnit}</span>
                                   }
                                 </td>
                               </tr>

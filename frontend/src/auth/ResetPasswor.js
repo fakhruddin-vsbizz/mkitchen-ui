@@ -19,6 +19,7 @@ import DeshboardBg from "../res/img/DeshboardBg.png";
 import whiteLogo from "../res/img/MKWhiteLogo.png";
 import logo from "../res/img/logo.png";
 import { CheckCircleFilled, CheckOutlined } from "@ant-design/icons";
+import { baseURL } from "../constants";
 
 const ResetPassword = () => {
   const [newPassword, setNewPassword] = useState("");
@@ -69,7 +70,7 @@ const ResetPassword = () => {
     if (error === false) {
       try {
         const data = await fetch(
-          "/api/admin/account_management/update_password",
+          baseURL+"/api/admin/account_management/update_password",
           {
             method: "PUT",
             headers: {

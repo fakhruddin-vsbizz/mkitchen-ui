@@ -17,7 +17,8 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 const DamagedGoodsList = () => {
   const [todayDate, setTodayDate] = useState("");
 
@@ -76,7 +77,7 @@ const DamagedGoodsList = () => {
   //   const getPurchaseData = async () => {
   //     if (todayDate) {
   //       try {
-  //         const data = await fetch("/api/purchase");
+  //         const data = await fetch(baseURL+"/api/purchase");
   //         const res = await data.json();
 
   //         if (res) {
@@ -163,7 +164,7 @@ const DamagedGoodsList = () => {
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
-        const data = await fetch("/api/purchase/expired_items", {
+        const data = await fetch(baseURL+"/api/purchase/expired_items", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -213,7 +214,7 @@ const DamagedGoodsList = () => {
   const unshelfAndRemoveItem = async () => {
     //update unshelf in purchase
     try {
-      const data = await fetch("/api/purchase/update_shelf", {
+      const data = await fetch(baseURL+"/api/purchase/update_shelf", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -231,7 +232,7 @@ const DamagedGoodsList = () => {
     //update total volume in inventory
 
     try {
-      const data = await fetch("/api/inventory/addinventory/update_volume", {
+      const data = await fetch(baseURL+"/api/inventory/addinventory/update_volume", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -276,6 +277,7 @@ const DamagedGoodsList = () => {
                       width: "85%",
                       textAlign: "left",
                       backgroundColor: "transparent",
+                      marginBottom: '1rem'
                     }}
                   >
                     <Row style={{ width: "100%" }}>
@@ -330,41 +332,42 @@ const DamagedGoodsList = () => {
                         <List.Item style={{padding: '8px 0'}}>
                           <Row
                             style={{
-                              margin: "0 8px",
+                              margin: "8px 10px",
                               width: "100%",
                               backgroundColor: "white",
                               padding: "2%",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                              boxShadow: '1px 1px 4px 4px lightgray',
+                              boxShadow: valueShadowBox,
+
                             }}
                           >
                             <Col
                               xs={24}
                               xl={4}
-                              style={{ fontSize: "150%", color: colorGreen, alignSelf: "center" }}
+                              style={{ fontSize: "150%", color: colorGreen, alignSelf: "center", textAlign: 'left' }}
                             >
                               {item.ingredient_name}
                             </Col>
-                            <Col xs={12} xl={4}>
+                            <Col xs={12} xl={4} style={{ textAlign: 'left'}}>
                               Quantity: <br />
                               {item.quantity_loaded} {" "} <span style={{textTransform: 'capitalize'}}>
                                 {item?.inventoryInfo[0]?.ingridient_measure_unit}
                                 </span> 
                             </Col>
-                            <Col xs={12} xl={4}>
+                            <Col xs={12} xl={4} style={{ textAlign: 'left'}}>
                               Expired on: <br />
                               {new Date(item.expiry_date).toDateString()}
                             </Col>
-                            <Col xs={12} xl={4}>
+                            <Col xs={12} xl={4} style={{ textAlign: 'left'}}>
                               Date of purchase: <br />
                               {new Date(item.createdAt).toDateString()}
                             </Col>
-                            <Col xs={12} xl={4}>
+                            <Col xs={12} xl={4} style={{ textAlign: 'left'}}>
                               Days after expiry: <br />
                               {daysAfterExpiry(item.expiry_date)} days
                             </Col>
-                            <Col xs={12} xl={4} style={{ alignSelf: "center" }}>
+                            <Col xs={12} xl={4} style={{ alignSelf: "center",  textAlign: 'left' }}>
                               <Button
                                 type="primary"
                                 onClick={(e) =>
