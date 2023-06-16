@@ -20,6 +20,7 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const IngredientPurchase = () => {
   const [itemPurchase, setItemPurchase] = useState();
@@ -61,7 +62,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("/api/vendor");
+      const data = await fetch(baseURL+"/api/vendor");
       if (data) {
         const res = await data.json();
         if (res) {
@@ -76,7 +77,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch("/api/purchase");
+      const data = await fetch(baseURL+"/api/purchase");
       if (data && id) {
         const res = await data.json();
         if (res) {
@@ -180,7 +181,7 @@ const IngredientPurchase = () => {
   }
 
   const paymentDone = (id) => {
-    fetch("/api/purchase/payment_done", {
+    fetch(baseURL+"/api/purchase/payment_done", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -307,28 +308,27 @@ const IngredientPurchase = () => {
                           width: "98%",
                         }}
                       >
-                        <Row style={{ width: "100%", textAlign: "left" }}>
+                        <Row style={{ width: "100%", textAlign: "left", alignItems: 'center' }}>
                           <Col
                             xs={24}
-                            xl={6}
+                            xl={5}
                             style={{ fontSize: "150%", color: colorGreen }}
                           >
                             {vendors &&
                               getVendor(item.vendor_id)}
                           </Col>
-                          <Col xs={8} xl={4}>
+                          <Col xs={8} xl={5}>
                             Ordered quantity:&nbsp;
                             {item.quantity_loaded} {item.unit}
                           </Col>
                           <Col xs={8} xl={4}>
-                            Price:&nbsp;
-                            Rs. {item.quantity_loaded * item.rate_per_unit}/-
+                            Price: ₹{item.quantity_loaded * item.rate_per_unit}
                           </Col>
-                          <Col xs={8} xl={6}>
-                            Date of purchase:&nbsp;
+                          <Col xs={8} xl={5}>
+                            Date of purchase:&nbsp;<br />
                             {new Date(item.createdAt).toDateString()}
                           </Col>
-                          <Col xs={8} xl={4}>
+                          <Col xs={10} xl={5}>
                             {item?.paid === true ? <Tag color="green">
                               PAID
                             </Tag>: <div>

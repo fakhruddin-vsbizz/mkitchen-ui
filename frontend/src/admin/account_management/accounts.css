@@ -5,6 +5,16 @@
     background: -webkit-gradient(linear, 0 0, 100% 0, from(transparent), to(transparent), color-stop(50%, black));
 }
 
+:where(.css-dev-only-do-not-override-1m9vtn2).ant-modal .ant-modal-footer,
+:where(.css-1m9vtn2).ant-modal .ant-modal-footer {
+    margin-top: 0;
+}
+
+.flexBox {
+    display: flex;
+    column-gap: 1.5rem;
+}
+
 .ant-input-suffix {
     display: none !important;
 }

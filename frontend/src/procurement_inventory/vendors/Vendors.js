@@ -6,6 +6,7 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const Vendors = () => {
   const [vendors, setVendors] = useState([]);
@@ -40,7 +41,7 @@ const Vendors = () => {
   //getting all the vendors
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("/api/vendor/totalpurchase");
+      const data = await fetch(baseURL+"/api/vendor/totalpurchase");
       if (data) {
         const res = await data.json();
         setVendors(res);
@@ -126,7 +127,7 @@ const Vendors = () => {
                       <List.Item style={{padding: '4px 0'}}>
                         <Card
                           style={{
-                            margin: 5,
+                            margin: "8px 10px",
                             width: "100%",
                             backgroundColor: "white",
                             borderRadius: 10,

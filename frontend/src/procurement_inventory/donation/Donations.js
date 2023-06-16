@@ -27,7 +27,8 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 // import { Link, useNavigate } from "react-router-dom";
 
 const VerifyVendor = () => {
@@ -69,7 +70,7 @@ const VerifyVendor = () => {
       its_id: +itsValue,
     }
 
-    fetch("/api/donation", {
+    fetch(baseURL+"/api/donation", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -105,7 +106,7 @@ const VerifyVendor = () => {
 
   useEffect(()=>{
 
-    fetch("/api/donation/all", {
+    fetch(baseURL+"/api/donation/all", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -139,7 +140,7 @@ const VerifyVendor = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -303,23 +304,20 @@ const VerifyVendor = () => {
                       padding: "0px",
                     }}>
                     <Row style={{width: "100%"}}>
-                          <Col xs={24} xl={10}>
-                            {" "}
-                            <Row>
-                              <Col xs={24} xl={9}>
-                                <div
-                                  style={{
+                          <Col xs={24} xl={11}>
+                            <Row >
+                              <Col xs={24} xl={6} style={{
                                     paddingLeft: "10px",
                                     fontWeight: "bold",
                                     fontSize: 16,
-                                  }}
-                                >
+                                    
+                                  }}>
+                                    <span style={{width: '6rem', display: 'block'}}>
                                   Ingredient
-                                </div>
+                                    </span>
                               </Col>
-                              <Col xs={24} xl={15}>
-                                {" "}
-                                <div style={{ paddingRight: "10px" }}>
+                              <Col xs={24} xl={18} style={{ paddingRight: "10px" }}>
+                               
                                   {/* <Input placeholder="Basic usage" value={donationIngredient} onChange={(e)=> setDonationIngredient(e.target.value)} /> */}
                                   <AutoComplete
                               id="ingredient-item-selected"
@@ -339,22 +337,20 @@ const VerifyVendor = () => {
                                   .indexOf(inputValue.toUpperCase()) !== -1
                               }
                             />
-                                </div>
+                              
                               </Col>
                             </Row>
                           </Col>
                           <Col xs={24} xl={11}>
-                            <Row>
-                              <Col xs={24} xl={9}>
-                                <div
-                                  style={{
+                            <Row >
+                              <Col xs={24} xl={9} style={{
                                     paddingLeft: "10px",
                                     fontWeight: "bold",
                                     fontSize: 16,
-                                  }}
-                                >
+                                  }}>
+                                
                                   Quantity ordered
-                                </div>
+                               
                               </Col>
                               <Col xs={24} xl={15}>
                                 {" "}
@@ -364,7 +360,7 @@ const VerifyVendor = () => {
                               </Col>
                             </Row>
                           </Col>
-                          <Col xs={24} xl={3}>
+                          <Col xs={24} xl={2}>
                             <span style={{textTransform: "capitalize"}}>{measureUnit}</span>
                           </Col>
                           {/* <Col xs={24} xl={3}>
@@ -500,7 +496,7 @@ const VerifyVendor = () => {
                       style={{
                         width: "100%",
                         backgroundColor: "transparent",
-                        padding: "0px",
+                        padding: "12px",
                       }}
                     >
                       <Row
@@ -510,8 +506,8 @@ const VerifyVendor = () => {
                           backgroundColor: "#fff",
                           borderRadius: 10,
                           // border: "2px solid darkred",
-                          boxShadow: '1px 1px 4px 4px lightgray',
-                          margin: '8px',
+                          boxShadow: valueShadowBox,
+                          margin: '8px 10px',
                           width: "100%",
                           marginBottom: "4px",
                         }}

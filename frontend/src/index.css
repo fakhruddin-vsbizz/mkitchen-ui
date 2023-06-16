@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:where(.css-dev-only-do-not-override-1m9vtn2).ant-list-split .ant-list-item, :where(.css-1m9vtn2).ant-list-split .ant-list-item, :where(.css-dev-only-do-not-override-tm88kj).ant-list-split .ant-list-item, :where(.css-tm88kj).ant-list-split .ant-list-item {
+  border-block-end: none
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

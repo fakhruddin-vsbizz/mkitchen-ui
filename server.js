@@ -13,7 +13,7 @@ const reportRouter = require('./routes/reportRouter');
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(CORS());
+app.use(CORS({origin: 'https://mkitchen.cyclic.app'}));
 
 app.use(express.json()); // body parser to parse the request of the client
 
@@ -43,13 +43,13 @@ app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
 app.use('/api/', donationRouter.router);
 app.use('/api/', reportRouter);
 
-app.use(express.static("./frontend/build"));
+// app.use(express.static("./frontend/build"));
 
-app.get("*", (req, res) => {
-  res
-    .status(200)
-    .sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   res
+//     .status(200)
+//     .sendFile(path.join(__dirname, "frontend/build", "index.html"));
+// });
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));

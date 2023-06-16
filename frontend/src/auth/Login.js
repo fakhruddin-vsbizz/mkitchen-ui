@@ -22,6 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import whiteLogo from "../res/img/MKWhiteLogo.png";
 import { CheckCircleFilled } from "@ant-design/icons";
 import { colorBlack, colorGreen } from "../colors";
+import { baseURL } from "../constants";
 
 const Login = () => {
   const [open, setOpen] = useState(false);
@@ -99,7 +100,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/login", {
+      const response = await axios.post(baseURL+"/api/login", {
         email,
         password,
       });
@@ -151,7 +152,7 @@ const Login = () => {
       return;
     }
 
-    const data = await fetch("/api/admin/reset_password", {
+    const data = await fetch(baseURL+"/api/admin/reset_password", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

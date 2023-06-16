@@ -7,7 +7,8 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -81,9 +82,33 @@ const ProcedureLogs = () => {
   /**************Restricting Admin Route************************* */
 
   useEffect(() => {
+    const getFood = async () => {
+      if (selectedDate) {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_food_Item",
+            date: selectedDate,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          if (!res?.msg) {
+            setMenuFoodId(res[0]?._id ? res[0]._id: undefined);
+          }
+        }
+      }
+    };
+    getFood();
+  }, [selectedDate]);
+
+  useEffect(() => {
     const getData = async () => {
-      if (selectedDate && menuFoodId) {
-        const data = await fetch("/api/review", {
+      if (menuFoodId) {
+        const data = await fetch(baseURL+"/api/review", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -97,10 +122,13 @@ const ProcedureLogs = () => {
 
         if (data) {
           const res = await data.json();
-          if (res) {
+          if (!res?.msg) {
             setReviewData(res?.menuDelivery);
             setDispatchData(res?.dispatchData);
             console.log(res);
+          } else {
+            setReviewData([]);
+            setDispatchData([]);
           }
         }
       }
@@ -111,7 +139,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/review/admin_history", {
+        const data = await fetch(baseURL+"/api/review/admin_history", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -135,7 +163,7 @@ const ProcedureLogs = () => {
   // useEffect(() => {
   //   const getFood = async () => {
   //     if (TodaysDate) {
-  //       const data = await fetch("/api/cooking/ingredients", {
+  //       const data = await fetch(baseURL+"/api/cooking/ingredients", {
   //         method: "POST",
   //         headers: {
   //           "Content-Type": "application/json",
@@ -161,7 +189,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -188,7 +216,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/admin/menu", {
+        const data = await fetch(baseURL+"/api/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -212,7 +240,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -238,35 +266,11 @@ const ProcedureLogs = () => {
     getFood();
   }, [menuFoodId]);
 
-  useEffect(() => {
-    const getFood = async () => {
-      if (selectedDate) {
-        const data = await fetch("/api/cooking/ingredients", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_food_Item",
-            date: selectedDate,
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-          if (res) {
-            setMenuFoodId(res[0]?._id ? res[0]._id: undefined);
-          }
-        }
-      }
-    };
-    getFood();
-  }, [selectedDate]);
-
   useEffect(()=>{
     const getPipeline = async() => {
       if (menuFoodId) {
     try {
-      const res = await fetch("/api/operation_pipeline", {
+      const res = await fetch(baseURL+"/api/operation_pipeline", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -293,7 +297,7 @@ const ProcedureLogs = () => {
   useEffect(()=>{
     const getPrice = async () => {
       try {
-        const res = await fetch("/api/operation_pipeline/getTotalPrices", {
+        const res = await fetch(baseURL+"/api/operation_pipeline/getTotalPrices", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -314,7 +318,7 @@ const ProcedureLogs = () => {
   // useEffect(() => {
   //   const getData = async () => {
   //     if (selectedDate && menuFoodId) {
-  //       const data = await fetch("/api/review", {
+  //       const data = await fetch(baseURL+"/api/review", {
   //         method: "POST",
   //         headers: {
   //           "Content-Type": "application/json",
@@ -413,7 +417,7 @@ const ProcedureLogs = () => {
                                 backgroundColor: "#fff",
                                 borderRadius: 5,
                                 // border: "2px solid darkred",
-                boxShadow: '1px 1px 4px 3px lightgray',
+                boxShadow: valueShadowBox,
 
                                 width: "100%",
                               }}
@@ -493,12 +497,11 @@ const ProcedureLogs = () => {
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>
                           <label style={{ fontSize: "800%" }}>
-                            <i style={{color: colorGreen}} className="fa-solid fa-hourglass-start"></i>
+                            <i style={{color: 'gray'}} className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
-                          <label style={{ fontSize: "120%", width: "50%" }}>
-                            There are no reviews from customers. Please visit after some
-                            time.
+                          <label style={{ fontSize: "120%", width: "50%", color: 'gray' }}>
+                            There are no reviews from customers.<br />Please visit after some time.
                           </label>
                         </div>
                       </center>
@@ -591,7 +594,7 @@ const ProcedureLogs = () => {
                                       backgroundColor: "#fff",
                                       borderRadius: 5,
                                       // border: "2px solid darkred",
-                boxShadow: '1px 1px 4px 3px lightgray',
+                boxShadow: valueShadowBox,
                                       margin: 8,
                                       width: "100%",
                                     }}
@@ -692,12 +695,12 @@ const ProcedureLogs = () => {
                     ) : (
                       <center>
                         <div style={{ marginTop: "8%", marginBottom: "8%" }}>
-                          <label style={{ fontSize: "800%", color: colorGreen }}>
+                          <label style={{ fontSize: "800%", color: 'gray' }}>
                             <i className="fa-solid fa-hourglass-start"></i>
                           </label>
                           <br />
-                          <label style={{ fontSize: "120%", width: "50%" }}>
-                            Food is not cooked yet. Please visit after some
+                          <label style={{ fontSize: "120%", width: "50%", color: 'gray' }}>
+                            Food is not cooked yet.<br />Please visit after some
                             time.
                           </label>
                         </div>
@@ -743,7 +746,7 @@ const ProcedureLogs = () => {
                       justifyContent: 'flex-end'}}>
                     <div style={{
                       // border: '2px solid darkred',
-                boxShadow: '1px 1px 4px 2px lightgray',
+                boxShadow: valueShadowBox,
 
                       borderRadius: '5px', padding: '8px 14px'}}>
                       <span>Today's Total Cost: </span>

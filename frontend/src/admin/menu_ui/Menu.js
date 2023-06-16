@@ -24,7 +24,8 @@ import Header from "../../components/navigation/Header.js";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context.js";
 import TextArea from "antd/es/input/TextArea";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 const { useToken } = theme;
 const Menu = () => {
   const data = ["Menu", "Process History", "Vendor Management", "Reports"];
@@ -96,7 +97,7 @@ const Menu = () => {
   useEffect(() => {
     const getFood = async () => {
       if (dateValue) {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -124,7 +125,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getIngridients = async () => {
-      const data = await fetch("/api/cooking/ingredients");
+      const data = await fetch(baseURL+"/api/cooking/ingredients");
 
       if (data) {
         const res = await data.json();
@@ -138,7 +139,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getFood = async () => {
-      await fetch("/api/cooking/ingredients", {
+      await fetch(baseURL+"/api/cooking/ingredients", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -170,7 +171,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getFoodItems = async () => {
-      await fetch("/api/admin/menu/get_food_item", {
+      await fetch(baseURL+"/api/admin/menu/get_food_item", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -195,7 +196,7 @@ const Menu = () => {
       return;
     } else {
       if (AddedFoodItems.find((item) => item.name === selectedFood)) {
-        await fetch("/api/admin/menu/get_food_item_id", {
+        await fetch(baseURL+"/api/admin/menu/get_food_item_id", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -217,7 +218,7 @@ const Menu = () => {
           });
       } else {
         try {
-          await fetch("/api/admin/menu/food_item", {
+          await fetch(baseURL+"/api/admin/menu/food_item", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -251,7 +252,7 @@ const Menu = () => {
 
   const reCreateMenu = async () => {
     try {
-      await fetch("/api/admin/menu/", {
+      await fetch(baseURL+"/api/admin/menu/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -286,7 +287,7 @@ const Menu = () => {
 
   const createMenu = async () => {
     try {
-      await fetch("/api/admin/menu/", {
+      await fetch(baseURL+"/api/admin/menu/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -334,7 +335,7 @@ const Menu = () => {
 
   useEffect(() => {
     const getData = async () => {
-      const data = await fetch("/api/admin/menu", {
+      const data = await fetch(baseURL+"/api/admin/menu", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -361,7 +362,7 @@ const Menu = () => {
     const updateMohallaWiseCount = async () => {
       if (mohallaAshkash && update)
         try {
-          const data = await fetch("/api/admin/menu", {
+          const data = await fetch(baseURL+"/api/admin/menu", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -451,8 +452,9 @@ const Menu = () => {
               >
                 <Calendar
                   style={{
-                    border: "1px solid lightgray",
+                    // border: "1px solid lightgray",
                     backgroundColor: colorGreen,
+                    boxShadow: valueShadowBox
                   }}
                   onSelect={onSelectDate}
                   fullscreen={false}
@@ -463,7 +465,7 @@ const Menu = () => {
               <Card
                 bordered={true}
                 className="w-full"
-                style={{ border: "1px solid lightgray", minHeight: "55vh" }}
+                style={{ border: "1px solid lightgray", minHeight: "55vh", boxShadow: valueShadowBox }}
                 bodyStyle={{padding: '24px 24px 10px'}}
               >
                 <Row
@@ -510,7 +512,7 @@ const Menu = () => {
                         style={{
                           width: "50%",
                           // border: "2px solid darkred",
-                          boxShadow: '1px 1px 4px 3px lightgray',
+                          boxShadow: valueShadowBox,
                           flexGrow: 1,
                           borderRadius: 8,
                         }}
@@ -566,14 +568,18 @@ const Menu = () => {
                         borderRadius: 5,
                         marginBottom: '.5rem',
                         // border: "2px solid darkred",
-                        boxShadow: '1px 1px 2px 2px lightgray',
+                        boxShadow: valueShadowBox,
                       }}
                     >
                       <div style={{ width: "60%" }}>
-                        <label style={{ fontSize: "140%" }}>
-                          <i class="fa-solid fa-bowl-rice"></i> &nbsp;&nbsp;{" "}
+                        <div style={{ fontSize: "140%", display: 'flex', columnGap: '1rem' }}>
+                          <span>
+                          <i class="fa-solid fa-bowl-rice"></i>
+                          </span>
+                          <span>
                           {item.food_name}
-                        </label>
+                          </span>
+                        </div>
                         <br />
                         {/* {ingridientList &&
                           ingridientList

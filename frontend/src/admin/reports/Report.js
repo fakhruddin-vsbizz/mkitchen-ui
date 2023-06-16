@@ -31,7 +31,8 @@ import { useNavigate } from "react-router-dom";
 // import SearchTable from "../../components/elements/SearchTable";
 import { SearchOutlined } from "@ant-design/icons";
 import Highlighter from "react-highlight-words";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 
 
 const Report = () => {
@@ -55,11 +56,11 @@ const Report = () => {
 
   useEffect(()=> {
     const getReports = async() => {
-      const res = await fetch('/api/report/total-inventory');
+      const res = await fetch(baseURL+'/api/report/total-inventory');
       const data = await res.json();
       setTotalIngredients(data?.totatItem)
       setTotalDamagedGoods(data?.totalExpiredItem)
-      const secondRes = await fetch('/api/report/total-purchases');
+      const secondRes = await fetch(baseURL+'/api/report/total-purchases');
       const secondData = await secondRes.json();
       setInventoryDetails(secondData?.purchase);
       setTotalInventoryCost(parseInt(secondData?.inventoryCost))
@@ -528,7 +529,7 @@ const Report = () => {
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                              boxShadow: '1px 1px 4px 4px lightgray',
+                              boxShadow: valueShadowBox,
                             }}
                           >
                             <h5 style={{marginBlock: '1px'}}>Total Ingredients</h5>
@@ -555,7 +556,7 @@ const Report = () => {
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                boxShadow: '1px 1px 4px 4px lightgray',
+                boxShadow: valueShadowBox,
 
                             }}
                           >
@@ -582,7 +583,7 @@ const Report = () => {
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                              boxShadow: '1px 1px 4px 4px lightgray',
+                              boxShadow: valueShadowBox,
                             }}
                           >
                             <h5 style={{marginBlock: '1px'}}>Total inventory cost</h5>
@@ -625,7 +626,7 @@ const Report = () => {
                                     backgroundColor: "#fff",
                                     borderRadius: 10,
                                     // borderBottom: "2px solid orange",
-                boxShadow: '1px 1px 4px 4px lightgray',
+                boxShadow: valueShadowBox,
 
                                     width: "100%",
                                   }}
@@ -651,7 +652,7 @@ flexDirection: 'column',
 rowGap: '0.5rem',
 justifyContent: 'center'}}>
                                     Total Purchases:{" "}
-                                    <h1>{item?.totalPurchases}</h1>
+                                    <h1 style={{marginBlock: '1px'}}>{item?.totalPurchases}</h1>
                                     {/* {item.usertype ? (
                                     <Tag color="green">ACITVE</Tag>
                                   ) : (
@@ -664,7 +665,7 @@ flexDirection: 'column',
 rowGap: '0.5rem',
 justifyContent: 'center'}}>
                                     Total Cost of ingredient purchase:{" "}
-                                    <h1>₹ {item?.totalCost}</h1>
+                                    <h1 style={{marginBlock: '1px'}}>₹ {item?.totalCost}</h1>
                                   </Col>
                                   {/* <Col xs={6} xl={6}>
                                     Times used in menus: <br />{" "}
@@ -681,7 +682,7 @@ flexDirection: 'column',
 rowGap: '0.5rem',
 justifyContent: 'center'}}>
                                     Average Market rate:{" "}
-                                    <h1>₹ {item?.basePrice}</h1>
+                                    <h1 style={{marginBlock: '1px'}}>₹ {item?.basePrice}</h1>
                                   </Col>
                                 </Row>
                               </List.Item>
@@ -739,7 +740,7 @@ justifyContent: 'center'}}>
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                boxShadow: '1px 1px 4px 4px lightgray',
+                boxShadow: valueShadowBox,
 
                             }}
                           >
@@ -767,7 +768,7 @@ justifyContent: 'center'}}>
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // borderBottom: "2px solid orange",
-                boxShadow: '1px 1px 4px 4px lightgray',
+                boxShadow: valueShadowBox,
 
                             }}
                           >
@@ -830,7 +831,7 @@ justifyContent: 'center'}}>
                                     backgroundColor: "#fff",
                                     borderRadius: 10,
                                     // borderBottom: "2px solid orange",
-                                    boxShadow: '1px 1px 4px 4px lightgray',
+                                    boxShadow: valueShadowBox,
                                     width: "100%",
                                   }}
                                 >

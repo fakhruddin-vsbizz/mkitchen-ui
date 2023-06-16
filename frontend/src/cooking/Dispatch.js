@@ -24,6 +24,7 @@ import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
+import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
@@ -62,12 +63,14 @@ const Dispatch = () => {
   const [foodId, setFoodId] = useState();
   const [update, setUpdate] = useState(false);
   const [isSelected, setIsSelected] = useState(false);
+  const [selectedMohallaName, setSelectedMohallaName] = useState("")
+  const [selectedMohallaPersonCount, setSelectedMohallaPersonCount] = useState(0)
 
   const [mohallaUserId, setMohallaUserId] = useState();
   const [viewDispatchedData, setViewDispatchedData] = useState();
   const [finaldipatchData, setFinalDispatchData] = useState([]);
   const [statusOP, setStatusOP] = useState(false);
-  const [dispatchDoneStatus, setDispatchDoneStatus] = useState(false)
+  const [dispatchDoneStatus, setDispatchDoneStatus] = useState(false);
 
   //validation stats
   const [userSelectedError, setUserSelectedError] = useState(false);
@@ -113,7 +116,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -148,7 +151,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -172,7 +175,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -196,7 +199,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -218,7 +221,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
+        const data = await fetch(baseURL+"/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -258,7 +261,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -274,6 +277,7 @@ const Dispatch = () => {
           if (res[0]) {
             setMenuFoodId(res[0]._id);
             setGetMohallaUsers(res[0].mohalla_wise_ashkhaas);
+            // console.log(res[0].mohalla_wise_ashkhaas);
             setFoodList(res[0].food_list);
           } else {
             setGetMohallaUsers([]);
@@ -291,7 +295,7 @@ const Dispatch = () => {
 
   const dispatchData = async (food_id, name) => {
     try {
-      const data = await fetch("/api/operation_pipeline", {
+      const data = await fetch(baseURL+"/api/operation_pipeline", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -333,7 +337,7 @@ const Dispatch = () => {
   const DispatchDone = async () => {
     
     try {
-      const data = await fetch("/api/operation_pipeline", {
+      const data = await fetch(baseURL+"/api/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -457,6 +461,7 @@ const Dispatch = () => {
                               backgroundColor: "transparent",
                               border: "none",
                             }}
+                            bodyStyle={{padding: '0 12px'}}
                           >
                             <Row
                               style={{
@@ -467,22 +472,32 @@ const Dispatch = () => {
                                 // border: "2px solid darkred",
                                 boxShadow: '1px 1px 4px 4px lightgray',
                                 width: "100%",
+                                alignItems: 'center'
                               }}
                             >
-                              <Col xs={16} xl={16}>
+                              <Col xs={16} xl={9}>
                                 Food Name:
                                 <br />
                                 <label style={{ fontSize: "125%" }}>
-                                  {item.name}
+                                  {item?.name}
                                 </label>
                               </Col>
-                              <Col xs={8} xl={8}>
+                              <Col xs={16} xl={9}>
+                                Total Person:
+                                <br />
+                                <label style={{ fontSize: "125%" }}>
+                                  {item?.total_ashkhaas} People
+                                </label>
+                              </Col>
+                              <Col xs={8} xl={6}>
                                 <Button
                                   type="primary"
                                   id={"set_index_" + item.index}
                                   onClick={() => {
                                     setMohallaDispatchData(item.mk_id);
                                     setIsSelected(true);
+                                    setSelectedMohallaName(item?.name);
+                                    setSelectedMohallaPersonCount(item?.total_ashkhaas);
                                   }}
                                   shape="circle"
                                   icon={<CaretRightOutlined />}
@@ -515,6 +530,10 @@ const Dispatch = () => {
                   </table>
                 )}
                 {isSelected ? (
+                  <>
+                  <span style={{display: 'block', fontSize: '1.5rem', fontWeight: '600', margin: '0 auto 16px', padding: '6px 37px'}}>
+                  Dispatch For: <span style={{textTransform: 'capitalize', color:colorGreen}}>{selectedMohallaName}</span> | Count: <span style={{textTransform: 'capitalize', color:colorGreen}}>{selectedMohallaPersonCount}</span>
+                </span> 
                   <Card style={{ backgroundColor: "transparent" }}>
                     {/* <label
                     style={{ fontSize: "200%" }}
@@ -523,6 +542,7 @@ const Dispatch = () => {
                     Select the items
                   </label>
         */}
+        
                     <List
                       size="small"
                       style={{
@@ -548,6 +568,7 @@ const Dispatch = () => {
                             width: "98%",
                           }}
                         >
+                          
                           <Card
                             style={{
                               width: "100%",
@@ -771,6 +792,7 @@ const Dispatch = () => {
                       )}
                     />
                   </Card>
+                  </>
                 ) : null}
               </Col>
               {getMohallaUsers &&

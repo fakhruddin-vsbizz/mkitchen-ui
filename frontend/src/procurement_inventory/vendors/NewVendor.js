@@ -24,6 +24,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const NewVendor = () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -78,7 +79,7 @@ const NewVendor = () => {
       : "";
 
     try {
-      const data = await fetch("/api/vendor", {
+      const data = await fetch(baseURL+"/api/vendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

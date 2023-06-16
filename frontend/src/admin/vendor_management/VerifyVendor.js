@@ -23,7 +23,8 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { baseURL } from "../../constants";
 
 const VerifyVendor = () => {
   const { Column, ColumnGroup } = Table;
@@ -65,7 +66,7 @@ const VerifyVendor = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch("/api/vendor");
+      const data = await fetch(baseURL+"/api/vendor");
       if (data) {
         const res = await data.json();
         setVendors(res);
@@ -77,7 +78,7 @@ const VerifyVendor = () => {
 
   const markVendorVerified = async (id) => {
     try {
-      const data = await fetch("/api/vendor", {
+      const data = await fetch(baseURL+"/api/vendor", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -151,7 +152,7 @@ const VerifyVendor = () => {
                           // width: "100%",
                           backgroundColor: "transparent",
                           padding: '0px',
-                          margin: '8px'
+                          margin: '8px 15px'
                         }}
                       >
                         <Row
@@ -161,7 +162,7 @@ const VerifyVendor = () => {
                             backgroundColor: "#fff",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 4px lightgray',
+                            boxShadow: valueShadowBox,
                             width: "100%",
                             marginBottom:'4px'
                           }}

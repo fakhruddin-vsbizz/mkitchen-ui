@@ -19,6 +19,7 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
+import { baseURL } from "../../constants";
 
 const VendorPurchase = () => {
   const [purchaseList, setPurchaseList] = useState();
@@ -65,7 +66,7 @@ const VendorPurchase = () => {
     const getPurchaseData = async () => {
       try {
         const data = await fetch(
-          "/api/purchase/vendor_purchase"
+          baseURL+"/api/purchase/vendor_purchase"
         );
         const res = await data.json();
 
@@ -121,7 +122,7 @@ const VendorPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch("/api/cooking/ingredients", {
+        const data = await fetch(baseURL+"/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -146,7 +147,7 @@ const VendorPurchase = () => {
 
   const payPurchaseItem = async (id) => {
     try {
-      const data = await fetch("/api/purchase", {
+      const data = await fetch(baseURL+"/api/purchase", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
