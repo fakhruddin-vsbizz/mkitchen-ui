@@ -84,7 +84,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -108,7 +108,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/review", {
+        const data = await fetch("/api/review", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -139,7 +139,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/review/admin_history", {
+        const data = await fetch("/api/review/admin_history", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -163,7 +163,7 @@ const ProcedureLogs = () => {
   // useEffect(() => {
   //   const getFood = async () => {
   //     if (TodaysDate) {
-  //       const data = await fetch(baseURL+"/api/cooking/ingredients", {
+  //       const data = await fetch("/api/cooking/ingredients", {
   //         method: "POST",
   //         headers: {
   //           "Content-Type": "application/json",
@@ -189,7 +189,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -216,7 +216,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/admin/menu", {
+        const data = await fetch("/api/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -240,7 +240,7 @@ const ProcedureLogs = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -270,7 +270,7 @@ const ProcedureLogs = () => {
     const getPipeline = async() => {
       if (menuFoodId) {
     try {
-      const res = await fetch(baseURL+"/api/operation_pipeline", {
+      const res = await fetch("/api/operation_pipeline", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -297,7 +297,7 @@ const ProcedureLogs = () => {
   useEffect(()=>{
     const getPrice = async () => {
       try {
-        const res = await fetch(baseURL+"/api/operation_pipeline/getTotalPrices", {
+        const res = await fetch("/api/operation_pipeline/getTotalPrices", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -318,7 +318,7 @@ const ProcedureLogs = () => {
   // useEffect(() => {
   //   const getData = async () => {
   //     if (selectedDate && menuFoodId) {
-  //       const data = await fetch(baseURL+"/api/review", {
+  //       const data = await fetch("/api/review", {
   //         method: "POST",
   //         headers: {
   //           "Content-Type": "application/json",
@@ -578,14 +578,14 @@ const ProcedureLogs = () => {
                                   <div style={{ fontSize: "1.3rem" }}>
                                     <span>Total cost for {foodItem.food_name}: </span>
                                     <span style={{color: colorGreen}}>
-                                    {totalPrice.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;
+                                    {totalPrice?.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;
                                     </span>
                                     <span>₹</span>
                                   </div>
                                 </Col>
                             </Row>
                             <List
-                              dataSource={pipelineData?.ingridient_list.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id)}
+                              dataSource={pipelineData?.ingridient_list?.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id)}
                               renderItem={(item, index) => (
                                 <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
                                   <div

@@ -116,7 +116,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -151,7 +151,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -175,7 +175,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId && mohallaUserId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -199,7 +199,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -221,7 +221,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -261,7 +261,7 @@ const Dispatch = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -295,7 +295,7 @@ const Dispatch = () => {
 
   const dispatchData = async (food_id, name) => {
     try {
-      const data = await fetch(baseURL+"/api/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -337,7 +337,7 @@ const Dispatch = () => {
   const DispatchDone = async () => {
     
     try {
-      const data = await fetch(baseURL+"/api/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

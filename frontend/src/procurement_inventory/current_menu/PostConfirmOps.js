@@ -90,7 +90,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -112,7 +112,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -137,7 +137,7 @@ const PostConfirmOps = () => {
   useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -163,7 +163,7 @@ const PostConfirmOps = () => {
   const updateReorderStatus = async (id, quantity_requireds, foodId) => {
     console.log(id, quantity_requireds, foodId);
     try {
-      const data = await fetch(baseURL+"/api/operation_pipeline", {
+      const data = await fetch("/api/operation_pipeline", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +177,7 @@ const PostConfirmOps = () => {
         }),
       }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {console.log("fetch1", err)})
 
-  // //     Promise.all([fetch(baseURL+"/api/operation_pipeline", {
+  // //     Promise.all([fetch("/api/operation_pipeline", {
   // //       method: "PUT",
   // //       headers: {
   // //         "Content-Type": "application/json",
@@ -191,7 +191,7 @@ const PostConfirmOps = () => {
   // //     }).then( res => res.json()).then(data => setUpdate((prev) => !prev)).catch(err => {
   // //       console.log("fetch1", err);
   // //   }),
-  // //   fetch(baseURL+"/api/operation_pipeline/updateInventoryAmount", {
+  // //   fetch("/api/operation_pipeline/updateInventoryAmount", {
   // //     method: "POST",
   // //     headers: {
   // //       "Content-Type": "application/json",
@@ -203,7 +203,7 @@ const PostConfirmOps = () => {
   // //   }).catch(err => {
   // //     console.log("fetch1", err);
   // // }),
-  // //   fetch(baseURL+"/api/operation_pipeline/changeProcurementAmount", {
+  // //   fetch("/api/operation_pipeline/changeProcurementAmount", {
   // //     method: "POST",
   // //     headers: {
   // //       "Content-Type": "application/json",

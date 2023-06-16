@@ -58,7 +58,7 @@ const Purchases = () => {
   useEffect(() => {
     const getPurchases = async () => {
       const data = await fetch(
-        baseURL+"/api/purchase/vendor_purchase"
+        "/api/purchase/vendor_purchase"
       );
       if (data) {
         const res = await data.json();

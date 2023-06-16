@@ -62,7 +62,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch(baseURL+"/api/vendor");
+      const data = await fetch("/api/vendor");
       if (data) {
         const res = await data.json();
         if (res) {
@@ -77,7 +77,7 @@ const IngredientPurchase = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch(baseURL+"/api/purchase");
+      const data = await fetch("/api/purchase");
       if (data && id) {
         const res = await data.json();
         if (res) {
@@ -181,7 +181,7 @@ const IngredientPurchase = () => {
   }
 
   const paymentDone = (id) => {
-    fetch(baseURL+"/api/purchase/payment_done", {
+    fetch("/api/purchase/payment_done", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
