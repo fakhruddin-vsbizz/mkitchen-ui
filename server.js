@@ -13,7 +13,7 @@ const reportRouter = require('./routes/reportRouter');
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(CORS({origin: 'https://mkitchen.cyclic.app'}));
+app.use(CORS({origin: 'https://648be8198726712b3c712bf3--coruscating-belekoy-470213.netlify.app'}));
 
 app.use(express.json()); // body parser to parse the request of the client
 
