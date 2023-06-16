@@ -448,7 +448,7 @@ const ProcedureLogs = () => {
                                   </label>
                                 </Col>
                               </Row>
-                                {dispatchData.filter(filterDispatch => filterDispatch?.mk_id === item.user_data[0]?.email)[0]?.dispatch.map(newItem => (
+                                {dispatchData.length !== 0 && dispatchData.filter(filterDispatch => filterDispatch?.mk_id === item.user_data[0]?.email)[0]?.dispatch.map(newItem => (
                                   <Row>
                                   <Col xs={6} xl={5} style={{marginLeft: "12px" }}>
                                   Food Name:&nbsp;
@@ -578,14 +578,14 @@ const ProcedureLogs = () => {
                                   <div style={{ fontSize: "1.3rem" }}>
                                     <span>Total cost for {foodItem.food_name}: </span>
                                     <span style={{color: colorGreen}}>
-                                    {totalPrice?.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;
+                                    {totalPrice.length !== 0 && totalPrice?.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price}&nbsp;
                                     </span>
                                     <span>₹</span>
                                   </div>
                                 </Col>
                             </Row>
                             <List
-                              dataSource={pipelineData?.ingridient_list?.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id)}
+                              dataSource={pipelineData?.ingridient_list.length !== 0 ? pipelineData?.ingridient_list?.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id): []}
                               renderItem={(item, index) => (
                                 <List.Item style={{ border: "none", padding: "0px", marginBottom: '5px' }}>
                                   <div
@@ -612,7 +612,7 @@ const ProcedureLogs = () => {
                                           <i className="fa-solid fa-scale-unbalanced"></i>{" "}
                                           &nbsp;
                                           {Number((item?.procure_amount).toFixed(3))}{" "}
-                                          {inventoryItems
+                                          {inventoryItems.length !== 0 && inventoryItems
                                             .filter(
                                               (inventory) =>
                                                 inventory._id ===
@@ -623,7 +623,7 @@ const ProcedureLogs = () => {
                                             )}
                                         </label>
                                         
-                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a + b.quantity_requireds,0)}&nbsp;{inventoryItems
+                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a + b.quantity_requireds,0)}&nbsp;{inventoryItems.length !== 0 && inventoryItems
                                             .filter(
                                               (inventory) =>
                                                 inventory._id ===
@@ -642,11 +642,11 @@ const ProcedureLogs = () => {
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-chart-pie"></i>{" "}
                                           &nbsp;
-                                          {leftOverItems && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                          {leftOverItems.length !== 0 && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
                                             )[0]?.leftover_amount !== undefined ? (
                                             <>
                                             <span style={{fontSize: '1rem', color:'green'}}>
-                                            {leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
+                                            {leftOverItems.length !== 0 && leftOverItems.filter(newItem => newItem.foodId === item.foodId && newItem.inventory_id === item.inventory_item_id
                                             )[0]?.leftover_amount}&nbsp;{inventoryItems
                                               .filter(
                                                 (inventory) =>
@@ -670,7 +670,7 @@ const ProcedureLogs = () => {
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-indian-rupee-sign"></i>
                                           &nbsp;
-                                          {inventoryItems
+                                          {inventoryItems.length !== 0 && inventoryItems
                                             .filter(
                                               (inventory) =>
                                                 inventory._id ===
