@@ -13,7 +13,7 @@ const reportRouter = require('./routes/reportRouter');
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(CORS({origin: 'https://648be8198726712b3c712bf3--coruscating-belekoy-470213.netlify.app'}));
+app.use(CORS());
 
 app.use(express.json()); // body parser to parse the request of the client
 
@@ -24,10 +24,7 @@ app.use("/api/admin/account_management", require("./routes/mkUserRoutes"));
 app.use("/api/login", require("./routes/loginRoute"));
 
 app.use("/api/admin/menu", require("./routes/menuFoodRoute"));
-app.use(
-  "/api/admin/reset_password",
-  require("./routes/emailNotificationRoute")
-);
+app.use("/api/admin/reset_password", require("./routes/emailNotificationRoute"));
 
 app.use("/api/cooking/ingredients", require("./routes/foodItemRoute"));
 app.use("/api/cooking", require("./routes/cookingRoute"));
@@ -43,13 +40,13 @@ app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
 app.use('/api/', donationRouter.router);
 app.use('/api/', reportRouter);
 
-// app.use(express.static("./frontend/build"));
+app.use(express.static("./frontend/build"));
 
-// app.get("*", (req, res) => {
-//   res
-//     .status(200)
-//     .sendFile(path.join(__dirname, "frontend/build", "index.html"));
-// });
+app.get(/.*(?!\/api\/)/, (req, res) => {
+  res
+    .status(200)
+    .sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 // app.use("/api/contacts", require("./routes/contactRoutes"));
 // app.use("/api/users", require("./routes/userRoutes"));
