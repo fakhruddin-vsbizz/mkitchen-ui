@@ -623,7 +623,7 @@ const ProcedureLogs = () => {
                                             )}
                                         </label>
                                         
-                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.reduce((a,b)=> a + b.quantity_requireds,0)}&nbsp;{inventoryItems.length !== 0 && inventoryItems
+                                          {item?.reorders && item?.reorders.length !== 0 ? <span style={{fontSize: '1rem', color:'red'}}>+{item?.reorders.length !== 0 && item?.reorders.reduce((a,b)=> a + b.quantity_requireds,0)}&nbsp;{inventoryItems.length !== 0 && inventoryItems
                                             .filter(
                                               (inventory) =>
                                                 inventory._id ===
@@ -751,7 +751,7 @@ const ProcedureLogs = () => {
                       borderRadius: '5px', padding: '8px 14px'}}>
                       <span>Today's Total Cost: </span>
                   <span style={{color: colorGreen}}>
-                    {(totalPrice.reduce((a,b) => a + b.price, 0)).toFixed(2)}&nbsp;
+                    {(totalPrice.length !== 0 && totalPrice.reduce((a,b) => a + b.price, 0)).toFixed(2)}&nbsp;
                     </span>
                     <span>₹</span>
                     </div>

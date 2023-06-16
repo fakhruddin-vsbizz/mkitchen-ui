@@ -247,7 +247,7 @@ const Dispatch = () => {
   //filtering the dispatched data based on the Mohalla admin
   useEffect(() => {
     if (viewDispatchedData) {
-      const data = viewDispatchedData.filter(
+      const data = viewDispatchedData.length !== 0 && viewDispatchedData.filter(
         (item) => item.mk_id === mohallaUserId
       );
       if (data[0]) {
@@ -580,7 +580,7 @@ const Dispatch = () => {
                           >
                             <span style={{ fontSize: '1.5rem', margin: '1rem .5rem'}}>Food: {item.food_name}</span>
                             <Row>
-                              {finaldipatchData &&
+                              {finaldipatchData.length !== 0 &&
                               finaldipatchData.filter(
                                 (batch) =>
                                   batch.food_item_id === item.food_item_id
@@ -642,7 +642,7 @@ const Dispatch = () => {
                                   </Col>
                                 </>
                               ) : <Col xs={12} xl={24} style={{ padding: "1%" }}>
-                              {finaldipatchData &&
+                              {finaldipatchData.length !== 0 &&
                                 finaldipatchData
                                   .filter(
                                     (batch) =>
@@ -690,7 +690,7 @@ const Dispatch = () => {
                                 </Row>
                                 <Row>
                               <Col xs={24} xl={24}>
-                              {finaldipatchData &&
+                              {finaldipatchData.length !== 0 &&
                               finaldipatchData.filter(
                                 (batch) =>
                                   batch.food_item_id === item.food_item_id

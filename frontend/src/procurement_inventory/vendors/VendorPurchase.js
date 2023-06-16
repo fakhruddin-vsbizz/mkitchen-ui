@@ -292,7 +292,7 @@ const VendorPurchase = () => {
                           <Col xs={8} xl={4}>
                             Required quantity: <br />
                             {item.quantity_loaded}{" "}
-                            {inventoryItems &&
+                            {inventoryItems.length !== 0 &&
                               inventoryItems
                                 .filter(
                                   (itemNew) => itemNew.ingridient_name === item.ingredient_name

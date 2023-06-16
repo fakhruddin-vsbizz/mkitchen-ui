@@ -626,7 +626,7 @@ const Cooking = () => {
                               Ingredients details for the <span style={{color: colorGreen}}>{item?.food_name}</span>:
                               </span>
                               <List
-                                dataSource={ingredientLists.filter(newItem => newItem?.foodId === item?.food_item_id)}
+                                dataSource={ingredientLists.length !== 0 ? ingredientLists.filter(newItem => newItem?.foodId === item?.food_item_id): []}
                                 renderItem={(ing, index) =>  (
                                     <List.Item style={{ padding: "0px" }}>
                                     <Card
@@ -690,7 +690,7 @@ const Cooking = () => {
                                             placeholder="Eg: 1L, 12KG, etc"
                                           ></Input>
                                           <span style={{textTransform: 'capitalize'}}>
-                                          {inventoryItems &&
+                                          {inventoryItems.length !== 0 &&
                                             inventoryItems
                                               .filter(
                                                 (itemNew) =>
@@ -709,7 +709,7 @@ const Cooking = () => {
                                               reorderIngridient(
                                                 ing.ingredient_name,
                                                 inventoryItems &&
-                                            inventoryItems
+                                                inventoryItems.length !== 0 && inventoryItems
                                               .filter(
                                                 (itemNew) =>
                                                   itemNew._id ===
@@ -746,7 +746,7 @@ const Cooking = () => {
                                                 &nbsp;
                                                 <span style={{textTransform: 'capitalize'}}>
                                                 {inventoryItems &&
-                                                  inventoryItems
+                                                  inventoryItems.length !== 0 && inventoryItems
                                                     .filter(
                                                       (itemNew) =>
                                                         itemNew._id ===
@@ -766,9 +766,9 @@ const Cooking = () => {
                                           xl={16}
                                           style={{ padding: "10px 10px 0" }}
                                         >
-                                          {leftoverLogs && leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0] !== undefined  ? <div>
+                                          {leftoverLogs.length !== 0 && leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0] !== undefined  ? <div>
                                             <span>Leftover Amount: </span>
-                                            <span style={{color: colorGreen, textTransform: 'capitalize'}}>{leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0]}&nbsp;{inventoryItems &&
+                                            <span style={{color: colorGreen, textTransform: 'capitalize'}}>{leftoverLogs.length !== 0 && leftoverLogs.filter(leftoverItem => leftoverItem.inventory_id === ing.inventory_item_id && leftoverItem.foodId === ing.foodId).map(eles => eles.leftover_amount)[0]}&nbsp;{inventoryItems.length !== 0 &&
                                                   inventoryItems
                                                     .filter(
                                                       (itemNew) =>
@@ -799,7 +799,7 @@ const Cooking = () => {
                                             placeholder="Eg: 1L, 12KG, etc"
                                           ></Input>
                                           <span style={{textTransform: 'capitalize'}}>
-                                          {inventoryItems &&
+                                          {inventoryItems.length !== 0 &&
                                             inventoryItems
                                               .filter(
                                                 (itemNew) =>
@@ -895,7 +895,7 @@ const Cooking = () => {
                                 <br />
                                 <span style={{ color: colorGreen, fontWeight: '600' }}>
                                   {item.quantity_requireds}{" "}
-                                  {inventoryItems &&
+                                  {inventoryItems.length !== 0 &&
                                     inventoryItems
                                       .filter(
                                         (itemNew) =>

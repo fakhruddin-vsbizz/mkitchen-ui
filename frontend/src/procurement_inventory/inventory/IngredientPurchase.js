@@ -82,7 +82,7 @@ const IngredientPurchase = () => {
         const res = await data.json();
         if (res) {
           if (res) {
-            let purchaseData = res.filter(
+            let purchaseData = res.length !== 0 && res.filter(
               (item, index) => item.inventory_id === id
             );
             setItemPurchase(purchaseData);

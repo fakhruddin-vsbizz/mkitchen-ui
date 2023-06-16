@@ -1045,7 +1045,7 @@ alignItems: 'center'}}>
                                   placeholder="Select User"
                                   style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px', flexGrow: 1 }}
                                   block
-                                    options={cookingDepartmentUser.map((item) => ({
+                                    options={cookingDepartmentUser.length !== 0 && cookingDepartmentUser.map((item) => ({
                                       value: item.username,
                                       label: item.username,
                                       id: item.email,
@@ -1359,7 +1359,7 @@ alignItems: 'center'}}>
                                 <Select
                                   // defaultValue={"-- SELECT USER ---"}
                                   // defaultValue={"select user"}
-                              options={pandiDepartmentUser.map((item) => ({
+                              options={pandiDepartmentUser.length !== 0 && pandiDepartmentUser.map((item) => ({
                                 value: item.username,
                                 label: item.username,
                               }))}

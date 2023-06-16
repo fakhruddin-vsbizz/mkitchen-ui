@@ -86,9 +86,9 @@ const NewPurchase = () => {
         const res = await data.json();
 
         if (res) {
-          let vendorVerified = res.filter(
+          let vendorVerified = res.length !== 0 ? res.filter(
             (item, index) => item.approval_status === true
-          );
+          ): [];
           setVendors(vendorVerified);
         }
       }
@@ -138,7 +138,7 @@ const NewPurchase = () => {
       
     let currentDate = new Date();
 
-      const data = inventoryItems.filter(
+      const data = inventoryItems.length !== 0 && inventoryItems.filter(
         (item) => item._id === idFromPrams
       );
 
@@ -369,7 +369,7 @@ const NewPurchase = () => {
                               id="ingredient-item-selected"
                               style={{width: "100%"}}
                               value={itemName}
-                              options={inventoryItems.map((item) => ({
+                              options={inventoryItems.length !== 0 && inventoryItems.map((item) => ({
                                 value: item.ingridient_name,
                                 id: item._id,
                               }))}
@@ -479,7 +479,7 @@ const NewPurchase = () => {
                                 <AutoComplete
                                   id="ingredient-item-selected"
                                   style={{ width: "70%" }}
-                                  options={vendors.map((item) => ({
+                                  options={vendors.length !== 0 && vendors.map((item) => ({
                                     value: item.vendor_name,
                                     id: item._id,
                                   }))}
@@ -502,7 +502,7 @@ const NewPurchase = () => {
                             </Col>
                             <Col xs={8} xl={8}>
                               Price per{" "}
-                              {inventoryItems &&
+                              {inventoryItems.length !== 0 &&
                                 inventoryItems
                                   .filter(
                                     (itemNew) =>
