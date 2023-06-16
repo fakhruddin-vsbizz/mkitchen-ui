@@ -517,7 +517,7 @@ const Menu = () => {
                           borderRadius: 8,
                         }}
                         value={selectedFood}
-                        options={AddedFoodItems.map((item) => ({
+                        options={AddedFoodItems.length !== 0 && AddedFoodItems.map((item) => ({
                           value: item.name,
                         }))}
                         onChange={(value) => setSelectedFood(value)}
@@ -609,12 +609,12 @@ const Menu = () => {
                           alignItems: "left",
                         }}
                       >
-                        {ingridientList &&
+                        {ingridientList.length !== 0 &&
                           ingridientList
                             .filter((it) => it.name === item.food_name)
                             .map((newItem, index) => (
                               <div key={index}>
-                                {newItem.ingridient_list.map(
+                                {newItem?.ingridient_list.length !== 0 && newItem.ingridient_list.map(
                                   (ing, ingIndex) => (
                                     <Tag color={colorGreen} key={ingIndex}>
                                       <i class="fa-solid fa-plate-wheat"></i> &nbsp;

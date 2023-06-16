@@ -311,7 +311,7 @@ const SetMenu = () => {
   };
 
   const handlePerAshkashChange = (value, ingredientName, unit) => {
-    const updatedIngredients = ingredientItems.map((ingredient) => {
+    const updatedIngredients = ingredientItems.length !== 0 && ingredientItems.map((ingredient) => {
       if (ingredient.ingredient_name === ingredientName) {
         // if the ingredient name matches, update its perAshkash value
         return {
@@ -406,7 +406,7 @@ const SetMenu = () => {
   // Output the final array
 
   const logIngredientForFood = async () => {
-    const newFoodIngredient = ingredientItems.map(item => ({
+    const newFoodIngredient = ingredientItems.length !== 0 && ingredientItems.map(item => ({
       ...item,
       procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(3)),
       perAshkash: +item.perAshkash,
@@ -663,7 +663,7 @@ const SetMenu = () => {
                             <AutoComplete
                               id="ingredient-item-selected"
                               style={{ width: "100%" }}
-                              options={finalArrayForData.map((item) => ({
+                              options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
                                   value: item.ingridient_name,
                                   id: item._id,
                                 }))}

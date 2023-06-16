@@ -322,7 +322,7 @@ const VerifyVendor = () => {
                                   <AutoComplete
                               id="ingredient-item-selected"
                               style={{ width: "100%" }}
-                              options={finalArrayForData.map((item) => ({
+                              options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
                                   value: item.ingridient_name,
                                   id: item._id,
                                   unit: item.ingridient_measure_unit

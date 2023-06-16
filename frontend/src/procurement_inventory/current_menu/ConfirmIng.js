@@ -421,7 +421,7 @@ const ConfirmIng = () => {
           operationalPipelineStatus !== 0 && (
             <Button
               onClick={markProcureIngridients}
-              disabled={finalizeBtnVisible || procureIngridients.filter(item => item?.sufficient === false).length !== 0}
+              disabled={finalizeBtnVisible || (procureIngridients.length !== 0 && procureIngridients.filter(item => item?.sufficient === false).length !== 0)}
               block
               type="primary"
               style={{ fontSize: "200%", height: "10%",width: "97%",
