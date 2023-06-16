@@ -13,10 +13,6 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
         const inventory = await Inventory.find()
         const totatItem = inventory.length;
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
         // totalCost = inventory.reduce((a,b)=> a+b.price, 0)
     
         const purchases = await Purchases.find();
@@ -27,10 +23,6 @@ exports.getTotalItems = expressAsyncHandler(async (req, res) => {
             return expiryDate < today && purchase?.unshelf === false;
         });
 
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
     
         // console.log(filteredPurchases);
         const response = {

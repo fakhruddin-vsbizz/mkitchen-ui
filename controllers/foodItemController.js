@@ -26,7 +26,7 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
         );
 
         // Send the ingredient lists back to the client
-        return res.json(ingredientLists);
+        return res.status(200).json(ingredientLists);
       })
       .catch((error) => {
         console.error(error);
@@ -90,7 +90,7 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
 
   if (type === "get_inventory_ingridients") {
     const inventory = await InventoryModel.find();
-    return res.json(inventory);
+    return res.status(200).json(inventory);
   }
 });
 
@@ -110,7 +110,7 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
       { new: true }
     );
     if (updateIngridient) {
-      return res.json({ message: "ingridient list updated successfully" });
+      return res.status(200).json({ message: "ingridient list updated successfully" });
     }
   }
 
@@ -128,7 +128,7 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
     );
 
     if (updatePipeline && updatePipelineStatus) {
-      return res.json({ message: "pipeline  updated successfully" });
+      return res.status(200).json({ message: "pipeline  updated successfully" });
     }
   }
 
