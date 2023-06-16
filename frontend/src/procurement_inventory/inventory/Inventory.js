@@ -75,7 +75,7 @@ const Inventory = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch(baseURL+"/api/inventory/addinventory");
+      const data = await fetch("/api/inventory/addinventory");
       if (data) {
         const res = await data.json();
         setInventoryItems(res);
@@ -116,7 +116,7 @@ const Inventory = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await fetch(baseURL+"/api/inventory/addinventory", {
+      const data = await fetch("/api/inventory/addinventory", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const Inventory = () => {
 
   const updateIngridientItem = async () => {
     try {
-      const data = await fetch(baseURL+"/api/inventory/addinventory/update_inventory", {
+      const data = await fetch("/api/inventory/addinventory/update_inventory", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

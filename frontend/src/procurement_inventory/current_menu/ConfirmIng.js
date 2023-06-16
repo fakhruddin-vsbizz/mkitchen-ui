@@ -97,7 +97,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -121,7 +121,7 @@ const ConfirmIng = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -147,7 +147,7 @@ const ConfirmIng = () => {
     const getInventory = async () => {
       if (operationalPipelineStatus >= 3 && selectedDate && menuFoodId) {
         try {
-          const data = await fetch(baseURL+"/api/pai/procurement", {
+          const data = await fetch("/api/pai/procurement", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -168,7 +168,7 @@ const ConfirmIng = () => {
             if (res?.message) {
               // if (menuFoodId) {
               //   try {
-              //     const data = await fetch(baseURL+"/api/pai/procurement", {
+              //     const data = await fetch("/api/pai/procurement", {
               //       method: "POST",
               //       headers: {
               //         "Content-Type": "application/json",
@@ -198,7 +198,7 @@ const ConfirmIng = () => {
         try {
           if (menuFoodId) {
             try {
-              const data = await fetch(baseURL+"/api/pai/procurement", {
+              const data = await fetch("/api/pai/procurement", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -229,7 +229,7 @@ const ConfirmIng = () => {
 
   const markProcureIngridients = async () => {
     try {
-      const data = await fetch(baseURL+"/api/pai/procurement", {
+      const data = await fetch("/api/pai/procurement", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

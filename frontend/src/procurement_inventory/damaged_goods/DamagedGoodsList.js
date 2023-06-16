@@ -77,7 +77,7 @@ const DamagedGoodsList = () => {
   //   const getPurchaseData = async () => {
   //     if (todayDate) {
   //       try {
-  //         const data = await fetch(baseURL+"/api/purchase");
+  //         const data = await fetch("/api/purchase");
   //         const res = await data.json();
 
   //         if (res) {
@@ -164,7 +164,7 @@ const DamagedGoodsList = () => {
   useEffect(() => {
     const getPurchaseData = async () => {
       if (todayDate) {
-        const data = await fetch(baseURL+"/api/purchase/expired_items", {
+        const data = await fetch("/api/purchase/expired_items", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -214,7 +214,7 @@ const DamagedGoodsList = () => {
   const unshelfAndRemoveItem = async () => {
     //update unshelf in purchase
     try {
-      const data = await fetch(baseURL+"/api/purchase/update_shelf", {
+      const data = await fetch("/api/purchase/update_shelf", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -232,7 +232,7 @@ const DamagedGoodsList = () => {
     //update total volume in inventory
 
     try {
-      const data = await fetch(baseURL+"/api/inventory/addinventory/update_volume", {
+      const data = await fetch("/api/inventory/addinventory/update_volume", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

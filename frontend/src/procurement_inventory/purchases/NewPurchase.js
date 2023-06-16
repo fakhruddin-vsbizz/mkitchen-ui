@@ -81,7 +81,7 @@ const NewPurchase = () => {
 
   useEffect(() => {
     const getVendors = async () => {
-      const data = await fetch(baseURL+"/api/vendor");
+      const data = await fetch("/api/vendor");
       if (data) {
         const res = await data.json();
 
@@ -99,7 +99,7 @@ const NewPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -288,7 +288,7 @@ const NewPurchase = () => {
 
   const addPurchaseData = async () => {
     try {
-      const data = await fetch(baseURL+"/api/purchase", {
+      const data = await fetch("/api/purchase", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -42,7 +42,7 @@ const AddIngridientsInventory = () => {
 
   useEffect(() => {
     const getInventory = async () => {
-      const data = await fetch(baseURL+"/api/inventory/addinventory");
+      const data = await fetch("/api/inventory/addinventory");
       if (data) {
         const res = await data.json();
         setInventoryItems(res);
@@ -53,7 +53,7 @@ const AddIngridientsInventory = () => {
 
   const handleSubmit = async () => {
     try {
-      const data = await fetch(baseURL+"/api/inventory/addinventory", {
+      const data = await fetch("/api/inventory/addinventory", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

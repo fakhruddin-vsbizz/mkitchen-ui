@@ -66,7 +66,7 @@ const VendorPurchase = () => {
     const getPurchaseData = async () => {
       try {
         const data = await fetch(
-          baseURL+"/api/purchase/vendor_purchase"
+          "/api/purchase/vendor_purchase"
         );
         const res = await data.json();
 
@@ -122,7 +122,7 @@ const VendorPurchase = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -147,7 +147,7 @@ const VendorPurchase = () => {
 
   const payPurchaseItem = async (id) => {
     try {
-      const data = await fetch(baseURL+"/api/purchase", {
+      const data = await fetch("/api/purchase", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

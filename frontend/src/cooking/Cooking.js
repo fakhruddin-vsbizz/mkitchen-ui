@@ -117,7 +117,7 @@ const Cooking = () => {
   useEffect(() => {
     const getStatus = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -144,7 +144,7 @@ const Cooking = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -174,7 +174,7 @@ const Cooking = () => {
   useEffect(() => {
     const getFood = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const Cooking = () => {
   useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
-        const data = await fetch(baseURL+"/api/admin/menu", {
+        const data = await fetch("/api/admin/menu", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -223,7 +223,7 @@ const Cooking = () => {
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -257,7 +257,7 @@ const Cooking = () => {
   useEffect(() => {
     // if (getFoodList) {
     //   axios
-    //     .post(baseURL+"/api/cooking/ingredients", {
+    //     .post("/api/cooking/ingredients", {
     //       food_item_ids: getFoodList,
     //       type: "get_food_and_ingridient",
     //     })
@@ -271,7 +271,7 @@ const Cooking = () => {
     
     if(getFoodList){
       axios
-        .post(baseURL+"/api/operation_pipeline/getIngredients", {
+        .post("/api/operation_pipeline/getIngredients", {
           menu_food_id: menuFoodId,
         })
         .then((response) => {
@@ -316,7 +316,7 @@ const Cooking = () => {
   useEffect(() => {
     const getData = async () => {
       if (selectedDate && menuFoodId) {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -349,7 +349,7 @@ const Cooking = () => {
     const updateReorderLog = async () => {
       if (reorderLogs && update)
         try {
-          const data = await fetch(baseURL+"/api/cooking/ingredients", {
+          const data = await fetch("/api/cooking/ingredients", {
             method: "PUT",
             headers: {
               "Content-Type": "application/json",
@@ -402,7 +402,7 @@ const Cooking = () => {
   const cookingDone = async () => {
     if (reorderFullFilled === true) {
       try {
-        const data = await fetch(baseURL+"/api/operation_pipeline", {
+        const data = await fetch("/api/operation_pipeline", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -424,7 +424,7 @@ const Cooking = () => {
 
   const returnIngToInventory = async (inventory_id, ingName, foodItemId, foodName) => {
     try {
-      const data = await fetch(baseURL+"/api/cooking/add_leftover", {
+      const data = await fetch("/api/cooking/add_leftover", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -449,7 +449,7 @@ const Cooking = () => {
       console.log(error);
     }
     try {
-      const data = await fetch(baseURL+"/api/inventory/addinventory", {
+      const data = await fetch("/api/inventory/addinventory", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

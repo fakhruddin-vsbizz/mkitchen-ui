@@ -70,7 +70,7 @@ const VerifyVendor = () => {
       its_id: +itsValue,
     }
 
-    fetch(baseURL+"/api/donation", {
+    fetch("/api/donation", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const VerifyVendor = () => {
 
   useEffect(()=>{
 
-    fetch(baseURL+"/api/donation/all", {
+    fetch("/api/donation/all", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -140,7 +140,7 @@ const VerifyVendor = () => {
   useEffect(() => {
     const getInventory = async () => {
       try {
-        const data = await fetch(baseURL+"/api/cooking/ingredients", {
+        const data = await fetch("/api/cooking/ingredients", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

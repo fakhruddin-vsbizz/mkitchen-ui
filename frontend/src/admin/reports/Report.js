@@ -56,11 +56,11 @@ const Report = () => {
 
   useEffect(()=> {
     const getReports = async() => {
-      const res = await fetch(baseURL+'/api/report/total-inventory');
+      const res = await fetch('/api/report/total-inventory');
       const data = await res.json();
       setTotalIngredients(data?.totatItem)
       setTotalDamagedGoods(data?.totalExpiredItem)
-      const secondRes = await fetch(baseURL+'/api/report/total-purchases');
+      const secondRes = await fetch('/api/report/total-purchases');
       const secondData = await secondRes.json();
       setInventoryDetails(secondData?.purchase);
       setTotalInventoryCost(parseInt(secondData?.inventoryCost))

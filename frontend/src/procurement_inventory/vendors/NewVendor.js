@@ -79,7 +79,7 @@ const NewVendor = () => {
       : "";
 
     try {
-      const data = await fetch(baseURL+"/api/vendor", {
+      const data = await fetch("/api/vendor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
