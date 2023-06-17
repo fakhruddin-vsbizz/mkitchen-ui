@@ -528,7 +528,9 @@ const Accounts = () => {
         <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header
             title="Account Management"
-            comp={<Button
+            comp={
+              localStorage.getItem("type") === "mk superadmin" &&
+            <Button
             icon={<PlusCircleOutlined style={{color: colorGreen}} />}
               style={{
                 // marginLeft: "60%",
@@ -555,9 +557,9 @@ const Accounts = () => {
               open={newMohallaPopup}
               onOk={handleNMOk}
               onCancel={handleNMCancel}
-              footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-evenly"}}>
-              <Button style={{backgroundColor: colorGreen, width: "40%"}} onClick={handleSubmit} type="primary" block>Create new Account</Button>
-              <Button style={{width: "40%"}} onClick={handleNMCancel}>Cancel</Button>
+              footer={<div style={{width: "100%", display: 'flex', justifyContent: "space-between", marginTop: '1rem'}}>
+              <Button style={{backgroundColor: colorGreen, width: "47%"}} onClick={handleSubmit} type="primary" block>Create new Account</Button>
+              <Button style={{width: "47%"}} onClick={handleNMCancel}>Cancel</Button>
               </div>}
             >
               <table style={{ width: "100%" }}>

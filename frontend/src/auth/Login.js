@@ -21,7 +21,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import DeshboardBg from "../res/img/DeshboardBg.png";
 // import whiteLogo from "../res/img/MKWhiteLogo.png";
 import { CheckCircleFilled } from "@ant-design/icons";
-import { colorBlack, colorGreen } from "../colors";
+import { colorBlack, colorGreen, valueShadowBox } from "../colors";
 import { baseURL } from "../constants";
 
 const Login = () => {
@@ -289,7 +289,7 @@ const Login = () => {
                 width: "50%",
                 maxWidth: '650px',
                 // border: "2px solid darkred",
-                boxShadow: '1px 1px 4px 4px lightgray',
+                boxShadow: valueShadowBox,
                 backgroundColor: '#fff',
                 // marginTop: 50,
               }}

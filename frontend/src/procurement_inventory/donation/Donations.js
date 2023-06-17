@@ -505,6 +505,8 @@ const VerifyVendor = () => {
                           display: "flex",
                           backgroundColor: "#fff",
                           borderRadius: 10,
+                          justifyContent: 'center',
+                          alignItems: 'center',
                           // border: "2px solid darkred",
                           boxShadow: valueShadowBox,
                           margin: '8px 10px',
@@ -513,42 +515,44 @@ const VerifyVendor = () => {
                         }}
                       >
                         <Col xs={12} xl={5} style={{ marginLeft: "17px" }}>
-                          Ingredient: <br />
+                        <i class="fa-solid fa-box"></i>&nbsp;&nbsp;Ingredient: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-box"></i>&nbsp;
-                            <span style={{textTransform: 'capitalize'}}>
+                            <span style={{textTransform: 'capitalize',
+display: 'block'}}>
                             {item?.ingredientName}
                             </span>
                           </label>
                         </Col>
                         <Col xs={12} xl={5}>
-                          Donor's Name: <br />
+                        <i class="fa-solid fa-hands-praying"></i>&nbsp;&nbsp;Donor's Name: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-hands-praying"></i>&nbsp;
-                            <span style={{textTransform: 'capitalize'}}>
+                            <span style={{textTransform: 'capitalize',
+display: 'block'}}>
                             {item?.donarName}
                             </span>
                           </label>
                         </Col>
                         <Col xs={12} xl={5}>
-                          Donor's Contact: <br />
-                          <label style={{ fontSize: "120%" }}>
-                          <i class="fa-solid fa-phone"></i>&nbsp;{item?.contactNumber}
-                          </label>
+                        <i class="fa-solid fa-phone"></i>&nbsp;&nbsp;Donor's Contact: <br />
+                          <span style={{textTransform: 'capitalize',
+display: 'block'}}>
+                          {item?.contactNumber}
+                          </span>
                         </Col>
                         <Col xs={12} xl={4}>
-                          ITS ID: <br />
-                          <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-id-card"></i>&nbsp;{item?.its_id}
-                          </label>
+                        <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;ITS ID: <br />
+                          <span style={{ textTransform: 'capitalize',
+display: 'block' }}>
+                            {item?.its_id}
+                          </span>
                         </Col>
                         <Col xs={12} xl={4}>
-                          Quantity Donated: <br />
-                          <label style={{ fontSize: "120%" }}>
-                            <i class="fa-solid fa-weight-scale"></i>&nbsp;{" "}
-                            <span style={{ fontSize: "22px", color: "green" }}>
+                        <i class="fa-solid fa-weight-scale"></i>&nbsp;&nbsp;Quantity Donated: <br />
+                          <label style={{ textTransform: 'capitalize',
+display: 'block',fontSize: "22px", color: "green" }}>
+                           
                               + {item?.donationQty} {item?.ingridient_measure_unit}
-                            </span>
+                            
                           </label>
                         </Col>
                       </Row>

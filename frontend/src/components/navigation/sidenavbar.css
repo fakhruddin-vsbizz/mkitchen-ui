@@ -1,16 +1,29 @@
+:where(.css-dev-only-do-not-override-1vtf12y).ant-layout, :where(.css-1vtf12y).ant-layout{
+    background-color: #282828 !important;
+    border-radius: 0 31px 31px 0 !important;
+}
+
+
+.ant-layout-sider-trigger {
+    /* color: #55b78d !important; */
+    border-radius: 0 0 31px 0 !important;
+}
+
+
+
 :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light>.ant-menu .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light .ant-menu-item-selected, :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light>.ant-menu .ant-menu-item-selected,:where(.css-1ftzuwy).ant-menu-light .ant-menu-item-selected, :where(.css-1ftzuwy).ant-menu-light>.ant-menu .ant-menu-item-selected, :where(.css-1ljlf6r).ant-menu-light .ant-menu-item-selected, :where(.css-1ljlf6r).ant-menu-light>.ant-menu .ant-menu-item-selected {
-    background-color: white;
+    background-color: white !important;
 }
 
 :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light>.ant-menu .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ftzuwy).ant-menu-light>.ant-menu .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light>.ant-menu .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-1ljlf6r).ant-menu-light>.ant-menu .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-1ftzuwy).ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, :where(.css-1ftzuwy).ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover,:where(.css-1ftzuwy).ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, :where(.css-1ftzuwy).ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, :where(.css-1ljlf6r).ant-menu-light:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover, :where(.css-1ljlf6r).ant-menu-light>.ant-menu:not(.ant-menu-horizontal) .ant-menu-item:not(.ant-menu-item-selected):hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #55b78d;
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: #55b78d !important;
 }
 
 :where(.css-dev-only-do-not-override-69pkui).ant-menu-light .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-69pkui).ant-menu-light>.ant-menu .ant-menu-item:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-69pkui).ant-menu-light .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected), :where(.css-dev-only-do-not-override-69pkui).ant-menu-light>.ant-menu .ant-menu-submenu-title:hover:not(.ant-menu-item-selected):not(.ant-menu-submenu-selected) {
-    color: white
+    color: white !important;
 }
 
 :where(.css-dev-only-do-not-override-1opj0mw).ant-layout .ant-layout-sider-trigger,:where(.css-1opj0mw).ant-layout .ant-layout-sider-trigger, :where(.css-dev-only-do-not-override-1vtf12y).ant-layout .ant-layout-sider-trigger, :where(.css-1vtf12y).ant-layout .ant-layout-sider-trigger, :where(.css-dev-only-do-not-override-tm88kj).ant-layout .ant-layout-sider-trigger, :where(.css-tm88kj).ant-layout .ant-layout-sider-trigger, :where(.css-dev-only-do-not-override-1nbdvhd).ant-layout .ant-layout-sider-trigger, :where(.css-1nbdvhd).ant-layout .ant-layout-sider-trigger, :where(.css-dev-only-do-not-override-9gol3p).ant-layout .ant-layout-sider-trigger, :where(.css-9gol3p).ant-layout .ant-layout-sider-trigger{
-    background-color: #55b78d;
+    background-color: #55b78d !important;
 }

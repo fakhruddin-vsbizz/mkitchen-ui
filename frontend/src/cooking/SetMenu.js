@@ -27,7 +27,7 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/auth-context";
 import IngredientList from "./Input";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../colors";
 import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
@@ -257,55 +257,55 @@ const SetMenu = () => {
         setUpdateAshkash(true);
         setIngredientName("");
       } else {
-        try {
-          const data = await fetch("/api/inventory/addinventory", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              mkuser_email: email,
-              ingridient_name: ingredientName,
-              ingridient_measure_unit: "",
-              ingridient_expiry_period: "Days",
-              ingridient_expiry_amount: "5",
-              price: 0,
-              decommisioned: true,
-              total_volume: 0,
-              baseline: 1,
-            }),
-          });
+        // try {
+        //   const data = await fetch("/api/inventory/addinventory", {
+        //     method: "POST",
+        //     headers: {
+        //       "Content-Type": "application/json",
+        //     },
+        //     body: JSON.stringify({
+        //       mkuser_email: email,
+        //       ingridient_name: ingredientName,
+        //       ingridient_measure_unit: "",
+        //       ingridient_expiry_period: "Days",
+        //       ingridient_expiry_amount: "5",
+        //       price: 0,
+        //       decommisioned: true,
+        //       total_volume: 0,
+        //       baseline: 1,
+        //     }),
+        //   });
           
-            // setDataAdded((prev) => !prev);
-            const res = await data.json();
-            setInventoryItems(prev => [...prev, res])
-            console.log(res, "res");
-            console.log(finalArrayForData, "finalArrayForData");
-            const newIngredient = {
-              foodId: foodIndex,
-              foodName: selectedFoodName,
-              procure_amount: 0,
-              inventory_item_id: res._id,
-              ingredient_name: ingredientName,
-              perAshkash: 0, // set initial perAshkash value as empty string
-              reorders: [],
-              leftover: {}
-            };
-            // setFinalArrayForData([...finalArrayForData, res])
-            // setFilteredAutoCompleted(finalArrayForData.map((item) => ({
-            //   value: item.ingridient_name,
-            //   id: item._id,
-            // })))
-            setIngredientItems((prevState) =>
-              prevState === undefined
-                ? [newIngredient]
-                : [newIngredient, ...prevState]
-            );
-            setIngredientName("");
+        //     // setDataAdded((prev) => !prev);
+        //     const res = await data.json();
+        //     setInventoryItems(prev => [...prev, res])
+        //     console.log(res, "res");
+        //     console.log(finalArrayForData, "finalArrayForData");
+        //     const newIngredient = {
+        //       foodId: foodIndex,
+        //       foodName: selectedFoodName,
+        //       procure_amount: 0,
+        //       inventory_item_id: res._id,
+        //       ingredient_name: ingredientName,
+        //       perAshkash: 0, // set initial perAshkash value as empty string
+        //       reorders: [],
+        //       leftover: {}
+        //     };
+        //     // setFinalArrayForData([...finalArrayForData, res])
+        //     // setFilteredAutoCompleted(finalArrayForData.map((item) => ({
+        //     //   value: item.ingridient_name,
+        //     //   id: item._id,
+        //     // })))
+        //     setIngredientItems((prevState) =>
+        //       prevState === undefined
+        //         ? [newIngredient]
+        //         : [newIngredient, ...prevState]
+        //     );
+        //     setIngredientName("");
 
-        } catch (error) {
-          console.log(error);
-        }
+        // } catch (error) {
+        //   console.log(error);
+        // }
       }
     }
   };
@@ -582,7 +582,7 @@ const SetMenu = () => {
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
                                 // border: "2px solid darkred",
-                                boxShadow: '1px 1px 4px 4px lightgray',
+                                boxShadow: valueShadowBox,
                                 width: "100%",
                               }}
                             >
@@ -631,20 +631,20 @@ const SetMenu = () => {
                         backgroundColor: "white",
                         border: "none",
                         // border: '2px solid darkred'
-                        boxShadow: '1px 1px 4px 4px lightgray',
+                        boxShadow: valueShadowBox,
                       }}
                     >
                       {status < 3 ?
                       <label
-                        style={{ fontSize: "200%", color: colorGreen }}
+                        style={{ fontSize: "200%", color: colorBlack }}
                         className="dongle-font-class"
                       >
-                        Select the ingredients for : <span>{selectedFoodName}</span>
+                        Select the ingredients for : <span style={{ color: colorGreen }}>{selectedFoodName}</span>
                       </label>: <label
-                        style={{ fontSize: "200%", color: colorGreen }}
+                        style={{ fontSize: "200%", color: colorBlack }}
                         className="dongle-font-class"
                       >
-                        Selected ingredients: <span>{selectedFoodName}</span> 
+                        Selected ingredients: <span style={{ color: colorGreen }}>{selectedFoodName}</span> 
                       </label>}
                       <br />
                       {status < 3 && foodIndex && <>
@@ -660,7 +660,8 @@ const SetMenu = () => {
                       >
                         {finalArrayForData && (
                           <Col xs={18} xl={18}>
-                            <AutoComplete
+                            <Select
+                              showSearch
                               id="ingredient-item-selected"
                               style={{ width: "100%" }}
                               options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
@@ -711,7 +712,7 @@ const SetMenu = () => {
                               backgroundColor: "#fff",
                               borderRadius: 10,
                               // border: "2px solid darkred",
-                              boxShadow: '1px 1px 4px 2px lightgray',
+                              boxShadow: valueShadowBox,
                               margin: '8px auto',
                               width: "98%",
                             }}

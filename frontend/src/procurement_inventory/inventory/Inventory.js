@@ -17,7 +17,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
 const Inventory = () => {
@@ -501,7 +501,7 @@ const Inventory = () => {
                             backgroundColor: "#fff",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 2px lightgray',
+                            boxShadow: valueShadowBox,
                             margin: '8px',
                             width: "100%",
                           }}

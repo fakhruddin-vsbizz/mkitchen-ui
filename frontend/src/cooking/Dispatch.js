@@ -23,7 +23,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, inputShadowBox, valueShadowBox } from "../colors";
 import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
@@ -75,8 +75,8 @@ const Dispatch = () => {
   //validation stats
   const [userSelectedError, setUserSelectedError] = useState(false);
   const [inputError, setInputError] = useState(false);
-  const [unitValueType, setUnitValueType] = useState("")
-  const [containerType, setContainerType] = useState("")
+  const [unitValueType, setUnitValueType] = useState("weight");
+  const [containerType, setContainerType] = useState("");
 
   const [status, setStatus] = useState();
 
@@ -294,6 +294,7 @@ const Dispatch = () => {
   };
 
   const dispatchData = async (food_id, name) => {
+    if (daigs && totalWeight && containerType !== "") {
     try {
       const data = await fetch("/api/operation_pipeline", {
         method: "POST",
@@ -319,6 +320,7 @@ const Dispatch = () => {
 
         setFinalDispatchData(res.data)
         console.log(res);
+        setUnitValueType("weight")
 
 
         if (res.invalidData) {
@@ -332,7 +334,8 @@ const Dispatch = () => {
       }
     } catch (error) {
       console.log(error);
-    }
+    }      
+  }
   };
   const DispatchDone = async () => {
     
@@ -450,7 +453,9 @@ const Dispatch = () => {
                   status !== 1 &&
                   status !== 2 && (
                     <List
-                      style={{ width: "100&" }}
+                      style={{ maxHeight: '66vh',
+                      overflowY: 'scroll',
+                      width: "100%" }}
                       itemLayout="horizontal"
                       dataSource={getMohallaUsers}
                       renderItem={(item, index) => (
@@ -470,7 +475,7 @@ const Dispatch = () => {
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
                                 // border: "2px solid darkred",
-                                boxShadow: '1px 1px 4px 4px lightgray',
+                                boxShadow: valueShadowBox,
                                 width: "100%",
                                 alignItems: 'center'
                               }}
@@ -534,7 +539,7 @@ const Dispatch = () => {
                   <span style={{display: 'block', fontSize: '1.5rem', fontWeight: '600', margin: '0 auto 16px', padding: '6px 37px'}}>
                   Dispatch For: <span style={{textTransform: 'capitalize', color:colorGreen}}>{selectedMohallaName}</span> | Count: <span style={{textTransform: 'capitalize', color:colorGreen}}>{selectedMohallaPersonCount}</span>
                 </span> 
-                  <Card style={{ backgroundColor: "transparent" }}>
+                  <Card style={{ backgroundColor: "transparent" }} bodyStyle={{padding: '12px'}}>
                     {/* <label
                     style={{ fontSize: "200%" }}
                     className="dongle-font-class"
@@ -548,7 +553,7 @@ const Dispatch = () => {
                       style={{
                         width: "100%",
                         padding: 5,
-                        height: "60vh",
+                        height: "55vh",
                         overflowY: "scroll",
                         overflowX: "hidden",
                         // backgroundColor: '#fff6ed'
@@ -563,7 +568,7 @@ const Dispatch = () => {
                             backgroundColor: "#fff",
                             borderRadius: 10,
                             // border: "2px solid darkred",
-                            boxShadow: '1px 1px 4px 2px lightgray',
+                            boxShadow: valueShadowBox,
                             margin: '8px auto',
                             width: "98%",
                           }}
@@ -580,29 +585,32 @@ const Dispatch = () => {
                           >
                             <span style={{ fontSize: '1.5rem', margin: '1rem .5rem'}}>Food: {item.food_name}</span>
                             <Row>
-                              {finaldipatchData.length !== 0 &&
+                              {finaldipatchData &&
                               finaldipatchData.filter(
                                 (batch) =>
                                   batch.food_item_id === item.food_item_id
                               ).length <= 0 ? (
                                 <>
                                   <Col xs={12} xl={12}>
+                                    <div style={{display: 'flex', columnGap: '.5rem', justifyContent: "flex-start", alignItems: 'center'}}>
                                     <span style={{fontSize: '1.1rem'}}>
                                     Number of 
                                     </span>
                                     <Input 
                                     placeholder="container"
-                                    style={{width: '40%', margin: '8px', border: "none", borderBottom: `2px solid ${colorGreen}`}}
+                                    style={{width: '40%', margin: '8px', border: "none", boxShadow: inputShadowBox, fontSize: '1rem'}}
                                     onChange={(e) => setContainerType(e.target.value)}
                                     />
-                                    :<br />
+                                    :
+                                    </div>
                                     <Input
                                       placeholder="Eg: 2, 3, 15, etc."
                                       onChange={(e) => setDaigs(e.target.value)}
-                                      style={{ fontSize: "140%", width: "70%" }}
+                                      style={{ fontSize: "140%", width: "70%",  border: `1px solid ${colorBlack}`, borderRadius: '5px'  }}
                                     ></Input>
                                   </Col>
                                   <Col xs={12} xl={12}>
+                                  <div style={{display: 'flex', columnGap: '.5rem', justifyContent: "flex-start", alignItems: 'center'}}>
                                     <span style={{fontSize: '1.1rem'}}>
                                     Total
                                     </span>
@@ -613,7 +621,7 @@ const Dispatch = () => {
                                           width: 120, margin: '8px 1px',
                                           // borderBottom: '2px solid darkred',
                                           borderRadius: "10px",
-                                          border: "none", borderBottom: `2px solid ${colorGreen}`
+                                          border: "none", boxShadow: inputShadowBox
                                         }}
                                         bordered={false}
                                         options={[
@@ -631,10 +639,10 @@ const Dispatch = () => {
                                           },
                                         ]}
                                       />
-                                    : <br />
+                                    :</div> 
                                     <Input
                                       placeholder="Eg: 2, 3, 15, etc."
-                                      style={{ fontSize: "140%", width: "70%" }}
+                                      style={{ fontSize: "140%", width: "70%",  border: `1px solid ${colorBlack}`, borderRadius: '5px'  }}
                                       onChange={(e) =>
                                         setTotalWeight(e.target.value)
                                       }
@@ -642,7 +650,7 @@ const Dispatch = () => {
                                   </Col>
                                 </>
                               ) : <Col xs={12} xl={24} style={{ padding: "1%" }}>
-                              {finaldipatchData.length !== 0 &&
+                              {finaldipatchData &&
                                 finaldipatchData
                                   .filter(
                                     (batch) =>
@@ -658,14 +666,12 @@ const Dispatch = () => {
                                           </label>
                                         </Col>
                                         <Col xs={24} xl={8}>
-                                          Total {item?.unitValueType}: <br />
+                                          Total &nbsp;{item?.unitValueType}: <br />
                                           <label style={{ fontSize: "150%" }}>
                                             {item.total_weight} {item?.unitValueType === "weight" ? "Kg" : item?.unitValueType === "liters" ? "Liters" : "Piece"}
                                           </label>
                                         </Col>
                                   <Col xs={12} xl={8} style={{ padding: "1%" }}>
-                 
-                                          
                                             {item?.delivery_status ===
                                             "completed" ? (
                                               <div>
@@ -690,7 +696,7 @@ const Dispatch = () => {
                                 </Row>
                                 <Row>
                               <Col xs={24} xl={24}>
-                              {finaldipatchData.length !== 0 &&
+                              {finaldipatchData &&
                               finaldipatchData.filter(
                                 (batch) =>
                                   batch.food_item_id === item.food_item_id
@@ -801,7 +807,7 @@ const Dispatch = () => {
                   <Button
                     block
                     disabled={dispatchDoneStatus}
-                    style={{ height: "160%", fontSize: "200%" }}
+                    style={{ height: "160%", fontSize: "200%", marginTop: "1rem" }}
                     type="primary"
                     onClick={DispatchDone}
                   >
