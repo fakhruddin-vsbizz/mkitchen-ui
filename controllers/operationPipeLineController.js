@@ -9,17 +9,26 @@ const addTotalPriceToFood = expressAsyncHandler(async (req, res) => {
 
   const {menu_id} = req.body;
 
+  
   let newList = [];
 
+  if (!menu_id) {
+    return res.status(401).json(newList)
+  }
+
   try {
+    const menu = await FoodMenu.findOne({_id: menu_id}, 'food_list')
+    
+    if (!menu) {
+      return res.status(404).json(newList);
+    }
+    
     const ingredientList = await OperationPipeLine.findOne({ menu_food_id : menu_id}, 'ingridient_list.foodId ingridient_list.inventory_item_id ingridient_list.procure_amount');
 
     if (!ingredientList) {
-      return res.status(200).json(newList);
+      return res.status(404).json(newList);
     }
-
-    const menu = await FoodMenu.findOne({_id: menu_id}, 'food_list')
-
+    
 
     const inventoryIdList = ingredientList.ingridient_list.map(item => item.inventory_item_id)
 

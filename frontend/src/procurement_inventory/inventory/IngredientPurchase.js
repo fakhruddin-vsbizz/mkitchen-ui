@@ -19,7 +19,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
 const IngredientPurchase = () => {
@@ -304,7 +304,7 @@ const IngredientPurchase = () => {
                           backgroundColor: "#fff",
                           borderRadius: 10,
                           // borderBottom: "2px solid orange",
-                          boxShadow: '1px 1px 4px 4px lightgray',
+                          boxShadow: valueShadowBox,
                           width: "98%",
                         }}
                       >

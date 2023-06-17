@@ -14,19 +14,13 @@ root.render(
         <div
           className="overlay"
           style={{
-            position: "fixed",
-            // display: "none",
-            width: "fit-content",
-            height: "2%",
-            top: "96%",
-            left: "42%",
-            right: 0,
-            bottom: 0,
-            // backgroundColor: "rgba(0, 0, 0, 0.05)",
-
-            // cursor: "pointer",
-            zIndex: 10,
-            padding: 2,
+            position: 'fixed',
+backgroundColor: 'white',
+padding: '1rem',
+display: 'flex',
+inset: '94% 0px 0px 0%',
+zIndex: '1',
+justifyContent: 'center'
           }}
         >
           <span style={{ textAlign: "center", color: "gray" }}>

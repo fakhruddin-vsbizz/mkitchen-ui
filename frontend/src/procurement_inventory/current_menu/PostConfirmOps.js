@@ -18,7 +18,7 @@ import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
 
@@ -334,7 +334,7 @@ const PostConfirmOps = () => {
                             <List.Item>
                               <Card style={{ margin: "0px 10px", width: "100%", 
                               // border: '2px solid darkred'
-                                boxShadow: '1px 1px 4px 4px lightgray',
+                                boxShadow: valueShadowBox,
                              }}
                               bodyStyle={{padding: '12px'}}
                               >

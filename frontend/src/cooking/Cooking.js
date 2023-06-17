@@ -26,7 +26,7 @@ import Sidebar from "../components/navigation/SideNav";
 import DeshboardBg from "../res/img/DeshboardBg.png";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../colors";
 import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
@@ -423,6 +423,9 @@ const Cooking = () => {
   };
 
   const returnIngToInventory = async (inventory_id, ingName, foodItemId, foodName) => {
+
+    if (setLeftOverQuantity !== "" && setLeftOverQuantity !== undefined) {
+
     try {
       const data = await fetch("/api/cooking/add_leftover", {
         method: "POST",
@@ -467,6 +470,8 @@ const Cooking = () => {
     } catch (error) {
       console.log(error);
     }
+    
+  }
   };
 
   return (
@@ -641,10 +646,10 @@ const Cooking = () => {
                                         style={{
                                           padding: 10,
                                           display: "flex",
-                                          backgroundColor: "#fff6ed",
+                                          backgroundColor: "#fff",
                                           borderRadius: 10,
                                           // border: "2px solid darkred",
-                                          boxShadow: '1px 1px 4px 4px lightgray',
+                                          boxShadow: valueShadowBox,
                                           width: "100%",  
                                           margin: '4px 0'
                                         }}
@@ -704,6 +709,7 @@ const Cooking = () => {
                                           </span>
                                           &nbsp;
                                           <Button
+                                          style={{width: '160px'}}
                                             disabled={status >= 3 || cookingDoneStatus}
                                             onClick={(e) =>
                                               reorderIngridient(
@@ -813,6 +819,8 @@ const Cooking = () => {
                                           </span>
                                               &nbsp;
                                           <Button
+                                          style={{width: '160px',
+                                          marginLeft: '3px'}}
                                             disabled={status >= 3 || cookingDoneStatus || (leftOverQuantity > Number(ing?.procure_amount.toFixed(3)) && (ing.foodId === item.food_item_id && ing.inventory_item_id === inventoryId))}
                                             onClick={(e) =>
                                               returnIngToInventory(
@@ -873,7 +881,7 @@ const Cooking = () => {
                                 backgroundColor: "#fff",
                                 borderRadius: 10,
                                 // border: "2px solid darkred",
-                                boxShadow: '1px 1px 4px 4px lightgray',
+                                boxShadow: valueShadowBox,
                                 width: "100%",
                               }}
                             >

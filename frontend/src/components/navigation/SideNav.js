@@ -182,7 +182,7 @@ const admin = [
     </Link>
   ),
   getItem(
-    <Link to="/admin/verifyvendor">Verify Vendor</Link>,
+    <Link to="/admin/verifyvendor">Vendors</Link>,
     "4",
     <Link to="/admin/verifyvendor">
       <ShopOutlined style={{ fontSize: "20px" }} />
@@ -321,7 +321,7 @@ const SideNav = ({ k, userType }) => {
         }}
       >
         <Sider
-          style={{ backgroundColor: colorBlack, height: '111vh' }}
+          style={{ backgroundColor: colorBlack, height: '111vh', borderRadius: "0 31px 31px 0" }}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}

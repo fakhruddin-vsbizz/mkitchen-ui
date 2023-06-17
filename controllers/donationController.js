@@ -22,6 +22,6 @@ exports.createDonation = async (req, res) => {
 }
 
 exports.getAllDonation = async (req, res) => {
-    const donation = await Donation.find();
+    const donation = await Donation.find().sort([['createdAt', -1]]);
     res.status(200).json(donation)
 }

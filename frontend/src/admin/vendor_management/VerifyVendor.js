@@ -143,7 +143,13 @@ const VerifyVendor = () => {
             </Col>
                 {vendors && (
                   <List
-                    dataSource={filteredVendors}
+                    dataSource={filteredVendors.filter(item => {
+                      if (localStorage.getItem("type") === "mk admin") {
+                        return item.approval_status === true
+                      }else{
+                        return true
+                      }
+                    })}
                     style={{height: "65vh",
                     overflowY: 'scroll'}}
                     renderItem={(item) => (
@@ -199,7 +205,7 @@ const VerifyVendor = () => {
                               
                             
                             &nbsp;&nbsp;&nbsp;
-                            {!item.approval_status ? (
+                            {!item.approval_status? (
                               <Button
                                 onClick={(e) => markVendorVerified(item._id)}
                                 style={{ backgroundColor:'lightgreen' }}

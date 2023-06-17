@@ -398,7 +398,12 @@ const ProcedureLogs = () => {
                   key="1"
                 >
                   <Card
-                    style={{width: "96%", marginLeft: "1%", overflowY: "scroll", overflowX: "hidden", maxHeight:'68vh' }}
+                    style={{width: '95%',
+                    display: 'flex',
+                    justifyContent: 'center',
+marginLeft: '3%',
+overflow: 'hidden scroll',
+maxHeight: '68vh' }}
                     bodyStyle={{padding: '0', width: '80vw', backgroundColor:'transparent'}}
                   >
                     {/* <h2 style={{ color: "#e08003" }}>
@@ -418,7 +423,7 @@ const ProcedureLogs = () => {
                                 borderRadius: 5,
                                 // border: "2px solid darkred",
                 boxShadow: valueShadowBox,
-
+                                margin: '10px',
                                 width: "100%",
                               }}
                             >
@@ -560,7 +565,7 @@ const ProcedureLogs = () => {
                 </Tabs.TabPane>
                 <Tabs.TabPane tab="Ingredients for the menu" key="2">
                   <Card
-                   style={{ width: "96%", marginLeft: "1%", backgroundColor: 'transparent', overflowY: "scroll", overflowX: "hidden", overflowX: "hidden", maxHeight:'55vh' }} bodyStyle={{ padding: '0', width: '80vw'}} >
+                   style={{ width: "96%", marginLeft: "1%", backgroundColor: 'transparent', overflowY: "scroll", overflowX: "hidden", maxHeight:'55vh' }} bodyStyle={{ padding: '0', width: '80vw'}} >
                     {/* <h2 style={{ color: "#e08003" }}>
                       Ingredients for the menu
                     </h2> */}
