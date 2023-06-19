@@ -545,8 +545,12 @@ const Cooking = () => {
             />
 
             <Row style={{ padding: 10 }}>
-              <Col xs={24} xl={16} style={{ padding: "0 1% 2% 2%" }}>
+              <Col xs={24} xl={16} style={{ padding: "0 1% 2% 2%",
+                      overflowY: "scroll",
+                      height: "67vh", }}>
                 {status === -1 && (
+                  <table>
+                    <tbody>
                   <tr>
                     <td colSpan={2}>
                       <br />
@@ -559,8 +563,12 @@ const Cooking = () => {
                       />
                     </td>
                   </tr>
+                    </tbody>
+                  </table>
                 )}
                 {status >= 3 && (
+                  <table>
+                    <tbody>
                   <tr>
                     <td colSpan={2}>
                       <br />
@@ -573,8 +581,12 @@ const Cooking = () => {
                       />
                     </td>
                   </tr>
+                    </tbody>
+                  </table>
                 )}
                 {reorderFullFilled === false && (
+                  <table>
+                    <tbody>
                   <tr>
                     <td colSpan={2}>
                       <br />
@@ -587,8 +599,12 @@ const Cooking = () => {
                       />
                     </td>
                   </tr>
+                    </tbody>
+                  </table>
                 )}
                 {status !== -1 && status < 2 && (
+                  <table>
+                    <tbody>
                   <tr>
                     <td colSpan={2}>
                       <br />
@@ -601,13 +617,13 @@ const Cooking = () => {
                       />
                     </td>
                   </tr>
+                    </tbody>
+                  </table>
                 )}
                 {status >= 2 && (
                   <List
                     style={{
                       width: "100%",
-                      overflowY: "scroll",
-                      height: "70vh",
                     }}
                     itemLayout="horizontal"
                     dataSource={getFoodList}
@@ -618,7 +634,7 @@ const Cooking = () => {
                             <Col xs={12} xl={8}>
                               <label style={{ fontSize: "130%" }}>
                                 <label style={{ fontSize: "160%", color: colorBlack }}>
-                                  <i style={{color: colorGreen}} class="fa-solid fa-plate-wheat"></i>
+                                  <i style={{color: colorGreen}} className="fa-solid fa-plate-wheat"></i>
                                   &nbsp;&nbsp;{item.food_name}
                                 </label>
                               </label>
@@ -859,7 +875,7 @@ const Cooking = () => {
                     <br />
                     <List
                       style={{
-                        height: "70vh",
+                        height: "63vh",
                         overflowY: "scroll",
                         padding: 0,
                       }}

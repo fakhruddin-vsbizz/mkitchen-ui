@@ -110,8 +110,12 @@ const Menu = () => {
         });
         if (data) {
           const res = await data.json();
+          if (data?.message) {
+            setStatus(-1);
+           return
+          }
           if (res[0]) {
-            setStatus(res.status);
+            setStatus(res?.status);
           } else {
             setStatus(-1);
           }
@@ -120,8 +124,6 @@ const Menu = () => {
     };
     getFood();
   }, [dateValue]);
-
-  console.log(status);
 
   useEffect(() => {
     const getIngridients = async () => {
@@ -155,11 +157,13 @@ const Menu = () => {
           return data;
         })
         .then((data) => {
-          if (data.message) {
+          console.log(data, "data");
+          if (data?.message) {
             setIsMenu(false);
             setFoodItems([]);
           } else {
             setFoodItems(data[0].food_list);
+            setReasonForReconfirmingMenu(data[0]?.reason_for_reconfirming_menu)
             setIsMenu(true);
           }
         })
@@ -183,13 +187,11 @@ const Menu = () => {
         });
     };
     getFoodItems();
-  }, []);
+  }, [dateValue]);
 
   const addFoodItem = async () => {
 
     const itemExists = foodItems.find((item) => item.food_name === selectedFood)
-
-    console.log(itemExists, foodItems);
 
     if (selectedFood === "" || itemExists) {
       setSelectedFood("");
@@ -212,7 +214,12 @@ const Menu = () => {
               food_item_id: id,
               // no_of_deigs: 0,
               // total_weight: 0,
-              food_name: selectedFood,
+              food_name: selectedFood.toLowerCase()
+              .split(' ')
+              .map(function(word) {
+                  return word[0].toUpperCase() + word.substring(1);
+              })
+              .join(' '),
             };
             setFoodItems([newFoodItem, ...foodItems]);
           });
@@ -225,7 +232,12 @@ const Menu = () => {
             },
             body: JSON.stringify({
               mkuser_email: emailAdmin,
-              food_name: selectedFood,
+              food_name: selectedFood.toLowerCase()
+              .split(' ')
+              .map(function(word) {
+                  return word[0].toUpperCase() + word.substring(1);
+              })
+              .join(' '),
               ingridient_list: [],
               usage_counter: 0,
             }),
@@ -238,7 +250,12 @@ const Menu = () => {
                 food_item_id: data._id,
                 // no_of_deigs: 0,
                 // total_weight: 0,
-                food_name: selectedFood,
+                food_name: selectedFood.toLowerCase()
+                .split(' ')
+                .map(function(word) {
+                    return word[0].toUpperCase() + word.substring(1);
+                })
+                .join(' '),
               };
               setFoodItems([newFoodItem, ...foodItems]);
             });
@@ -310,6 +327,7 @@ const Menu = () => {
       })
         .then((res) => res.json())
         .then((data) => {
+          setReasonForReconfirmingMenu(data?.foodMenu?.reason_for_reconfirming_menu)
           setVisible(true);
           setStatus(0);
           setFoodItemId("");
@@ -342,21 +360,21 @@ const Menu = () => {
         },
         body: JSON.stringify({
           add_type: "get_mohalla_ashkash",
-          date: "5/3/2023",
+          date: dateValue,
         }),
       });
 
       if (data) {
         const res = await data.json();
         if (res) {
-          if (res[0].mk_id) {
+          if (res?.mk_id) {
             setMohallaAshkash(res);
           }
         }
       }
     };
     getData();
-  }, []);
+  }, [dateValue]);
 
   useEffect(() => {
     const updateMohallaWiseCount = async () => {
@@ -438,7 +456,7 @@ const Menu = () => {
           <Header title="Set Today's Menu" />
           <Row>
             <Col xs={12} xl={12} style={{ padding: "3%" }}>
-              {/* <label style={{ fontSize: "200%" }} className="dongle-font-class">
+              {/* <label style={{ fontSize: "200%" }} className="dongle-font-className">
                 Menu Setting
               </label>
               <Divider style={{ backgroundColor: "#000" }}></Divider> */}
@@ -479,7 +497,7 @@ const Menu = () => {
                   <Col xs={24} xl={12}>
                     Menu for:
                     <br />
-                    <i class="fa-solid fa-calendar"></i> &nbsp;&nbsp;{" "}
+                    <i className="fa-solid fa-calendar"></i> &nbsp;&nbsp;{" "}
                     <span style={{ fontSize: "1.2rem" }}>
                       {" "}
                       {new Date(dateValue).toDateString()}{" "}
@@ -502,7 +520,7 @@ const Menu = () => {
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                 {(new Date(dateValue) >
-                  new Date().setDate(new Date().getDate() - 1)) && status < 3 && <><div
+                  new Date().setDate(new Date().getDate() - 1)) && status < 2 && <><div
                   style={{ marginTop: 10, marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: 'baseline' }}
                 >
                   <div style={{ width: "83%", display: 'flex', columnGap: '6px' }}>
@@ -574,7 +592,7 @@ const Menu = () => {
                       <div style={{ width: "60%" }}>
                         <div style={{ fontSize: "140%", display: 'flex', columnGap: '1rem' }}>
                           <span>
-                          <i class="fa-solid fa-bowl-rice"></i>
+                          <i className="fa-solid fa-bowl-rice"></i>
                           </span>
                           <span>
                           {item.food_name}
@@ -617,7 +635,7 @@ const Menu = () => {
                                 {newItem?.ingridient_list.length !== 0 && newItem.ingridient_list.map(
                                   (ing, ingIndex) => (
                                     <Tag color={colorGreen} key={ingIndex}>
-                                      <i class="fa-solid fa-plate-wheat"></i> &nbsp;
+                                      <i className="fa-solid fa-plate-wheat"></i> &nbsp;
                                       {ing.ingredient_name}
                                     </Tag>
                                     // <span key={ingIndex}>
@@ -628,7 +646,7 @@ const Menu = () => {
                               </div>
                             ))}
                       </div>
-                      {(new Date(dateValue) > new Date().setDate(new Date().getDate() - 1)) && status < 3 && <div
+                      {(new Date(dateValue) > new Date().setDate(new Date().getDate() - 1)) && status < 2 && <div
                         style={{
                           width: "20%",
                           display: "flex",
@@ -647,7 +665,7 @@ const Menu = () => {
                           }}
                           onClick={() => deleteItem(item)}
                         >
-                          <i class="fa-solid fa-trash"></i>
+                          <i className="fa-solid fa-trash"></i>
                         </Button>
                       </div>}
                     </div>
@@ -684,7 +702,7 @@ const Menu = () => {
                     //           size="small"
                     //           onClick={() => deleteItem(item)}
                     //         >
-                    //           <i class="fa-solid fa-trash"></i>
+                    //           <i className="fa-solid fa-trash"></i>
                     //         </Button>
                     //       </center>
                     //     </Col>
@@ -703,7 +721,7 @@ const Menu = () => {
                   <div style={{ width: "100%", textAlign: "right" }}>
                     <Button
                       onClick={createMenu}
-                      disabled={menuConfimStatus}
+                      // disabled={menuConfimStatus}
                       style={{
                         width: "100%",
                         backgroundColor: colorGreen,
@@ -716,7 +734,7 @@ const Menu = () => {
                       Confirm Menu
                     </Button>
                   </div>
-                ) : (status <3 && <div style={{ width: "100%", textAlign: "left", marginTop: '1rem' }}>
+                ) : (status < 2 && <div style={{ width: "100%", textAlign: "left", marginTop: '1rem' }}>
                   <label htmlFor="reason" className="label">Reason for changing menu : </label>
                   <TextArea rows={2} name="reason" id="reason" style={{marginBlock: '.5rem', fontSize: '1.1rem'}} value={reasonForReconfirmingMenu} onChange={(e) => setReasonForReconfirmingMenu(e.target.value)} />
                 <Button

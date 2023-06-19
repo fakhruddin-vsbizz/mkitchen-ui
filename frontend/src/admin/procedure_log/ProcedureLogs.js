@@ -612,7 +612,7 @@ maxHeight: '68vh' }}
                                         </label>
                                       </Col>
                                       <Col xs={12} xl={6}>
-                                        Required Amount: <br />
+                                        Required Quantity: <br />
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-scale-unbalanced"></i>{" "}
                                           &nbsp;
@@ -642,7 +642,7 @@ maxHeight: '68vh' }}
                                         <label style={{ color:'darkgreen' }}>+ 2 KGs reordered</label><br/> */}
                                       </Col>
                                       <Col xs={12} xl={6}>
-                                        Leftover amount:
+                                        Leftover Quantity:
                                         <br />
                                         <label style={{ fontSize: "120%" }}>
                                           <i className="fa-solid fa-chart-pie"></i>{" "}

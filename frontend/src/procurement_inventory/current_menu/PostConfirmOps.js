@@ -50,7 +50,7 @@ const newTodaysDate = dateFormatter();
 const PostConfirmOps = () => {
   const [menuFoodId, setMenuFoodId] = useState();
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
-  const [foodItems, setFoodItems] = useState(null);
+  const [foodItems, setFoodItems] = useState([]);
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(true);
   const [status, setStatus] = useState();
@@ -104,6 +104,8 @@ const PostConfirmOps = () => {
           const res = await data.json();
           setStatus(res);
         }
+      }else {
+        setStatus(0);
       }
     };
     getFood();
@@ -124,7 +126,10 @@ const PostConfirmOps = () => {
         });
         if (data) {
           const res = await data.json();
-          if (res) {
+          if(res?.message){
+            setMenuFoodId("")
+            setFoodItems([])
+          }else if (res) {
             setMenuFoodId(res[0]._id);
             setFoodItems(res[0].food_list);
           }
@@ -263,11 +268,11 @@ const PostConfirmOps = () => {
             {status < 2 ? (
               <center>
               <div style={{ marginTop: '8%', marginBottom: '8%' }}>
-                <label style={{ fontSize: '800%', color: colorGreen }}>
-                  <i class="fa-solid fa-hourglass-start"></i>
+                <label style={{ fontSize: '800%', color: colorGreen, marginBottom: '1rem' }}>
+                  <i style={{color: 'gray'}} className="fa-solid fa-hourglass-start"></i>
                 </label>
                 <br/>
-                <label style={{ fontSize: '120%', width:'50%' }}>Procurement is not done yet. Please wait or try again later.</label>
+                <label style={{ fontSize: "120%", width: "50%", color: 'gray' }}>Procurement is not done yet.<br />Please wait or try again later.</label>
               </div>
             </center>
             ) : (
@@ -389,10 +394,10 @@ const PostConfirmOps = () => {
                         />
                       </div>
                     ) : (
-                      <div style={{ marginBottom: '8%', width:'30%', border:'0.5px solid black', padding:'5%', borderRadius:'10px' }}>
+                      <div style={{ marginBottom: '8%', width:'30%', border:'0.5px solid black', padding:'5%', borderRadius:'10px'}}>
                         <center>
                           <label style={{ fontSize: '200%', color: colorGreen }}>
-                          <i class="fa-brands fa-creative-commons-zero"></i>
+                          <i className="fa-brands fa-creative-commons-zero"></i>
                           </label>
                           <br/>
                           <label style={{ fontSize: '100%', width:'50%' }}>For now, there are no reorders for this menu</label>

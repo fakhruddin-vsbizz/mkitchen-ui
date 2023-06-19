@@ -148,52 +148,52 @@ const Dispatch = () => {
 
   //get the dispatch data for mk -user.
 
-  useEffect(() => {
-    const getFood = async () => {
-      if (menuFoodId && mohallaUserId) {
-        const data = await fetch("/api/operation_pipeline", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_mohalla_dispatch_data",
-            menu_id: menuFoodId,
-            mk_id: mohallaUserId,
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-        }
-      }
-    };
-    getFood();
-  }, [menuFoodId, mohallaUserId]);
+  // useEffect(() => {
+  //   const getFood = async () => {
+  //     if (menuFoodId && mohallaUserId) {
+  //       const data = await fetch("/api/operation_pipeline", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           type: "get_mohalla_dispatch_data",
+  //           menu_id: menuFoodId,
+  //           mk_id: mohallaUserId,
+  //         }),
+  //       });
+  //       if (data) {
+  //         const res = await data.json();
+  //       }
+  //     }
+  //   };
+  //   getFood();
+  // }, [menuFoodId, mohallaUserId]);
 
   //updating the dispatch delivery status.
 
-  useEffect(() => {
-    const getFood = async () => {
-      if (menuFoodId && mohallaUserId) {
-        const data = await fetch("/api/operation_pipeline", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "update_dispatch_delivery_status",
-            menu_id: menuFoodId,
-            mk_id: mohallaUserId,
-            food_item_id: "6440fb6d4f57047f11926b0f",
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-        }
-      }
-    };
-    getFood();
-  }, [menuFoodId, mohallaUserId]);
+  // useEffect(() => {
+  //   const getFood = async () => {
+  //     if (menuFoodId && mohallaUserId) {
+  //       const data = await fetch("/api/operation_pipeline", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           type: "update_dispatch_delivery_status",
+  //           menu_id: menuFoodId,
+  //           mk_id: mohallaUserId,
+  //           food_item_id: "6440fb6d4f57047f11926b0f",
+  //         }),
+  //       });
+  //       if (data) {
+  //         const res = await data.json();
+  //       }
+  //     }
+  //   };
+  //   getFood();
+  // }, [menuFoodId, mohallaUserId]);
 
   //getting the status from operational pipeline
   useEffect(() => {
@@ -236,6 +236,9 @@ const Dispatch = () => {
           if (res) {
             if (res.dispatch.length > 0) {
               setViewDispatchedData(res.dispatch);
+              console.log(res.dispatch);
+            }else{
+              setViewDispatchedData([]);
             }
           }
         }
@@ -251,6 +254,7 @@ const Dispatch = () => {
         (item) => item.mk_id === mohallaUserId
       );
       if (data[0]) {
+        console.log(data);
         setFinalDispatchData(data[0].dispatch);
       } else {
         setFinalDispatchData([]);
@@ -274,12 +278,15 @@ const Dispatch = () => {
         });
         if (data) {
           const res = await data.json();
+          console.log(res);
+          console.log(menuFoodId, "id");
           if (res[0]) {
             setMenuFoodId(res[0]._id);
             setGetMohallaUsers(res[0].mohalla_wise_ashkhaas);
             // console.log(res[0].mohalla_wise_ashkhaas);
             setFoodList(res[0].food_list);
           } else {
+            setMenuFoodId();
             setGetMohallaUsers([]);
             setInputError(false);
           }
@@ -422,10 +429,10 @@ const Dispatch = () => {
               <center>
                 <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
                   <label style={{ fontSize: '800%', color: colorGreen }}>
-                    <i class="fa-solid fa-hourglass-start"></i>
+                    <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
                   </label>
                   <br/><br/>
-                  <label style={{ fontSize: '120%', width:'50%' }}>Cooking has not been done yet. Please wait while cooking department has confirmed dispatch.</label>
+                  <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Cooking has not been done yet.<br />Please wait while cooking department has confirmed dispatch.</label>
                 </div>
               </center>
             )}
@@ -481,14 +488,14 @@ const Dispatch = () => {
                               }}
                             >
                               <Col xs={16} xl={9}>
-                                Food Name:
+                                Dish:
                                 <br />
                                 <label style={{ fontSize: "125%" }}>
                                   {item?.name}
                                 </label>
                               </Col>
                               <Col xs={16} xl={9}>
-                                Total Person:
+                                Total Person Count:
                                 <br />
                                 <label style={{ fontSize: "125%" }}>
                                   {item?.total_ashkhaas} People
@@ -658,7 +665,7 @@ const Dispatch = () => {
                                   )
                                   .map((item) => (
                                     
-                                      <Row>
+                                      <Row key={item.food_item_id}>
                                         <Col xs={24} xl={8}>
                                           Number of {item?.containerType}: <br />
                                           <label style={{ fontSize: "150%" }}>
