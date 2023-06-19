@@ -442,12 +442,12 @@ maxHeight: '68vh' }}
                                   </label>
                                 </Col>
                                 <Col xs={6} xl={7}>
-                                <i className="fa-solid fa-star"></i>&nbsp;&nbsp;Ratings (out of 5):
+                                {/* <i className="fa-solid fa-star"></i>&nbsp;&nbsp;Ratings (out of 5): */}
                                   <Rate disabled allowHalf defaultValue={+item.review} />
                                 </Col>
-                                <Col xs={6} xl={9}>
-                                <i className="fa-solid fa-magnifying-glass"></i>
-                                    &nbsp;&nbsp;Review :
+                                <Col xs={6} xl={9} style={{display: 'flex',alignItems: 'center'}}>
+                                <i class="fa-regular fa-message fa-flip-horizontal"></i>
+                                    &nbsp;&nbsp;
                                   <label>
                                     {item.remark}
                                   </label>

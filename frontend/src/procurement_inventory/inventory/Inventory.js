@@ -29,7 +29,7 @@ const Inventory = () => {
   const [fetchedUnit, setFetchedUnitUnit] = useState("");
   const [expiry, setExpiry] = useState("");
   const [expiryType, setExpiryType] = useState("");
-  const [price, setPrice] = useState("");
+  const [price, setPrice] = useState(0);
   const [baseline, setbaseline] = useState("");
   const [inventoryId, setInventoryId] = useState("");
 
@@ -123,7 +123,12 @@ const Inventory = () => {
         },
         body: JSON.stringify({
           mkuser_email: email,
-          ingridient_name: name,
+          ingridient_name: name.toLowerCase()
+          .split(' ')
+          .map(function(word) {
+              return word[0].toUpperCase() + word.substring(1);
+          })
+          .join(' '),
           ingridient_measure_unit: unit,
           ingridient_expiry_period: expiryType,
           ingridient_expiry_amount: expiry,
@@ -175,7 +180,12 @@ const Inventory = () => {
         },
         body: JSON.stringify({
           inventory_id: inventoryId,
-          ingridient_name: name,
+          ingridient_name: name.toLowerCase()
+          .split(' ')
+          .map(function(word) {
+              return word[0].toUpperCase() + word.substring(1);
+          })
+          .join(' '),
           ingridient_measure_unit: unit,
           ingridient_expiry_period: expiryType,
           ingridient_expiry_amount: expiry,
@@ -194,7 +204,7 @@ const Inventory = () => {
           setExpiry("");
           setExpiryType("");
           setUnit("");
-          setPrice("");
+          setPrice(0);
           setbaseline("");
           setValidationError(false);
           setValidationError(false);
@@ -327,7 +337,7 @@ const Inventory = () => {
                                   ></Input>
                                 </td>
                               </tr>
-                              <tr>
+                              {/* <tr>
                                 <td>Avearage Price</td>
                                 <td>
                                   <Input
@@ -336,7 +346,7 @@ const Inventory = () => {
                                     placeholder="Eg: 250, 100"
                                   ></Input>
                                 </td>
-                              </tr>
+                              </tr> */}
                               <tr>
                                 <td>Baseline</td>
                                 <td>
@@ -418,11 +428,7 @@ const Inventory = () => {
                               <tr>
                                 <td>Avearage Price</td>
                                 <td>
-                                  <Input
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    placeholder="Eg: 250, 100"
-                                  ></Input>
+                                  <label>₹&nbsp;{price}</label>
                                 </td>
                               </tr>
                               <tr>

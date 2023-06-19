@@ -163,9 +163,39 @@ exports.getAvgCost = expressAsyncHandler(async (req, res) => {
             name: name,
             _id: id,
             qty: totalQty,
-            unitPrice: totalCost / totalQty,
+            avgPrice: Math.ceil(totalCost / totalQty),
             cost: totalCost
         }
+
+        res.status(200).json(result);
+
+    } catch (error) {
+        res.status(400).json(error);
+    }
+})
+
+exports.updateAvgCost = expressAsyncHandler(async (req, res) => {
+    const id = req.params.id;
+    let name;
+    var totalQty = 0
+    var totalCost = 0
+
+    try {
+        let item = await Purchases.find({ inventory_id: id })
+        item.forEach(i => {
+            name = i.ingredient_name;
+            totalCost += i.total_amount;
+            totalQty += i.quantity_loaded;
+        });
+        result = {
+            name: name,
+            _id: id,
+            qty: totalQty,
+            avgPrice: Math.ceil(totalCost / totalQty),
+            cost: totalCost
+        }
+
+        await Inventory.findOneAndUpdate({_id : id}, {price: Math.ceil(totalCost / totalQty)})
 
         res.status(200).json(result);
 
