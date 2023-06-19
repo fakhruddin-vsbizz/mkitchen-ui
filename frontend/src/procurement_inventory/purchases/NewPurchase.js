@@ -27,8 +27,8 @@ const NewPurchase = () => {
   const [inventoryItemName, setInventoryItemName] = useState();
   const [price, setPrice] = useState();
   const [quantity, setQuantity] = useState();
-  const [vendors, setVendors] = useState();
-  const [selectedVendor, setSelectedVendor] = useState();
+  const [vendors, setVendors] = useState(); 
+  const [selectedVendor, setSelectedVendor] = useState("");
   const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
   const [visible, setVisible] = useState(false);
   const [itemName, setItemName] = useState("")
@@ -186,7 +186,7 @@ const NewPurchase = () => {
   },[idFromPrams,inventoryItems])
 
 
-  const onAddIngredient = () => {
+  const onAddIngredient = async() => {
     if(ingredientForPurchase.length === 0 || ingredientForPurchase.filter(item => item?.inventory_id === inventoryItemId).length === 0){
       if (inventoryItemName === undefined) {
         setValidationError(true);
@@ -222,21 +222,44 @@ const NewPurchase = () => {
         });
   
         // Output the final date
-  
-        var ingredient_added = {
-          mkuser_id: userId,
-          ingredient_name: inventoryItemName,
-          vendor_id: selectedVendor,
-          inventory_id: inventoryItemId,
-          rate_per_unit: price,
-          quantity_loaded: quantity,
-          paid: false,
-          total_amount: price * quantity,
-          expiry_date: formattedDate,
-          unshelf: false,
-        };
-        setIngredientForPurchase([ingredient_added, ...ingredientForPurchase]);
-        
+
+        // let avgPrice = 0;
+
+        try {
+          // const res = await fetch(`/api/report/update-avg-item-cost/${inventoryItemId}`, {
+          //   method: "GET",
+          //   headers: {
+          //     "Content-Type": "application/json",
+          //   }
+          // })
+
+          // const data = await res.json()
+
+          // avgPrice = await data?.avgPrice;
+
+          // console.log(avgPrice);
+          
+          const ingredient_added = {
+            mkuser_id: userId,
+            ingredient_name: inventoryItemName,
+            vendor_id: selectedVendor,
+            inventory_id: inventoryItemId,
+            rate_per_unit: price,
+            quantity_loaded: quantity,
+            paid: false,
+            total_amount: price * quantity,
+            expiry_date: formattedDate,
+            unshelf: false,
+          };
+
+          console.log(ingredient_added);
+
+          setIngredientForPurchase([...ingredientForPurchase,ingredient_added]);
+
+        } catch (error) {
+          console.log(error);
+        }
+
       }
     }
     setItemName("")
@@ -287,7 +310,10 @@ const NewPurchase = () => {
   };
 
   const addPurchaseData = async () => {
+    const idArray = ingredientForPurchase.map(item => item.inventory_id);
+    // console.log(idArray);
     try {
+      console.log(ingredientForPurchase);
       const data = await fetch("/api/purchase", {
         method: "POST",
         headers: {
@@ -308,19 +334,29 @@ const NewPurchase = () => {
             setFieldsError(true);
             setValidationError(false);
           } else {
-            setVisible(true);
-            setIngredientForPurchase([]);
-            setPrice("");
-            setQuantity("");
-            setSelectedVendor("");
-            setInventoryItemName("");
-            setInventoryItemId("");
-            setValidationError(false);
-            setFieldsError(false);
+              setVisible(true);
+              setIngredientForPurchase([]);
+              setPrice("");
+              setQuantity("");
+              setSelectedVendor("");
+              setInventoryItemName("");
+              setInventoryItemId("");
+              setValidationError(false);
+              setFieldsError(false);
+
+              await Promise.all(idArray.map((e, index) => {
+                return fetch(`/api/report/update-avg-item-cost/${e.inventory_id}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                    })
+            }))
           }
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (

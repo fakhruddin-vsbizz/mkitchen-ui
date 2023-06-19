@@ -310,6 +310,7 @@ const SideNav = ({ k, userType }) => {
     <Layout
       style={{
         boxShadow: valueNavShadowBox,
+        backgroundColor: colorBlack
       }}
     >
       <ConfigProvider

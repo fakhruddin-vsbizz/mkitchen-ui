@@ -16,55 +16,89 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
     documents,
   } = req.body;
 
-  //validation and error handling
-  if (documents.length === 0) {
-    return res.status(403).json({ error: "please add items" });
-  }
-  documents.forEach((element) => {
-    if (
-      element.quantity_loaded === undefined ||
-      element.rate_per_unit === undefined ||
-      element.vendor_id === undefined
-    ) {
-      return res.status(403).json({ fieldError: "please add all the fields" });
+  try {
+    //validation and error handling
+    if (documents.length === 0) {
+      return res.status(403).json({ error: "please add items" });
     }
-  });
-  // Create an array of write operations to perform in bulk
-  const ops = documents.map((doc) => ({
-    insertOne: { document: doc },
-  }));
-
-  // Perform the bulk write operation
-  await Purchase.bulkWrite(ops)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => {
-      console.error(error);
+    documents.forEach((element) => {
+      if (
+        element.quantity_loaded === undefined ||
+        element.rate_per_unit === undefined ||
+        element.vendor_id === undefined
+      ) {
+        return res.status(403).json({ fieldError: "please add all the fields" });
+      }
     });
-
-  // Create an array of write operations to perform in bulk
-  const updateInventory = documents.map((inventory) => ({
-    updateOne: {
-      filter: { _id: inventory.inventory_id },
-      update: {
-        $inc: {
-          total_volume: inventory.quantity_loaded,
+    // Create an array of write operations to perform in bulk
+    const ops = documents.map((doc) => ({
+      insertOne: { document: doc },
+    }));
+  
+    // Perform the bulk write operation
+    await Purchase.bulkWrite(ops)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      
+  
+    // Create an array of write operations to perform in bulk
+    const updateInventory = documents.map((inventory) => ({
+      updateOne: {
+        filter: { _id: inventory.inventory_id },
+        update: {
+          $inc: {
+            total_volume: inventory.quantity_loaded,
+          }
         },
       },
-    },
-  }));
+    }));
 
-  // Perform the bulk write operation
-  await InventoryModel.bulkWrite(updateInventory)
-    .then((result) => {
-      console.log(result);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
+    // Perform the bulk write operation
+    await InventoryModel.bulkWrite(updateInventory)
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
 
-  return res.json({ message: "Purchase added" });
+    const data = await Promise.all(
+      documents.map(async (doc) => {
+        const id = doc.inventory_id;
+        let name;
+        var totalQty = 0
+        var totalCost = 0
+
+            let item = await Purchase.find({ inventory_id: id })
+            item.forEach(i => {
+                name = i.ingredient_name;
+                totalCost += i.total_amount;
+                totalQty += i.quantity_loaded;
+            });
+            result = {
+                name: name,
+                _id: id,
+                qty: totalQty,
+                avgPrice: Math.ceil(totalCost / totalQty),
+                cost: totalCost
+            }
+    
+            await InventoryModel.findOneAndUpdate({_id : id}, {price: Math.ceil(totalCost / totalQty)})
+      })
+    );
+  
+    
+  
+    return res.json({ message: "Purchase added" });
+    
+  } catch (error) {
+    console.log(error);
+  }
+
 });
 
 const getVendorWisePurchase = expressAsyncHandler(async (req, res) => {
