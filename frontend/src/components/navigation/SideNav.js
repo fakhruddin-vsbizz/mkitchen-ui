@@ -136,7 +136,7 @@ const superAdmin = [
     </Link>
   ),
   getItem(
-    <Link to="/pai/expiries">Expiries</Link>,
+    <Link to="/pai/expiries">Expired Goods</Link>,
     "14",
     <Link to="/pai/expiries">
       <ShopOutlined style={{ fontSize: "20px" }} />
@@ -270,7 +270,7 @@ const pai = [
     </Link>
   ),
   getItem(
-    <Link to="/pai/expiries">Expiries</Link>,
+    <Link to="/pai/expiries">Expired Goods</Link>,
     "6",
     <Link to="/pai/expiries">
       <ShopOutlined style={{ fontSize: "20px" }} />

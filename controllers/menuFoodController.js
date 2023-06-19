@@ -61,65 +61,90 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     }
   }
 
-  if (add_type === "add_menu") {
-    console.log("here");
-    if (date_of_cooking === "" || food_list.length === 0) {
-      return res.status(404).json({ error: "date or food item not selected " });
+  if (add_type === "menu_reset") {
+    try {
+      const {menu_reset} = req.body;
+      const menu = await FoodMenu.findOneAndUpdate({ date_of_cooking: date_of_cooking }, {menu_reset: menu_reset});
+      // console.log(menu);
+      res.status(200).json(menu)
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    const menu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
+  if (add_type === "add_menu") {
 
-    console.log(menu);
-
-    if (menu === null) {
-      console.log("not exists");
-      const foodMenu = await FoodMenu.create({
-        food_list,
-        total_ashkhaas,
-        mohalla_wise_ashkhaas,
-        date_of_cooking,
-        client_name,
-        jaman_coming,
-        reason_for_undelivered,
-      });
-
-      if (foodMenu) {
-        const operationPipeLine = await OperationPipeLine.create({
-          menu_food_id: foodMenu._id,
-          ingridient_list,
-          reorder_logs,
-          dispatch,
-          status,
-          leftover,
+    try {
+      
+      const {reason_for_reconfirming_menu} = req.body;
+  
+      console.log("here");
+      if (date_of_cooking === "" || food_list.length === 0) {
+        return res.status(404).json({ error: "date or food item not selected" });
+      }
+  
+      const menu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
+  
+      console.log(menu);
+  
+      if (menu === null) {
+        console.log("not exists");
+        const foodMenu = await FoodMenu.create({
+          food_list,
+          total_ashkhaas,
+          mohalla_wise_ashkhaas,
+          date_of_cooking,
+          client_name,
+          jaman_coming,
+          menu_reset: false,
+          reason_for_reconfirming_menu,
+          reason_for_undelivered,
         });
-
-        if (operationPipeLine) {
-          return res.status(201).json({
-            _id: operationPipeLine.id,
-            menu_food_id: operationPipeLine.menu_food_id,
-            message: "menu created ",
+  
+        if (foodMenu) {
+          const operationPipeLine = await OperationPipeLine.create({
+            menu_food_id: foodMenu._id,
+            ingridient_list,
+            reorder_logs,
+            dispatch,
+            status,
+            leftover,
           });
+  
+          if (operationPipeLine) {
+            return res.status(201).json({
+              _id: operationPipeLine.id,
+              menu_food_id: operationPipeLine.menu_food_id,
+              message: "menu created ",
+              foodMenu
+            });
+          } else {
+            res.status(400);
+            throw new Error("Error creating the operationPipeLine ");
+          }
         } else {
           res.status(400);
-          throw new Error("Error creating the operationPipeLine ");
+          throw new Error("Error creating the menu");
         }
       } else {
-        res.status(400);
-        throw new Error("Error creating the menu");
+        menu.food_list = food_list;
+        menu.total_ashkhaas = total_ashkhaas;
+        // menu.mohalla_wise_ashkhaas = mohalla_wise_ashkhaas;
+        menu.date_of_cooking = date_of_cooking;
+        menu.client_name = client_name;
+        menu.jaman_coming = jaman_coming;
+        menu.reason_for_undelivered = reason_for_undelivered;
+        menu.reason_for_reconfirming_menu = reason_for_reconfirming_menu;
+        menu.menu_reset = true
+  
+        await menu.save();
+        return res.json({ message: "menu updated ", menu });
       }
-    } else {
-      menu.food_list = food_list;
-      menu.total_ashkhaas = total_ashkhaas;
-      // menu.mohalla_wise_ashkhaas = mohalla_wise_ashkhaas;
-      menu.date_of_cooking = date_of_cooking;
-      menu.client_name = client_name;
-      menu.jaman_coming = jaman_coming;
-      menu.reason_for_undelivered = reason_for_undelivered;
-
-      await menu.save();
-      return res.json({ message: "menu updated " });
+      // return res.json({ message: "menu created " });
+    } catch (error) {
+    console.log(error);  
     }
-    // return res.json({ message: "menu created " });
+
   }
 
   if (add_type === "food_item") {
@@ -144,7 +169,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
 
   if (add_type === "get_food_item") {
     const foodMenu = await FoodItem.find();
-    return res.json(foodMenu);
+    return res.status(200).json(foodMenu);
   }
 
   if (add_type === "get_food_item_id") {

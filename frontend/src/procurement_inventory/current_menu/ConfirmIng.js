@@ -44,11 +44,13 @@ const TodaysDate = dateFormatterForToday();
 const newTodaysDate = dateFormatter();
 
 const ConfirmIng = () => {
-  const [menuFoodId, setMenuFoodId] = useState("");
+  const [menuFoodId, setMenuFoodId] = useState();
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
   const [procureIngridients, setProcureIngridients] = useState([]);
   const [visible, setVisible] = useState(false);
   const [operationalPipelineStatus, setOperationalPipelineStatus] = useState();
+  const [reasonForChangingMenu, setReasonForChangingMenu] = useState("");
+
 
   const [finalizeBtnVisible, setFinalizeBtnVisible] = useState(false)
 
@@ -57,8 +59,6 @@ const ConfirmIng = () => {
   const location = useLocation();
 
   /**************Restricting PandI Route************************* */
-
-  console.log(procureIngridients);
   useEffect(() => {
     const type = localStorage.getItem("type");
 
@@ -94,30 +94,7 @@ const ConfirmIng = () => {
     // console.log(id);
   };
 
-  useEffect(() => {
-    const getStatus = async () => {
-      if (menuFoodId) {
-        const data = await fetch("/api/operation_pipeline", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_status_op",
-            menu_id: menuFoodId,
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-          if (res) {
-            setOperationalPipelineStatus(res);
-          }
-        }
-      }
-    };
-    getStatus();
-  }, [menuFoodId]);
-
+  
   useEffect(() => {
     const getFood = async () => {
       if (selectedDate) {
@@ -133,9 +110,14 @@ const ConfirmIng = () => {
         });
         if (data) {
           const res = await data.json();
-          if (res[0]) {
-            setMenuFoodId(res[0]?._id);
-            setOperationalPipelineStatus(res.status);
+          console.log("res", res);
+          if (res?.message) {
+            setMenuFoodId("");
+            return;
+          }else if (res[0]) {
+            setMenuFoodId(res[0]?._id || "");
+            setOperationalPipelineStatus(res?.status);
+            setReasonForChangingMenu(res?.reason_for_reconfirming_menu);
           }
         }
       }
@@ -144,8 +126,44 @@ const ConfirmIng = () => {
   }, [selectedDate]);
 
   useEffect(() => {
+    const getStatus = async () => {
+      if (menuFoodId) {
+        const data = await fetch("/api/operation_pipeline", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            type: "get_status_op",
+            menu_id: menuFoodId,
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          // console.log("ressss", res);
+          if (res?.message) {
+            // setOperationalPipelineStatus(-1);
+            // console.log(res);
+            return;
+          }else if (res) {
+            setOperationalPipelineStatus(res);
+          }
+        }
+      }else {
+        setOperationalPipelineStatus(-1);
+      }
+    };
+    getStatus();
+  }, [menuFoodId]);
+
+
+  useEffect(() => {
     const getInventory = async () => {
-      if (operationalPipelineStatus >= 3 && selectedDate && menuFoodId) {
+      // console.log(menuFoodId);
+      if(!menuFoodId){
+        setProcureIngridients([]);
+        return;
+      }else if (selectedDate && menuFoodId) {
         try {
           const data = await fetch("/api/pai/procurement", {
             method: "POST",
@@ -161,11 +179,38 @@ const ConfirmIng = () => {
 
           if (data) {
             const res = await data.json();
-            console.log(res);
-            if (res._id) {
-              setProcureIngridients(res.procure_items);
-            }
+            // console.log(res);
+            // console.log("170 res", res)
             if (res?.message) {
+              try {
+                if (menuFoodId) {
+                  try {
+                    const data = await fetch("/api/pai/procurement", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify({
+                        menu_id: menuFoodId,
+                        type: "get_procure_data",
+                      }),
+                    });
+      
+                    if (data) {
+                      const res = await data.json();
+                  // console.log("220 res", res)
+      
+                      if (res) {
+                        setProcureIngridients(res);
+                      }
+                    }
+                  } catch (error) {
+                    console.log(error);
+                  }
+                }
+              } catch (error) {
+                console.log(error);
+              }
               // if (menuFoodId) {
               //   try {
               //     const data = await fetch("/api/pai/procurement", {
@@ -189,45 +234,23 @@ const ConfirmIng = () => {
               //     console.log(error);
               //   }
               // }
+            }else if (res._id) {
+              setProcureIngridients(res?.procure_items);
             }
+            
           }
         } catch (error) {
           console.log(error);
         }
       }else{
-        try {
-          if (menuFoodId) {
-            try {
-              const data = await fetch("/api/pai/procurement", {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  menu_id: menuFoodId,
-                  type: "get_procure_data",
-                }),
-              });
-
-              if (data) {
-                const res = await data.json();
-                if (res) {
-                  setProcureIngridients(res);
-                }
-              }
-            } catch (error) {
-              console.log(error);
-            }
-          }
-        } catch (error) {
-          console.log(error);
-        }
+        
       }
     };
     getInventory();
-  }, [menuFoodId, selectedDate, operationalPipelineStatus]);
+  }, [menuFoodId]);
 
   const markProcureIngridients = async () => {
+    console.log(procureIngridients);
     try {
       const data = await fetch("/api/pai/procurement", {
         method: "POST",
@@ -246,11 +269,13 @@ const ConfirmIng = () => {
 
       if (data) {
         const res = await data.json();
-        if (res) {
-          setVisible(true);
-          setSelectedDate("");
-          setMenuFoodId("");
-        }
+        console.log("proc res", res);
+        setOperationalPipelineStatus(2);
+        // if (res) {
+        //   setVisible(true);
+        //   // setSelectedDate("");
+        //   // setMenuFoodId("");
+        // }
       }
     } catch (err) {
       console.log(err);
@@ -307,6 +332,15 @@ const ConfirmIng = () => {
                 </Row>
               }
             />
+            {operationalPipelineStatus < 0 && (
+              <Alert
+                style={{ margin: "0.5rem" }}
+                message="Message"
+                description="Menu is not set for today"
+                type="error"
+                closable
+              />
+            )}
             {operationalPipelineStatus === 0 && (
               <Alert
                 style={{ margin: "0.5rem" }}
@@ -416,9 +450,11 @@ const ConfirmIng = () => {
                 )}
               </div>
             </div>
+            {/* {reasonForChangingMenu !== "" && operationalPipelineStatus >= 2 ? (<>
+            <Button>Collect previos</Button>
+            </>) : */}
         {operationalPipelineStatus &&
-          operationalPipelineStatus < 2 &&
-          operationalPipelineStatus !== 0 && (
+          operationalPipelineStatus < 2 && menuFoodId &&
             <Button
               onClick={markProcureIngridients}
               disabled={finalizeBtnVisible || (procureIngridients.length !== 0 && procureIngridients.filter(item => item?.sufficient === false).length !== 0)}
@@ -427,9 +463,9 @@ const ConfirmIng = () => {
               style={{ fontSize: "200%", height: "10%",width: "97%",
               alignSelf: "center" }}
             >
-              FINALIZE AND PUSH TO COOKING
+              Hand Over To Cooking Department
             </Button>
-        )}
+        }
           </div>
         </div>
       </ConfigProvider>

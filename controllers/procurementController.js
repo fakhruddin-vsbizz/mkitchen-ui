@@ -47,9 +47,9 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         return {
           inventoryItemId,
           ingridientName: group.ingridientName,
-          total_quantity: (inventory.total_volume - requiredVolume),
+          total_quantity: Number((inventory.total_volume - requiredVolume).toFixed(2)),
           unit: group.unit ?? inventory.ingridient_measure_unit,
-          requiredVolume,
+          requiredVolume: Number(requiredVolume.toFixed(2)),
           sufficient: inventory.total_volume >= requiredVolume,
         };
       })
@@ -71,6 +71,12 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       },
     }));
 
+    const procurementExists = await FinalizeProcure.findOne({menu_id});
+
+    console.log(updateInventory, procurementExists);
+
+    // return res.json(updateInventory);
+    
     // Perform the bulk write operation
     await Inventory.bulkWrite(updateInventory)
       .then((result) => {
@@ -86,14 +92,29 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
       { new: true }
     );
 
-    const procureData = await FinalizeProcure.create({
-      procure_items,
-      date,
-      menu_id
-    });
-    if (updatePipeline) {
-      return res.json({ message: "pipeline  updated successfully" });
+    if (!procurementExists) {
+  
+      const procureData = await FinalizeProcure.create({
+        procure_items,
+        date,
+        menu_id
+      });
+
+      console.log(procureData,"procureDate new");
+      
+    } else if (procurementExists) {
+      
+      const procureData = await FinalizeProcure.findOneAndUpdate({menu_id},{
+        procure_items
+      });
+
+      console.log(procureData,"procureDate update");
+      
     }
+    if (updatePipeline) {
+      return res.status(201).json({ message: "pipeline  updated successfully" });
+    }
+
   }
 
   if (type === "get_procure_history") {

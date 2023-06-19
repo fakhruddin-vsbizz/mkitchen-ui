@@ -30,6 +30,10 @@ const userModel = mongoose.Schema(
       type: String,
       default: ""
     },
+    menu_reset: {
+      type: Boolean,
+      required: false,
+    },
     jaman_coming: {
       type: Boolean,
       required: false,
