@@ -333,22 +333,40 @@ const ConfirmIng = () => {
               }
             />
             {operationalPipelineStatus < 0 && (
-              <Alert
-                style={{ margin: "0.5rem" }}
-                message="Message"
-                description="Menu is not set for today"
-                type="error"
-                closable
-              />
+              <center>
+              <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                <label style={{ fontSize: '800%', color: colorGreen }}>
+                  <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                </label>
+                <br/><br/>
+                <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Menu is not set for today.<br />Please try after sometime.</label>
+              </div>
+            </center>
+              // <Alert
+              //   style={{ margin: "0.5rem" }}
+              //   message="Message"
+              //   description="Menu is not set for today"
+              //   type="error"
+              //   closable
+              // />
             )}
             {operationalPipelineStatus === 0 && (
-              <Alert
-                style={{ margin: "0.5rem" }}
-                message="Message"
-                description="Ingridients not set for the selected date"
-                type="error"
-                closable
-              />
+              <center>
+              <div style={{ marginTop: '8%', marginBottom: '8%', width:'32%' }}>
+                <label style={{ fontSize: '800%', color: colorGreen }}>
+                  <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                </label>
+                <br/><br/>
+                <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Ingridients not set for the selected date.<br />Please try after sometime.</label>
+              </div>
+            </center>
+              // <Alert
+              //   style={{ margin: "0.5rem" }}
+              //   message="Message"
+              //   description="Ingridients not set for the selected date"
+              //   type="error"
+              //   closable
+              // />
             )}
             {operationalPipelineStatus >= 2 && (
               <Alert
@@ -364,6 +382,7 @@ const ConfirmIng = () => {
                 {procureIngridients && (
                   <List
                     size="small"
+                    locale={{emptyText: " "}}
                     style={{
                       maxHeight: "70vh",
                       width: "100%",
@@ -464,8 +483,7 @@ const ConfirmIng = () => {
             {/* {reasonForChangingMenu !== "" && operationalPipelineStatus >= 2 ? (<>
             <Button>Collect previos</Button>
             </>) : */}
-        {operationalPipelineStatus &&
-          operationalPipelineStatus < 2 && menuFoodId &&
+        {operationalPipelineStatus === 1 && menuFoodId &&
             <Button
               onClick={markProcureIngridients}
               disabled={finalizeBtnVisible || (procureIngridients.length !== 0 && procureIngridients.filter(item => item?.sufficient === false).length !== 0)}

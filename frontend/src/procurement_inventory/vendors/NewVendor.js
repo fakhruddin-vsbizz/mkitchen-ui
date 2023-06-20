@@ -23,7 +23,7 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { colorBackgroundColor, colorBlack, colorNavBackgroundColor } from "../../colors";
+import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
 const NewVendor = () => {
@@ -127,7 +127,7 @@ const NewVendor = () => {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: "orange",
+            colorPrimary: colorGreen,
           },
         }}
       >
@@ -167,7 +167,7 @@ const NewVendor = () => {
                 <center>
                   <Link to="/pai/vendors">
                     <Button
-                      style={{ backgroundColor: "white", color: "orange" }}
+                      style={{ backgroundColor: "white", color: colorGreen }}
                     >
                       Cancel
                     </Button>
@@ -206,7 +206,7 @@ const NewVendor = () => {
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "90%", padding: "3%" }}>
                 <Card
-                  style={{ border: "2px solid orange" }}
+                  style={{boxShadow: valueShadowBox}}
                   className="dongle-font-class"
                 >
                   <label style={{ fontSize: "250%" }}>

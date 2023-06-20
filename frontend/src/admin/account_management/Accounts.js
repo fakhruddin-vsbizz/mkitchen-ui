@@ -26,7 +26,7 @@ import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import AuthContext from "../../components/context/auth-context";
 import { useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import { bgGradient, colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import {baseURL} from '../../constants'; 
 
 const Accounts = () => {
@@ -1023,7 +1023,7 @@ justifyContent: 'center'}}>
                             borderRadius: 10,
                             // border: "2px solid darkred",
                             boxShadow: valueShadowBox,
-                            width: "573px",
+                            width: "37.8rem",
                           }}
                         >
                           <label style={{ fontSize: '120%', color: colorBlack}}>
@@ -1348,9 +1348,7 @@ alignItems: 'center'}}>
                           <hr className="separator"></hr>
                           <div style={{ width:'100%' }}>
                             
-                              <div style={{display: 'flex',
-columnGap: '.2rem',
-alignItems: 'center'}}>
+                              <div style={{display: 'flex', columnGap: '.2rem', alignItems: 'center'}}>
                               <i style={{color: colorGreen}} class="fa-solid fa-user"></i> &nbsp;&nbsp;
                               
                               {pandiDepartmentUser && (
@@ -1360,8 +1358,11 @@ alignItems: 'center'}}>
                               options={pandiDepartmentUser.length !== 0 && pandiDepartmentUser.map((item) => ({
                                 value: item.username,
                                 label: item.username,
+                                id: item.email,
                               }))}
-                              onChange={(value) => setSelectedPandIUser(value)}
+                              onChange={(value, id) => {
+                                handlepandIUser(value, id)
+                              }}
                                   placeholder="Select User"
                                   style={{ width: "80%", border: `1px solid ${colorBlack}`, borderRadius: '5px', flexGrow: 1 }}
                                   block

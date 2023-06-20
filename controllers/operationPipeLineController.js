@@ -349,7 +349,7 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
 
     await operationId.updateOne({ reorder_logs: reorderArr, ingridient_list: ingredientLs });
 
-    await InventoryItemsModel.findOneAndUpdate({_id: req.body.inventory_id},{
+    await InventoryItemsModel.findOneAndUpdate({_id: inventory_id},{
       $inc: {
         total_volume: -req.body.procured_Amount
       }

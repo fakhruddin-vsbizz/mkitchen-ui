@@ -33,6 +33,7 @@ const InventoryItems = mongoose.Schema(
     total_volume: {
       type: Number,
       required: true,
+      set: function (v) { return Number(v.toFixed(3))}
     },
     baseline: {
       type: Number,

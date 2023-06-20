@@ -524,7 +524,7 @@ const Cooking = () => {
                     <DatePicker
                       defaultValue={dayjs(TodaysDate, "MM/DD/YYYY")}
                       onChange={handleDateChange}
-                      // disabledDate={(current) => current > dayjs().endOf('day')}
+                      disabledDate={(current) => current > dayjs().endOf('day')}
                     />
                   </Col>
                   {/* <Col xs={24} xl={12}>
@@ -545,10 +545,50 @@ const Cooking = () => {
             />
 
             <Row style={{ padding: 10 }}>
+              <Col xs={24} xl={24}>
+              {status === -1 && (
+                  <center>
+                  <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                    <label style={{ fontSize: '800%', color: colorGreen }}>
+                      <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                    </label>
+                    <br/><br/>
+                    <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Menu is not set for today.<br />Please try after sometime.</label>
+                  </div>
+                </center>
+                )}
+                {status !== -1 && status < 2 && (
+                  <center>
+                  <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                    <label style={{ fontSize: '800%', color: colorGreen }}>
+                      <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                    </label>
+                    <br/><br/>
+                    <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Ingredients have not been procured from P&I.<br />Please try after sometime.</label>
+                  </div>
+                </center>
+                  // <table>
+                  //   <tbody>
+                  // <tr>
+                  //   <td colSpan={2}>
+                  //     <br />
+                  //     <Alert
+                  //       style={{ margin: "0.5rem" }}
+                  //       message="Menu Not Procured"
+                  //       description="This Menu is Not Procured"
+                  //       type="error"
+                  //       closable
+                  //     />
+                  //   </td>
+                  // </tr>
+                  //   </tbody>
+                  // </table>
+                )}
+              </Col>
               <Col xs={24} xl={16} style={{ padding: "0 1% 2% 2%",
                       overflowY: "scroll",
                       height: "67vh", }}>
-                {status === -1 && (
+                {/* {status === -1 && (
                   <table>
                     <tbody>
                   <tr>
@@ -565,7 +605,7 @@ const Cooking = () => {
                   </tr>
                     </tbody>
                   </table>
-                )}
+                )} */}
                 {status >= 3 && (
                   <table>
                     <tbody>
@@ -602,7 +642,7 @@ const Cooking = () => {
                     </tbody>
                   </table>
                 )}
-                {status !== -1 && status < 2 && (
+                {/* {status !== -1 && status < 2 && (
                   <table>
                     <tbody>
                   <tr>
@@ -619,7 +659,7 @@ const Cooking = () => {
                   </tr>
                     </tbody>
                   </table>
-                )}
+                )} */}
                 {status >= 2 && (
                   <List
                     style={{

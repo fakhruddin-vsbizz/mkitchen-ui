@@ -1,5 +1,5 @@
 import React from "react";
-import { colorGreen } from "../../colors";
+import { colorGreen, valueShadowBox } from "../../colors";
 
 const Header = ({ title,subTitle, comp }) => {
   return (
@@ -8,7 +8,7 @@ const Header = ({ title,subTitle, comp }) => {
         padding: "0.3% 3%",
           margin: "1%",
         //  borderBottom: "2px solid #E86800",
-        boxShadow: '0px 0px 6px 3px lightgray',
+        boxShadow: valueShadowBox,
         borderRadius: 10, 
         color: "white",
         backgroundColor: colorGreen,

@@ -571,15 +571,48 @@ const SetMenu = () => {
                     </Tag>
                   ))
                 }</Col>
+                <Col xs={24} xl={24}>
+                {status === -1 && (
+                  <center>
+                  <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                    <label style={{ fontSize: '800%', color: colorGreen }}>
+                      <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                    </label>
+                    <br/><br/>
+                    <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Menu is not set for today.<br />Please try after sometime.</label>
+                  </div>
+                </center>
+                    // <Alert
+                    //   message="Message"
+                    //   description="Menu not set for the selected date"
+                    //   type="error"
+                    //   closable
+                    // />
+                  ) }
+                </Col>
                 <Col xs={24} xl={12} style={{ padding: "1%" }}>
-                  {totalAshkash === 0 && (
+                  {totalAshkash === 0 && status === 0 ? (
                     <Alert
                       message="Message"
                       description="Mohalla Count Not set"
                       type="error"
                       closable
                     />
-                  )}
+                  ) : status < 1 && status !== -1  && reasonForChangingMenu !== "" ? (
+                    <Alert
+                      message="Menu changed set ingredients again."
+                      description={"Reason: "+reasonForChangingMenu}
+                      type="error"
+                      closable
+                    />
+                  ): status > 1 ? (
+                    <Alert
+                      message="Message"
+                      description="Ingredient Items have already added"
+                      type="success"
+                      closable
+                    />
+                  ): null}
                   {/* {(reasonForChangingMenu !== "" && status === -2) && (
                     <Alert
                       message="Menu changed please change ingredients"
@@ -588,7 +621,7 @@ const SetMenu = () => {
                       closable
                     />
                   )} */}
-                  {status === -1 && (
+                  {/* {status === -1 && (
                     <Alert
                       message="Message"
                       description="Menu not set for the selected date"
@@ -610,7 +643,7 @@ const SetMenu = () => {
                       type="success"
                       closable
                     />
-                  )}
+                  )} */}
                   {/* {status >= 1 && (
                     
                   )} */}
