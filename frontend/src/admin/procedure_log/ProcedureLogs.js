@@ -106,6 +106,32 @@ const ProcedureLogs = () => {
   }, [selectedDate]);
 
   useEffect(() => {
+    const getHistory = async () => {
+      if (menuFoodId) {
+        const data = await fetch("/api/admin/menu", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            menu_id: menuFoodId,
+            add_type: "get_total_ashkash_sum",
+          }),
+        });
+        if (data) {
+          const res = await data.json();
+          // setGetMkUserId(res.user);
+          setTotalAshkhaas(res);
+        }
+      }else{
+        setTotalAshkhaas(0);
+      }
+    };
+
+    getHistory();
+  }, [menuFoodId, selectedDate]);
+
+  useEffect(() => {
     const getData = async () => {
       if (menuFoodId) {
         const data = await fetch("/api/review", {
@@ -422,7 +448,7 @@ maxHeight: '68vh' }}
                                 backgroundColor: "#fff",
                                 borderRadius: 5,
                                 // border: "2px solid darkred",
-                boxShadow: valueShadowBox,
+                                boxShadow: valueShadowBox,
                                 margin: '10px',
                                 width: "100%",
                               }}
@@ -573,13 +599,22 @@ maxHeight: '68vh' }}
                         foodList.map(foodItem => (
                           <div key={foodItem.food_item_id}>
                             <Row>
-                                <Col xs={12} xl={12} style={{ padding: "1%" }}>
+                                <Col xs={12} xl={8} style={{ padding: "1%" }}>
                                   <div style={{ fontSize: "1.3rem" }}>
                                     <span>Food: </span>
                                     <span style={{color: colorGreen}}>{foodItem.food_name}</span>
                                   </div>
                                 </Col>
-                                <Col xs={12} xl={12} style={{ padding: "1%", textAlign: 'end' }}>
+                                {(totalAshkash !==0 && totalPrice.length !== 0) && <><Col xs={12} xl={8} style={{ padding: "1%" }}>
+                                <div style={{ fontSize: "1.3rem" }}>
+                                    <span>Total cost per person: </span>
+                                    <span style={{color: colorGreen}}>
+                                    {((totalPrice.length !== 0 && totalPrice?.filter(filteredPrice => filteredPrice.foodId === foodItem.food_item_id)[0]?.price)/totalAshkash).toFixed(2)}&nbsp;
+                                    </span>
+                                    <span>₹</span>
+                                  </div>
+                                </Col>
+                                <Col xs={12} xl={8} style={{ padding: "1%", textAlign: 'end' }}>
                                   <div style={{ fontSize: "1.3rem" }}>
                                     <span>Total cost for {foodItem.food_name}: </span>
                                     <span style={{color: colorGreen}}>
@@ -587,7 +622,7 @@ maxHeight: '68vh' }}
                                     </span>
                                     <span>₹</span>
                                   </div>
-                                </Col>
+                                </Col></>}
                             </Row>
                             <List
                               dataSource={pipelineData?.ingridient_list.length !== 0 ? pipelineData?.ingridient_list?.filter(filterFoodItem => filterFoodItem.foodId === foodItem.food_item_id): []}

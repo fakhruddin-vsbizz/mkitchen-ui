@@ -78,17 +78,15 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
       
       const {reason_for_reconfirming_menu} = req.body;
   
-      console.log("here");
+      
       if (date_of_cooking === "" || food_list.length === 0) {
         return res.status(404).json({ error: "date or food item not selected" });
       }
   
       const menu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
   
-      console.log(menu);
   
       if (menu === null) {
-        console.log("not exists");
         const foodMenu = await FoodMenu.create({
           food_list,
           total_ashkhaas,
@@ -133,11 +131,17 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
         menu.date_of_cooking = date_of_cooking;
         menu.client_name = client_name;
         menu.jaman_coming = jaman_coming;
+
         menu.reason_for_undelivered = reason_for_undelivered;
         menu.reason_for_reconfirming_menu = reason_for_reconfirming_menu;
         menu.menu_reset = true
   
         await menu.save();
+
+        // console.log(menu._id);
+
+        await OperationPipeLine.findOneAndUpdate({menu_food_id: menu._id},{status: status})
+
         return res.json({ message: "menu updated ", menu });
       }
       // return res.json({ message: "menu created " });

@@ -282,11 +282,9 @@ const Accounts = () => {
   }, [newpasswordPandI, newconfirmpasswordPandI]);
 
   const updateUserPasswordMohalla = async (usertype) => {
-    console.log("updating 1");
 
     try {
       if (selectedMohallaUser && newConfirmpasswordMohalla) {
-        console.log("updating 2");
         const data = await fetch("/api/admin/account_management", {
           method: "PUT",
           headers: {
@@ -487,9 +485,7 @@ const Accounts = () => {
         }
       );
       if (data) {
-        console.log(data);
         const res = await data.json();
-        console.log(res);
         if (res.error) {
           setFieldError(true);
           setOldPasswordError(false);

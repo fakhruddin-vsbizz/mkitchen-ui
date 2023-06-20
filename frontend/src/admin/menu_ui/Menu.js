@@ -157,7 +157,6 @@ const Menu = () => {
           return data;
         })
         .then((data) => {
-          console.log(data, "data");
           if (data?.message) {
             setIsMenu(false);
             setFoodItems([]);

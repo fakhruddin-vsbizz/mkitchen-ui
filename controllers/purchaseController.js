@@ -173,7 +173,6 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
         },
       }
     ]);
-    console.log(purchases);
 
     const filteredPurchases = purchases.filter((purchase) => {
       const [month, day, year] = purchase.expiry_date.split("/");

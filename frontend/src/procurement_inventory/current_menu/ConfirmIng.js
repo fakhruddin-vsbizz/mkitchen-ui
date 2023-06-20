@@ -180,7 +180,7 @@ const ConfirmIng = () => {
           if (data) {
             const res = await data.json();
             // console.log(res);
-            // console.log("170 res", res)
+            console.log("170 res", res)
             if (res?.message) {
               try {
                 if (menuFoodId) {
@@ -198,7 +198,7 @@ const ConfirmIng = () => {
       
                     if (data) {
                       const res = await data.json();
-                  // console.log("220 res", res)
+                  console.log("220 res", res)
       
                       if (res) {
                         setProcureIngridients(res);
@@ -385,13 +385,24 @@ const ConfirmIng = () => {
                           }}
                         >
                           <Row>
-                            <Col xs={8} xl={8}>
+                            <Col xs={8} xl={4}>
                               <label style={{ fontSize: "140%" }}>
                                 <span>{item.ingridientName}</span>
                               </label>
                             </Col>
-                            <Col xs={8} xl={8}>
-                              Amount Procured:{" "}
+                            <Col xs={8} xl={6}>
+                              Total Quantity:{" "}
+                              <label
+                                style={{
+                                  color: item.sufficient ? "green" : "red",
+                                  fontSize: "130%",
+                                }}
+                              >
+                                {Number(item.total_quantity.toFixed(3)) + Number(item.requiredVolume.toFixed(3))} {item.unit}
+                              </label>
+                            </Col>
+                            <Col xs={8} xl={6}>
+                              Require Quantity:{" "}
                               <label
                                 style={{
                                   color: item.sufficient ? "green" : "red",

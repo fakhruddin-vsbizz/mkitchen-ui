@@ -73,8 +73,6 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
 
     const procurementExists = await FinalizeProcure.findOne({menu_id});
 
-    console.log(updateInventory, procurementExists);
-
     // return res.json(updateInventory);
     
     // Perform the bulk write operation
@@ -100,7 +98,7 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         menu_id
       });
 
-      console.log(procureData,"procureDate new");
+    
       
     } else if (procurementExists) {
       
@@ -108,7 +106,6 @@ const procumentoryOperation = expressAsyncHandler(async (req, res) => {
         procure_items
       });
 
-      console.log(procureData,"procureDate update");
       
     }
     if (updatePipeline) {

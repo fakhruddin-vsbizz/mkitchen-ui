@@ -18,7 +18,6 @@ const getMohallaReviews = expressAsyncHandler(async (req, res) => {
 const getMenuReviewReportForAdmin = expressAsyncHandler(async (req, res) => {
   const { menuFoodId } = req.body;
 
-  console.log(menuFoodId);
   try {
     const data = await OperationalPipeline.findOne({
       menu_food_id: menuFoodId,
