@@ -94,7 +94,7 @@ const loginUser = expressAsyncHandler(async (req, res) => {
 const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
   const { username, usertype, action, email, password } = req.body;
 
-  console.log("hitting");
+  
 
   if (username === undefined) {
     return res.status(400).json({ error: "invalid username" });
@@ -119,7 +119,7 @@ const updateUserBasedOnNameAndType = expressAsyncHandler(async (req, res) => {
   }
 
   if (user && action === "update_password") {
-    console.log("hitting 2");
+    
 
     const hashPassword = await bcrypt.hash(password, 10);
     const updateUser = await MKUser.findByIdAndUpdate(

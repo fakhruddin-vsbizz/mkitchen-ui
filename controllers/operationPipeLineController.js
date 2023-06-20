@@ -36,7 +36,7 @@ const addTotalPriceToFood = expressAsyncHandler(async (req, res) => {
 
     const priceList = ingredientList.ingridient_list.map(ingredient => {
       const temp = inventoryPrices.find(inventory => inventory._id.toString() === ingredient.inventory_item_id);
-      console.log(ingredient.procure_amount , temp.price);
+      
       return {
         foodId: ingredient.foodId,
         price: Number((ingredient.procure_amount * temp.price).toFixed(2))
@@ -95,7 +95,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
       },
     ]);
 
-    console.log("operationPipe", operationPipe);
+    
     
     if(!operationPipe[0]){
       return res.status(404).json({msg: "Pipeline doesn't exist"})
@@ -387,20 +387,14 @@ const changeInventoryAmount = expressAsyncHandler(async (req, res) => {
 const changeProcurementAmount = expressAsyncHandler(async (req, res) => {
   const procuredItem = await FinalizeProcureModel.findOne({menu_id: req.body.menu_id}).lean()
 
-  console.log("procuredItem",procuredItem);
-
     const newProcuredItems = await procuredItem?.procure_items.map(item => item?.inventoryItemId === req.body.inventory_id? ({
         ...item,
         requiredVolume: item.requiredVolume + req.body.procured_Amount,
         total_quantity: item.total_quantity -req.body.procured_Amount
       }): item
     )
-
-  console.log("newProcuredItems",newProcuredItems);
   
   const something = await FinalizeProcureModel.findOneAndUpdate({menu_id: req.body.menu_id}, {procure_items: newProcuredItems});
-  
-  console.log("something",something);
    
   return res.status(200).json(something);
 });

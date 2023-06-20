@@ -343,8 +343,8 @@ const PostConfirmOps = () => {
                              }}
                               bodyStyle={{padding: '12px'}}
                               >
-                                <Row>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.5rem'}}>
+                                <Row style={{display: 'flex', flexFlow: 'row wrap', minWidth: '0', alignItems: 'center'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
                                     <span>
                                       For:&nbsp;
                                     </span>
@@ -352,7 +352,7 @@ const PostConfirmOps = () => {
                                     {item?.foodName}
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'0',  fontSize: '1.5rem'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'0',  fontSize: '1.2rem'}}>
                                     <span>
                                       Ingredient:&nbsp;
                                     </span>
@@ -360,7 +360,7 @@ const PostConfirmOps = () => {
                                     {item.ingridient_name}
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.3rem'}}>
+                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
                                     <span>
                                     Required quantity:&nbsp;
                                     <span style={{color: colorGreen}}>

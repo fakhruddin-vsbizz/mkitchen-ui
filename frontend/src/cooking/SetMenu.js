@@ -14,7 +14,9 @@ import {
   ConfigProvider,
   Alert,
   Tag,
+  Carousel,
 } from "antd";
+import "./setmenu.css"
 import {
   CaretRightOutlined,
   DeleteOutlined,
@@ -203,6 +205,7 @@ const SetMenu = () => {
             setGetFoodList(res[0]?.food_list);
             setIngredientItems([]);
             setStatus(res.status);
+            console.log(res.status);
             setReasonForChangingMenu(res[0]?.reason_for_reconfirming_menu);
             setResetMenu(res[0]?.menu_reset);
             setMohallaList(res[0]?.mohalla_wise_ashkhaas);
@@ -559,10 +562,10 @@ const SetMenu = () => {
                         ]}
                       /> */}
                 </Col>
-                <Col xs={24} xl={12} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center'}}>{
+                <Col xs={24} xl={11} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'left', marginLeft: '1rem'}}>{
                   mohallaList.length !== 0 && mohallaList.map(mohallaItem => (
                     <Tag color={colorGreen} key={mohallaItem?.mk_id} style={{display: 'flex',
-                    columnGap: '.5rem', fontSize: "1.1rem"}}>
+                    columnGap: '.5rem', fontSize: "1.1rem", padding: ".4rem .6rem"}}>
                       <span>{mohallaItem?.name}</span>:&nbsp;
                       <span>{mohallaItem?.total_ashkhaas}</span>
                     </Tag>
@@ -593,15 +596,14 @@ const SetMenu = () => {
                       closable
                     />
                   )}
-                  {status >= 1 && resetMenu && (
+                  {status < 1 ? (
                     <Alert
                       message="Menu changed set ingredients again."
                       description={"Reason: "+reasonForChangingMenu}
                       type="error"
                       closable
                     />
-                  )}
-                  {status >= 1 && !resetMenu && (
+                  ): (
                     <Alert
                       message="Message"
                       description="Ingredient Items have already added"
@@ -609,6 +611,9 @@ const SetMenu = () => {
                       closable
                     />
                   )}
+                  {/* {status >= 1 && (
+                    
+                  )} */}
                   {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                   {getFoodList && totalAshkash > 0 && (
                     <List
