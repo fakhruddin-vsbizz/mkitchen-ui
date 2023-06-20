@@ -51,6 +51,7 @@ const VerifyVendor = () => {
   const [donarName, setDonarName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [donations, setDonations] = useState([]);
+  const [remark, setRemark] = useState("")
 
 
   const handleSelect = (value, option) => {
@@ -65,6 +66,7 @@ const VerifyVendor = () => {
       ingredientName: donationIngredient,
       donarName,
       contactNumber,
+      remark,
       donationQty: +quantityValue,
       ingridient_measure_unit: measureUnit,
       its_id: +itsValue,
@@ -227,7 +229,7 @@ const VerifyVendor = () => {
                         Name<br />
                         <Input
                           style={{ marginTop: "10px", padding: "10px 5px" }}
-                          placeholder="Basic usage"
+                          placeholder="Enter Your Name"
                           value={donarName}
                           onChange={(e)=> setDonarName(e.target.value)}
                         />
@@ -244,7 +246,7 @@ const VerifyVendor = () => {
                         Contact Number<br />
                         <Input
                           style={{ marginTop: "10px", padding: "10px 5px" }}
-                          placeholder="Basic usage"
+                          placeholder="Enter Your Contact Number"
                           value={contactNumber}
                           onChange={(e)=> setContactNumber(e.target.value)}
                         />
@@ -262,9 +264,27 @@ const VerifyVendor = () => {
                         ITS ID<br />
                         <Input
                           style={{ marginTop: "10px", padding: "10px 5px" }}
-                          placeholder="Basic usage"
+                          placeholder="Enter Your ITS Id"
                           value={itsValue}
                           onChange={(e)=> setItsValue(e.target.value)}
+                        />
+                      </div>
+                    </Col>
+                    <Col xs={24} xl={12}>
+                      {" "}
+                      <div
+                        style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          fontSize: 16,
+                        }}
+                      >
+                        Remarks<br />
+                        <Input
+                          style={{ marginTop: "10px", padding: "10px 5px" }}
+                          placeholder="Enter Remark"
+                          value={remark}
+                          onChange={(e)=> setRemark(e.target.value)}
                         />
                       </div>
                     </Col>
@@ -349,13 +369,13 @@ const VerifyVendor = () => {
                                     fontSize: 16,
                                   }}>
                                 
-                                  Quantity ordered
+                                  Donation Amount
                                
                               </Col>
                               <Col xs={24} xl={15}>
                                 {" "}
                                 <div style={{ paddingRight: "10px" }}>
-                                  <Input placeholder="Basic usage" value={quantityValue} onChange={(e)=> setQuantityValue(e.target.value)} />
+                                  <Input placeholder="Donation Amount" value={quantityValue} onChange={(e)=> setQuantityValue(e.target.value)} />
                                 </div>
                               </Col>
                             </Row>

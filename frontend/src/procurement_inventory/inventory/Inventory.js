@@ -154,7 +154,7 @@ const Inventory = () => {
           setExpiry("");
           setExpiryType("");
           setUnit("");
-          setPrice("");
+          setPrice(0);
           setbaseline("");
           setValidationError(false);
           setValidationError(false);
@@ -229,12 +229,12 @@ const Inventory = () => {
   const closeModelForUpdateIngridient = () => {
     setValidationError(false);
 
-    setName();
-    setExpiry();
-    setUnit();
-    setExpiryType();
-    setPrice();
-    setbaseline();
+    setName("");
+    setExpiry("");
+    setUnit("");
+    setExpiryType("");
+    setPrice(0);
+    setbaseline("");
 
     setIsModalOpenUpdate(false);
   };
@@ -496,6 +496,15 @@ const Inventory = () => {
                     bodyStyle={{padding: '5px 20px'}}
                   >
                     <List
+                    locale={{emptyText: <center>
+                      <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                        <label style={{ fontSize: '800%', color: colorGreen }}>
+                          <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                        </label>
+                        <br/><br/>
+                        <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Your inventory is empty.<br />Add some ingredients.</label>
+                      </div>
+                    </center>}}
                       size="small"
                       dataSource={filteredInventoryItems}
                       renderItem={(item) => (

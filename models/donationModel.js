@@ -17,6 +17,9 @@ const donationSchema = new Schema(
         donarName: {
             type: String,
         },
+        remark: {
+            type: String,
+        },
         contactNumber: {
             type: String,
         },
@@ -30,8 +33,7 @@ const donationSchema = new Schema(
         },
 
         its_id: {
-            type: Number,
-            required: true
+            type: Number
         },
     },
     { timestamps: true }

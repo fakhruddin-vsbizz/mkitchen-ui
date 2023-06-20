@@ -5,6 +5,14 @@
     background: -webkit-gradient(linear, 0 0, 100% 0, from(transparent), to(transparent), color-stop(50%, black));
 }
 
+/* div[role="tablist"].ant-tabs-nav, div[role="tablist"].ant-tabs-nav::before {
+    border-bottom: none;
+}
+
+:where(.css-dev-only-do-not-override-1m9vtn2).ant-card-bordered, :where(.css-1m9vtn2).ant-card-bordered {
+    border: none;
+} */
+
 :where(.css-dev-only-do-not-override-1m9vtn2).ant-modal .ant-modal-footer,
 :where(.css-1m9vtn2).ant-modal .ant-modal-footer {
     margin-top: 0;

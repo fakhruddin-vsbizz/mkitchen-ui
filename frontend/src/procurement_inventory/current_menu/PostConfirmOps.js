@@ -15,7 +15,7 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { MinusCircleFilled, PlusCircleFilled } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
@@ -54,6 +54,7 @@ const PostConfirmOps = () => {
   const [reorderLogs, setReorderLogs] = useState([]);
   const [update, setUpdate] = useState(true);
   const [status, setStatus] = useState();
+  const [inventoryItems, setInventoryItems] = useState([]);
 
   const data = [
     "Inventory",
@@ -63,6 +64,8 @@ const PostConfirmOps = () => {
     "Damaged Goods",
   ];
   const navigate = useNavigate();
+
+  const location = useLocation();
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
@@ -110,6 +113,20 @@ const PostConfirmOps = () => {
     };
     getFood();
   }, [menuFoodId]);
+
+  useEffect(()=>{
+    const getInventory = async () => {
+      const data = await fetch("/api/inventory/addinventory");
+      if (data) {
+        const res = await data.json();
+        setInventoryItems(res);
+        console.log(res, "res inv");
+      }
+    };
+    getInventory();
+  },[update])
+
+  
 
   useEffect(() => {
     const getFood = async () => {
@@ -164,6 +181,11 @@ const PostConfirmOps = () => {
     };
     getData();
   }, [selectedDate, menuFoodId, update]);
+
+  const onRestock = (id) => {
+    navigate(`/pai/purchases/new/${id}`, { state: { prevPath: location.pathname}});
+    // console.log(id);
+  };
 
   const updateReorderStatus = async (id, quantity_requireds, foodId) => {
     console.log(id, quantity_requireds, foodId);
@@ -328,6 +350,15 @@ const PostConfirmOps = () => {
                     {(reorderLogs && status >= 2) ? (
                       <div>
                         <List
+                          locale={{emptyText: <center>
+                            <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
+                              <label style={{ fontSize: '800%', color: colorGreen }}>
+                                <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
+                              </label>
+                              <br/><br/>
+                              <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>No re-orders for today.<br />Please try after sometime.</label>
+                            </div>
+                          </center>}}
                           style={{
                             maxHeight: "68vh",
                             width: "100%",
@@ -344,7 +375,7 @@ const PostConfirmOps = () => {
                               bodyStyle={{padding: '12px'}}
                               >
                                 <Row style={{display: 'flex', flexFlow: 'row wrap', minWidth: '0', alignItems: 'center'}}>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
+                                  <Col xs={8} xl={4} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
                                     <span>
                                       For:&nbsp;
                                     </span>
@@ -352,7 +383,7 @@ const PostConfirmOps = () => {
                                     {item?.foodName}
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'0',  fontSize: '1.2rem'}}>
+                                  <Col xs={8} xl={4} style={{alignSelf: 'center', paddingLeft:'0',  fontSize: '1.2rem'}}>
                                     <span>
                                       Ingredient:&nbsp;
                                     </span>
@@ -361,6 +392,17 @@ const PostConfirmOps = () => {
                                     </span>
                                   </Col>
                                   <Col xs={8} xl={6} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
+                                    <span>
+                                    Total quantity:&nbsp;
+                                    <span style={{color: inventoryItems.length !== 0 && inventoryItems.filter(filterItem => filterItem._id === item?.inventory_id)[0]?.total_volume > item?.quantity_requireds ? colorGreen: "darkred"}}>
+                                    {(inventoryItems.length !== 0 && inventoryItems.filter(filterItem => filterItem._id === item?.inventory_id)[0]?.total_volume).toFixed(2)}
+                                    </span>
+                                    {" "}<span style={{textTransform: 'capitalize', color: inventoryItems.length !== 0 && inventoryItems.filter(filterItem => filterItem._id === item?.inventory_id)[0]?.total_volume > item?.quantity_requireds ? colorGreen: "darkred"}}>
+                                      {item.unit}
+                                      </span> 
+                                    </span>
+                                  </Col>
+                                  <Col xs={8} xl={5} style={{alignSelf: 'center', paddingLeft:'2rem',  fontSize: '1.2rem'}}>
                                     <span>
                                     Required quantity:&nbsp;
                                     <span style={{color: colorGreen}}>
@@ -371,7 +413,9 @@ const PostConfirmOps = () => {
                                       </span> 
                                     </span>
                                   </Col>
-                                  <Col xs={8} xl={6} style={{alignSelf: 'center', textAlign: 'center'}}>
+                                  {/* check total amount */}
+
+                                 {item.reorder_delivery_status ? (inventoryItems.length !== 0 && inventoryItems.filter(filterItem => filterItem._id === item?.inventory_id)[0]?.total_volume > item?.quantity_requireds ? <Col xs={8} xl={5} style={{alignSelf: 'center', textAlign: 'center'}}>
                                     {item.reorder_delivery_status ? (
   
                                         <Button
@@ -386,7 +430,26 @@ const PostConfirmOps = () => {
                                     ) : (
                                       <Tag color="green">FULFILLED</Tag>
                                     )}
-                                  </Col>
+                                  </Col>: 
+                                  <Col xs={8} xl={5}>
+                                  <div style={{ color: colorGreen, display: 'flex', columnGap: '1rem', alignItems: 'center', rowGap: '5px', flexDirection: 'column' }}>
+                                  <span>
+                                  <i
+                                    className="fa-solid fa-circle-exclamation"
+                                    
+                                  ></i> You are short on items
+                                  </span>
+                                  <Button
+                                    onClick={() => onRestock(item?.inventory_id)}
+                                    style={{
+                                      backgroundColor: "green",
+                                    }}
+                                    type="primary"
+                                  >
+                                    Restock Ingredient
+                                  </Button>
+                                </div>
+                                </Col>):<Col xs={8} xl={5}><div style={{ color: colorGreen, display: 'flex', columnGap: '1rem', alignItems: 'center', rowGap: '5px', justifyContent: 'center' }}><Tag color="green">FULFILLED</Tag></div></Col>}
                                 </Row>
                               </Card>
                             </List.Item>

@@ -328,6 +328,15 @@ const DamagedGoodsList = () => {
                     <List
                       style={{ width: "85%", height: '64vh', overflowY: 'scroll' }}
                       dataSource={filteredExpiredItems}
+                      locale={{emptyText: <center>
+                        <div style={{ marginTop: '8%', marginBottom: '8%' }}>
+                          <label style={{ fontSize: '800%', color: colorGreen, marginBottom: '1rem' }}>
+                            <i style={{color: 'gray'}} className="fa-solid fa-hourglass-start"></i>
+                          </label>
+                          <br/>
+                          <label style={{ fontSize: "120%", width: "50%", color: 'gray' }}>There are no expired Goods in your Inventory.</label>
+                        </div>
+                      </center>}}
                       renderItem={(item, idx) => (
                         <List.Item style={{padding: '8px 0'}}>
                           <Row

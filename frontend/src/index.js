@@ -24,11 +24,11 @@ justifyContent: 'center'
           }}
         >
           <span style={{ textAlign: "center", color: "gray" }}>
-            Powered By <img src={VsLogo} style={{ width: 16, height: 16, margin: '2px, 10px' }} />
+            Powered By <img src={VsLogo} style={{ width: 16, height: 16, margin: '2px, 10px' }} alt="logo" />
             <span
               style={{
                 textAlign: "center",
-                color: "gray",
+                // color: "gray",
                 color: "#24323E",
                 fontSize: 16,
                 fontFamily: "'Poppins', sans-serif",

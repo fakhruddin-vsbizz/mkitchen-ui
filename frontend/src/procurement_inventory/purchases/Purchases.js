@@ -190,6 +190,7 @@ const Purchases = () => {
                 </label>
                 {purchases && (
                   <List
+                  locale={{emptyText: " "}}
                     style={{
                       height: "55vh",
                       width: "80vw",

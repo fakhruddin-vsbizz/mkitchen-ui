@@ -130,6 +130,8 @@ const Dispatch = () => {
           const res = await data.json();
           setStatus(res);
         }
+      }else {
+        setStatus(-1);
       }
     };
     getFood();
@@ -432,7 +434,7 @@ const Dispatch = () => {
                     <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
                   </label>
                   <br/><br/>
-                  <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Cooking has not been done yet.<br />Please wait while cooking department has confirmed dispatch.</label>
+                  <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Cooking is not been done yet.<br />Please try after sometime.</label>
                 </div>
               </center>
             )}
@@ -460,6 +462,7 @@ const Dispatch = () => {
                   status !== 1 &&
                   status !== 2 && (
                     <List
+                    locale={{emptyText: " "}}
                       style={{ maxHeight: '66vh',
                       overflowY: 'scroll',
                       width: "100%" }}
@@ -557,6 +560,7 @@ const Dispatch = () => {
         
                     <List
                       size="small"
+                    locale={{emptyText: " "}}
                       style={{
                         width: "100%",
                         padding: 5,
