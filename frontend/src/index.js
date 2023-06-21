@@ -18,7 +18,7 @@ root.render(
 backgroundColor: 'white',
 padding: '1rem',
 display: 'flex',
-inset: '94% 0px 0px 0%',
+inset: '94.4% 0px 0px 0%',
 zIndex: '1',
 justifyContent: 'center'
           }}
