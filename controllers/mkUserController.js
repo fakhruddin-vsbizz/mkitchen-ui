@@ -28,8 +28,7 @@ const createMkUser = expressAsyncHandler(async (req, res) => {
     const userAvailable = await MKUser.findOne({ email });
 
     if (userAvailable) {
-      res.status(400);
-      throw new Error("User Already Register");
+      res.status(401).json({msg: "User Already Register"});
     }
 
     //Hash Password using bcrypt

@@ -77,6 +77,8 @@ const Accounts = () => {
   const [emailErrorPandIPassword, setEmailErrorPandIPassword] = useState(false);
   const [fieldError, setFieldError] = useState(false);
   const [oldPasswordError, setOldPasswordError] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertChanges, setAlertChanges] = useState(false);
 
   const authCtx = useContext(AuthContext);
   const userId = authCtx.userEmail;
@@ -103,6 +105,13 @@ const Accounts = () => {
       navigate("/pai/inventory");
     }
   }, [navigate]);
+
+  useEffect(()=>{
+    const time = setTimeout(() => {
+      setShowAlert(false)
+    }, 3000);
+    return () => clearTimeout(time)
+  },[alertChanges])
 
   /**************Restricting Admin Route************************* */
 
@@ -423,7 +432,10 @@ const Accounts = () => {
 
       const res = await data.json();
 
-      if (res.fieldError) {
+      if (res.msg){
+        setShowAlert(true);
+        setAlertChanges((prev => !prev));
+      }else if (res.fieldError) {
         setValidationError(true);
         setError(false);
 
@@ -537,7 +549,7 @@ const Accounts = () => {
               }}
               onClick={showNMModal}
             >
-              Add New MK User
+              Create New User
             </Button>}
           />
           <ConfigProvider
@@ -549,7 +561,7 @@ const Accounts = () => {
             }}
           >
             <Modal
-              title={<h3 style={{ color: colorGreen, marginBlock: '1px' }}>Add New Account</h3>}
+              title={<h3 style={{ color: colorGreen, marginBlock: '1px' }}>Create New Account</h3>}
               open={newMohallaPopup}
               onOk={handleNMOk}
               onCancel={handleNMCancel}
@@ -581,36 +593,36 @@ const Accounts = () => {
                   </td>
                 </tr>
                 <tr className="flexBox">
-                  <td style={{width: '7rem', marginBottom: '1rem'}}>Name of the user:</td>
+                  <td style={{width: '5rem', marginBottom: '1rem'}}>Name:</td>
                   <td style={{flexGrow: 1}}>
                     <Input
                       value={username}
                       style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
-                      placeholder="Eg: Kalimi Mohalla, Noor Baug, etc"
+                      placeholder="Enter Name"
                       onChange={(e) => setUserName(e.target.value)}
                     />
                   </td>
                 </tr>
                 <tr className="flexBox">
-                  <td style={{width: '7rem', marginBottom: '1rem'}}>Email of the user:</td>
+                  <td style={{width: '5rem', marginBottom: '1rem'}}>Email:</td>
                   <td style={{flexGrow: 1}}>
                     <Input
                       value={email}
                       style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
 
-                      placeholder="Eg: juzermakki@gmail.com, hakimburhan@hotmail.com., etc"
+                      placeholder="Enter Email"
                       onChange={(e) => setUserEmail(e.target.value)}
                     />
                   </td>
                 </tr>
                 <tr className="flexBox">
-                  <td style={{width: '7rem'}}>New Password:</td>
+                  <td style={{width: '5rem'}}>Password:</td>
                   <td style={{flexGrow: 1}}>
                     <Input.Password
                       value={password}
                       style={{ border: `1px solid ${colorBlack}`, borderRadius: '5px'}}
 
-                      placeholder="Initial password"
+                      placeholder="Enter Password"
                       onChange={(e) => setUserPassword(e.target.value)}
                     />
                   </td>
@@ -622,6 +634,20 @@ const Accounts = () => {
                 </td>
               </tr> */}
                 {error && !validationError && (
+                  <tr>
+                    <td colSpan={2}>
+                      <br />
+                      <Alert
+                        style={{ margin: "0.5rem" }}
+                        message="Validation Error"
+                        description="User already exists. Please try a different user email."
+                        type="error"
+                        closable
+                      />
+                    </td>
+                  </tr>
+                )}
+                {showAlert && (
                   <tr>
                     <td colSpan={2}>
                       <br />
