@@ -28,7 +28,7 @@ const Inventory = () => {
   const [unit, setUnit] = useState("");
   const [fetchedUnit, setFetchedUnitUnit] = useState("");
   const [expiry, setExpiry] = useState("");
-  const [expiryType, setExpiryType] = useState("");
+  const [expiryType, setExpiryType] = useState("Days");
   const [price, setPrice] = useState(0);
   const [baseline, setbaseline] = useState("");
   const [inventoryId, setInventoryId] = useState("");
@@ -152,7 +152,7 @@ const Inventory = () => {
           setIsModalOpen(false);
           setName("");
           setExpiry("");
-          setExpiryType("");
+          setExpiryType("Days");
           setUnit("");
           setPrice(0);
           setbaseline("");
@@ -186,7 +186,7 @@ const Inventory = () => {
               return word[0].toUpperCase() + word.substring(1);
           })
           .join(' '),
-          ingridient_measure_unit: unit,
+          ingridient_measure_unit: unit === "" ? fetchedUnit : unit,
           ingridient_expiry_period: expiryType,
           ingridient_expiry_amount: expiry,
           price: price,
@@ -202,7 +202,7 @@ const Inventory = () => {
           setIsModalOpenUpdate(false);
           setName("");
           setExpiry("");
-          setExpiryType("");
+          setExpiryType("Days");
           setUnit("");
           setPrice(0);
           setbaseline("");
@@ -226,13 +226,14 @@ const Inventory = () => {
     setbaseline(data[0].baseline);
     setIsModalOpenUpdate(true);
   };
+
   const closeModelForUpdateIngridient = () => {
     setValidationError(false);
 
     setName("");
     setExpiry("");
     setUnit("");
-    setExpiryType("");
+    setExpiryType("Days");
     setPrice(0);
     setbaseline("");
 
@@ -351,6 +352,8 @@ const Inventory = () => {
                                 <td>Baseline</td>
                                 <td>
                                   <Input
+                                  type="number"
+                                  min={0}
                                     value={baseline}
                                     onChange={(e) =>
                                       setbaseline(e.target.value)
@@ -363,6 +366,8 @@ const Inventory = () => {
                                 <td>Expiry Period</td>
                                 <td>
                                   <Input
+                                  type="number"
+                                  min={0}
                                     value={expiry}
                                     onChange={(e) => setExpiry(e.target.value)}
                                     placeholder="Eg: 12,24,36, etc"
