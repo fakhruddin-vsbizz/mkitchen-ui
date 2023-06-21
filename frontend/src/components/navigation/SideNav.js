@@ -300,6 +300,7 @@ const logout = [
     </Link>
   ),
 ];
+
 const SideNav = ({ k, userType }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
@@ -322,7 +323,7 @@ const SideNav = ({ k, userType }) => {
         }}
       >
         <Sider
-          style={{ backgroundColor: colorBlack, height: '111vh', borderRadius: "0 31px 31px 0" }}
+          style={{ backgroundColor: colorBlack, height: '111vh'}}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}
