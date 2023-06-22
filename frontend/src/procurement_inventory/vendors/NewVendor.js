@@ -53,25 +53,25 @@ const NewVendor = () => {
     console.log(location?.state?.prevPath);
   },[])
 
-  useEffect(() => {
-    const type = localStorage.getItem("type");
+  // useEffect(() => {
+  //   const type = localStorage.getItem("type");
 
-    if (!type) {
-      navigate("/");
-    }
+  //   if (!type) {
+  //     navigate("/");
+  //   }
 
-    const typeAdmin = type === "mk admin" ? true : false;
+  //   const typeAdmin = type === "mk admin" ? true : false;
 
-    if (typeAdmin) {
-      navigate("/admin/menu");
-    }
-    if (!typeAdmin && type && type === "Cooking") {
-      navigate("/cooking/ingredients");
-    }
-    if (!typeAdmin && type && type === "Procurement Inventory") {
-      navigate("/pai/vendors/new");
-    }
-  }, [navigate]);
+  //   if (typeAdmin) {
+  //     navigate("/admin/menu");
+  //   }
+  //   if (!typeAdmin && type && type === "Cooking") {
+  //     navigate("/cooking/ingredients");
+  //   }
+  //   if (!typeAdmin && type && type === "Procurement Inventory") {
+  //     navigate("/pai/vendors/new");
+  //   }
+  // }, [navigate]);
 
   /**************Restricting PandI Route************************* */
 
