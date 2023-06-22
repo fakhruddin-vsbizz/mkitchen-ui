@@ -118,6 +118,7 @@ const VerifyVendor = () => {
       <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
         {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="4" userType="superadmin" /> :
         <SideNav k="4" userType="admin" />}
+        
         <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Verify Vendors" comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
                 <Link to="/pai/vendors/new" state={{ prevPath: location.pathname}}>
