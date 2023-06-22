@@ -51,7 +51,10 @@ const VerifyVendor = () => {
   const [donarName, setDonarName] = useState("");
   const [contactNumber, setContactNumber] = useState("");
   const [donations, setDonations] = useState([]);
-  const [remark, setRemark] = useState("")
+  const [remark, setRemark] = useState("");
+  const [mohallaName, setMohallaName] = useState("");
+  const [mohallaId, setMohallaId] = useState("");
+  const [mohallaUsers, setMohallaUsers] = useState([]);
 
 
   const handleSelect = (value, option) => {
@@ -59,9 +62,16 @@ const VerifyVendor = () => {
     setDonationIngredient(value);
     setMeasureUnit(option.unit);
   };
+
+  const handleUserSelect = (value, option) => {
+    setMohallaId(option.id);
+    setMohallaName(value);
+  };
   
   const onSubmit = () => {
     const bodyData = {
+      userId : mohallaId,
+      userType: mohallaName,
       ingredientId: inventoryItemId,
       ingredientName: donationIngredient,
       donarName,
@@ -79,7 +89,17 @@ const VerifyVendor = () => {
           },
           body: JSON.stringify(bodyData),
         }).then(res => res.json()).then((data) => {
-          setDonations(prev => [...prev, data])
+          setDonations(prev => [data, ...prev])
+          setMohallaId("")
+          setMohallaName("")
+          setInventoryItemId("")
+          setDonationIngredient("")
+          setDonarName("")
+          setContactNumber("")
+          setRemark("")
+          setQuantityValue("")
+          setMeasureUnit("")
+          setItsValue("")
         }).catch(err => console.log(err)).finally(() => handleOk())
 
   }
@@ -113,7 +133,9 @@ const VerifyVendor = () => {
       headers: {
         "Content-Type": "application/json",
       },
-    }).then(res => res.json()).then((data) => setDonations(data)).catch(err => console.log(err))
+    }).then(res => res.json()).then((data) => {
+      console.log(data);
+      setDonations(data)}).catch(err => console.log(err))
 
   },[])
 
@@ -163,6 +185,27 @@ const VerifyVendor = () => {
       }
     };
     getInventory();
+  }, []);
+
+  useEffect(() => {
+    const getMohallas = async () => {
+      const data = await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype: "Mohalla Admin",
+          action: "get_user",
+        }),
+      });
+      if (data) {
+        const res = await data.json()
+        setMohallaUsers(res)
+        console.log(res);
+      }
+    };
+    getMohallas();
   }, []);
 
   /**************Restricting Admin Route************************* */
@@ -217,6 +260,37 @@ const VerifyVendor = () => {
                   width={"70%"}
                 >
                   <hr />
+                  <Row style={{ margin: "20px 0px" }}>
+                  <Col xs={24} xl={3}>
+                    <span style={{
+                          padding: "10px",
+                          fontWeight: "bold",
+                          fontSize: 16,
+                        }}>
+                    Select Mohalla: 
+                    </span>
+                  </Col>
+                  <Col xs={24} xl={18}>
+                  <Select
+                    showSearch
+                    id="ingredient-item-selected"
+                    style={{ width: "100%" }}
+                    options={mohallaUsers.length !== 0 && mohallaUsers.map((item) => ({
+                        value: item.username,
+                        id: item._id
+                      }))}
+                    value={mohallaName}
+                    onChange={(value) => setMohallaName(value)}
+                    onSelect={handleUserSelect}
+                    placeholder="Select User"
+                    filterOption={(inputValue, option) =>
+                      option.value
+                        .toUpperCase()
+                        .indexOf(inputValue.toUpperCase()) !== -1
+                    }
+                  />
+                  </Col>
+                  </Row>
                   <Row style={{ margin: "20px 0px" }}>
                     <Col xs={24} xl={12}>
                       <div
@@ -339,40 +413,41 @@ const VerifyVendor = () => {
                               <Col xs={24} xl={18} style={{ paddingRight: "10px" }}>
                                
                                   {/* <Input placeholder="Basic usage" value={donationIngredient} onChange={(e)=> setDonationIngredient(e.target.value)} /> */}
-                                  <AutoComplete
-                              id="ingredient-item-selected"
-                              style={{ width: "100%" }}
-                              options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
-                                  value: item.ingridient_name,
-                                  id: item._id,
-                                  unit: item.ingridient_measure_unit
-                                }))}
-                              value={donationIngredient}
-                              onChange={(value) => setDonationIngredient(value)}
-                              onSelect={handleSelect}
-                              placeholder="Eg: Roti, Chawal, Daal, etc"
-                              filterOption={(inputValue, option) =>
-                                option.value
-                                  .toUpperCase()
-                                  .indexOf(inputValue.toUpperCase()) !== -1
-                              }
-                            />
+                                  <Select
+                                    showSearch
+                                    id="ingredient-item-selected"
+                                    style={{ width: "100%" }}
+                                    options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
+                                        value: item.ingridient_name,
+                                        id: item._id,
+                                        unit: item.ingridient_measure_unit
+                                      }))}
+                                    value={donationIngredient}
+                                    onChange={(value) => setDonationIngredient(value)}
+                                    onSelect={handleSelect}
+                                    placeholder="Eg: Roti, Chawal, Daal, etc"
+                                    filterOption={(inputValue, option) =>
+                                      option.value
+                                        .toUpperCase()
+                                        .indexOf(inputValue.toUpperCase()) !== -1
+                                    }
+                                  />
                               
                               </Col>
                             </Row>
                           </Col>
                           <Col xs={24} xl={11}>
                             <Row >
-                              <Col xs={24} xl={9} style={{
+                              <Col xs={24} xl={8} style={{
                                     paddingLeft: "10px",
                                     fontWeight: "bold",
                                     fontSize: 16,
                                   }}>
                                 
-                                  Donation Amount
+                                  Donation Quantity
                                
                               </Col>
-                              <Col xs={24} xl={15}>
+                              <Col xs={24} xl={16}>
                                 {" "}
                                 <div style={{ paddingRight: "10px" }}>
                                   <Input placeholder="Donation Amount" value={quantityValue} onChange={(e)=> setQuantityValue(e.target.value)} />
@@ -534,42 +609,45 @@ const VerifyVendor = () => {
                           marginBottom: "4px",
                         }}
                       >
-                        <Col xs={12} xl={5} style={{ marginLeft: "17px" }}>
-                        <i class="fa-solid fa-box"></i>&nbsp;&nbsp;Ingredient: <br />
+                        <Col xs={12} xl={3} style={{ marginLeft: "17px" }}>
+                        <i className="fa-solid fa-box"></i>&nbsp;&nbsp;Ingredient: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <span style={{textTransform: 'capitalize',
-display: 'block'}}>
+                            <span style={{textTransform: 'capitalize', display: 'block'}}>
                             {item?.ingredientName}
                             </span>
                           </label>
                         </Col>
-                        <Col xs={12} xl={5}>
-                        <i class="fa-solid fa-hands-praying"></i>&nbsp;&nbsp;Donor's Name: <br />
+                        <Col xs={12} xl={3}>
+                        <i className="fa-solid fa-hands-praying"></i>&nbsp;&nbsp;Mohalla: <br />
                           <label style={{ fontSize: "120%" }}>
-                            <span style={{textTransform: 'capitalize',
-display: 'block'}}>
+                            <span style={{textTransform: 'capitalize', display: 'block'}}>
+                            {item?.userType}
+                            </span>
+                          </label>
+                        </Col>
+                        <Col xs={12} xl={4}>
+                        <i className="fa-solid fa-hands-praying"></i>&nbsp;&nbsp;Donor's Name: <br />
+                          <label style={{ fontSize: "120%" }}>
+                            <span style={{textTransform: 'capitalize', display: 'block'}}>
                             {item?.donarName}
                             </span>
                           </label>
                         </Col>
-                        <Col xs={12} xl={5}>
-                        <i class="fa-solid fa-phone"></i>&nbsp;&nbsp;Donor's Contact: <br />
-                          <span style={{textTransform: 'capitalize',
-display: 'block'}}>
+                        <Col xs={12} xl={4}>
+                        <i className="fa-solid fa-phone"></i>&nbsp;&nbsp;Donor's Contact: <br />
+                          <span style={{textTransform: 'capitalize', display: 'block'}}>
                           {item?.contactNumber}
                           </span>
                         </Col>
                         <Col xs={12} xl={4}>
-                        <i class="fa-solid fa-id-card"></i>&nbsp;&nbsp;ITS ID: <br />
-                          <span style={{ textTransform: 'capitalize',
-display: 'block' }}>
+                        <i className="fa-solid fa-id-card"></i>&nbsp;&nbsp;ITS ID: <br />
+                          <span style={{ textTransform: 'capitalize', display: 'block' }}>
                             {item?.its_id}
                           </span>
                         </Col>
                         <Col xs={12} xl={4}>
-                        <i class="fa-solid fa-weight-scale"></i>&nbsp;&nbsp;Quantity Donated: <br />
-                          <label style={{ textTransform: 'capitalize',
-display: 'block',fontSize: "22px", color: "green" }}>
+                        <i className="fa-solid fa-weight-scale"></i>&nbsp;&nbsp;Quantity Donated: <br />
+                          <label style={{ textTransform: 'capitalize',display: 'block',fontSize: "22px", color: "green" }}>
                            
                               + {item?.donationQty} {item?.ingridient_measure_unit}
                             
