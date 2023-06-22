@@ -7,6 +7,13 @@ const InventoryItems = inventory.Schema
 
 const donationSchema = new Schema(
     {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "MKUser"
+        },
+        userType: {
+            type: String
+        },
         ingredientId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "InventoryItems"

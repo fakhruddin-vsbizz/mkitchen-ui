@@ -370,7 +370,7 @@ const Accounts = () => {
         }),
       });
       if (data) {
-        console.log(data.json().then((data) => setMohallaUsers(data)));
+        console.log(data.json().then((data) => setMohallaUsers(data.filter(item => item?.username !== "Direct Donations"))));
       }
     };
     getMohallas();

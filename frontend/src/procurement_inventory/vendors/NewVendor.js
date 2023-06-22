@@ -21,7 +21,7 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
@@ -37,12 +37,21 @@ const NewVendor = () => {
 
   const [validationError, setValidationError] = useState(false);
   const [emailError, setEmailError] = useState(false);
+  const [prevPath, setPrevPath] = useState("");
 
   const authCtx = useContext(AuthContext);
   const userEmail = authCtx.userEmail;
 
   const navigate = useNavigate();
+
+  const location = useLocation();
+
   /**************Restricting PandI Route************************* */
+
+  useEffect(()=>{
+    setPrevPath(location?.state?.prevPath);
+    console.log(location?.state?.prevPath);
+  },[])
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -132,7 +141,7 @@ const NewVendor = () => {
         }}
       >
         <Modal
-          visible={visible}
+          open={visible}
           onOk={() => setVisible(false)}
           onCancel={() => setVisible(false)}
           footer={[
@@ -147,15 +156,15 @@ const NewVendor = () => {
           </div>
         </Modal>
         <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="12" userType="superadmin" /> :
-          <Sidebar k="4" userType="pai" />}
+        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="4" userType="superadmin" /> :
+          <Sidebar k="5" userType="pai" />}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title={
                 <p>
                   <Link
-                    to="/pai/vendors"
+                    to={prevPath}
                     style={{ color: "white", textDecoration: "none" }}
                   >
                     <ArrowLeftOutlined />
@@ -165,7 +174,7 @@ const NewVendor = () => {
               }
               comp={
                 <center>
-                  <Link to="/pai/vendors">
+                  <Link to={prevPath}>
                     <Button
                       style={{ backgroundColor: "white", color: colorGreen }}
                     >

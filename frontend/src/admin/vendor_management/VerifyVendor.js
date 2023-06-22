@@ -22,7 +22,7 @@ import DeshboardBg from "../../res/img/DeshboardBg.png";
 import SideNav from "../../components/navigation/SideNav";
 import Header from "../../components/navigation/Header";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
@@ -39,6 +39,8 @@ const VerifyVendor = () => {
 
 
   const navigate = useNavigate();
+  const location = useLocation();
+
 
   /**************Restricting Admin Route************************* */
 
@@ -117,7 +119,14 @@ const VerifyVendor = () => {
         {localStorage.getItem("type") === "mk superadmin" ? <SideNav k="4" userType="superadmin" /> :
         <SideNav k="4" userType="admin" />}
         <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
-          <Header title="Verify Vendors" />
+          <Header title="Verify Vendors" comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
+                <Link to="/pai/vendors/new" state={{ prevPath: location.pathname}}>
+                  <Button style={{ backgroundColor: "white", color: colorGreen }}>
+                    <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+                    Add Vendor
+                  </Button>
+                </Link>
+              </center>} />
           <div style={{ padding: "0 2% 2%" }}>
             <Card style={{ width: "100%", backgroundColor: "transparent" }} bodyStyle={{padding: '0'}}>
               <ConfigProvider
@@ -143,13 +152,14 @@ const VerifyVendor = () => {
             </Col>
                 {vendors && (
                   <List
-                    dataSource={filteredVendors.filter(item => {
-                      if (localStorage.getItem("type") === "mk admin") {
-                        return item.approval_status === true
-                      }else{
-                        return true
-                      }
-                    })}
+                    dataSource={filteredVendors}
+                    // dataSource={filteredVendors.filter(item => {
+                    //   if (localStorage.getItem("type") === "mk admin") {
+                    //     return item.approval_status === true
+                    //   }else{
+                    //     return true
+                    //   }
+                    // })}
                     style={{height: "65vh",
                     overflowY: 'scroll'}}
                     renderItem={(item) => (

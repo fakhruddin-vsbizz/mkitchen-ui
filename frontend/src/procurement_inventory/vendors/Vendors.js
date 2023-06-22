@@ -4,7 +4,7 @@ import { Row, Col, List, Card, Tag, Button, ConfigProvider, Input } from "antd";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
 import { baseURL } from "../../constants";
 
@@ -14,6 +14,8 @@ const Vendors = () => {
 	const [filterByName, setFilterByName] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
+
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
@@ -84,7 +86,7 @@ const Vendors = () => {
             <Header
               title="Vendor"
               comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Link to="/pai/vendors/new">
+                <Link to="/pai/vendors/new" state={{ prevPath: location.pathname}}>
                   <Button style={{ backgroundColor: "white", color: colorGreen }}>
                     <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
                     Add Vendor
