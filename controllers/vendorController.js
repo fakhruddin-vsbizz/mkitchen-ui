@@ -8,8 +8,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
   const {
     mkuser_email,
     vendor_name,
-    opening_time,
-    closing_time,
+    phone,
     email,
     address,
     mkuser_id,
@@ -23,8 +22,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
       address === "" ||
       email === "" ||
       vendor_name === "" ||
-      closing_time === "" ||
-      opening_time === ""
+      phone === ""
     ) {
       return res.status(403).json({ inputInvalid: "All Fields Are Mendatory" });
     }
@@ -55,8 +53,15 @@ const addVendor = expressAsyncHandler(async (req, res) => {
 });
 
 const getVendor = expressAsyncHandler(async (req, res) => {
-  const vendor = await VendorModel.find();
+  item_id = req.params.item_id
+
+  const purchase = await Purchase.find({ inventory_id: item_id }, 'vendor_id')
+  const vendorByItem = purchase.map(p => p.vendor_id.toString())
+  const data = item_id ? { _id: vendorByItem } : {}
+  const vendor = await VendorModel.find(data);
+
   return res.json(vendor);
+
 });
 
 const getVendorPurchaseWithOrderHistory = expressAsyncHandler(
