@@ -10,13 +10,15 @@ const vendorModel = new mongoose.Schema(
       type: String,
       required: true,
     },
+    contact_person: {
+      type: String,
+    },
     phone: {
       type: String,
       required: true,
     },
     phone2: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -24,11 +26,9 @@ const vendorModel = new mongoose.Schema(
     },
     email2: {
       type: String,
-      required: true,
     },
     gstin: {
       type: String,
-      required: true,
     },
     address: {
       type: String,
