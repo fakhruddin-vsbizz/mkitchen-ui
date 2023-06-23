@@ -10,7 +10,7 @@ const {
 const router = express.Router();
 
 router.post("/", addVendor);
-router.get("/", getVendor);
+router.get("/:item_id?", getVendor);
 router.get("/vendor_purchase_record", getVendorPurchaseWithOrderHistory);
 router.get("/totalpurchase", getTotalVendorPurchase);
 

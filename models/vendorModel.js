@@ -10,15 +10,23 @@ const vendorModel = new mongoose.Schema(
       type: String,
       required: true,
     },
-    opening_time: {
+    phone: {
       type: String,
       required: true,
     },
-    closing_time: {
+    phone2: {
       type: String,
       required: true,
     },
     email: {
+      type: String,
+      required: true,
+    },
+    email2: {
+      type: String,
+      required: true,
+    },
+    gstin: {
       type: String,
       required: true,
     },
