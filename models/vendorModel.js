@@ -22,7 +22,6 @@ const vendorModel = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
     },
     email2: {
       type: String,
@@ -32,7 +31,6 @@ const vendorModel = new mongoose.Schema(
     },
     address: {
       type: String,
-      required: true,
     },
     approval_status: {
       type: Boolean,

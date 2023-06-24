@@ -63,7 +63,7 @@ const Purchases = () => {
       if (data) {
         const res = await data.json();
         setPurchases(res.data);
-        setFilteredPurchases(res.data);
+        setFilteredPurchases(res.data.reverse());
       }
     };
     getPurchases();
