@@ -29,10 +29,13 @@ import { baseURL } from "../../constants";
 const NewVendor = () => {
   const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
   const [vendorName, setVendorName] = useState();
-  const [vendorEmail, setVendorEmail] = useState();
+  const [vendorEmail1, setVendorEmail1] = useState();
+  const [vendorEmail2, setVendorEmail2] = useState();
+  const [phone1, setPhone1] = useState("");
+  const [phone2, setPhone2] = useState("");
+  const [GSTIN, setGSTIN] = useState("");
+  const [personOfContact, setPersonOfContact] = useState("");
   const [vendorAddress, setVendorAddress] = useState();
-  const [closingTime, setClosingTime] = useState();
-  const [openingTime, setOpeningTime] = useState();
   const [visible, setVisible] = useState(false);
 
   const [validationError, setValidationError] = useState(false);
@@ -76,16 +79,10 @@ const NewVendor = () => {
   /**************Restricting PandI Route************************* */
 
   const createNewVendor = async () => {
-    const selectedTimeOpening = openingTime ? new Date(openingTime) : null;
-    const selectedTimeClosing = closingTime ? new Date(closingTime) : null;
 
-    const finalOpeningTime = selectedTimeOpening
-      ? selectedTimeOpening.toLocaleTimeString()
-      : "";
-
-    const finalClosingTime = selectedTimeClosing
-      ? selectedTimeClosing.toLocaleTimeString()
-      : "";
+    if (!vendorName && !phone1) {
+      return;
+    }
 
     try {
       const data = await fetch("/api/vendor", {
@@ -96,9 +93,12 @@ const NewVendor = () => {
         body: JSON.stringify({
           mkuser_email: userEmail,
           vendor_name: vendorName,
-          opening_time: finalOpeningTime,
-          closing_time: finalClosingTime,
-          email: vendorEmail,
+          phone: phone1,
+          phone2: phone2,
+          email: vendorEmail1,
+          email2: vendorEmail2,
+          gstin: GSTIN,
+          contact_person: personOfContact,
           address: vendorAddress,
           approval_status: 0,
         }),
@@ -115,11 +115,14 @@ const NewVendor = () => {
           setValidationError(false);
         } else {
           setVisible(true);
-          setVendorEmail("");
+          setVendorEmail1("");
+          setVendorEmail2("");
           setVendorName("");
           setVendorAddress("");
-          setOpeningTime("");
-          setClosingTime("");
+          setPhone1("");
+          setPhone2("");
+          setPersonOfContact("");
+          setGSTIN("");
           setEmailError(false);
           setValidationError(false);
         }
@@ -228,50 +231,98 @@ const NewVendor = () => {
                   >
                     <tr>
                       <td>
-                        Vendor Name:{" "}
+                      <Col xs={12} xl={24}>
+                        Vendor Name:<span style={{color: 'red'}}>*</span>{" "}
                         <Input
                           value={vendorName}
                           onChange={(e) => setVendorName(e.target.value)}
-                          placeholder="Eg: VK General store, Brahma store, etc.."
+                          placeholder="Enter Name"
+                          required
                         ></Input>
+                        </Col>
                       </td>
-                      <td>
+                      {/* <td>
                         Email:{" "}
                         <Input
                           value={vendorEmail}
                           onChange={(e) => setVendorEmail(e.target.value)}
                           placeholder="Eg: brahma@gmail.com, vkstore@hotmail.com, etc.."
                         ></Input>
+                      </td> */}
+                      <td>
+                        <Row style={{columnGap: "1rem"}}>
+                          <Col xs={12} xl={11}>
+                          Email 1: <br />
+                        <Input
+                          value={vendorEmail1}
+                          onChange={(e) => setVendorEmail1(e.target.value)}
+                          placeholder="Enter Email Here"
+                        ></Input>
+                          </Col>
+                          <Col xs={12} xl={11}>
+                          Email 2: <br />
+                        <Input
+                          value={vendorEmail2}
+                          onChange={(e) => setVendorEmail2(e.target.value)}
+                          placeholder="Enter Email Here"
+                        ></Input>
+                          </Col>
+                        </Row>
                       </td>
                     </tr>
                     <tr>
                       <td>
+                      <Col xs={12} xl={24}>
                         Address:{" "}
                         <Input
                           value={vendorAddress}
                           onChange={(e) => setVendorAddress(e.target.value)}
-                          placeholder="Must include Street name, locality, city and country.."
+                          placeholder="Enter Address Here"
                         ></Input>
+                        </Col>
                       </td>
                       <td>
-                        <Row>
-                          <Col xs={12} xl={12}>
-                            Opening time: <br />
-                            <TimePicker
-                              value={openingTime}
-                              onChange={(time) => setOpeningTime(time)}
-                              style={{ width: "90%" }}
-                            ></TimePicker>
+                        <Row style={{columnGap: "1rem"}}>
+                          <Col xs={12} xl={11}>
+                          Phone 1:<span style={{color: 'red'}}>*</span><br />
+                        <Input
+                          value={phone1}
+                          onChange={(e) => setPhone1(e.target.value)}
+                          placeholder="Enter Phone Number Here"
+                          required
+                        ></Input>
                           </Col>
-                          <Col xs={12} xl={12}>
-                            Closing time: <br />
-                            <TimePicker
-                              value={closingTime}
-                              style={{ width: "100%" }}
-                              onChange={(time) => setClosingTime(time)}
-                            ></TimePicker>
+                          <Col xs={12} xl={11}>
+                            Phone 2:<br />
+                        <Input
+                          value={phone2}
+                          onChange={(e) => setPhone2(e.target.value)}
+                          placeholder="Enter Phone Number Here"
+                        ></Input>
                           </Col>
                         </Row>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <Col xs={12} xl={24}>
+                      Contact Person:{" "}
+                        <Input
+                          value={personOfContact}
+                          onChange={(e) => setPersonOfContact(e.target.value)}
+                          placeholder="Enter Person of Contact Here"
+                        ></Input>
+                        </Col>
+                      </td>
+                      <td>
+                        <Col xs={12} xl={24}>
+                      GSTIN:{" "}
+                        <Input
+                          value={GSTIN}
+                          onChange={(e) => setGSTIN(e.target.value)}
+                          placeholder="Enter GSTIN Here"
+                        ></Input>
+                        </Col>
                       </td>
                     </tr>
                   </table>
@@ -309,9 +360,6 @@ const NewVendor = () => {
                 </Radio.Group>
                         
             </Card> */}
-
-                <br />
-                <br />
 
                 <Button onClick={createNewVendor} type="primary">
                   ADD VENDOR

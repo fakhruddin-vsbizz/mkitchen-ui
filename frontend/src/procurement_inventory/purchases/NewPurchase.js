@@ -486,7 +486,7 @@ const NewPurchase = () => {
           {" "}
           Add to Cart
         </Button> */}
-                  <hr></hr>
+                  <hr className="separator" />
                   <List
                     size="small"
                     bordered
@@ -498,7 +498,7 @@ const NewPurchase = () => {
                             <Col xs={24} xl={12} style={{ fontSize: "150%" }}>
                               {item.ingredient_name}
                             </Col>
-                            <Col xs={24} xl={12} style={{ fontSize: "150%", textAlign: 'right' }}>
+                            <Col xs={24} xl={11} style={{ fontSize: "150%", textAlign: 'right' }}>
                               <Button
                               onClick={deletePurchase.bind(this, item?.inventory_id)}
                               shape="circle"
@@ -559,7 +559,7 @@ const NewPurchase = () => {
                               ></Input>
                               -
                             </Col>
-                            <Col xs={8} xl={8}>
+                            <Col xs={8} xl={7}>
                               Quantity ordered: <br />
                               <Input
                                 onChange={(e) =>

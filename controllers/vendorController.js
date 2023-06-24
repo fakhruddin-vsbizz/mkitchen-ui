@@ -9,7 +9,11 @@ const addVendor = expressAsyncHandler(async (req, res) => {
     mkuser_email,
     vendor_name,
     phone,
+    phone2,
     email,
+    email2,
+    gstin,
+    contact_person,
     address,
     mkuser_id,
     approval_status,
@@ -20,9 +24,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
   if (mkUser) {
     if (
       address === "" ||
-      email === "" ||
-      vendor_name === "" ||
-      phone === ""
+      vendor_name === ""
     ) {
       return res.status(403).json({ inputInvalid: "All Fields Are Mendatory" });
     }
@@ -35,9 +37,12 @@ const addVendor = expressAsyncHandler(async (req, res) => {
     const vendor = await VendorModel.create({
       mkuser_id: mkUser._id,
       vendor_name,
-      opening_time,
-      closing_time,
+      phone,
+      phone2,
       email,
+      email2,
+      gstin,
+      contact_person,
       address,
       approval_status,
     });
@@ -49,7 +54,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
       throw new Error("Error creating the Vendor");
     }
   }
-  return res.json({ message: "vendor created " });
+  return res.json({ message: "vendor created" });
 });
 
 const getVendor = expressAsyncHandler(async (req, res) => {
