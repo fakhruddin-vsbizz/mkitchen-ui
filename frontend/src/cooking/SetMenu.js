@@ -72,6 +72,7 @@ const SetMenu = () => {
   const [allIngridients, setAllIngridients] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
   const [dataAdded, setDataAdded] = useState(false);
+  const [countUpdated, setCountUpdated] = useState(false);
 
   const [ingredientName, setIngredientName] = useState("");
 
@@ -80,6 +81,7 @@ const SetMenu = () => {
   const [visible, setVisible] = useState(false);
   const [updateAshkash, setUpdateAshkash] = useState(false);
   const [totalAshkash, setTotalAshkhaas] = useState(0);
+  const [totalCount, setTotalCount] = useState(0);
 
   const [ashkaasCountInput, setAshkaasCountInput] = useState(0);
   const [foodIndex, setFoodIndex] = useState("");
@@ -156,6 +158,33 @@ const SetMenu = () => {
     getHistory();
   }, [menuFoodId, selectedDate]);
 
+  useEffect(()=>{
+    setTotalCount(totalAshkash)
+  },[totalAshkash])
+
+  const addTotalCount = () => {
+    //figure out how to add total count
+    fetch('/api/admin/menu',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            data: [{
+              mk_id: "combine@gmail.com",
+              total_ashkhaas: +totalCount,
+              name: "Combine",
+            },],
+            date_of_cooking: selectedDate,
+          }),
+        },
+      ).then(res => setCountUpdated(prev => !prev)).catch(error => {
+      console.log('error 189', error);
+    })
+    
+  }
+
   useEffect(() => {
     const getUserId = async () => {
       const data = await fetch("/api/cooking/ingredients", {
@@ -220,7 +249,7 @@ const SetMenu = () => {
       }
     };
     getFood();
-  }, [getMkUserId, selectedDate, dataAdded]);
+  }, [getMkUserId, selectedDate, dataAdded, countUpdated]);
 
   useEffect(() => {
     const getInventory = async () => {
@@ -548,7 +577,18 @@ const SetMenu = () => {
               <Row>
                 <Col xs={24} xl={12} style={{ padding: "0px 15px" }}>
                   <h3 style={{ color: colorBlack, fontSize:'1.5rem', marginBottom: '0' }}>
-                    Total count: <span style={{color: colorGreen}}>{totalAshkash}</span> People
+                    {localStorage.getItem("type") === "mk superadmin" ? <Col>
+                    Total count: <Input
+                      type="number"
+                        onChange={(e) =>
+                          setTotalCount(e.target.value)
+                        }
+                        value={totalCount}
+                        placeholder="Eg: 2,3,15, etc"
+                        style={{ width: "40%" }}
+                      ></Input> People
+                      <Button style={{marginLeft: '8px'}} onClick={addTotalCount}>Add Count</Button>
+                    </Col>: <>Total count: <span style={{color: colorGreen}}>{totalAshkash}</span> People</>} 
                   </h3>
                   {/* Select Client: &nbsp;&nbsp;&nbsp;
                       <Select

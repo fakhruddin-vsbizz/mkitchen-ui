@@ -40,6 +40,16 @@ const purcahsesModel = new mongoose.Schema(
       type: String,
       required: false,
     },
+    invoice_no: {
+      type: String,
+      required: false,
+      default: 'n/a'
+    },
+    date_of_purchase: {
+      type: String,
+      required: false,
+      default: 'n/a'
+    },
     unshelf: {
       type: Boolean,
       required: false,
