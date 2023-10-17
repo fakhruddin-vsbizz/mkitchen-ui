@@ -280,6 +280,34 @@ const NewPurchase = () => {
     setIngredientForPurchase(updatedIngredients);
   };
 
+  const handleInvoiceNoPerIngridient = (value, ingredientName) => {
+    const updatedIngredients = ingredientForPurchase.map((ingredient) => {
+      if (ingredient.ingredient_name === ingredientName) {
+        // if the ingredient name matches, update its perAshkash value
+        return {
+          ...ingredient,
+          invoice_no: value,
+        };
+      }
+      return ingredient; // return the unchanged ingredient object
+    });
+    setIngredientForPurchase(updatedIngredients);
+  }
+
+  const handleDateOfPurchasePerIngridient = (value, ingredientName) => {
+    const updatedIngredients = ingredientForPurchase.map((ingredient) => {
+      if (ingredient.ingredient_name === ingredientName) {
+        // if the ingredient name matches, update its perAshkash value
+        return {
+          ...ingredient,
+          date_of_purchase: value,
+        };
+      }
+      return ingredient; // return the unchanged ingredient object
+    });
+    setIngredientForPurchase(updatedIngredients);
+  }
+
   const handlequantityPerIngridient = (value, ingredientName) => {
     const updatedIngredients = ingredientForPurchase.map((ingredient) => {
       if (ingredient.ingredient_name === ingredientName) {
@@ -537,7 +565,7 @@ const NewPurchase = () => {
                               )}
                             </Col>
                             <Col xs={8} xl={8}>
-                              Price per{" "}
+                              Price per:{" "}
                               {inventoryItems.length !== 0 &&
                                 inventoryItems
                                   .filter(
@@ -572,6 +600,34 @@ const NewPurchase = () => {
                                 style={{ width: "70%" }}
                               ></Input>
                             </Col>
+                            <Col xs={8} xl={8} style={{marginTop: '8px'}}>
+                            Invoice No: <br />
+                              <Input
+                                onChange={(e) =>
+                                  handleInvoiceNoPerIngridient(
+                                    e.target.value,
+                                    item.ingredient_name
+                                  )
+                                }
+                                placeholder="Enter Invoice No."
+                                style={{ width: "70%" }}
+                              ></Input>
+                            </Col>
+                            <Col xs={8} xl={8} style={{marginTop: '8px'}}>
+                            Date of purchase: <br />
+                              <Input
+                              type="date"
+                                onChange={(e) =>
+                                  handleDateOfPurchasePerIngridient(
+                                    e.target.value,
+                                    item.ingredient_name
+                                  )
+                                }
+                                placeholder="Eg: 2,3,15, etc"
+                                style={{ width: "70%" }}
+                              ></Input>
+                            </Col>
+                            
                           </Row>
                         </Card>
 
