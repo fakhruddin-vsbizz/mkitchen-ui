@@ -8,7 +8,8 @@ const {
   updateShelfStatus,
   getExpiredInventoryItems,
   getVendorWisePurchase,
-  changePaymentStatus
+  changePaymentStatus,
+  getOnePurchase,
 } = require("../controllers/purchaseController");
 
 const router = express.Router();
@@ -23,6 +24,7 @@ router.put("/update_shelf", updateShelfStatus);
 router.get("/vendor_purchase", getVendorWisePurchase);
 
 router.get("/", getPurchase);
+router.get("/getOne/:id", getOnePurchase);
 
 router.get("/withExpiry", getPurchaseWithExpiry);
 router.delete("/:id", unShelfItem);

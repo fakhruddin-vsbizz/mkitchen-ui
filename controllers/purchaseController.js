@@ -3,6 +3,7 @@ const MKUser = require("../models/mkUserModel");
 const Vendor = require("../models/vendorModel");
 const Purchase = require("../models/purchasesModel");
 const InventoryModel = require("../models/inventoryItemsModel");
+const Order = require("../models/ordersModal");
 
 const addPurchase = expressAsyncHandler(async (req, res) => {
   const {
@@ -27,14 +28,24 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
         element.rate_per_unit === undefined ||
         element.vendor_id === undefined
       ) {
-        return res.status(403).json({ fieldError: "please add all the fields" });
+        return res
+          .status(403)
+          .json({ fieldError: "please add all the fields" });
       }
     });
     // Create an array of write operations to perform in bulk
     const ops = documents.map((doc) => ({
       insertOne: { document: doc },
     }));
-  
+
+    const orderUpdate = await Order.findOneAndUpdate(
+      { _id: documents[0]?.order_id },
+      {
+        quantity_loaded: documents[0]?.quantity_loaded,
+        deliveryStatus: true,
+      }
+    );
+
     // Perform the bulk write operation
     await Purchase.bulkWrite(ops)
       .then((result) => {
@@ -43,16 +54,16 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
       .catch((error) => {
         console.error(error);
       });
-      
-  
+
     // Create an array of write operations to perform in bulk
+    console.log(documents, "documents");
     const updateInventory = documents.map((inventory) => ({
       updateOne: {
         filter: { _id: inventory.inventory_id },
         update: {
           $inc: {
             total_volume: inventory.quantity_loaded,
-          }
+          },
         },
       },
     }));
@@ -70,35 +81,43 @@ const addPurchase = expressAsyncHandler(async (req, res) => {
       documents.map(async (doc) => {
         const id = doc.inventory_id;
         let name;
-        var totalQty = 0
-        var totalCost = 0
+        let totalQty = 0;
+        let totalCost = 0;
 
-            let item = await Purchase.find({ inventory_id: id })
-            item.forEach(i => {
-                name = i.ingredient_name;
-                totalCost += i.total_amount;
-                totalQty += i.quantity_loaded;
-            });
-            result = {
-                name: name,
-                _id: id,
-                qty: totalQty,
-                avgPrice: Math.ceil(totalCost / totalQty),
-                cost: totalCost
-            }
-    
-            await InventoryModel.findOneAndUpdate({_id : id}, {price: Math.ceil(totalCost / totalQty)})
+        let item = await Purchase.find({ inventory_id: id });
+        item.forEach((i) => {
+          name = i.ingredient_name;
+          totalCost += i.rate_per_unit * i.quantity_loaded;
+          totalQty += i.quantity_loaded;
+        });
+
+        result = {
+          name: name,
+          _id: id,
+          qty: totalQty,
+          avgPrice: Math.ceil(totalCost / totalQty),
+          cost: totalCost,
+        };
+
+        console.log("not error yet");
+
+        console.log(
+          Math.ceil(totalCost / totalQty),
+          "Math.ceil(totalCost / totalQty)"
+        );
+        console.log(totalCost, totalQty, "totalCost and totalQty");
+
+        await InventoryModel.findOneAndUpdate(
+          { _id: id },
+          { price: Math.ceil(totalCost / totalQty) }
+        );
       })
     );
-  
-    
-  
+
     return res.json({ message: "Purchase added" });
-    
   } catch (error) {
     console.log(error);
   }
-
 });
 
 const getVendorWisePurchase = expressAsyncHandler(async (req, res) => {
@@ -146,12 +165,31 @@ const getVendorWisePurchase = expressAsyncHandler(async (req, res) => {
 });
 
 const getPurchase = expressAsyncHandler(async (req, res) => {
-  const purchase = await Purchase.find();
-  if (!purchase) {
-    return res.status(404).json({ error: "No purchase found" });
-  }
+  try {
+    const purchase = await Purchase.find();
+    if (!purchase) {
+      return res.status(404).json({ error: "No purchase found" });
+    }
 
-  return res.status(200).json(purchase);
+    return res.status(200).json(purchase);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+});
+
+const getOnePurchase = expressAsyncHandler(async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const purchase = await Purchase.findOne({ order_id: id });
+    if (!purchase) {
+      return res.status(404).json({ error: "No purchase found" });
+    }
+
+    return res.status(200).json(purchase);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
 });
 
 const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
@@ -162,7 +200,7 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
     // const purchases = await Purchase.find({ unshelf: false });
     const purchases = await Purchase.aggregate([
       {
-        $match: { unshelf: false }
+        $match: { unshelf: false },
       },
       {
         $lookup: {
@@ -171,7 +209,7 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
           foreignField: "_id",
           as: "inventoryInfo",
         },
-      }
+      },
     ]);
 
     const filteredPurchases = purchases.filter((purchase) => {
@@ -179,7 +217,6 @@ const getExpiredInventoryItems = expressAsyncHandler(async (req, res) => {
       const expiryDate = new Date(`${month}/${day}/20${year}`);
       return expiryDate < parsedDate;
     });
-
 
     return res.status(200).json(filteredPurchases);
   } catch (error) {
@@ -277,19 +314,16 @@ const getPurchaseWithExpiry = expressAsyncHandler(async (req, res) => {
 });
 
 const changePaymentStatus = expressAsyncHandler(async (req, res) => {
+  const { id } = req.body;
 
-  const {id} = req.body;
+  const purchase = await Purchase.findOneAndUpdate({ _id: id }, { paid: true });
 
-  const purchase = await Purchase.findOneAndUpdate({_id: id}, {paid: true});
-
-  if(!purchase) {
-    return res.status(404).json({msg : "not found"})
+  if (!purchase) {
+    return res.status(404).json({ msg: "not found" });
   }
 
-  return res.status(200).json(purchase)
-
-})
-
+  return res.status(200).json(purchase);
+});
 
 module.exports = {
   addPurchase,
@@ -300,5 +334,6 @@ module.exports = {
   updateShelfStatus,
   getExpiredInventoryItems,
   getVendorWisePurchase,
-  changePaymentStatus
+  changePaymentStatus,
+  getOnePurchase,
 };

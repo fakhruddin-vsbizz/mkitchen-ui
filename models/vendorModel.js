@@ -33,9 +33,14 @@ const vendorModel = new mongoose.Schema(
       type: String,
     },
     approval_status: {
-      type: Boolean,
+      type: String,
       required: true,
+      default: "pending",
     },
+    // approval_status: {
+    //   type: Boolean,
+    //   required: true,
+    // },
   },
   { timestamps: true }
 );

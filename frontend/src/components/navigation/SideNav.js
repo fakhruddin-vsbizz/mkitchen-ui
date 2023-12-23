@@ -1,4 +1,4 @@
-import './sidenavbar.css'
+import "./sidenavbar.css";
 import {
   FileOutlined,
   PieChartOutlined,
@@ -16,7 +16,7 @@ import Logo from "../../res/img/MKWhiteLogo.png";
 import LogoMin from "../../res/img/MKWhiteLogoMin.png";
 import { Link } from "react-router-dom";
 import { Footer } from "antd/es/layout/layout";
-import { colorBlack, colorGreen, valueNavShadowBox } from '../../colors';
+import { colorBlack, colorGreen, valueNavShadowBox } from "../../colors";
 
 const { Sider } = Layout;
 function getItem(label, key, icon, children, link) {
@@ -40,8 +40,6 @@ const logoutHandler = () => {
 
   window.location.href = "/";
 };
-
-
 
 const superAdmin = [
   getItem(
@@ -150,8 +148,15 @@ const superAdmin = [
     </Link>
   ),
   getItem(
-    <span onClick={logoutHandler}>Logout</span>,
+    <Link to="/pai/orders">Orders</Link>,
     "16",
+    <Link to="/pai/orders">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "17",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
@@ -196,8 +201,15 @@ const admin = [
     </Link>
   ),
   getItem(
-    <span onClick={logoutHandler}>Logout</span>,
+    <Link to="/pai/orders">Orders</Link>,
     "6",
+    <Link to="/pai/orders">
+      <ShopOutlined style={{ fontSize: "20px" }} />
+    </Link>
+  ),
+  getItem(
+    <span onClick={logoutHandler}>Logout</span>,
+    "7",
     <Link onClick={logoutHandler}>
       <LogoutOutlined style={{ fontSize: "20px" }} />
     </Link>
@@ -311,30 +323,26 @@ const SideNav = ({ k, userType }) => {
     <Layout
       style={{
         boxShadow: valueNavShadowBox,
-        backgroundColor: colorBlack
-      }}
-    >
+        backgroundColor: colorBlack,
+      }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
             colorSecondary: "white",
           },
-        }}
-      >
+        }}>
         <Sider
-          style={{ backgroundColor: colorBlack, height: '111vh'}}
+          style={{ backgroundColor: colorBlack, height: "118vh" }}
           collapsible
           collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-        >
+          onCollapse={(value) => setCollapsed(value)}>
           <div
             style={{
               height: 32,
               margin: 16,
               // background: 'red',
-            }}
-          >
+            }}>
             {collapsed ? (
               <img src={LogoMin} style={{ width: 40 }} />
             ) : (
@@ -358,10 +366,11 @@ const SideNav = ({ k, userType }) => {
               fontSize: 16,
               fontWeight: 500,
             }}
-            
             mode="inline"
             items={
-              userType == "superadmin" ? superAdmin : userType == "admin"
+              userType == "superadmin"
+                ? superAdmin
+                : userType == "admin"
                 ? admin
                 : userType == "cooking"
                 ? cooking

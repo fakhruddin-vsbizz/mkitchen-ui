@@ -15,8 +15,9 @@ import {
   Alert,
   Tag,
   Carousel,
+  Typography,
 } from "antd";
-import "./setmenu.css"
+import "./setmenu.css";
 import {
   CaretRightOutlined,
   DeleteOutlined,
@@ -30,18 +31,24 @@ import { useNavigate } from "react-router-dom";
 import AuthContext from "../components/context/auth-context";
 import IngredientList from "./Input";
 import dayjs from "dayjs";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+  valueShadowBox,
+} from "../colors";
 import { baseURL } from "../constants";
 
 const dateFormatterForToday = () => {
   const dateObj = new Date();
   const formattedDate = `${
-    (dateObj.getMonth() + 1) < 10
+    dateObj.getMonth() + 1 < 10
       ? `0${dateObj.getMonth() + 1}`
       : dateObj.getMonth() + 1
-  }/${(dateObj.getDate()) < 10
-    ? `0${dateObj.getDate()}`
-    : dateObj.getDate()}/${dateObj.getFullYear()}`;
+  }/${
+    dateObj.getDate() < 10 ? `0${dateObj.getDate()}` : dateObj.getDate()
+  }/${dateObj.getFullYear()}`;
   return formattedDate;
 };
 
@@ -64,7 +71,7 @@ const SetMenu = () => {
   const [getMkUserId, setGetMkUserId] = useState();
   //date filter
   const [selectedDate, setSelectedDate] = useState(newTodaysDate);
-  const [selectedFoodName, setSelectedFoodName] = useState("")
+  const [selectedFoodName, setSelectedFoodName] = useState("");
 
   const [ingredientItems, setIngredientItems] = useState([]);
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -91,13 +98,20 @@ const SetMenu = () => {
   const [finalArrayForData, setFinalArrayForData] = useState([]);
   const [addedList, setAddedList] = useState([]);
   const [mohallaList, setMohallaList] = useState([]);
+  const [selectedMohalla, setSelectedMohalla] = useState("");
+  const [mohallaDetails, setMohallaDetails] = useState();
+  const [mohallaDetailsList, setMohallaDetailsList] = useState([]);
 
   const [filteredAutoCompleted, setFilteredAutoCompleted] = useState([]);
   const [reasonForChangingMenu, setReasonForChangingMenu] = useState("");
+  const [mohallaUsersList, setMohallaUsersList] = useState([]);
+
   const [resetMenu, setResetMenu] = useState(false);
 
   const [status, setStatus] = useState();
   const navigate = useNavigate();
+
+  const { Paragraph } = Typography;
 
   const authCtx = useContext(AuthContext);
   const email = authCtx.userEmail;
@@ -124,12 +138,67 @@ const SetMenu = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    const getMohallaUsers = async () => {
+      await fetch("/api/admin/account_management", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          usertype: "Mohalla Admin",
+          action: "get_user",
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log("mohallauser", data);
+          setMohallaUsersList(
+            data.filter((item) => item?.username !== "Direct Donations")
+          );
+        });
+    };
+    getMohallaUsers();
+  }, []);
+
   /**************Restricting Cooking Route************************* */
 
   const OnDelete = (id) => {
     setIngredientItems((pervItem) =>
       pervItem.filter((item) => item.inventory_item_id !== id)
     );
+  };
+
+  const onAddMohalla = () => {
+    console.log("totalcount", totalCount);
+    console.log("mohalladetails", mohallaDetails);
+    if (mohallaDetails?.email) {
+      // const newData = { ...mohallaDetails, total_ashkhaas: totalCount };
+      console.log({ ...mohallaDetails, total_ashkhaas: +totalCount });
+      fetch("/api/admin/menu", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          date_of_cooking: selectedDate,
+          data: [
+            {
+              mk_id: mohallaDetails?.email,
+              name: mohallaDetails?.username,
+              total_ashkhaas: +totalCount,
+            }, //name: username and mk_id: email
+          ],
+        }),
+      })
+        .then((res) => {
+          setCountUpdated((prev) => !prev);
+          console.log(res);
+          setTotalCount(0);
+          setSelectedMohalla("");
+        })
+        .catch((err) => console.log(err));
+    }
   };
 
   useEffect(() => {
@@ -150,7 +219,7 @@ const SetMenu = () => {
           // setGetMkUserId(res.user);
           setTotalAshkhaas(res);
         }
-      }else{
+      } else {
         setTotalAshkhaas(0);
       }
     };
@@ -158,32 +227,33 @@ const SetMenu = () => {
     getHistory();
   }, [menuFoodId, selectedDate]);
 
-  useEffect(()=>{
-    setTotalCount(totalAshkash)
-  },[totalAshkash])
+  // useEffect(() => {
+  //   setTotalCount(totalAshkash);
+  // }, [totalAshkash]);
 
   const addTotalCount = () => {
     //figure out how to add total count
-    fetch('/api/admin/menu',
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
+    fetch("/api/admin/menu", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        data: [
+          {
+            mk_id: "combine@gmail.com",
+            total_ashkhaas: +totalCount,
+            name: "Combine",
           },
-          body: JSON.stringify({
-            data: [{
-              mk_id: "combine@gmail.com",
-              total_ashkhaas: +totalCount,
-              name: "Combine",
-            },],
-            date_of_cooking: selectedDate,
-          }),
-        },
-      ).then(res => setCountUpdated(prev => !prev)).catch(error => {
-      console.log('error 189', error);
+        ],
+        date_of_cooking: selectedDate,
+      }),
     })
-    
-  }
+      .then((res) => setCountUpdated((prev) => !prev))
+      .catch((error) => {
+        console.log("error 189", error);
+      });
+  };
 
   useEffect(() => {
     const getUserId = async () => {
@@ -293,7 +363,7 @@ const SetMenu = () => {
           ingredient_name: ingredientName,
           perAshkash: 0, // set initial perAshkash value as empty string
           reorders: [],
-          leftover: {}
+          leftover: {},
         };
         setIngredientItems((prevState) =>
           prevState === undefined
@@ -321,7 +391,6 @@ const SetMenu = () => {
         //       baseline: 1,
         //     }),
         //   });
-          
         //     // setDataAdded((prev) => !prev);
         //     const res = await data.json();
         //     setInventoryItems(prev => [...prev, res])
@@ -348,7 +417,6 @@ const SetMenu = () => {
         //         : [newIngredient, ...prevState]
         //     );
         //     setIngredientName("");
-
         // } catch (error) {
         //   console.log(error);
         // }
@@ -357,16 +425,18 @@ const SetMenu = () => {
   };
 
   const handlePerAshkashChange = (value, ingredientName, unit) => {
-    const updatedIngredients = ingredientItems.length !== 0 && ingredientItems.map((ingredient) => {
-      if (ingredient.ingredient_name === ingredientName) {
-        // if the ingredient name matches, update its perAshkash value
-        return {
-          ...ingredient,
-          perAshkash: value,
-        };
-      }
-      return ingredient; // return the unchanged ingredient object
-    });
+    const updatedIngredients =
+      ingredientItems.length !== 0 &&
+      ingredientItems.map((ingredient) => {
+        if (ingredient.ingredient_name === ingredientName) {
+          // if the ingredient name matches, update its perAshkash value
+          return {
+            ...ingredient,
+            perAshkash: value,
+          };
+        }
+        return ingredient; // return the unchanged ingredient object
+      });
     setIngredientItems(updatedIngredients);
     setUpdateAshkash(true);
   };
@@ -397,21 +467,24 @@ const SetMenu = () => {
   };
 
   const updateOperationPipeliinIngridient = async () => {
-
-    if(resetMenu){
-        await fetch("/api/admin/menu/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            add_type: "menu_reset",
-            menu_reset: false
-          }),
-        }).then((res) => res.json()).then(data => {
-          console.log(data)
-          setResetMenu(data?.menu_reset)}).catch(err => console.log(err));
-      }
+    if (resetMenu) {
+      await fetch("/api/admin/menu/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          add_type: "menu_reset",
+          menu_reset: false,
+        }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+          setResetMenu(data?.menu_reset);
+        })
+        .catch((err) => console.log(err));
+    }
 
     try {
       const data = await fetch("/api/cooking/ingredients", {
@@ -468,14 +541,15 @@ const SetMenu = () => {
   // Output the final array
 
   const logIngredientForFood = async () => {
+    setAddedList((prev) => [...prev, foodIndex]);
 
-    setAddedList(prev => [...prev, foodIndex]);
-
-    const newFoodIngredient = ingredientItems.length !== 0 && ingredientItems.map(item => ({
-      ...item,
-      procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(3)),
-      perAshkash: +item.perAshkash,
-    }))
+    const newFoodIngredient =
+      ingredientItems.length !== 0 &&
+      ingredientItems.map((item) => ({
+        ...item,
+        procure_amount: Number((totalAshkash * +item.perAshkash).toFixed(3)),
+        perAshkash: +item.perAshkash,
+      }));
     const foodIngMapObj = { ingridients: newFoodIngredient };
     setFoodIngredientMap([foodIngMapObj, ...foodIngredientMap]);
 
@@ -506,7 +580,7 @@ const SetMenu = () => {
     }
     // console.log(newFoodIngredient);
     // console.log(ingredientItems);
-    setSelectedFoodName("")
+    setSelectedFoodName("");
   };
 
   // console.log(inventoryItems);
@@ -526,9 +600,7 @@ const SetMenu = () => {
   };
 
   return (
-    <div
-      style={{ margin: 0, padding: 0}}
-    >
+    <div style={{ margin: 0, padding: 0 }}>
       <Modal
         open={visible}
         onOk={() => setVisible(false)}
@@ -537,8 +609,7 @@ const SetMenu = () => {
           <Button key="ok" type="primary" onClick={() => setVisible(false)}>
             OK
           </Button>,
-        ]}
-      >
+        ]}>
         <div style={{ textAlign: "center" }}>
           <h2 style={{ color: "#52c41a" }}>Success!</h2>
           <p>Ingridient Added Successfully</p>
@@ -548,19 +619,22 @@ const SetMenu = () => {
         theme={{
           token: {
             colorPrimary: colorGreen,
-            colorLink: colorGreen
+            colorLink: colorGreen,
           },
-        }}
-      >
-        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="6" userType="superadmin" /> :
-          <Sidebar k="1" userType="cooking" />}
+        }}>
+        <div
+          style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? (
+            <Sidebar k="6" userType="superadmin" />
+          ) : (
+            <Sidebar k="1" userType="cooking" />
+          )}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
               title="Set Ingredients"
               comp={
-                <Row style={{justifyContent: 'flex-end'}}>
+                <Row style={{ justifyContent: "flex-end" }}>
                   <Col style={{ marginRight: 10, fontSize: 18 }}>
                     Select date:{" "}
                   </Col>
@@ -576,7 +650,62 @@ const SetMenu = () => {
             <div style={{ padding: 20 }}>
               <Row>
                 <Col xs={24} xl={12} style={{ padding: "0px 15px" }}>
-                  <h3 style={{ color: colorBlack, fontSize:'1.5rem', marginBottom: '0' }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "1rem",
+                    }}>
+                    <AutoComplete
+                      id="food-item-selected"
+                      style={{
+                        // border: "2px solid darkred",
+                        boxShadow: valueShadowBox,
+                        flexGrow: 1,
+                        borderRadius: 8,
+                      }}
+                      value={selectedMohalla}
+                      options={
+                        mohallaUsersList.length !== 0 &&
+                        mohallaUsersList.map((item) => ({
+                          value: item.username,
+                          item: item,
+                        }))
+                      }
+                      onChange={(value, item) => {
+                        if (item?.item) {
+                          setMohallaDetails(item?.item);
+                        }
+                        setSelectedMohalla(value);
+                      }}
+                      placeholder="Enter a food item"
+                      filterOption={(inputValue, option) =>
+                        option.value
+                          .toUpperCase()
+                          .indexOf(inputValue.toUpperCase()) !== -1
+                      }
+                    />
+                    <Input
+                      type="number"
+                      onChange={(e) => setTotalCount(e.target.value)}
+                      value={totalCount}
+                      placeholder="Eg: 2,3,15, etc"
+                      style={{ width: "10%" }}
+                    />
+                    <Button onClick={onAddMohalla}>Add</Button>
+                    <Paragraph
+                      style={{
+                        width: "25%",
+                        display: "inline-block",
+                        textAlign: "center",
+                        marginBottom: "0",
+                        alignSelf: "center",
+                      }}>
+                      Total Count: {totalAshkash}
+                    </Paragraph>
+                  </div>
+
+                  {/* <h3 style={{ color: colorBlack, fontSize:'1.5rem', marginBottom: '0' }}>
                     {localStorage.getItem("type") === "mk superadmin" ? <Col>
                     Total count: <Input
                       type="number"
@@ -589,7 +718,7 @@ const SetMenu = () => {
                       ></Input> People
                       <Button style={{marginLeft: '8px'}} onClick={addTotalCount}>Add Count</Button>
                     </Col>: <>Total count: <span style={{color: colorGreen}}>{totalAshkash}</span> People</>} 
-                  </h3>
+                  </h3> */}
                   {/* Select Client: &nbsp;&nbsp;&nbsp;
                       <Select
                         defaultValue={0}
@@ -602,33 +731,68 @@ const SetMenu = () => {
                         ]}
                       /> */}
                 </Col>
-                <Col xs={24} xl={11} style={{display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'left', marginLeft: '1rem'}}>{
-                  mohallaList.length !== 0 && mohallaList.map(mohallaItem => (
-                    <Tag color={colorGreen} key={mohallaItem?.mk_id} style={{display: 'flex',
-                    columnGap: '.5rem', fontSize: "1.1rem", padding: ".4rem .6rem"}}>
-                      <span>{mohallaItem?.name}</span>:&nbsp;
-                      <span>{mohallaItem?.total_ashkhaas}</span>
-                    </Tag>
-                  ))
-                }</Col>
+                <Col
+                  xs={24}
+                  xl={11}
+                  style={{
+                    display: "flex",
+                    gap: "0.5rem",
+                    alignItems: "center",
+                    flexWrap: "wrap",
+                    justifyContent: "left",
+                    marginLeft: "1rem",
+                  }}>
+                  {mohallaList.length !== 0 &&
+                    mohallaList.map((mohallaItem) => (
+                      <Tag
+                        color={colorGreen}
+                        key={mohallaItem?.mk_id}
+                        style={{
+                          display: "flex",
+                          // columnGap: ".5rem",
+                          fontSize: "1.1rem",
+                          padding: ".4rem .6rem",
+                        }}>
+                        <span>{mohallaItem?.name}</span>:&nbsp;
+                        <span>{mohallaItem?.total_ashkhaas}</span>
+                      </Tag>
+                    ))}
+                </Col>
                 <Col xs={24} xl={24}>
-                {status === -1 && (
-                  <center>
-                  <div style={{ marginTop: '8%', marginBottom: '8%', width:'30%' }}>
-                    <label style={{ fontSize: '800%', color: colorGreen }}>
-                      <i style={{ color: "gray"}} className="fa-solid fa-hourglass-start"></i>
-                    </label>
-                    <br/><br/>
-                    <label style={{ fontSize: '120%', width:'50%', color: "gray"}}>Menu is not set for today.<br />Please try after sometime.</label>
-                  </div>
-                </center>
+                  {status === -1 && (
+                    <center>
+                      <div
+                        style={{
+                          marginTop: "8%",
+                          marginBottom: "8%",
+                          width: "30%",
+                        }}>
+                        <label style={{ fontSize: "800%", color: colorGreen }}>
+                          <i
+                            style={{ color: "gray" }}
+                            className="fa-solid fa-hourglass-start"></i>
+                        </label>
+                        <br />
+                        <br />
+                        <label
+                          style={{
+                            fontSize: "120%",
+                            width: "50%",
+                            color: "gray",
+                          }}>
+                          Menu is not set for today.
+                          <br />
+                          Please try after sometime.
+                        </label>
+                      </div>
+                    </center>
                     // <Alert
                     //   message="Message"
                     //   description="Menu not set for the selected date"
                     //   type="error"
                     //   closable
                     // />
-                  ) }
+                  )}
                 </Col>
                 <Col xs={24} xl={12} style={{ padding: "1%" }}>
                   {totalAshkash === 0 && status === 0 ? (
@@ -638,21 +802,23 @@ const SetMenu = () => {
                       type="error"
                       closable
                     />
-                  ) : status < 1 && status !== -1  && reasonForChangingMenu !== "" ? (
+                  ) : status < 1 &&
+                    status !== -1 &&
+                    reasonForChangingMenu !== "" ? (
                     <Alert
                       message="Menu changed set ingredients again."
-                      description={"Reason: "+reasonForChangingMenu}
+                      description={"Reason: " + reasonForChangingMenu}
                       type="error"
                       closable
                     />
-                  ): status > 1 ? (
+                  ) : status > 1 ? (
                     <Alert
                       message="Message"
                       description="Ingredient Items have already added"
                       type="success"
                       closable
                     />
-                  ): null}
+                  ) : null}
                   {/* {(reasonForChangingMenu !== "" && status === -2) && (
                     <Alert
                       message="Menu changed please change ingredients"
@@ -690,19 +856,22 @@ const SetMenu = () => {
                   {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                   {getFoodList && totalAshkash > 0 && (
                     <List
-                      style={{ width: "100%", maxHeight: '54vh', overflowY: 'scroll' }}
+                      style={{
+                        width: "100%",
+                        maxHeight: "54vh",
+                        overflowY: "scroll",
+                      }}
                       itemLayout="horizontal"
                       dataSource={getFoodList}
                       renderItem={(item, index) => (
-                        <List.Item style={{padding: '10px 0'}}>
+                        <List.Item style={{ padding: "10px 0" }}>
                           <Card
                             style={{
                               width: "100%",
                               backgroundColor: "transparent",
                               border: "none",
                             }}
-                            bodyStyle={{padding: '0'}}
-                          >
+                            bodyStyle={{ padding: "0" }}>
                             <Row
                               style={{
                                 padding: 20,
@@ -712,24 +881,34 @@ const SetMenu = () => {
                                 // border: "2px solid darkred",
                                 boxShadow: valueShadowBox,
                                 width: "100%",
-                              }}
-                            >
-                              <Col xs={16} xl={16} style={{
-                                display: "flex",
-                                columnGap: "5px",
-                                alignItems: "center",
-                                justifyContent: "flex-start",
-                                fontSize: '1.3rem',
-                                color: colorBlack,
-                                fontWeight: '600'
                               }}>
-                                <span>
-                                Dish:
-                                </span>
-                                <label style={{color: colorGreen}}>
+                              <Col
+                                xs={16}
+                                xl={16}
+                                style={{
+                                  display: "flex",
+                                  columnGap: "5px",
+                                  alignItems: "center",
+                                  justifyContent: "flex-start",
+                                  fontSize: "1.3rem",
+                                  color: colorBlack,
+                                  fontWeight: "600",
+                                }}>
+                                <span>Dish:</span>
+                                <label style={{ color: colorGreen }}>
                                   {item.food_name}
                                 </label>
-                                {addedList.includes(item?.food_item_id) && <span style={{marginLeft: '1rem', color: 'lightgreen', padding: '.2rem .7rem', borderRadius: '1rem'}}>Added</span>}
+                                {addedList.includes(item?.food_item_id) && (
+                                  <span
+                                    style={{
+                                      marginLeft: "1rem",
+                                      color: "lightgreen",
+                                      padding: ".2rem .7rem",
+                                      borderRadius: "1rem",
+                                    }}>
+                                    Added
+                                  </span>
+                                )}
                               </Col>
                               <Col xs={8} xl={8}>
                                 <Button
@@ -761,187 +940,250 @@ const SetMenu = () => {
                         border: "none",
                         // border: '2px solid darkred'
                         boxShadow: valueShadowBox,
-                      }}
-                    >
-                      {status < 2 ?
-                      <div
-                        style={{ fontSize: "200%", color: colorBlack, display: 'flex' }}
-                        className="dongle-font-class"
-                      >
-                        <div>
-                        <span>
-                        Select the ingredients for : 
-                        </span>
-                        <span style={{ color: colorGreen, marginLeft: '8px' }}>{selectedFoodName}</span>
-                        {addedList.includes(foodIndex) && <span style={{marginLeft: '1rem', color: 'lightgreen', padding: '.2rem .7rem', borderRadius: '1rem'}}>Added</span>}
+                      }}>
+                      {status < 2 ? (
+                        <div
+                          style={{
+                            fontSize: "200%",
+                            color: colorBlack,
+                            display: "flex",
+                          }}
+                          className="dongle-font-class">
+                          <div>
+                            <span>Select the ingredients for :</span>
+                            <span
+                              style={{ color: colorGreen, marginLeft: "8px" }}>
+                              {selectedFoodName}
+                            </span>
+                            {addedList.includes(foodIndex) && (
+                              <span
+                                style={{
+                                  marginLeft: "1rem",
+                                  color: "lightgreen",
+                                  padding: ".2rem .7rem",
+                                  borderRadius: "1rem",
+                                }}>
+                                Added
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>: <div
-                        style={{ fontSize: "200%", color: colorBlack, display: 'flex' }}
-                        className="dongle-font-class"
-                      >
-                        <div>
-                        <span>
-                        Selected ingredients : 
-                        </span>
-                        <span style={{ color: colorGreen, marginLeft: '8px' }}>{selectedFoodName}</span> 
-                        {/* <span style={{marginLeft: '1rem', color: 'lightgreen', padding: '.2rem .7rem', boxShadow: valueShadowBox, borderRadius: '1rem'}}>Added</span> */}
+                      ) : (
+                        <div
+                          style={{
+                            fontSize: "200%",
+                            color: colorBlack,
+                            display: "flex",
+                          }}
+                          className="dongle-font-class">
+                          <div>
+                            <span>Selected ingredients :</span>
+                            <span
+                              style={{ color: colorGreen, marginLeft: "8px" }}>
+                              {selectedFoodName}
+                            </span>
+                            {/* <span style={{marginLeft: '1rem', color: 'lightgreen', padding: '.2rem .7rem', boxShadow: valueShadowBox, borderRadius: '1rem'}}>Added</span> */}
+                          </div>
                         </div>
-                      </div>
-                      }
-                      {status < 2 && foodIndex && <>
-                      {/* <span style={{ fontSize: 16, color: colorGreen }}>
+                      )}
+                      {status < 2 && foodIndex && (
+                        <>
+                          {/* <span style={{ fontSize: 16, color: colorGreen }}>
                         Add Ingredients:
                       </span> */}
-                      <Row
-                        style={{
-                          padding: 5,
-                          display: "flex",
-                          width: "100%",
-                        }}
-                      >
-                        {finalArrayForData && (
-                          <Col xs={18} xl={18}>
-                            <Select
-                              showSearch
-                              id="ingredient-item-selected"
-                              style={{ width: "100%" }}
-                              options={finalArrayForData.length !== 0 && finalArrayForData.map((item) => ({
-                                  value: item.ingridient_name,
-                                  id: item._id,
-                                }))}
-                              value={ingredientName}
-                              onChange={(value) => setIngredientName(value)}
-                              onSelect={handleSelect}
-                              placeholder="Eg: Roti, Chawal, Daal, etc"
-                              filterOption={(inputValue, option) =>
-                                option.value
-                                  .toUpperCase()
-                                  .indexOf(inputValue.toUpperCase()) !== -1
-                              }
-                            />
-                          </Col>
-                        )}
-                        <Col xs={6} xl={6}>
-                          <Button
-                            type="primary"
-                            onClick={addIngredients}
-                            shape="circle"
-                            icon={<PlusOutlined />}
-                            style={{ margin: "0px 10px" }}
-                            // size="large"
-                          />
-                        </Col>
-                      </Row></>}
-                      {ingredientItems.length !== 0 ? <List
-                        size="small"
-                        style={{
-                          width: "100%",
-                          padding: 5,
-                          maxHeight: "35vh",
-                          overflowY: "scroll",
-                          overflowX: "hidden",
-                          // backgroundColor: "#fff6ed",
-                        }}
-                        bordered
-                        dataSource={ingredientItems}
-                        renderItem={(item, index) => (
-                          <List.Item
+                          <Row
                             style={{
-                              // margin: 5,
-                              padding: 0,
+                              padding: 5,
                               display: "flex",
-                              backgroundColor: "#fff",
-                              borderRadius: 10,
-                              // border: "2px solid darkred",
-                              boxShadow: valueShadowBox,
-                              margin: '8px auto',
-                              width: "98%",
-                            }}
-                          >
-                            <Card
+                              width: "100%",
+                            }}>
+                            {finalArrayForData && (
+                              <Col xs={18} xl={18}>
+                                <Select
+                                  showSearch
+                                  id="ingredient-item-selected"
+                                  style={{ width: "100%" }}
+                                  options={
+                                    finalArrayForData.length !== 0 &&
+                                    finalArrayForData.map((item) => ({
+                                      value: item.ingridient_name,
+                                      id: item._id,
+                                    }))
+                                  }
+                                  value={ingredientName}
+                                  onChange={(value) => setIngredientName(value)}
+                                  onSelect={handleSelect}
+                                  placeholder="Eg: Roti, Chawal, Daal, etc"
+                                  filterOption={(inputValue, option) =>
+                                    option.value
+                                      .toUpperCase()
+                                      .indexOf(inputValue.toUpperCase()) !== -1
+                                  }
+                                />
+                              </Col>
+                            )}
+                            <Col xs={6} xl={6}>
+                              <Button
+                                type="primary"
+                                onClick={addIngredients}
+                                shape="circle"
+                                icon={<PlusOutlined />}
+                                style={{ margin: "0px 10px" }}
+                                // size="large"
+                              />
+                            </Col>
+                          </Row>
+                        </>
+                      )}
+                      {ingredientItems.length !== 0 ? (
+                        <List
+                          size="small"
+                          style={{
+                            width: "100%",
+                            padding: 5,
+                            maxHeight: "35vh",
+                            overflowY: "scroll",
+                            overflowX: "hidden",
+                            // backgroundColor: "#fff6ed",
+                          }}
+                          bordered
+                          dataSource={ingredientItems}
+                          renderItem={(item, index) => (
+                            <List.Item
                               style={{
-                                width: "100%",
-                                backgroundColor: "transparent",
-                                border: "none",
-                                display: 'flex',
-                                flexDirection: 'column',
-                                justifyContent: 'center'
-                              }}
-                              bodyStyle={{padding: '10px 24px'}}
-                            >
-                              <Row>
-                              <Col xs={12} xl={8}  style={{alignSelf: 'center'}}>
-                                <span style={{fontSize: '1.3rem', textTransform: 'capitalize'}}>
-                                    {item.ingredient_name}
-                                </span>
+                                // margin: 5,
+                                padding: 0,
+                                display: "flex",
+                                backgroundColor: "#fff",
+                                borderRadius: 10,
+                                // border: "2px solid darkred",
+                                boxShadow: valueShadowBox,
+                                margin: "8px auto",
+                                width: "98%",
+                              }}>
+                              <Card
+                                style={{
+                                  width: "100%",
+                                  backgroundColor: "transparent",
+                                  border: "none",
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  justifyContent: "center",
+                                }}
+                                bodyStyle={{ padding: "10px 24px" }}>
+                                <Row>
+                                  <Col
+                                    xs={12}
+                                    xl={8}
+                                    style={{ alignSelf: "center" }}>
+                                    <span
+                                      style={{
+                                        fontSize: "1.3rem",
+                                        textTransform: "capitalize",
+                                      }}>
+                                      {item.ingredient_name}
+                                    </span>
                                   </Col>
-                                <Col xs={12} xl={7} style={{alignSelf: 'center'}}>
-                                <span style={{fontSize: '1.3rem'}}>
-                                  Per person:
-                                  </span>
-                                </Col>
-                                <Col xs={12} xl={9} style={{display: 'flex', justifyContent: 'center', columnGap: '5px', alignSelf: 'center'}}>
-
-                                  <div style={{ display: 'flex', columnGap: '4px', alignSelf: 'center'}}>
-                                      {status < 2 ?
-                                      <Input
-                                      style={{fontSize: '1.3rem'}}
-                                      value={item.perAshkash}
-                                      onChange={(e) => {
-                                        handlePerAshkashChange(
-                                          e.target.value,
-                                          item.ingredient_name,
-                                          inventoryItems.find(
-                                            (inv) =>
-                                            inv.ingridient_name ===
-                                            item.ingredient_name
-                                            )?.ingridient_measure_unit
-                                          );
-                                        }}
-                                        placeholder="Eg: 1200,200,etc.."
-                                        /> : <span style={{fontSize: '1.3rem'}}>{item.perAshkash}</span>
-                        }
-                                        <span style={{fontSize: '1.3rem', textTransform: 'capitalize', alignSelf: 'center'}}>
+                                  <Col
+                                    xs={12}
+                                    xl={7}
+                                    style={{ alignSelf: "center" }}>
+                                    <span style={{ fontSize: "1.3rem" }}>
+                                      Per person:
+                                    </span>
+                                  </Col>
+                                  <Col
+                                    xs={12}
+                                    xl={9}
+                                    style={{
+                                      display: "flex",
+                                      justifyContent: "center",
+                                      columnGap: "5px",
+                                      alignSelf: "center",
+                                    }}>
+                                    <div
+                                      style={{
+                                        display: "flex",
+                                        columnGap: "4px",
+                                        alignSelf: "center",
+                                      }}>
+                                      {status < 2 ? (
+                                        <Input
+                                          style={{ fontSize: "1.3rem" }}
+                                          value={item.perAshkash}
+                                          onChange={(e) => {
+                                            handlePerAshkashChange(
+                                              e.target.value,
+                                              item.ingredient_name,
+                                              inventoryItems.find(
+                                                (inv) =>
+                                                  inv.ingridient_name ===
+                                                  item.ingredient_name
+                                              )?.ingridient_measure_unit
+                                            );
+                                          }}
+                                          placeholder="Eg: 1200,200,etc.."
+                                        />
+                                      ) : (
+                                        <span style={{ fontSize: "1.3rem" }}>
+                                          {item.perAshkash}
+                                        </span>
+                                      )}
+                                      <span
+                                        style={{
+                                          fontSize: "1.3rem",
+                                          textTransform: "capitalize",
+                                          alignSelf: "center",
+                                        }}>
                                         &nbsp;
                                         {inventoryItems.find(
                                           (inv) =>
-                                          inv.ingridient_name ===
-                                          item.ingredient_name
-                                          )?.ingridient_measure_unit || "kg"}
+                                            inv.ingridient_name ===
+                                            item.ingredient_name
+                                        )?.ingridient_measure_unit || "kg"}
                                       </span>
-                                          </div>
-                                      {status < 2 &&
-                                        <Button
+                                    </div>
+                                    {status < 2 && (
+                                      <Button
                                         type="primary"
                                         onClick={() =>
                                           OnDelete(item.inventory_item_id)
                                         }
                                         shape="circle"
                                         icon={<DeleteOutlined />}
-                                        style={{ margin: "0px 15px", alignSelf: 'center' }}
+                                        style={{
+                                          margin: "0px 15px",
+                                          alignSelf: "center",
+                                        }}
                                         // size="large"
                                       />
-                                      }
-                                    </Col>
-
-                                  </Row>
-                            </Card>
-                          </List.Item>
-                        )}
-                      />: <div style={{width: "100%",
-                      padding: 5,
-                      height: "35vh",
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      flexDirection: 'column'
-                      }}>
-             
-                        <i style={{fontSize: '6rem', color: colorGreen}} className="fa-solid fa-square-xmark"></i>
-                        <span style={{fontSize: '1.8rem', letterSpacing: 2}}>
-                        Add Ingredient or select food item
-                        </span>
-                        </div>}
+                                    )}
+                                  </Col>
+                                </Row>
+                              </Card>
+                            </List.Item>
+                          )}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: "100%",
+                            padding: 5,
+                            height: "35vh",
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            flexDirection: "column",
+                          }}>
+                          <i
+                            style={{ fontSize: "6rem", color: colorGreen }}
+                            className="fa-solid fa-square-xmark"></i>
+                          <span
+                            style={{ fontSize: "1.8rem", letterSpacing: 2 }}>
+                            Add Ingredient or select food item
+                          </span>
+                        </div>
+                      )}
                       {/* <IngredientList
                         ingredientItems={ingredientItems}
                         OnDelete={OnDelete}
@@ -954,8 +1196,7 @@ const SetMenu = () => {
                           block
                           type="primary"
                           style={{ marginTop: 10 }}
-                          onClick={logIngredientForFood}
-                        >
+                          onClick={logIngredientForFood}>
                           Confirm Menu
                         </Button>
                       )}
@@ -975,8 +1216,7 @@ const SetMenu = () => {
                     backgroundColor: colorGreen,
                   }}
                   type="primary"
-                  onClick={updateOperationPipeliinIngridient}
-                >
+                  onClick={updateOperationPipeliinIngridient}>
                   Request Ingredients
                 </Button>
               )}

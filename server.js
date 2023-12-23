@@ -6,9 +6,8 @@ const CORS = require("cors");
 const { menuHistory } = require("./controllers/menuHistory");
 const path = require("path");
 connectDb();
-const donationRouter = require('./routes/donationRoutes')
-const reportRouter = require('./routes/reportRouter');
-
+const donationRouter = require("./routes/donationRoutes");
+const reportRouter = require("./routes/reportRouter");
 
 const app = express();
 const port = process.env.PORT || 5001;
@@ -24,7 +23,10 @@ app.use("/api/admin/account_management", require("./routes/mkUserRoutes"));
 app.use("/api/login", require("./routes/loginRoute"));
 
 app.use("/api/admin/menu", require("./routes/menuFoodRoute"));
-app.use("/api/admin/reset_password", require("./routes/emailNotificationRoute"));
+app.use(
+  "/api/admin/reset_password",
+  require("./routes/emailNotificationRoute")
+);
 
 app.use("/api/cooking/ingredients", require("./routes/foodItemRoute"));
 app.use("/api/cooking", require("./routes/cookingRoute"));
@@ -36,9 +38,10 @@ app.use("/api/review", require("./routes/menuDeliveryReviewRoute"));
 
 app.use("/api/vendor", require("./routes/vendorRoutes"));
 app.use("/api/purchase", require("./routes/purchaseRoutes"));
+app.use("/api/order", require("./routes/orderRoutes"));
 app.use("/api/pai/procurement", require("./routes/procurementRoutes"));
-app.use('/api/', donationRouter.router);
-app.use('/api/', reportRouter);
+app.use("/api/", donationRouter.router);
+app.use("/api/", reportRouter);
 
 app.use(express.static("./frontend/build"));
 

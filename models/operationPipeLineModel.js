@@ -21,7 +21,27 @@ const OperationPipeLine = new mongoose.Schema(
     },
     leftover: {
       type: mongoose.Schema.Types.Mixed,
-      default: []
+      default: [],
+    },
+    dailyMaintenanceCharges: {
+      type: Number,
+      default: 0,
+    },
+    gasCharges: {
+      type: Number,
+      default: 0,
+    },
+    laborCharges: {
+      type: Number,
+      default: 0,
+    },
+    transportCharges: {
+      type: Number,
+      default: 0,
+    },
+    micsCharges: {
+      type: Number,
+      default: 0,
     },
     status: {
       type: Number,
