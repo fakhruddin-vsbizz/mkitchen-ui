@@ -12,7 +12,7 @@ const InventoryItems = mongoose.Schema(
     },
     ingridient_measure_unit: {
       type: String,
-      default: ""
+      default: "",
     },
     ingridient_expiry_period: {
       type: String,
@@ -33,7 +33,10 @@ const InventoryItems = mongoose.Schema(
     total_volume: {
       type: Number,
       required: true,
-      set: function (v) { return Number(v.toFixed(3))}
+      set: function (v) {
+        console.log("v", v);
+        return Number(Number(v).toFixed(3));
+      },
     },
     baseline: {
       type: Number,

@@ -17,24 +17,28 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useNavigate } from "react-router-dom";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+  valueShadowBox,
+} from "../../colors";
 import { baseURL } from "../../constants";
 
 const Purchases = () => {
   const [purchases, setPurchases] = useState([]);
   const [filteredPurchases, setFilteredPurchases] = useState([]);
-	const [filterByName, setFilterByName] = useState("");
+  const [filterByName, setFilterByName] = useState("");
   const [filterByDate, setFilterByDate] = useState(null);
-	const [filterByVolume, setFilterByVolume] = useState(1)
+  const [filterByVolume, setFilterByVolume] = useState(1);
 
   const navigate = useNavigate();
 
   /**************Restricting PandI Route************************* */
 
   useEffect(() => {
-
     const type = localStorage.getItem("type");
-
 
     if (!type) {
       navigate("/");
@@ -57,9 +61,7 @@ const Purchases = () => {
 
   useEffect(() => {
     const getPurchases = async () => {
-      const data = await fetch(
-        "/api/purchase/vendor_purchase"
-      );
+      const data = await fetch("/api/purchase/vendor_purchase");
       if (data) {
         const res = await data.json();
         setPurchases(res.data);
@@ -70,38 +72,61 @@ const Purchases = () => {
   }, []);
 
   useEffect(() => {
-		const filterList = () => {
+    const filterList = () => {
       if (filterByName && filterByVolume !== 1 && filterByDate !== null) {
-				return purchases.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else if (filterByName && filterByVolume !== 1) {
-				return purchases.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && item.total_amount <= filterByVolume
-				);
-			} else if (filterByName && filterByDate !== null) {
-				return purchases.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else if (filterByVolume !== 1 && filterByDate !== null) {
-				return purchases.filter(item =>
-					item.total_amount <= filterByVolume && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else if (filterByName) {
-				return purchases.filter(item =>
-					item.ingredient_name.toLowerCase().includes(filterByName.toLowerCase()))
-			} else if (filterByDate !== null) {
-				return purchases.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
-			} else if (filterByVolume !== 1) {
-				return purchases.filter(item => item.total_amount <= filterByVolume
-				);
-			}
-			return purchases
-		};
-		const filteredList = filterList();
-		setFilteredPurchases(filteredList);
-	}, [filterByName, filterByVolume, purchases, filterByDate]);
-
+        return purchases.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            item.total_amount <= filterByVolume &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName && filterByVolume !== 1) {
+        return purchases.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            item.total_amount <= filterByVolume
+        );
+      } else if (filterByName && filterByDate !== null) {
+        return purchases.filter(
+          (item) =>
+            item.ingredient_name
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByVolume !== 1 && filterByDate !== null) {
+        return purchases.filter(
+          (item) =>
+            item.total_amount <= filterByVolume &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName) {
+        return purchases.filter((item) =>
+          item.ingredient_name
+            .toLowerCase()
+            .includes(filterByName.toLowerCase())
+        );
+      } else if (filterByDate !== null) {
+        return purchases.filter(
+          (item) =>
+            new Date(item.createdAt).toDateString() ===
+            new Date(filterByDate).toDateString()
+        );
+      } else if (filterByVolume !== 1) {
+        return purchases.filter((item) => item.total_amount <= filterByVolume);
+      }
+      return purchases;
+    };
+    const filteredList = filterList();
+    setFilteredPurchases(filteredList);
+  }, [filterByName, filterByVolume, purchases, filterByDate]);
 
   return (
     <div
@@ -111,86 +136,134 @@ const Purchases = () => {
         // backgroundImage: `url(${DeshboardBg})`,
         height: "100%",
         // overflowY: "hidden",
-      }}
-    >
+      }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
           },
-        }}
-      >
-        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-          {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="10" userType="superadmin" /> :
-          <Sidebar k="2" userType="pai" />}
+        }}>
+        <div
+          style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? (
+            <Sidebar k="10" userType="superadmin" />
+          ) : (
+            <Sidebar k="2" userType="pai" />
+          )}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
-            <Header comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
-                <Link to="/pai/purchases/new">
-                  <Button style={{ backgroundColor: "white", color: colorGreen }}>
-                    <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
-                    New Purchase
-                  </Button>
-                </Link>
-              </center>} title="Purchases" />
+            <Header
+              // comp={<center style={{display: 'flex', justifyContent: 'flex-end'}}>
+              //     <Link to="/pai/purchases/new">
+              //       <Button style={{ backgroundColor: "white", color: colorGreen }}>
+              //         <i className="fa-solid fa-circle-plus"></i> &nbsp;&nbsp;&nbsp;
+              //         New Purchase
+              //       </Button>
+              //     </Link>
+              //   </center>}
+              title="Purchases"
+            />
             <div style={{ padding: 0 }}>
-              <Col xs={24} xl={17} style={{ width: "100%", padding: "0 2% 2%" }}>
+              <Col
+                xs={24}
+                xl={17}
+                style={{ width: "100%", padding: "0 2% 2%" }}>
                 <table cellPadding={10}>
                   <tbody>
-                  <tr>
-                  <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600', paddingRight: '1rem'}}>
-                    <span style={{marginBottom: '.5rem', display: 'block'}}>
-                      Ingredient name:
-                    </span>
-                      <Input style={{marginTop: '5px', height: '40px', fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} value={filterByName} onChange={e => setFilterByName(e.target.value)} placeholder="Filter by name"></Input>
-                    </td>
-                    <td style={{paddingLeft: "0", fontSize: '20px', fontWeight: '600', width: '21%'}}>
-                      <span style={{marginBottom: '.5rem', display: 'block'}}>
-                        Date of purchase:
-                      </span>
-                      <ConfigProvider
-                        theme={{
-                          token: {
-                            colorPrimary: colorGreen,
-                            colorLink: colorGreen
-                          },
-                        }}
-                      >
-                      <DatePicker style={{ fontSize: '18px', border: `1px solid ${colorBlack}`, borderRadius: '5px'}} onChange={value => setFilterByDate(value)} />
-                    </ConfigProvider>
-                    </td>
-                    <td style={{paddingLeft: "10px", fontSize: '20px', fontWeight: '600', width: '24%'}}>
-                      <span style={{marginBottom: '.5rem', display: 'block', marginTop: '1.6rem'}}>
-                        Filter By Price: <span style={{color: colorGreen}}>
-                        {filterByVolume !== 1 ? filterByVolume : null}
+                    <tr>
+                      <td
+                        style={{
+                          paddingLeft: "0",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          paddingRight: "1rem",
+                        }}>
+                        <span
+                          style={{ marginBottom: ".5rem", display: "block" }}>
+                          Ingredient name:
+                        </span>
+                        <Input
+                          style={{
+                            marginTop: "5px",
+                            height: "40px",
+                            fontSize: "18px",
+                            border: `1px solid ${colorBlack}`,
+                            borderRadius: "5px",
+                          }}
+                          value={filterByName}
+                          onChange={(e) => setFilterByName(e.target.value)}
+                          placeholder="Filter by name"></Input>
+                      </td>
+                      <td
+                        style={{
+                          paddingLeft: "0",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          width: "21%",
+                        }}>
+                        <span
+                          style={{ marginBottom: ".5rem", display: "block" }}>
+                          Date of purchase:
+                        </span>
+                        <ConfigProvider
+                          theme={{
+                            token: {
+                              colorPrimary: colorGreen,
+                              colorLink: colorGreen,
+                            },
+                          }}>
+                          <DatePicker
+                            style={{
+                              fontSize: "18px",
+                              border: `1px solid ${colorBlack}`,
+                              borderRadius: "5px",
+                            }}
+                            onChange={(value) => setFilterByDate(value)}
+                          />
+                        </ConfigProvider>
+                      </td>
+                      <td
+                        style={{
+                          paddingLeft: "10px",
+                          fontSize: "20px",
+                          fontWeight: "600",
+                          width: "24%",
+                        }}>
+                        <span
+                          style={{
+                            marginBottom: ".5rem",
+                            display: "block",
+                            marginTop: "1.6rem",
+                          }}>
+                          Filter By Price:{" "}
+                          <span style={{ color: colorGreen }}>
+                            {filterByVolume !== 1 ? filterByVolume : null}
                           </span>
-                      </span>
-                      <Slider
-                        value={filterByVolume}
-                        style={{color: colorBlack}}
-                        onChange={value => setFilterByVolume(value)}
-                        min={1}
-                        max={1000}
-                      ></Slider>
-                      <br />
-                      
-                      {/* <InputNumber
+                        </span>
+                        <Slider
+                          value={filterByVolume}
+                          style={{ color: colorBlack }}
+                          onChange={(value) => setFilterByVolume(value)}
+                          min={1}
+                          max={1000}></Slider>
+                        <br />
+
+                        {/* <InputNumber
                         value={filterByVolume}
                         onChange={value => setFilterByVolume(value)}
                       ></InputNumber> */}
-                    </td>
-                  </tr>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
                 <label
                   style={{ fontSize: "2rem" }}
-                  className="dongle-font-class"
-                >
+                  className="dongle-font-class">
                   Recent Purchases
                 </label>
                 {purchases && (
                   <List
-                  locale={{emptyText: " "}}
+                    locale={{ emptyText: " " }}
                     style={{
                       height: "55vh",
                       width: "80vw",
@@ -200,11 +273,17 @@ const Purchases = () => {
                     dataSource={filteredPurchases}
                     renderItem={(item) => (
                       <List.Item>
-                      
-                        <Card style={{ width: "100%", margin: '8px 10px', boxShadow: valueShadowBox}}>
+                        <Card
+                          style={{
+                            width: "100%",
+                            margin: "8px 10px",
+                            boxShadow: valueShadowBox,
+                          }}>
                           <Row style={{ width: "100%", textAlign: "left" }}>
                             <Col xs={24} xl={24} style={{ fontSize: "150%" }}>
-                              <span style={{color: colorGreen}}>{item.ingredient_name}</span>
+                              <span style={{ color: colorGreen }}>
+                                {item.ingredient_name}
+                              </span>
                             </Col>
                             <Col xs={12} xl={6}>
                               Purchase Quantity: <br />

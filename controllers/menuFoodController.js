@@ -53,39 +53,40 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
   if (add_type === "get_mohalla_ashkash") {
     try {
       const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
-      if (!foodMenu) return res.status(404).json({msg: "not found"})
-      
+      if (!foodMenu) return res.status(404).json({ msg: "not found" });
+
       return res.json(foodMenu);
     } catch (error) {
-      return res.status(500).json({err: "internal server error"})
+      return res.status(500).json({ err: "internal server error" });
     }
   }
 
   if (add_type === "menu_reset") {
     try {
-      const {menu_reset} = req.body;
-      const menu = await FoodMenu.findOneAndUpdate({ date_of_cooking: date_of_cooking }, {menu_reset: menu_reset});
+      const { menu_reset } = req.body;
+      const menu = await FoodMenu.findOneAndUpdate(
+        { date_of_cooking: date_of_cooking },
+        { menu_reset: menu_reset }
+      );
       // console.log(menu);
-      res.status(200).json(menu)
+      res.status(200).json(menu);
     } catch (error) {
       console.log(error);
     }
   }
 
   if (add_type === "add_menu") {
-
     try {
-      
-      const {reason_for_reconfirming_menu} = req.body;
-  
-      
+      const { reason_for_reconfirming_menu } = req.body;
+
       if (date_of_cooking === "" || food_list.length === 0) {
-        return res.status(404).json({ error: "date or food item not selected" });
+        return res
+          .status(404)
+          .json({ error: "date or food item not selected" });
       }
-  
+
       const menu = await FoodMenu.findOne({ date_of_cooking: date_of_cooking });
-  
-  
+
       if (menu === null) {
         const foodMenu = await FoodMenu.create({
           food_list,
@@ -98,7 +99,7 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
           reason_for_reconfirming_menu,
           reason_for_undelivered,
         });
-  
+
         if (foodMenu) {
           const operationPipeLine = await OperationPipeLine.create({
             menu_food_id: foodMenu._id,
@@ -108,13 +109,13 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
             status,
             leftover,
           });
-  
+
           if (operationPipeLine) {
             return res.status(201).json({
               _id: operationPipeLine.id,
               menu_food_id: operationPipeLine.menu_food_id,
               message: "menu created ",
-              foodMenu
+              foodMenu,
             });
           } else {
             res.status(400);
@@ -134,21 +135,23 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
 
         menu.reason_for_undelivered = reason_for_undelivered;
         menu.reason_for_reconfirming_menu = reason_for_reconfirming_menu;
-        menu.menu_reset = true
-  
+        menu.menu_reset = true;
+
         await menu.save();
 
         // console.log(menu._id);
 
-        await OperationPipeLine.findOneAndUpdate({menu_food_id: menu._id},{status: status})
+        await OperationPipeLine.findOneAndUpdate(
+          { menu_food_id: menu._id },
+          { status: status }
+        );
 
         return res.json({ message: "menu updated ", menu });
       }
       // return res.json({ message: "menu created " });
     } catch (error) {
-    console.log(error);  
+      console.log(error);
     }
-
   }
 
   if (add_type === "food_item") {
@@ -180,6 +183,8 @@ const addFoodMenu = expressAsyncHandler(async (req, res) => {
     const foodMenu = await FoodItem.findOne({ name: selected_food });
     return res.json(foodMenu);
   }
+
+  // IMP
   if (add_type === "get_mohalla_ashkash") {
     const foodMenu = await FoodMenu.findOne({ date_of_cooking: date });
     return res.json(foodMenu.mohalla_wise_ashkhaas);

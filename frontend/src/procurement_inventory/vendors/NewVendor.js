@@ -23,7 +23,13 @@ import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+  valueShadowBox,
+} from "../../colors";
 import { baseURL } from "../../constants";
 
 const NewVendor = () => {
@@ -51,10 +57,10 @@ const NewVendor = () => {
 
   /**************Restricting PandI Route************************* */
 
-  useEffect(()=>{
+  useEffect(() => {
     setPrevPath(location?.state?.prevPath);
     console.log(location?.state?.prevPath);
-  },[])
+  }, []);
 
   // useEffect(() => {
   //   const type = localStorage.getItem("type");
@@ -79,7 +85,6 @@ const NewVendor = () => {
   /**************Restricting PandI Route************************* */
 
   const createNewVendor = async () => {
-
     if (!vendorName && !phone1) {
       return;
     }
@@ -100,7 +105,7 @@ const NewVendor = () => {
           gstin: GSTIN,
           contact_person: personOfContact,
           address: vendorAddress,
-          approval_status: 0,
+          approval_status: "pending",
         }),
       });
 
@@ -133,16 +138,13 @@ const NewVendor = () => {
   };
 
   return (
-    <div
-      style={{ margin: 0, padding: 0}}
-    >
+    <div style={{ margin: 0, padding: 0 }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
           },
-        }}
-      >
+        }}>
         <Modal
           open={visible}
           onOk={() => setVisible(false)}
@@ -151,16 +153,19 @@ const NewVendor = () => {
             <Button key="ok" type="primary" onClick={() => setVisible(false)}>
               OK
             </Button>,
-          ]}
-        >
+          ]}>
           <div style={{ textAlign: "center" }}>
             <h2 style={{ color: "#52c41a" }}>Success!</h2>
             <p>Vendor Added Successfully</p>
           </div>
         </Modal>
-        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="4" userType="superadmin" /> :
-          <Sidebar k="5" userType="pai" />}
+        <div
+          style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? (
+            <Sidebar k="4" userType="superadmin" />
+          ) : (
+            <Sidebar k="5" userType="pai" />
+          )}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
@@ -168,8 +173,7 @@ const NewVendor = () => {
                 <p>
                   <Link
                     to={prevPath}
-                    style={{ color: "white", textDecoration: "none" }}
-                  >
+                    style={{ color: "white", textDecoration: "none" }}>
                     <ArrowLeftOutlined />
                   </Link>{" "}
                   Add New Vendor
@@ -179,8 +183,7 @@ const NewVendor = () => {
                 <center>
                   <Link to={prevPath}>
                     <Button
-                      style={{ backgroundColor: "white", color: colorGreen }}
-                    >
+                      style={{ backgroundColor: "white", color: colorGreen }}>
                       Cancel
                     </Button>
                   </Link>
@@ -218,27 +221,24 @@ const NewVendor = () => {
             <div style={{ width: "100%", padding: 0 }}>
               <div style={{ width: "90%", padding: "3%" }}>
                 <Card
-                  style={{boxShadow: valueShadowBox}}
-                  className="dongle-font-class"
-                >
+                  style={{ boxShadow: valueShadowBox }}
+                  className="dongle-font-class">
                   <label style={{ fontSize: "250%" }}>
                     <span>Vendor Details</span>
                   </label>
                   <br />
                   <table
                     style={{ width: "100%", fontSize: "130%" }}
-                    cellPadding={20}
-                  >
+                    cellPadding={20}>
                     <tr>
                       <td>
-                      <Col xs={12} xl={24}>
-                        Vendor Name:<span style={{color: 'red'}}>*</span>{" "}
-                        <Input
-                          value={vendorName}
-                          onChange={(e) => setVendorName(e.target.value)}
-                          placeholder="Enter Name"
-                          required
-                        ></Input>
+                        <Col xs={12} xl={24}>
+                          Vendor Name:<span style={{ color: "red" }}>*</span>{" "}
+                          <Input
+                            value={vendorName}
+                            onChange={(e) => setVendorName(e.target.value)}
+                            placeholder="Enter Name"
+                            required></Input>
                         </Col>
                       </td>
                       {/* <td>
@@ -250,55 +250,20 @@ const NewVendor = () => {
                         ></Input>
                       </td> */}
                       <td>
-                        <Row style={{columnGap: "1rem"}}>
+                        <Row style={{ columnGap: "1rem" }}>
                           <Col xs={12} xl={11}>
-                          Email 1: <br />
-                        <Input
-                          value={vendorEmail1}
-                          onChange={(e) => setVendorEmail1(e.target.value)}
-                          placeholder="Enter Email Here"
-                        ></Input>
+                            Email 1: <br />
+                            <Input
+                              value={vendorEmail1}
+                              onChange={(e) => setVendorEmail1(e.target.value)}
+                              placeholder="Enter Email Here"></Input>
                           </Col>
                           <Col xs={12} xl={11}>
-                          Email 2: <br />
-                        <Input
-                          value={vendorEmail2}
-                          onChange={(e) => setVendorEmail2(e.target.value)}
-                          placeholder="Enter Email Here"
-                        ></Input>
-                          </Col>
-                        </Row>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                      <Col xs={12} xl={24}>
-                        Address:{" "}
-                        <Input
-                          value={vendorAddress}
-                          onChange={(e) => setVendorAddress(e.target.value)}
-                          placeholder="Enter Address Here"
-                        ></Input>
-                        </Col>
-                      </td>
-                      <td>
-                        <Row style={{columnGap: "1rem"}}>
-                          <Col xs={12} xl={11}>
-                          Phone 1:<span style={{color: 'red'}}>*</span><br />
-                        <Input
-                          value={phone1}
-                          onChange={(e) => setPhone1(e.target.value)}
-                          placeholder="Enter Phone Number Here"
-                          required
-                        ></Input>
-                          </Col>
-                          <Col xs={12} xl={11}>
-                            Phone 2:<br />
-                        <Input
-                          value={phone2}
-                          onChange={(e) => setPhone2(e.target.value)}
-                          placeholder="Enter Phone Number Here"
-                        ></Input>
+                            Email 2: <br />
+                            <Input
+                              value={vendorEmail2}
+                              onChange={(e) => setVendorEmail2(e.target.value)}
+                              placeholder="Enter Email Here"></Input>
                           </Col>
                         </Row>
                       </td>
@@ -306,22 +271,52 @@ const NewVendor = () => {
                     <tr>
                       <td>
                         <Col xs={12} xl={24}>
-                      Contact Person:{" "}
-                        <Input
-                          value={personOfContact}
-                          onChange={(e) => setPersonOfContact(e.target.value)}
-                          placeholder="Enter Person of Contact Here"
-                        ></Input>
+                          Address:{" "}
+                          <Input
+                            value={vendorAddress}
+                            onChange={(e) => setVendorAddress(e.target.value)}
+                            placeholder="Enter Address Here"></Input>
+                        </Col>
+                      </td>
+                      <td>
+                        <Row style={{ columnGap: "1rem" }}>
+                          <Col xs={12} xl={11}>
+                            Phone 1:<span style={{ color: "red" }}>*</span>
+                            <br />
+                            <Input
+                              value={phone1}
+                              onChange={(e) => setPhone1(e.target.value)}
+                              placeholder="Enter Phone Number Here"
+                              required></Input>
+                          </Col>
+                          <Col xs={12} xl={11}>
+                            Phone 2:
+                            <br />
+                            <Input
+                              value={phone2}
+                              onChange={(e) => setPhone2(e.target.value)}
+                              placeholder="Enter Phone Number Here"></Input>
+                          </Col>
+                        </Row>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <Col xs={12} xl={24}>
+                          Contact Person:{" "}
+                          <Input
+                            value={personOfContact}
+                            onChange={(e) => setPersonOfContact(e.target.value)}
+                            placeholder="Enter Person of Contact Here"></Input>
                         </Col>
                       </td>
                       <td>
                         <Col xs={12} xl={24}>
-                      GSTIN:{" "}
-                        <Input
-                          value={GSTIN}
-                          onChange={(e) => setGSTIN(e.target.value)}
-                          placeholder="Enter GSTIN Here"
-                        ></Input>
+                          GSTIN:{" "}
+                          <Input
+                            value={GSTIN}
+                            onChange={(e) => setGSTIN(e.target.value)}
+                            placeholder="Enter GSTIN Here"></Input>
                         </Col>
                       </td>
                     </tr>

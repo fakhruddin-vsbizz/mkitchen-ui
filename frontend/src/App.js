@@ -28,6 +28,7 @@ import ProcedureLogs from "./admin/procedure_log/ProcedureLogs";
 import IngredientPurchase from "./procurement_inventory/inventory/IngredientPurchase";
 import ResetPassword from "./auth/ResetPasswor";
 import Report from "./admin/reports/Report";
+import Orders from "./orders/Orders";
 function App() {
   return (
     <AuthContextProvider>
@@ -55,6 +56,7 @@ function App() {
           element={<IngredientPurchase />}
         />
         <Route exact path="/pai/purchases" element={<Purchases />} />
+        <Route exact path="/pai/orders" element={<Orders />} />
         <Route path="/pai/purchases/new/:id?" element={<NewPurchase />} />
         <Route exact path="/pai/procurement/" element={<ConfirmIng />} />
         <Route

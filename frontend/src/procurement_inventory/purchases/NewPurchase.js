@@ -16,9 +16,20 @@ import AuthContext from "../../components/context/auth-context";
 import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
-import { Link, useLocation, useNavigate, useParams, useHistory } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useHistory,
+} from "react-router-dom";
 import { ArrowLeftOutlined, DeleteOutlined } from "@ant-design/icons";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor } from "../../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+} from "../../colors";
 import { baseURL } from "../../constants";
 
 const NewPurchase = () => {
@@ -27,11 +38,11 @@ const NewPurchase = () => {
   const [inventoryItemName, setInventoryItemName] = useState();
   const [price, setPrice] = useState();
   const [quantity, setQuantity] = useState();
-  const [vendors, setVendors] = useState(); 
+  const [vendors, setVendors] = useState();
   const [selectedVendor, setSelectedVendor] = useState("");
   const [ingredientForPurchase, setIngredientForPurchase] = useState([]);
   const [visible, setVisible] = useState(false);
-  const [itemName, setItemName] = useState("")
+  const [itemName, setItemName] = useState("");
 
   const [idFromPrams, setIdFromPrams] = useState();
 
@@ -43,19 +54,17 @@ const NewPurchase = () => {
 
   const navigate = useNavigate();
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   const location = useLocation();
 
-
-
   /**************Restricting PandI Route************************* */
 
-  useEffect(()=>{
+  useEffect(() => {
     if (id) {
-      setIdFromPrams(id)
+      setIdFromPrams(id);
     }
-  },[])
+  }, []);
 
   useEffect(() => {
     const type = localStorage.getItem("type");
@@ -86,9 +95,10 @@ const NewPurchase = () => {
         const res = await data.json();
 
         if (res) {
-          let vendorVerified = res.length !== 0 ? res.filter(
-            (item, index) => item.approval_status === true
-          ): [];
+          let vendorVerified =
+            res.length !== 0
+              ? res.filter((item, index) => item.approval_status === "verified")
+              : [];
           setVendors(vendorVerified);
         }
       }
@@ -129,18 +139,18 @@ const NewPurchase = () => {
   };
 
   const deletePurchase = (id) => {
-    setIngredientForPurchase(prev => prev.filter(item => item.inventory_id !== id))
-  }
+    setIngredientForPurchase((prev) =>
+      prev.filter((item) => item.inventory_id !== id)
+    );
+  };
 
-
-  useEffect(()=>{
+  useEffect(() => {
     if (inventoryItems.length !== 0 && idFromPrams !== undefined) {
-      
-    let currentDate = new Date();
+      let currentDate = new Date();
 
-      const data = inventoryItems.length !== 0 && inventoryItems.filter(
-        (item) => item._id === idFromPrams
-      );
+      const data =
+        inventoryItems.length !== 0 &&
+        inventoryItems.filter((item) => item._id === idFromPrams);
 
       // setName(data[0]?.ingridient_name)
 
@@ -183,26 +193,30 @@ const NewPurchase = () => {
       };
       setIngredientForPurchase([ingredient_added]);
     }
-  },[idFromPrams,inventoryItems])
+  }, [idFromPrams, inventoryItems]);
 
-
-  const onAddIngredient = async() => {
-    if(ingredientForPurchase.length === 0 || ingredientForPurchase.filter(item => item?.inventory_id === inventoryItemId).length === 0){
+  const onAddIngredient = async () => {
+    if (
+      ingredientForPurchase.length === 0 ||
+      ingredientForPurchase.filter(
+        (item) => item?.inventory_id === inventoryItemId
+      ).length === 0
+    ) {
       if (inventoryItemName === undefined) {
         setValidationError(true);
       } else {
         setValidationError(false);
         let currentDate = new Date();
-  
+
         const data = inventoryItems.filter(
           (item) => item._id === inventoryItemId
         );
-  
+
         const time = +data[0].ingridient_expiry_amount;
         const period = data[0].ingridient_expiry_period;
-  
+
         // Get the current date
-  
+
         // Add the specified time and period to the current date
         if (period === "Days") {
           currentDate.setDate(currentDate.getDate() + time);
@@ -212,15 +226,15 @@ const NewPurchase = () => {
           currentDate.setFullYear(currentDate.getFullYear() + time);
         }
         let formattedDateData = currentDate.toDateString();
-  
+
         var date = new Date(formattedDateData);
-  
+
         var formattedDate = date.toLocaleDateString("en-US", {
           month: "numeric",
           day: "numeric",
           year: "2-digit",
         });
-  
+
         // Output the final date
 
         // let avgPrice = 0;
@@ -238,7 +252,7 @@ const NewPurchase = () => {
           // avgPrice = await data?.avgPrice;
 
           // console.log(avgPrice);
-          
+
           const ingredient_added = {
             mkuser_id: userId,
             ingredient_name: inventoryItemName,
@@ -254,15 +268,16 @@ const NewPurchase = () => {
 
           console.log(ingredient_added);
 
-          setIngredientForPurchase([...ingredientForPurchase,ingredient_added]);
-
+          setIngredientForPurchase([
+            ...ingredientForPurchase,
+            ingredient_added,
+          ]);
         } catch (error) {
           console.log(error);
         }
-
       }
     }
-    setItemName("")
+    setItemName("");
   };
 
   const handlePricePerIngridient = (value, ingredientName) => {
@@ -292,7 +307,7 @@ const NewPurchase = () => {
       return ingredient; // return the unchanged ingredient object
     });
     setIngredientForPurchase(updatedIngredients);
-  }
+  };
 
   const handleDateOfPurchasePerIngridient = (value, ingredientName) => {
     const updatedIngredients = ingredientForPurchase.map((ingredient) => {
@@ -306,7 +321,7 @@ const NewPurchase = () => {
       return ingredient; // return the unchanged ingredient object
     });
     setIngredientForPurchase(updatedIngredients);
-  }
+  };
 
   const handlequantityPerIngridient = (value, ingredientName) => {
     const updatedIngredients = ingredientForPurchase.map((ingredient) => {
@@ -337,8 +352,63 @@ const NewPurchase = () => {
     setIngredientForPurchase(updatedIngredients);
   };
 
+  const addOrderData = async () => {
+    const idArray = ingredientForPurchase.map((item) => item.inventory_id);
+    console.log(ingredientForPurchase);
+    try {
+      console.log(ingredientForPurchase);
+      const data = await fetch("/api/order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          documents: ingredientForPurchase,
+        }),
+      });
+
+      if (data) {
+        const res = await data.json();
+        console.log(res);
+        if (res) {
+          if (res.error) {
+            setValidationError(true);
+            setFieldsError(false);
+          } else if (res.fieldError) {
+            setFieldsError(true);
+            setValidationError(false);
+          } else {
+            setVisible(true);
+            setIngredientForPurchase([]);
+            setPrice("");
+            setQuantity("");
+            setSelectedVendor("");
+            setInventoryItemName("");
+            setInventoryItemId("");
+            setValidationError(false);
+            setFieldsError(false);
+
+            // await Promise.all(
+            //   idArray.map((e, index) => {
+            //     return fetch(
+            //       `/api/report/update-avg-item-cost/${e.inventory_id}`
+            //     )
+            //       .then((response) => response.json())
+            //       .then((data) => {
+            //         console.log(data);
+            //       });
+            //   })
+            // );
+          }
+        }
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addPurchaseData = async () => {
-    const idArray = ingredientForPurchase.map(item => item.inventory_id);
+    const idArray = ingredientForPurchase.map((item) => item.inventory_id);
     // console.log(idArray);
     try {
       console.log(ingredientForPurchase);
@@ -362,23 +432,27 @@ const NewPurchase = () => {
             setFieldsError(true);
             setValidationError(false);
           } else {
-              setVisible(true);
-              setIngredientForPurchase([]);
-              setPrice("");
-              setQuantity("");
-              setSelectedVendor("");
-              setInventoryItemName("");
-              setInventoryItemId("");
-              setValidationError(false);
-              setFieldsError(false);
+            setVisible(true);
+            setIngredientForPurchase([]);
+            setPrice("");
+            setQuantity("");
+            setSelectedVendor("");
+            setInventoryItemName("");
+            setInventoryItemId("");
+            setValidationError(false);
+            setFieldsError(false);
 
-              await Promise.all(idArray.map((e, index) => {
-                return fetch(`/api/report/update-avg-item-cost/${e.inventory_id}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-                    })
-            }))
+            await Promise.all(
+              idArray.map((e, index) => {
+                return fetch(
+                  `/api/report/update-avg-item-cost/${e.inventory_id}`
+                )
+                  .then((response) => response.json())
+                  .then((data) => {
+                    console.log(data);
+                  });
+              })
+            );
           }
         }
       }
@@ -395,57 +469,64 @@ const NewPurchase = () => {
         backgroundImage: `url(${DeshboardBg})`,
         height: "100%  ",
         overflowY: "hidden",
-      }}
-    >
+      }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
           },
-        }}
-      >
-        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="10" userType="superadmin" /> :
-          <Sidebar k="2" userType="pai" />}
+        }}>
+        <div
+          style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? (
+            <Sidebar k="10" userType="superadmin" />
+          ) : (
+            <Sidebar k="2" userType="pai" />
+          )}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
-            <Header title={<p>
-                <Link
-                  to={location?.state?.prevPath || '/pai/purchases'}
-                  style={{ color: "white", textDecoration: "none" }}
-                >
-                  <ArrowLeftOutlined />
-                </Link>{" "}
-                Purchases
-              </p>} />
+            <Header
+              title={
+                <p>
+                  <Link
+                    to={location?.state?.prevPath || "/pai/orders"}
+                    style={{ color: "white", textDecoration: "none" }}>
+                    <ArrowLeftOutlined />
+                  </Link>{" "}
+                  Orders
+                </p>
+              }
+            />
             <div style={{ padding: 0 }}>
               <center>
                 <div
                   style={{ width: "90%", padding: "3%" }}
-                  className="dongle-font-class"
-                >
+                  className="dongle-font-class">
                   <table style={{ width: "100%" }} cellPadding={20}>
                     <tr>
                       <td style={{ fontSize: "150%" }}>Select the item:</td>
-                      <td style={{width: "30vw"}}>
+                      <td style={{ width: "30vw" }}>
                         {inventoryItems.length !== 0 && (
-                            <AutoComplete
-                              id="ingredient-item-selected"
-                              style={{width: "100%"}}
-                              value={itemName}
-                              options={inventoryItems.length !== 0 && inventoryItems.map((item) => ({
+                          <AutoComplete
+                            id="ingredient-item-selected"
+                            style={{ width: "100%" }}
+                            value={itemName}
+                            options={
+                              inventoryItems.length !== 0 &&
+                              inventoryItems.map((item) => ({
                                 value: item.ingridient_name,
                                 id: item._id,
-                              }))}
-                              onSelect={handleSelect}
-                              onChange={(value) => setItemName(value)}
-                              placeholder="Eg: Roti, Chawal, Daal, etc"
-                              filterOption={(inputValue, option) =>
-                                option.value
-                                  .toUpperCase()
-                                  .indexOf(inputValue.toUpperCase()) !== -1
-                              }
-                            />
+                              }))
+                            }
+                            onSelect={handleSelect}
+                            onChange={(value) => setItemName(value)}
+                            placeholder="Eg: Roti, Chawal, Daal, etc"
+                            filterOption={(inputValue, option) =>
+                              option.value
+                                .toUpperCase()
+                                .indexOf(inputValue.toUpperCase()) !== -1
+                            }
+                          />
                         )}
                       </td>
                       <td>
@@ -462,8 +543,7 @@ const NewPurchase = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
-                      style={{ margin: "0.5rem" }}
-
+                            style={{ margin: "0.5rem" }}
                             message="Validation Error"
                             description="Please select the ingridients and add values !!"
                             type="error"
@@ -477,8 +557,7 @@ const NewPurchase = () => {
                         <td colSpan={2}>
                           <br />
                           <Alert
-                      style={{ margin: "0.5rem" }}
-
+                            style={{ margin: "0.5rem" }}
                             message="Validation Error"
                             description="Please fill all the fields !!"
                             type="error"
@@ -526,15 +605,23 @@ const NewPurchase = () => {
                             <Col xs={24} xl={12} style={{ fontSize: "150%" }}>
                               {item.ingredient_name}
                             </Col>
-                            <Col xs={24} xl={11} style={{ fontSize: "150%", textAlign: 'right' }}>
+                            <Col
+                              xs={24}
+                              xl={11}
+                              style={{ fontSize: "150%", textAlign: "right" }}>
                               <Button
-                              onClick={deletePurchase.bind(this, item?.inventory_id)}
-                              shape="circle"
-                              icon={<DeleteOutlined />}
-                              style={{ margin: "0px 15px", alignSelf: 'center', backgroundColor: 'red', color: "white" }}
-                              >
-                                
-                              </Button>
+                                onClick={deletePurchase.bind(
+                                  this,
+                                  item?.inventory_id
+                                )}
+                                shape="circle"
+                                icon={<DeleteOutlined />}
+                                style={{
+                                  margin: "0px 15px",
+                                  alignSelf: "center",
+                                  backgroundColor: "red",
+                                  color: "white",
+                                }}></Button>
                             </Col>
                             <Col xs={8} xl={8}>
                               Search vendor:
@@ -543,10 +630,13 @@ const NewPurchase = () => {
                                 <AutoComplete
                                   id="ingredient-item-selected"
                                   style={{ width: "70%" }}
-                                  options={vendors.length !== 0 && vendors.map((item) => ({
-                                    value: item.vendor_name,
-                                    id: item._id,
-                                  }))}
+                                  options={
+                                    vendors.length !== 0 &&
+                                    vendors.map((item) => ({
+                                      value: item.vendor_name,
+                                      id: item._id,
+                                    }))
+                                  }
                                   onSelect={(id, op) =>
                                     handleVendorPerIngridient(
                                       op.id,
@@ -583,8 +673,7 @@ const NewPurchase = () => {
                                   )
                                 }
                                 placeholder="Eg: 2,3,15, etc"
-                                style={{ width: "70%" }}
-                              ></Input>
+                                style={{ width: "70%" }}></Input>
                               -
                             </Col>
                             <Col xs={8} xl={7}>
@@ -597,11 +686,10 @@ const NewPurchase = () => {
                                   )
                                 }
                                 placeholder="Eg: 2,3,15, etc"
-                                style={{ width: "70%" }}
-                              ></Input>
+                                style={{ width: "70%" }}></Input>
                             </Col>
-                            <Col xs={8} xl={8} style={{marginTop: '8px'}}>
-                            Invoice No: <br />
+                            {/* <Col xs={8} xl={8} style={{ marginTop: "8px" }}>
+                              Invoice No: <br />
                               <Input
                                 onChange={(e) =>
                                   handleInvoiceNoPerIngridient(
@@ -610,13 +698,12 @@ const NewPurchase = () => {
                                   )
                                 }
                                 placeholder="Enter Invoice No."
-                                style={{ width: "70%" }}
-                              ></Input>
+                                style={{ width: "70%" }}></Input>
                             </Col>
-                            <Col xs={8} xl={8} style={{marginTop: '8px'}}>
-                            Date of purchase: <br />
+                            <Col xs={8} xl={8} style={{ marginTop: "8px" }}>
+                              Date of purchase: <br />
                               <Input
-                              type="date"
+                                type="date"
                                 onChange={(e) =>
                                   handleDateOfPurchasePerIngridient(
                                     e.target.value,
@@ -624,10 +711,8 @@ const NewPurchase = () => {
                                   )
                                 }
                                 placeholder="Eg: 2,3,15, etc"
-                                style={{ width: "70%" }}
-                              ></Input>
-                            </Col>
-                            
+                                style={{ width: "70%" }}></Input>
+                            </Col> */}
                           </Row>
                         </Card>
 
@@ -701,11 +786,10 @@ const NewPurchase = () => {
                   <br />
                   <br />
                   <Button
-                    onClick={addPurchaseData}
+                    onClick={addOrderData}
                     type="primary"
                     style={{ width: "60%", fontSize: "150%", height: "120%" }}
-                    className="dongle-font-class"
-                  >
+                    className="dongle-font-class">
                     FINALIZE AND ENTER PURCHASE
                   </Button>
                 </div>

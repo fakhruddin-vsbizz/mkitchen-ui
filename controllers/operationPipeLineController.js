@@ -1,65 +1,134 @@
 const expressAsyncHandler = require("express-async-handler");
 const FoodMenu = require("../models/menuFoodModel");
 const OperationPipeLine = require("../models/operationPipeLineModel");
-const FinalizeProcureModel = require( "../models/finalizeProcureModel" );
-const InventoryItemsModel = require( "../models/inventoryItemsModel" );
+const FinalizeProcureModel = require("../models/finalizeProcureModel");
+const InventoryItemsModel = require("../models/inventoryItemsModel");
 const { ObjectId } = require("mongodb");
 
 const addTotalPriceToFood = expressAsyncHandler(async (req, res) => {
+  const { menu_id } = req.body;
 
-  const {menu_id} = req.body;
-
-  
   let newList = [];
 
   if (!menu_id) {
-    return res.status(401).json(newList)
+    return res.status(401).json(newList);
   }
 
   try {
-    const menu = await FoodMenu.findOne({_id: menu_id}, 'food_list')
-    
+    const menu = await FoodMenu.findOne({ _id: menu_id }, "food_list");
+
     if (!menu) {
       return res.status(404).json(newList);
     }
-    
-    const ingredientList = await OperationPipeLine.findOne({ menu_food_id : menu_id}, 'ingridient_list.foodId ingridient_list.inventory_item_id ingridient_list.procure_amount');
+
+    const ingredientList = await OperationPipeLine.findOne(
+      { menu_food_id: menu_id },
+      "ingridient_list.foodId ingridient_list.inventory_item_id ingridient_list.procure_amount"
+    );
 
     if (!ingredientList) {
       return res.status(404).json(newList);
     }
-    
 
-    const inventoryIdList = ingredientList.ingridient_list.map(item => item.inventory_item_id)
+    const inventoryIdList = ingredientList.ingridient_list.map(
+      (item) => item.inventory_item_id
+    );
 
-    const inventoryPrices = await InventoryItemsModel.find({ _id: { $in: inventoryIdList} }, 'price');
+    const inventoryPrices = await InventoryItemsModel.find(
+      { _id: { $in: inventoryIdList } },
+      "price"
+    );
 
-    const priceList = ingredientList.ingridient_list.map(ingredient => {
-      const temp = inventoryPrices.find(inventory => inventory._id.toString() === ingredient.inventory_item_id);
-      
+    const priceList = ingredientList.ingridient_list.map((ingredient) => {
+      const temp = inventoryPrices.find(
+        (inventory) => inventory._id.toString() === ingredient.inventory_item_id
+      );
+
       return {
         foodId: ingredient.foodId,
-        price: Number((ingredient.procure_amount * temp.price).toFixed(2))
-      }
-    })
+        price: Number((ingredient.procure_amount * temp.price).toFixed(2)),
+      };
+    });
 
-    newList = menu.food_list.map(food => {
-      const temp = priceList.filter(filterItem => filterItem.foodId === food.food_item_id).reduce((a,b) =>  Number((a + b.price).toFixed(2)), 0);
+    newList = menu.food_list.map((food) => {
+      const temp = priceList
+        .filter((filterItem) => filterItem.foodId === food.food_item_id)
+        .reduce((a, b) => Number((a + b.price).toFixed(2)), 0);
       return {
         foodId: food.food_item_id,
-        price: temp
-      }
-    })
+        price: temp,
+      };
+    });
 
-    return res.status(200).json(newList)
-
+    return res.status(200).json(newList);
   } catch (error) {
     console.log(error);
   }
+});
 
-})
+const getMicsCharges = expressAsyncHandler(async (req, res) => {
+  const { menu_id } = req.body;
 
+  try {
+    if (!menu_id) {
+      return res.status(404).json({ message: "menu id is required" });
+    }
 
+    const micsCharges = await OperationPipeLine.findOne({
+      menu_food_id: menu_id,
+    });
+
+    if (!micsCharges) {
+      return res.status(404).json({ message: "menu does not exist" });
+    }
+
+    return res.status(404).json(micsCharges);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+const addMicsCharges = expressAsyncHandler(async (req, res) => {
+  const {
+    menu_id,
+    dailyMaintenanceCharges,
+    gasCharges,
+    laborCharges,
+    transportCharges,
+  } = req.body;
+
+  const micsCharges = Object.values({
+    dailyMaintenanceCharges,
+    gasCharges,
+    laborCharges,
+    transportCharges,
+  }).reduce((a, b) => Number(a) + Number(b));
+
+  try {
+    if (!menu_id) {
+      return res.status(404).json({ message: "menu id is required" });
+    }
+
+    const micsCharge = await OperationPipeLine.findOneAndUpdate(
+      { menu_food_id: menu_id },
+      {
+        dailyMaintenanceCharges,
+        gasCharges,
+        laborCharges,
+        transportCharges,
+        micsCharges,
+      }
+    );
+
+    if (!micsCharge) {
+      return res.status(404).json({ message: "menu does not exist" });
+    }
+
+    return res.status(404).json(micsCharge);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   const {
@@ -77,15 +146,13 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
     delivery_status,
     food_name,
   } = req.body;
-  
-  
+
   if (type === "get_full_pipeline") {
-    
     const operationPipe = await OperationPipeLine.aggregate([
       {
-        $match : {menu_food_id: new ObjectId(menu_id)},
+        $match: { menu_food_id: new ObjectId(menu_id) },
       },
-      {       
+      {
         $lookup: {
           from: "menufoods",
           localField: "menu_food_id",
@@ -95,13 +162,11 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
       },
     ]);
 
-    
-    
-    if(!operationPipe[0]){
-      return res.status(404).json({msg: "Pipeline doesn't exist"})
+    if (!operationPipe[0]) {
+      return res.status(404).json({ msg: "Pipeline doesn't exist" });
     }
 
-    return res.status(200).json(operationPipe[0])
+    return res.status(200).json(operationPipe[0]);
   }
 
   const operationId = await OperationPipeLine.findOne({
@@ -206,7 +271,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   if (type === "get_mohalla_dispatch_data") {
     const pipeline = await OperationPipeLine.findOne({ menu_food_id: menu_id });
 
-    if (!pipeline) return res.status(404).json({msg: "no pipeline"})
+    if (!pipeline) return res.status(404).json({ msg: "no pipeline" });
     const dispatchArr = pipeline.dispatch;
 
     if (dispatchArr) {
@@ -221,8 +286,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
   }
 
   if (type === "post_dispatch_data") {
-
-    const {unitValueType, containerType} = req.body;
+    const { unitValueType, containerType } = req.body;
 
     try {
       if (total_weight === undefined || no_of_deigh === undefined) {
@@ -230,12 +294,12 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
           .status(403)
           .json({ invalidData: "total weight and daigh cannot be empty" });
       }
-  
+
       const dispatchDoc = await OperationPipeLine.findOne({
         menu_food_id: menu_id,
       });
       const dispatchArr = await dispatchDoc.dispatch;
-  
+
       const newDispatchObj = {
         food_item_id: food_item_id,
         total_weight: total_weight,
@@ -245,7 +309,7 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
         delivery_status: delivery_status,
         food_name: food_name,
       };
-  
+
       if (dispatchArr.length === 0) {
         // create a new `dispatch` object and set its fields
         const newObj = [
@@ -262,15 +326,20 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
         );
         if (updatePipeline) {
           // return res.json({ message: "pipeline  updated successfully" });
-          return res.status(200).json({message: "pipeline  updated successfully", data: updatePipeline.dispatch});
+          return res
+            .status(200)
+            .json({
+              message: "pipeline  updated successfully",
+              data: updatePipeline.dispatch,
+            });
         }
       } else {
         // find the existing `dispatch` object with the matching `mk_id`, if any
-  
+
         const targetDispatchObj = await dispatchArr.find(
           (dispatch) => dispatch.mk_id === mk_id
         );
-  
+
         if (targetDispatchObj) {
           // if a matching `dispatch` object is found, add the new `dispatch` object to its `dispatch` array
           targetDispatchObj.dispatch.push(newDispatchObj);
@@ -280,21 +349,25 @@ const addOperationPipeline = expressAsyncHandler(async (req, res) => {
             mk_id: mk_id,
             dispatch: [newDispatchObj],
           };
-  
+
           dispatchArr.push(newDispatchObjWithId);
         }
-  
+
         // update the document in MongoDB with the modified `dispatch` array
         await dispatchDoc.updateOne({ dispatch: dispatchArr });
-        return res.status(200).json({ message: "operationPipeLine  added", data: dispatchDoc?.dispatch});
+        return res
+          .status(200)
+          .json({
+            message: "operationPipeLine  added",
+            data: dispatchDoc?.dispatch,
+          });
       }
-  
+
       return res.json({ message: "operationPipeLine  added" });
     } catch (error) {
       console.log(error);
     }
   }
-    
 });
 
 const getOperationPipeline = expressAsyncHandler(async (req, res) => {
@@ -334,81 +407,110 @@ const updateOperationPipeline = expressAsyncHandler(async (req, res) => {
   if (type === "update_operation_pipeline_reorder_status") {
     const reorderArr = operationId.reorder_logs;
     const ingredientLs = operationId.ingridient_list;
-    
+
     reorderArr.forEach((item) => {
-      if (item.inventory_id === inventory_id && item.foodId === req.body?.foodId) {
+      if (
+        item.inventory_id === inventory_id &&
+        item.foodId === req.body?.foodId
+      ) {
         item.reorder_delivery_status = false;
       }
     });
 
-    ingredientLs.forEach((item)=> {
-      if (item.inventory_item_id === inventory_id && item.foodId === req.body?.foodId) {
-        item.procure_amount = Number((item.procure_amount + req.body?.procured_Amount).toFixed(3));
+    ingredientLs.forEach((item) => {
+      if (
+        item.inventory_item_id === inventory_id &&
+        item.foodId === req.body?.foodId
+      ) {
+        item.procure_amount = Number(
+          (item.procure_amount + req.body?.procured_Amount).toFixed(3)
+        );
       }
-    })
+    });
 
-    await operationId.updateOne({ reorder_logs: reorderArr, ingridient_list: ingredientLs });
+    await operationId.updateOne({
+      reorder_logs: reorderArr,
+      ingridient_list: ingredientLs,
+    });
 
-    await InventoryItemsModel.findOneAndUpdate({_id: inventory_id},{
-      $inc: {
-        total_volume: -req.body.procured_Amount
+    await InventoryItemsModel.findOneAndUpdate(
+      { _id: inventory_id },
+      {
+        $inc: {
+          total_volume: -req.body.procured_Amount,
+        },
       }
-    })
+    );
 
-    
     // const procuredItem = await FinalizeProcureModel.findOne({menu_id: req.body.menu_id}).lean()
 
     // console.log("procuredItem",procuredItem);
-  
+
     //   const newProcuredItems = await procuredItem?.procure_items.map(item => item?.inventoryItemId === req.body.inventory_id? ({
     //       ...item,
     //       requiredVolume: item.requiredVolume + req.body.procured_Amount,
     //       total_quantity: item.total_quantity -req.body.procured_Amount
     //     }): item
     //   )
-  
+
     // console.log("newProcuredItems",newProcuredItems);
-    
+
     // const something = await FinalizeProcureModel.findOneAndUpdate({menu_id: req.body.menu_id}, {procure_items: newProcuredItems});
 
-    return res.status(200).json({ message: "reOrderLog  updated successfully" });
+    return res
+      .status(200)
+      .json({ message: "reOrderLog  updated successfully" });
   }
 });
 
 const changeInventoryAmount = expressAsyncHandler(async (req, res) => {
-  const newInventoryItem = await InventoryItemsModel.findOneAndUpdate({_id: req.body.inventory_id},{
-    $inc: {
-      total_volume: -req.body.procured_Amount
+  const newInventoryItem = await InventoryItemsModel.findOneAndUpdate(
+    { _id: req.body.inventory_id },
+    {
+      $inc: {
+        total_volume: -req.body.procured_Amount,
+      },
     }
-  })
+  );
   return res.status(200).json(newInventoryItem);
 });
 
 const changeProcurementAmount = expressAsyncHandler(async (req, res) => {
-  const procuredItem = await FinalizeProcureModel.findOne({menu_id: req.body.menu_id}).lean()
+  const procuredItem = await FinalizeProcureModel.findOne({
+    menu_id: req.body.menu_id,
+  }).lean();
 
-    const newProcuredItems = await procuredItem?.procure_items.map(item => item?.inventoryItemId === req.body.inventory_id? ({
-        ...item,
-        requiredVolume: item.requiredVolume + req.body.procured_Amount,
-        total_quantity: item.total_quantity -req.body.procured_Amount
-      }): item
-    )
-  
-  const something = await FinalizeProcureModel.findOneAndUpdate({menu_id: req.body.menu_id}, {procure_items: newProcuredItems});
-   
+  const newProcuredItems = await procuredItem?.procure_items.map((item) =>
+    item?.inventoryItemId === req.body.inventory_id
+      ? {
+          ...item,
+          requiredVolume: item.requiredVolume + req.body.procured_Amount,
+          total_quantity: item.total_quantity - req.body.procured_Amount,
+        }
+      : item
+  );
+
+  const something = await FinalizeProcureModel.findOneAndUpdate(
+    { menu_id: req.body.menu_id },
+    { procure_items: newProcuredItems }
+  );
+
   return res.status(200).json(something);
 });
 
 const getIngredients = expressAsyncHandler(async (req, res) => {
-  const {menu_food_id} = req.body;
+  const { menu_food_id } = req.body;
 
-  const ingredients = await OperationPipeLine.findOne({menu_food_id}, 'ingridient_list').exec()
+  const ingredients = await OperationPipeLine.findOne(
+    { menu_food_id },
+    "ingridient_list"
+  ).exec();
 
-  if (!ingredients) return res.status(404).json({msg: "no ingredient for today"})
+  if (!ingredients)
+    return res.status(404).json({ msg: "no ingredient for today" });
 
-  return res.status(200).json(ingredients)
-
-})
+  return res.status(200).json(ingredients);
+});
 
 module.exports = {
   addOperationPipeline,
@@ -417,5 +519,7 @@ module.exports = {
   changeInventoryAmount,
   changeProcurementAmount,
   getIngredients,
-  addTotalPriceToFood
+  addTotalPriceToFood,
+  getMicsCharges,
+  addMicsCharges,
 };

@@ -7,6 +7,10 @@ const purcahsesModel = new mongoose.Schema(
       ref: "MKUser",
       required: true,
     },
+    order_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "OrdersModels",
+    },
     ingredient_name: {
       type: String,
       required: true,
@@ -43,12 +47,12 @@ const purcahsesModel = new mongoose.Schema(
     invoice_no: {
       type: String,
       required: false,
-      default: 'n/a'
+      default: "n/a",
     },
     date_of_purchase: {
       type: String,
       required: false,
-      default: 'n/a'
+      default: "n/a",
     },
     unshelf: {
       type: Boolean,
