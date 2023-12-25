@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import './menu.css'
+import "./menu.css";
 
 import {
   Row,
@@ -24,7 +24,13 @@ import Header from "../../components/navigation/Header.js";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../../components/context/auth-context.js";
 import TextArea from "antd/es/input/TextArea";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+  valueShadowBox,
+} from "../../colors";
 import { baseURL } from "../../constants";
 const { useToken } = theme;
 const Menu = () => {
@@ -45,7 +51,8 @@ const Menu = () => {
   const [AddedFoodItems, setAddedFoodItems] = useState([]);
   const [isMenu, setIsMenu] = useState(false);
   const [status, setStatus] = useState();
-  const [reasonForReconfirmingMenu, setReasonForReconfirmingMenu] = useState("")
+  const [reasonForReconfirmingMenu, setReasonForReconfirmingMenu] =
+    useState("");
 
   const [ingridientList, setIngridientList] = useState([]);
   const [menuConfimStatus, setMenuConfimStatus] = useState(false);
@@ -112,7 +119,7 @@ const Menu = () => {
           const res = await data.json();
           if (data?.message) {
             setStatus(-1);
-           return
+            return;
           }
           if (res[0]) {
             setStatus(res?.status);
@@ -162,7 +169,7 @@ const Menu = () => {
             setFoodItems([]);
           } else {
             setFoodItems(data[0].food_list);
-            setReasonForReconfirmingMenu(data[0]?.reason_for_reconfirming_menu)
+            setReasonForReconfirmingMenu(data[0]?.reason_for_reconfirming_menu);
             setIsMenu(true);
           }
         })
@@ -189,8 +196,9 @@ const Menu = () => {
   }, [dateValue]);
 
   const addFoodItem = async () => {
-
-    const itemExists = foodItems.find((item) => item.food_name === selectedFood)
+    const itemExists = foodItems.find(
+      (item) => item.food_name === selectedFood
+    );
 
     if (selectedFood === "" || itemExists) {
       setSelectedFood("");
@@ -213,12 +221,13 @@ const Menu = () => {
               food_item_id: id,
               // no_of_deigs: 0,
               // total_weight: 0,
-              food_name: selectedFood.toLowerCase()
-              .split(' ')
-              .map(function(word) {
+              food_name: selectedFood
+                .toLowerCase()
+                .split(" ")
+                .map(function (word) {
                   return word[0].toUpperCase() + word.substring(1);
-              })
-              .join(' '),
+                })
+                .join(" "),
             };
             setFoodItems([newFoodItem, ...foodItems]);
           });
@@ -231,12 +240,13 @@ const Menu = () => {
             },
             body: JSON.stringify({
               mkuser_email: emailAdmin,
-              food_name: selectedFood.toLowerCase()
-              .split(' ')
-              .map(function(word) {
+              food_name: selectedFood
+                .toLowerCase()
+                .split(" ")
+                .map(function (word) {
                   return word[0].toUpperCase() + word.substring(1);
-              })
-              .join(' '),
+                })
+                .join(" "),
               ingridient_list: [],
               usage_counter: 0,
             }),
@@ -249,12 +259,13 @@ const Menu = () => {
                 food_item_id: data._id,
                 // no_of_deigs: 0,
                 // total_weight: 0,
-                food_name: selectedFood.toLowerCase()
-                .split(' ')
-                .map(function(word) {
+                food_name: selectedFood
+                  .toLowerCase()
+                  .split(" ")
+                  .map(function (word) {
                     return word[0].toUpperCase() + word.substring(1);
-                })
-                .join(' '),
+                  })
+                  .join(" "),
               };
               setFoodItems([newFoodItem, ...foodItems]);
             });
@@ -293,13 +304,13 @@ const Menu = () => {
         .then((res) => res.json())
         .then((data) => {
           setVisible(true);
-          setStatus(0)
+          setStatus(0);
           setFoodItemId("");
         });
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   const createMenu = async () => {
     try {
@@ -326,7 +337,9 @@ const Menu = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          setReasonForReconfirmingMenu(data?.foodMenu?.reason_for_reconfirming_menu)
+          setReasonForReconfirmingMenu(
+            data?.foodMenu?.reason_for_reconfirming_menu
+          );
           setVisible(true);
           setStatus(0);
           setFoodItemId("");
@@ -414,9 +427,7 @@ const Menu = () => {
   const { token } = useToken();
 
   return (
-    <div
-      style={{ margin: 0, padding: 0 }}
-    >
+    <div style={{ margin: 0, padding: 0 }}>
       <Modal
         open={visible}
         onOk={() => setVisible(false)}
@@ -428,12 +439,10 @@ const Menu = () => {
             onClick={() => {
               setMenuConfimStatus(true);
               setVisible(false);
-            }}
-          >
+            }}>
             OK
           </Button>,
-        ]}
-      >
+        ]}>
         <div style={{ textAlign: "center" }}>
           <h2 style={{ color: "#52c41a" }}>Success!</h2>
           <p>Menu Created Successfully</p>
@@ -447,10 +456,14 @@ const Menu = () => {
             renderItem={(item) => <List.Item>{item}</List.Item>}
           /> */}
       {/* </Col> */}
-      <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="1" userType="superadmin" /> :
-        <Sidebar k="1" userType="admin" />}
-        
+      <div
+        style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+        {localStorage.getItem("type") === "mk superadmin" ? (
+          <Sidebar k="1" userType="superadmin" />
+        ) : (
+          <Sidebar k="1" userType="admin" />
+        )}
+
         <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
           <Header title="Set Today's Menu" />
           <Row>
@@ -465,13 +478,12 @@ const Menu = () => {
                   token: {
                     colorPrimary: colorGreen,
                   },
-                }}
-              >
+                }}>
                 <Calendar
                   style={{
                     // border: "1px solid lightgray",
                     backgroundColor: colorGreen,
-                    boxShadow: valueShadowBox
+                    boxShadow: valueShadowBox,
                   }}
                   onSelect={onSelectDate}
                   fullscreen={false}
@@ -482,17 +494,19 @@ const Menu = () => {
               <Card
                 bordered={true}
                 className="w-full"
-                style={{ border: "1px solid lightgray", minHeight: "55vh", boxShadow: valueShadowBox }}
-                bodyStyle={{padding: '24px 24px 10px'}}
-              >
+                style={{
+                  border: "1px solid lightgray",
+                  minHeight: "55vh",
+                  boxShadow: valueShadowBox,
+                }}
+                bodyStyle={{ padding: "24px 24px 10px" }}>
                 <Row
                   style={{
                     backgroundColor: colorGreen,
                     padding: "2%",
                     color: "white",
                     borderRadius: 5,
-                  }}
-                >
+                  }}>
                   <Col xs={24} xl={12}>
                     Menu for:
                     <br />
@@ -519,83 +533,106 @@ const Menu = () => {
 
                 {/* <Divider style={{ backgroundColor: "#000" }}></Divider> */}
                 {(new Date(dateValue) >
-                  new Date().setDate(new Date().getDate() - 1)) && status < 2 && <><div
-                  style={{ marginTop: 10, marginBottom: 20, display: "flex", justifyContent: "space-between", alignItems: 'baseline' }}
-                >
-                  <div style={{ width: "83%", display: 'flex', columnGap: '6px' }}>
-                    <label className="label">Menu:</label> &nbsp;&nbsp;
-                      <AutoComplete
-                        id="food-item-selected"
+                  new Date().setDate(new Date().getDate() - 1) &&
+                  status < 2) ||
+                localStorage.getItem("type") === "mk superadmin" ? (
+                  <>
+                    <div
+                      style={{
+                        marginTop: 10,
+                        marginBottom: 20,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "baseline",
+                      }}>
+                      <div
                         style={{
-                          width: "50%",
-                          // border: "2px solid darkred",
-                          boxShadow: valueShadowBox,
-                          flexGrow: 1,
-                          borderRadius: 8,
-                        }}
-                        value={selectedFood}
-                        options={AddedFoodItems.length !== 0 && AddedFoodItems.map((item) => ({
-                          value: item.name,
-                        }))}
-                        onChange={(value) => setSelectedFood(value)}
-                        placeholder="Enter a food item"
-                        filterOption={(inputValue, option) =>
-                          option.value
-                            .toUpperCase()
-                            .indexOf(inputValue.toUpperCase()) !== -1
-                        }
-                      />               
-                  </div>
-                  <div
-                    style={{
-                      width: "fit-content",
-                      display: "flex",
-                      alignContent: "center",
-                      justifyContent: "center",
-                      alignItems: "flex-end",
-                    }}
-                  >
-                      <Button
+                          width: "83%",
+                          display: "flex",
+                          columnGap: "6px",
+                        }}>
+                        <label className="label">Menu:</label> &nbsp;&nbsp;
+                        <AutoComplete
+                          id="food-item-selected"
+                          style={{
+                            width: "50%",
+                            // border: "2px solid darkred",
+                            boxShadow: valueShadowBox,
+                            flexGrow: 1,
+                            borderRadius: 8,
+                          }}
+                          value={selectedFood}
+                          options={
+                            AddedFoodItems.length !== 0 &&
+                            AddedFoodItems.map((item) => ({
+                              value: item.name,
+                            }))
+                          }
+                          onChange={(value) => setSelectedFood(value)}
+                          placeholder="Enter a food item"
+                          filterOption={(inputValue, option) =>
+                            option.value
+                              .toUpperCase()
+                              .indexOf(inputValue.toUpperCase()) !== -1
+                          }
+                        />
+                      </div>
+                      <div
                         style={{
-                          backgroundColor: "black",
-                          borderRadius: 50,
-                          color: "white",
-                          fontSize: 14,
-                          height: "auto",
-                        }}
-                        onClick={addFoodItem}
-                      >
-                        <i className="fa-solid fa-plus"></i>&nbsp;&nbsp;Add
-                      </Button>                 
-                  </div></div></>}
-                
+                          width: "fit-content",
+                          display: "flex",
+                          alignContent: "center",
+                          justifyContent: "center",
+                          alignItems: "flex-end",
+                        }}>
+                        <Button
+                          style={{
+                            backgroundColor: "black",
+                            borderRadius: 50,
+                            color: "white",
+                            fontSize: 14,
+                            height: "auto",
+                          }}
+                          onClick={addFoodItem}>
+                          <i className="fa-solid fa-plus"></i>&nbsp;&nbsp;Add
+                        </Button>
+                      </div>
+                    </div>
+                  </>
+                ) : null}
 
                 <List
                   // size="small"
                   // bordered
-                  style={{overflowY: 'scroll', height: "33vh", padding: ".5rem .3rem"}}
+                  style={{
+                    overflowY: "scroll",
+                    height: "33vh",
+                    padding: ".5rem .3rem",
+                  }}
                   dataSource={foodItems}
                   renderItem={(item) => (
                     <div
                       style={{
                         padding: 15,
                         display: "flex",
-                        alignItems: 'center',
+                        alignItems: "center",
                         // backgroundColor: "rgb(255 246 237)",
                         borderRadius: 5,
-                        marginBottom: '.5rem',
+                        marginBottom: ".5rem",
                         // border: "2px solid darkred",
                         boxShadow: valueShadowBox,
-                      }}
-                    >
+                      }}>
                       <div style={{ width: "60%" }}>
-                        <div style={{ fontSize: "140%", display: 'flex', columnGap: '1rem' }}>
+                        <div
+                          style={{
+                            fontSize: "140%",
+                            display: "flex",
+                            columnGap: "1rem",
+                          }}>
                           <span>
-                          <i className="fa-solid fa-bowl-rice"></i>
+                            <i className="fa-solid fa-bowl-rice"></i>
                           </span>
-                          <span>
-                          {item.food_name}
-                          </span>
+                          <span>{item.food_name}</span>
                         </div>
                         <br />
                         {/* {ingridientList &&
@@ -624,49 +661,53 @@ const Menu = () => {
                           alignContent: "left",
                           justifyContent: "left",
                           alignItems: "left",
-                        }}
-                      >
+                        }}>
                         {ingridientList.length !== 0 &&
                           ingridientList
                             .filter((it) => it.name === item.food_name)
                             .map((newItem, index) => (
                               <div key={index}>
-                                {newItem?.ingridient_list.length !== 0 && newItem.ingridient_list.map(
-                                  (ing, ingIndex) => (
-                                    <Tag color={colorGreen} key={ingIndex}>
-                                      <i className="fa-solid fa-plate-wheat"></i> &nbsp;
-                                      {ing.ingredient_name}
-                                    </Tag>
-                                    // <span key={ingIndex}>
-                                    //   {ing.ingredient_name},{" "}
-                                    // </span>
-                                  )
-                                )}
+                                {newItem?.ingridient_list.length !== 0 &&
+                                  newItem.ingridient_list.map(
+                                    (ing, ingIndex) => (
+                                      <Tag color={colorGreen} key={ingIndex}>
+                                        <i className="fa-solid fa-plate-wheat"></i>{" "}
+                                        &nbsp;
+                                        {ing.ingredient_name}
+                                      </Tag>
+                                      // <span key={ingIndex}>
+                                      //   {ing.ingredient_name},{" "}
+                                      // </span>
+                                    )
+                                  )}
                               </div>
                             ))}
                       </div>
-                      {(new Date(dateValue) > new Date().setDate(new Date().getDate() - 1)) && status < 2 && <div
-                        style={{
-                          width: "20%",
-                          display: "flex",
-                          alignContent: "center",
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Button
+                      {(new Date(dateValue) >
+                        new Date().setDate(new Date().getDate() - 1) &&
+                        status < 2) ||
+                      localStorage.getItem("type") === "mk superadmin" ? (
+                        <div
                           style={{
-                            backgroundColor: "red",
-                            borderRadius: 50,
-                            color: "white",
-                            fontSize: 9,
-                            height: "auto",
-                          }}
-                          onClick={() => deleteItem(item)}
-                        >
-                          <i className="fa-solid fa-trash"></i>
-                        </Button>
-                      </div>}
+                            width: "20%",
+                            display: "flex",
+                            alignContent: "center",
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}>
+                          <Button
+                            style={{
+                              backgroundColor: "red",
+                              borderRadius: 50,
+                              color: "white",
+                              fontSize: 9,
+                              height: "auto",
+                            }}
+                            onClick={() => deleteItem(item)}>
+                            <i className="fa-solid fa-trash"></i>
+                          </Button>
+                        </div>
+                      ) : null}
                     </div>
 
                     // <List.Item>
@@ -710,48 +751,78 @@ const Menu = () => {
                   )}
                 />
                 <hr className="separator"></hr>
-                {status >= 3 || (new Date(dateValue) <
-                  new Date().setDate(new Date().getDate() - 1)) ?
-              <p className="done-tag">
-                Food Already Cooked
-              </p> : <>{ foodItems.length !== 0
-                /*status === -1 &&*/
-                 ? <> {status < 0 ? (
-                  <div style={{ width: "100%", textAlign: "right" }}>
-                    <Button
-                      onClick={createMenu}
-                      // disabled={menuConfimStatus}
-                      style={{
-                        width: "100%",
-                        backgroundColor: colorGreen,
-                        color: "white",
-                        height: "170%",
-                        fontSize: "120%",
-                        fontWeight: 600,
-                      }}
-                    >
-                      Confirm Menu
-                    </Button>
-                  </div>
-                ) : (status < 2 && <div style={{ width: "100%", textAlign: "left", marginTop: '1rem' }}>
-                  <label htmlFor="reason" className="label">Reason for changing menu : </label>
-                  <TextArea rows={2} name="reason" id="reason" style={{marginBlock: '.5rem', fontSize: '1.1rem'}} value={reasonForReconfirmingMenu} onChange={(e) => setReasonForReconfirmingMenu(e.target.value)} />
-                <Button
-                  onClick={reCreateMenu}
-                  disabled={!reasonForReconfirmingMenu}
-                  style={{
-                    width: "100%",
-                    backgroundColor: colorGreen,
-                    color: "white",
-                    height: "170%",
-                    fontSize: "120%",
-                    fontWeight: 600,
-                  }}
-                >
-                  Change Menu
-                </Button>
-              </div>)}</>: null
-               }</>}
+                {(status >= 3 ||
+                  new Date(dateValue) <
+                    new Date().setDate(new Date().getDate() - 1)) &&
+                (status >= 3 ||
+                  localStorage.getItem("type") !== "mk superadmin") ? (
+                  <p className="done-tag">Food Already Cooked</p>
+                ) : (
+                  <>
+                    {foodItems.length !== 0 ? (
+                      /*status === -1 &&*/
+                      <>
+                        {" "}
+                        {status < 0 ? (
+                          <div style={{ width: "100%", textAlign: "right" }}>
+                            <Button
+                              onClick={createMenu}
+                              // disabled={menuConfimStatus}
+                              style={{
+                                width: "100%",
+                                backgroundColor: colorGreen,
+                                color: "white",
+                                height: "170%",
+                                fontSize: "120%",
+                                fontWeight: 600,
+                              }}>
+                              Confirm Menu
+                            </Button>
+                          </div>
+                        ) : (
+                          status < 2 && (
+                            <div
+                              style={{
+                                width: "100%",
+                                textAlign: "left",
+                                marginTop: "1rem",
+                              }}>
+                              <label htmlFor="reason" className="label">
+                                Reason for changing menu :{" "}
+                              </label>
+                              <TextArea
+                                rows={2}
+                                name="reason"
+                                id="reason"
+                                style={{
+                                  marginBlock: ".5rem",
+                                  fontSize: "1.1rem",
+                                }}
+                                value={reasonForReconfirmingMenu}
+                                onChange={(e) =>
+                                  setReasonForReconfirmingMenu(e.target.value)
+                                }
+                              />
+                              <Button
+                                onClick={reCreateMenu}
+                                disabled={!reasonForReconfirmingMenu}
+                                style={{
+                                  width: "100%",
+                                  backgroundColor: colorGreen,
+                                  color: "white",
+                                  height: "170%",
+                                  fontSize: "120%",
+                                  fontWeight: 600,
+                                }}>
+                                Change Menu
+                              </Button>
+                            </div>
+                          )
+                        )}
+                      </>
+                    ) : null}
+                  </>
+                )}
               </Card>
             </Col>
           </Row>
