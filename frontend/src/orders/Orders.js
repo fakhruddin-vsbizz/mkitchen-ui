@@ -86,7 +86,7 @@ const Orders = () => {
     const typeAdmin = type === "mk admin" ? true : false;
 
     if (typeAdmin) {
-      navigate("/admin/menu");
+      navigate("/pai/orders");
     }
     if (!typeAdmin && type && type === "Cooking") {
       navigate("/cooking/ingredients");
@@ -236,7 +236,7 @@ const Orders = () => {
                           onChange={(e) => setFilterByName(e.target.value)}
                           placeholder="Filter by name"></Input>
                       </td>
-                      <td
+                      {/* <td
                         style={{
                           paddingLeft: "0",
                           fontSize: "20px",
@@ -290,11 +290,11 @@ const Orders = () => {
                           max={1000}></Slider>
                         <br />
 
-                        {/* <InputNumber
+                        <InputNumber
                         value={filterByVolume}
                         onChange={value => setFilterByVolume(value)}
-                      ></InputNumber> */}
-                      </td>
+                      ></InputNumber>
+                      </td> */}
                     </tr>
                   </tbody>
                 </table>
