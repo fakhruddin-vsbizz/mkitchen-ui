@@ -333,7 +333,7 @@ const SideNav = ({ k, userType }) => {
           },
         }}>
         <Sider
-          style={{ backgroundColor: colorBlack, height: "118vh" }}
+          style={{ backgroundColor: colorBlack, height: "119vh" }}
           collapsible
           collapsed={collapsed}
           onCollapse={(value) => setCollapsed(value)}>
