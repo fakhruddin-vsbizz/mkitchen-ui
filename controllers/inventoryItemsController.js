@@ -4,14 +4,15 @@ const InventoryModel = require("../models/inventoryItemsModel");
 const TransectionLogs = require("../models/transectionLogsInventoryModel");
 const FoodMenu = require("../models/menuFoodModel");
 
+const Purchase = require("../models/purchasesModel");
+
 const getBaseValues = expressAsyncHandler(async (req, res) => {
-  const {idList} = req.body
-  const data = await InventoryModel.find({_id: { $in: idList }}, "price")
-  if (!data) return res.status(404).json({msg: 'no data for this IDs'})
+  const { idList } = req.body;
+  const data = await InventoryModel.find({ _id: { $in: idList } }, "price");
+  if (!data) return res.status(404).json({ msg: "no data for this IDs" });
 
-  return res.status(200).json(data)
-})
-
+  return res.status(200).json(data);
+});
 
 const addInventoryItems = expressAsyncHandler(async (req, res) => {
   const {
@@ -134,6 +135,7 @@ const updateInventoryVolume = expressAsyncHandler(async (req, res) => {
 const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
   const {
     inventory_id,
+    ingridient_name,
     ingridient_measure_unit,
     ingridient_expiry_period,
     ingridient_expiry_amount,
@@ -142,6 +144,7 @@ const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
   } = req.body;
 
   if (
+    ingridient_name === "" ||
     ingridient_measure_unit === "" ||
     ingridient_expiry_period === "" ||
     ingridient_expiry_amount === "" ||
@@ -157,6 +160,7 @@ const updateInventoryAllItems = expressAsyncHandler(async (req, res) => {
     { _id: Object(inventory._id) },
     {
       $set: {
+        ingridient_name: ingridient_name,
         ingridient_measure_unit: ingridient_measure_unit,
         ingridient_expiry_period: ingridient_expiry_period,
         ingridient_expiry_amount: ingridient_expiry_amount,
@@ -201,6 +205,21 @@ const recommissionOne = expressAsyncHandler(async (req, res) => {
   return res.json(200);
 });
 
+const deleteItem = expressAsyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  const purchase = await Purchase.find({ inventory_id: id });
+
+  if (purchase.length === 0) {
+    await InventoryModel.findByIdAndDelete(id);
+    return res.status(200).json({ message: "Item deleted" });
+  }
+
+  return res
+    .status(400)
+    .json({ error: "Purchase exists! Item cannot be deleted" });
+});
+
 module.exports = {
   addInventoryItems,
   getInventoryItems,
@@ -210,5 +229,6 @@ module.exports = {
   updateInventoryVolume,
   updateInventoryAllItems,
   getNegativeInventory,
-  getBaseValues
+  getBaseValues,
+  deleteItem,
 };

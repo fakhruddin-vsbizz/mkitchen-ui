@@ -101,36 +101,36 @@ const Menu = () => {
         The variable 'options' below must come from the database and if the option isn't present must be added in automatic format'
     */
 
-  useEffect(() => {
-    const getFood = async () => {
-      if (dateValue) {
-        const data = await fetch("/api/cooking/ingredients", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            type: "get_food_Item",
-            // mkuser_id: getMkUserId,
-            date: dateValue,
-          }),
-        });
-        if (data) {
-          const res = await data.json();
-          if (data?.message) {
-            setStatus(-1);
-            return;
-          }
-          if (res[0]) {
-            setStatus(res?.status);
-          } else {
-            setStatus(-1);
-          }
-        }
-      }
-    };
-    getFood();
-  }, [dateValue]);
+  // useEffect(() => {
+  //   const getFood = async () => {
+  //     if (dateValue) {
+  //       const data = await fetch("/api/cooking/ingredients", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           type: "get_food_Item",
+  //           // mkuser_id: getMkUserId,
+  //           date: dateValue,
+  //         }),
+  //       });
+  //       if (data) {
+  //         const res = await data.json();
+  //         if (data?.message) {
+  //           setStatus(-1);
+  //           return;
+  //         }
+  //         if (res[0]) {
+  //           setStatus(res?.status);
+  //         } else {
+  //           setStatus(-1);
+  //         }
+  //       }
+  //     }
+  //   };
+  //   getFood();
+  // }, [dateValue]);
 
   useEffect(() => {
     const getIngridients = async () => {
@@ -167,10 +167,16 @@ const Menu = () => {
           if (data?.message) {
             setIsMenu(false);
             setFoodItems([]);
+            setStatus(-1);
           } else {
             setFoodItems(data[0].food_list);
             setReasonForReconfirmingMenu(data[0]?.reason_for_reconfirming_menu);
             setIsMenu(true);
+            if (data[0]) {
+              setStatus(data?.status);
+            } else {
+              setStatus(-1);
+            }
           }
         })
         .catch((err) => console.log("cooking/ingredients: error", err));

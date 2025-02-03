@@ -28,13 +28,17 @@ const purcahsesModel = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    used_quantity: {
+      type: Number,
+      default: 0,
+    },
     rate_per_unit: {
       type: Number,
       required: true,
     },
     paid: {
       type: Boolean,
-      required: false,
+      default: false,
     },
     total_amount: {
       type: Number,

@@ -22,10 +22,7 @@ const addVendor = expressAsyncHandler(async (req, res) => {
   const mkUser = await MkUser.findOne({ email: mkuser_email });
 
   if (mkUser) {
-    if (
-      address === "" ||
-      vendor_name === ""
-    ) {
+    if (address === "" || vendor_name === "") {
       return res.status(403).json({ inputInvalid: "All Fields Are Mendatory" });
     }
 
@@ -58,15 +55,14 @@ const addVendor = expressAsyncHandler(async (req, res) => {
 });
 
 const getVendor = expressAsyncHandler(async (req, res) => {
-  item_id = req.params.item_id
+  item_id = req.params.item_id;
 
-  const purchase = await Purchase.find({ inventory_id: item_id }, 'vendor_id')
-  const vendorByItem = purchase.map(p => p.vendor_id.toString())
-  const data = item_id ? { _id: vendorByItem } : {}
+  const purchase = await Purchase.find({ inventory_id: item_id }, "vendor_id");
+  const vendorByItem = purchase.map((p) => p.vendor_id.toString());
+  const data = item_id ? { _id: vendorByItem } : {};
   const vendor = await VendorModel.find(data);
 
   return res.json(vendor);
-
 });
 
 const getVendorPurchaseWithOrderHistory = expressAsyncHandler(
@@ -125,7 +121,7 @@ const getTotalVendorPurchase = expressAsyncHandler(async (req, res) => {
           approval_status: "$approval_status",
           address: "$address",
           opening_time: "$opening_time",
-          closing_time: "$closing_time"
+          closing_time: "$closing_time",
         },
       },
     ]);
@@ -137,14 +133,48 @@ const getTotalVendorPurchase = expressAsyncHandler(async (req, res) => {
 });
 
 const updateVendor = expressAsyncHandler(async (req, res) => {
-  const { type, approval_status, vendor_id } = req.body;
+  const { type, vendor_id } = req.body;
 
   const vendorData = await VendorModel.findOne({ _id: vendor_id });
 
   if (type === "update_status") {
+    const { approval_status } = req.body;
     const updateVendorStatus = await VendorModel.findByIdAndUpdate(
       { _id: Object(vendorData._id) },
       { $set: { approval_status: approval_status } },
+      { new: true }
+    );
+    if (updateVendorStatus) {
+      return res.json(updateVendorStatus);
+    }
+  }
+
+  if (type === "update_details") {
+    const {
+      vendor_name,
+      phone,
+      phone2,
+      email,
+      email2,
+      gstin,
+      contact_person,
+      address,
+    } = req.body;
+
+    const updateVendorStatus = await VendorModel.findByIdAndUpdate(
+      { _id: Object(vendorData._id) },
+      {
+        $set: {
+          vendor_name,
+          phone,
+          phone2,
+          email,
+          email2,
+          gstin,
+          contact_person,
+          address,
+        },
+      },
       { new: true }
     );
     if (updateVendorStatus) {

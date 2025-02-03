@@ -72,6 +72,8 @@ const Orders = () => {
   const [filterByDate, setFilterByDate] = useState(null);
   const [filterByVolume, setFilterByVolume] = useState(1);
 
+  const [isUpdates, setIsUpdates] = useState(false);
+
   const navigate = useNavigate();
 
   /**************Restricting PandI Route************************* */
@@ -108,7 +110,7 @@ const Orders = () => {
       }
     };
     getPurchases();
-  }, []);
+  }, [isUpdates]);
 
   useEffect(() => {
     const filterList = () => {
@@ -350,8 +352,11 @@ const Orders = () => {
                             </Col>
                             {!item?.deliveryStatus ? (
                               <Col xs={12} xl={6}>
-                                Update Order Details: <br />
-                                <UpdateOrderModal id={item?._id} />
+                                Confirm Order Details: <br />
+                                <UpdateOrderModal
+                                  id={item?._id}
+                                  setIsUpdates={setIsUpdates}
+                                />
                               </Col>
                             ) : (
                               <Col xs={12} xl={6}>

@@ -4,6 +4,7 @@ import {
   Col,
   List,
   Input,
+  Typography,
   Slider,
   Button,
   Card,
@@ -25,6 +26,8 @@ import {
   valueShadowBox,
 } from "../../colors";
 import { baseURL } from "../../constants";
+import AsyncModal from "../../components/AsyncModal";
+import { toast } from "react-toastify";
 
 const Inventory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +46,8 @@ const Inventory = () => {
   const [filteredInventoryItems, setFilteredInventoryItems] = useState([]);
   const [filterByName, setFilterByName] = useState("");
   const [filterByVolume, setFilterByVolume] = useState(0);
+
+  const [confirmLoading, setConfirmLoading] = useState(false);
 
   const [updated, setUpdated] = useState(false);
 
@@ -120,6 +125,7 @@ const Inventory = () => {
   }, [filterByName, filterByVolume, inventoryItems]);
 
   const handleSubmit = async () => {
+    setConfirmLoading(true);
     try {
       const data = await fetch("/api/inventory/addinventory", {
         method: "POST",
@@ -153,6 +159,7 @@ const Inventory = () => {
         const res = await data.json();
         if (res.error) {
           setValidationError(true);
+          setConfirmLoading(false);
         } else {
           setUpdated((prev) => !prev);
           setIsModalOpen(false);
@@ -162,12 +169,14 @@ const Inventory = () => {
           setUnit("");
           setPrice(0);
           setbaseline("");
+          setConfirmLoading(false);
           setValidationError(false);
           setValidationError(false);
         }
       }
     } catch (error) {
       console.log(error);
+      setConfirmLoading(false);
     }
   };
 
@@ -179,6 +188,7 @@ const Inventory = () => {
   };
 
   const updateIngridientItem = async () => {
+    setConfirmLoading(true);
     try {
       const data = await fetch("/api/inventory/addinventory/update_inventory", {
         method: "PUT",
@@ -217,22 +227,62 @@ const Inventory = () => {
           setValidationError(false);
           setValidationError(false);
         }
+        setConfirmLoading(false);
       }
     } catch (error) {
       console.log(error);
+      setConfirmLoading(false);
     }
   };
 
   const updateIngridientHandler = async (id) => {
     setInventoryId(id);
     const data = inventoryItems.filter((item) => item._id === id);
-    setName(data[0].ingridient_name);
-    setExpiry(data[0].ingridient_expiry_amount);
-    setFetchedUnitUnit(data[0].ingridient_measure_unit);
-    setExpiryType(data[0].ingridient_expiry_period);
-    setPrice(data[0].price);
-    setbaseline(data[0].baseline);
-    setIsModalOpenUpdate(true);
+    if (data.length !== 0) {
+      setName(data[0].ingridient_name);
+      setUnit(data[0].ingridient_measure_unit);
+      setExpiry(data[0].ingridient_expiry_amount);
+      setFetchedUnitUnit(data[0].ingridient_measure_unit);
+      setExpiryType(data[0].ingridient_expiry_period);
+      setPrice(data[0].price);
+      setbaseline(data[0].baseline);
+      setIsModalOpenUpdate(true);
+    }
+  };
+
+  const deleteItem = async (itemId) => {
+    setConfirmLoading(true);
+    try {
+      const data = await fetch(`/api/inventory/addinventory/${itemId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (data) {
+        const res = await data.json();
+        if (res?.error) {
+          toast.error(res.error || "Error:", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            theme: "light",
+          });
+        } else {
+          setUpdated((prev) => !prev);
+          setIsModalOpenUpdate(false);
+          setValidationError(false);
+        }
+        setConfirmLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setConfirmLoading(false);
+    }
   };
 
   const closeModelForUpdateIngridient = () => {
@@ -333,95 +383,136 @@ const Inventory = () => {
                           </Button>
                         </center>
 
-                        <Modal
+                        <AsyncModal
+                          width="35%"
+                          setOpen={setIsModalOpen}
+                          confirmLoading={confirmLoading}
+                          title="Add New Ingredient"
                           open={isModalOpen}
-                          onOk={handleSubmit}
-                          onCancel={(e) => setIsModalOpen(false)}>
-                          <label style={{ fontSize: "150%" }}>
-                            Add new Ingredient
-                          </label>
-                          <br />
-                          <br />
-                          <table style={{ width: "100%" }}>
-                            <tbody>
-                              <tr>
-                                <td>Name</td>
-                                <td>
-                                  <Input
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                    placeholder="Eg: Chicken Meat, Basmati Rice, etc"></Input>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Measurement Unit</td>
-                                <td>
-                                  <Input
-                                    value={unit}
-                                    onChange={(e) => setUnit(e.target.value)}
-                                    placeholder="Eg: kg, gram,.. etc"></Input>
-                                </td>
-                              </tr>
-                              {/* <tr>
-                                <td>Avearage Price</td>
-                                <td>
-                                  <Input
-                                    value={price}
-                                    onChange={(e) => setPrice(e.target.value)}
-                                    placeholder="Eg: 250, 100"
-                                  ></Input>
-                                </td>
-                              </tr> */}
-                              <tr>
-                                <td>Min Stock</td>
-                                <td>
-                                  <Input
-                                    type="number"
-                                    min={0}
-                                    value={baseline}
-                                    onChange={(e) =>
-                                      setbaseline(e.target.value)
-                                    }
-                                    placeholder="Eg: 1, 2"></Input>
-                                </td>
-                              </tr>
-                              <tr>
-                                <td>Expiry Period</td>
-                                <td>
-                                  <Input
-                                    type="number"
-                                    min={0}
-                                    value={expiry}
-                                    onChange={(e) => setExpiry(e.target.value)}
-                                    placeholder="Eg: 12,24,36, etc"></Input>
-                                  <Radio.Group
-                                    onChange={(e) =>
-                                      setExpiryType(e.target.value)
-                                    }>
-                                    <Radio value={"Days"}>Days</Radio>
-                                    <Radio value={"Months"}>Months</Radio>
-                                    <Radio value={"Year"}>Year</Radio>
-                                  </Radio.Group>
-                                </td>
-                              </tr>
-                              {validationError && (
-                                <tr>
-                                  <td colSpan={2}>
-                                    <br />
-                                    <Alert
-                                      style={{ margin: "0.5rem" }}
-                                      message="Validation Error"
-                                      description="All Fields Must Be Filled"
-                                      type="error"
-                                      closable
-                                    />
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </Modal>
-                        <Modal
+                          handleOk={handleSubmit}>
+                          <Row>
+                            <Typography.Title level={5}>Name</Typography.Title>
+                            <Input
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              placeholder="Eg: Chicken Meat, Rice, etc"
+                            />
+                          </Row>
+                          <Row>
+                            <Typography.Title level={5}>
+                              Measurement Unit
+                            </Typography.Title>
+                            <Input
+                              value={unit}
+                              onChange={(e) => setUnit(e.target.value)}
+                              placeholder="Eg: kg, gram,.. etc"
+                            />
+                          </Row>
+                          <Row>
+                            <Typography.Title level={5}>
+                              Min Stock
+                            </Typography.Title>
+                            <Input
+                              type="number"
+                              min={0}
+                              value={baseline}
+                              onChange={(e) => setbaseline(e.target.value)}
+                              placeholder="Eg: 1, 2"
+                            />
+                          </Row>
+                          <Row gutter={[16, 16]}>
+                            <Col xl={12}>
+                              <Typography.Title level={5}>
+                                Expiry Period
+                              </Typography.Title>
+                              <Input
+                                type="number"
+                                min={0}
+                                value={expiry}
+                                onChange={(e) => setExpiry(e.target.value)}
+                                placeholder="Eg: 12,24,36, etc"
+                              />
+                            </Col>
+                            <Col xl={12} style={{ alignSelf: "self-end" }}>
+                              <Radio.Group
+                                onChange={(e) => setExpiryType(e.target.value)}>
+                                <Radio value={"Days"}>Days</Radio>
+                                <Radio value={"Months"}>Months</Radio>
+                                <Radio value={"Year"}>Year</Radio>
+                              </Radio.Group>
+                            </Col>
+                          </Row>
+                          {validationError && (
+                            <Alert
+                              style={{ margin: "0.5rem" }}
+                              message="Validation Error"
+                              description="All Fields Must Be Filled"
+                              type="error"
+                              closable
+                            />
+                          )}
+                        </AsyncModal>
+                        <AsyncModal
+                          width="35%"
+                          setOpen={setIsModalOpenUpdate}
+                          confirmLoading={confirmLoading}
+                          title="Update Ingredient"
+                          open={isModalOpenUpdate}
+                          handleOk={updateIngridientItem}>
+                          <Row>
+                            <Typography.Title level={5}>Name</Typography.Title>
+                            <Input
+                              value={name}
+                              onChange={(e) => setName(e.target.value)}
+                              placeholder="Eg: Chicken Meat, Rice, etc"
+                            />
+                          </Row>
+                          <Row>
+                            <Typography.Title level={5}>
+                              Measurement Unit
+                            </Typography.Title>
+                            <Input
+                              value={unit}
+                              onChange={(e) => setUnit(e.target.value)}
+                              placeholder="Eg: kg, gram,.. etc"
+                            />
+                          </Row>
+                          <Row>
+                            <Typography.Title level={5}>
+                              Min Stock
+                            </Typography.Title>
+                            <Input
+                              type="number"
+                              min={0}
+                              value={baseline}
+                              onChange={(e) => setbaseline(e.target.value)}
+                              placeholder="Eg: 1, 2"
+                            />
+                          </Row>
+                          <Row gutter={[16, 16]}>
+                            <Col xl={12}>
+                              <Typography.Title level={5}>
+                                Expiry Period
+                              </Typography.Title>
+                              <Input
+                                value={expiry}
+                                onChange={(e) => setExpiry(e.target.value)}
+                                placeholder="Eg: 12,24,36, etc"
+                              />
+                            </Col>
+                            <Col xl={12} style={{ alignSelf: "self-end" }}>
+                              <Radio.Group
+                                value={expiryType}
+                                onChange={(e) => setExpiryType(e.target.value)}>
+                                <Radio value={"Days"}>Days</Radio>
+
+                                <Radio value={"Months"}>Months</Radio>
+                                <Radio value={"Year"}>Year</Radio>
+                              </Radio.Group>
+                            </Col>
+                          </Row>
+                        </AsyncModal>
+                        {/* <Modal
                           open={isModalOpenUpdate}
                           onOk={updateIngridientItem}
                           onCancel={closeModelForUpdateIngridient}>
@@ -510,7 +601,7 @@ const Inventory = () => {
                               )}
                             </tbody>
                           </table>
-                        </Modal>
+                        </Modal> */}
                       </td>
                     </tr>
                   </tbody>
@@ -614,7 +705,7 @@ const Inventory = () => {
                                 {item.ingridient_measure_unit}
                               </span>
                             </Col>
-                            <Col xs={4} xl={4}>
+                            <Col xs={3} xl={3}>
                               {item.total_volume <= item.baseline ? (
                                 <div
                                   style={{
@@ -656,6 +747,7 @@ const Inventory = () => {
                               style={{
                                 display: "flex",
                                 alignItems: "center",
+                                gap: "1rem",
                                 justifyContent: "space-between",
                               }}>
                               <Link to={`/pai/inventory/purchases/${item._id}`}>
@@ -677,6 +769,15 @@ const Inventory = () => {
                                   backgroundColor: "#607d8b",
                                 }}>
                                 Update
+                              </Button>
+                              <Button
+                                onClick={(e) => deleteItem(item._id)}
+                                type="primary"
+                                style={{
+                                  fontSize: "110%",
+                                  backgroundColor: "red",
+                                }}>
+                                Delete
                               </Button>
                             </Col>
                           </Row>

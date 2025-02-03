@@ -204,6 +204,7 @@ const SetMenu = () => {
   useEffect(() => {
     const getHistory = async () => {
       if (menuFoodId) {
+        console.log(menuFoodId);
         const data = await fetch("/api/admin/menu", {
           method: "POST",
           headers: {
@@ -225,7 +226,7 @@ const SetMenu = () => {
     };
 
     getHistory();
-  }, [menuFoodId, selectedDate]);
+  }, [menuFoodId, selectedDate, countUpdated]);
 
   // useEffect(() => {
   //   setTotalCount(totalAshkash);
@@ -257,6 +258,7 @@ const SetMenu = () => {
 
   useEffect(() => {
     const getUserId = async () => {
+      const type = localStorage.getItem("type");
       const data = await fetch("/api/cooking/ingredients", {
         method: "POST",
         headers: {
@@ -264,7 +266,8 @@ const SetMenu = () => {
         },
         body: JSON.stringify({
           type: "get_user_id",
-          client_name: "mk admin",
+          client_name: type || "mk admin",
+          // mk superadmin
         }),
       });
       if (data) {

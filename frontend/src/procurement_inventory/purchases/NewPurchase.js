@@ -674,7 +674,6 @@ const NewPurchase = () => {
                                 }
                                 placeholder="Eg: 2,3,15, etc"
                                 style={{ width: "70%" }}></Input>
-                              -
                             </Col>
                             <Col xs={8} xl={7}>
                               Quantity ordered: <br />
