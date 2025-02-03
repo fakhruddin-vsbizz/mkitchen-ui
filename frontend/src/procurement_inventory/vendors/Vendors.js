@@ -24,6 +24,7 @@ import {
   valueShadowBox,
 } from "../../colors";
 import { baseURL } from "../../constants";
+import AsyncModal from "../../components/AsyncModal";
 
 const info = (vendor) => {
   Modal.info({
@@ -74,6 +75,20 @@ const Vendors = () => {
   const [ingredientsList, setIngredientsList] = useState([]);
   const [selectedIngredient, setSelectedIngredient] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updateOpen, setUpdateOpen] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+
+  const [vendor_id, setVendor_id] = useState();
+  const [vendorName, setVendorName] = useState();
+  const [vendorEmail1, setVendorEmail1] = useState();
+  const [vendorEmail2, setVendorEmail2] = useState();
+  const [phone1, setPhone1] = useState("");
+  const [phone2, setPhone2] = useState("");
+  const [GSTIN, setGSTIN] = useState("");
+  const [personOfContact, setPersonOfContact] = useState("");
+  const [vendorAddress, setVendorAddress] = useState();
+
+  const [isUpdated, setIsUpdated] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -124,7 +139,7 @@ const Vendors = () => {
       }
     };
     getVendors();
-  }, []);
+  }, [isUpdated]);
 
   useEffect(() => {
     const filterList = () => {
@@ -146,6 +161,53 @@ const Vendors = () => {
       setVendors(vendorJson);
       console.log(vendorJson);
       setFilteredVendors(vendorJson);
+    }
+  };
+
+  const openUpdateModal = (vendor) => {
+    setUpdateOpen(true);
+    setUpdateOpen(vendor);
+    setVendor_id(vendor?._id);
+    setVendorName(vendor?.vendor_name ? vendor?.vendor_name : "");
+    setVendorEmail1(vendor?.email ? vendor?.email : "");
+    setVendorEmail2(vendor?.email2 ? vendor?.email2 : "");
+    setPhone1(vendor?.phone ? vendor?.phone : "");
+    setPhone2(vendor?.phone2 ? vendor?.phone2 : "");
+    setGSTIN(vendor?.gstin ? vendor?.gstin : "");
+    setPersonOfContact(vendor?.contact_person ? vendor?.contact_person : "");
+    setVendorAddress(vendor?.address ? vendor?.address : "");
+  };
+
+  const handleUpdate = async () => {
+    setConfirmLoading(true);
+    try {
+      const data = await fetch("/api/vendor", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          type: "update_details",
+          vendor_id: vendor_id,
+          vendor_name: vendorName,
+          phone: vendorEmail1,
+          phone2: vendorEmail2,
+          email: phone1,
+          email2: phone2,
+          gstin: GSTIN,
+          contact_person: personOfContact,
+          address: vendorAddress,
+        }),
+      });
+      if (data) {
+        setUpdateOpen(false);
+        setConfirmLoading(false);
+        setIsUpdated((prev) => !prev);
+      }
+    } catch (e) {
+      setUpdateOpen(false);
+      setConfirmLoading(false);
+      console.log(e);
     }
   };
 
@@ -398,9 +460,25 @@ const Vendors = () => {
                               </Tag>
                             </Col>
                             <Col xs={4} xl={3}>
-                              <Button onClick={() => info(item)}>
-                                More Details
-                              </Button>
+                              Actions:
+                              <br />
+                              <div style={{ display: "flex", gap: "1rem" }}>
+                                <Button onClick={() => info(item)}>
+                                  More Details
+                                </Button>
+                                <Button
+                                  onClick={
+                                    (e) => openUpdateModal(item)
+                                    // updateIngridientHandler(item._id)
+                                  }
+                                  type="primary"
+                                  style={{
+                                    fontSize: "110%",
+                                    backgroundColor: "#607d8b",
+                                  }}>
+                                  Update
+                                </Button>
+                              </div>
                             </Col>
                           </Row>
                         </Card>
@@ -413,6 +491,93 @@ const Vendors = () => {
           </div>
         </div>
       </ConfigProvider>
+      <AsyncModal
+        open={updateOpen}
+        setOpen={setUpdateOpen}
+        handleOk={handleUpdate}
+        confirmLoading={confirmLoading}
+        title="Update Vendor">
+        <Card
+          style={{ boxShadow: valueShadowBox }}
+          className="dongle-font-class">
+          <Row style={{ marginBlock: "1rem" }} gutter={[16, 16]}>
+            <Col xl={12}>
+              Vendor Name:<span style={{ color: "red" }}>*</span>{" "}
+              <Input
+                value={vendorName}
+                onChange={(e) => setVendorName(e.target.value)}
+                placeholder="Enter Name"
+                required></Input>
+            </Col>
+
+            <Col xl={12}>
+              Email 1: <br />
+              <Input
+                value={vendorEmail1}
+                onChange={(e) => setVendorEmail1(e.target.value)}
+                placeholder="Enter Email Here"></Input>
+            </Col>
+          </Row>
+
+          <Row style={{ marginBlock: "1rem" }} gutter={[16, 16]}>
+            <Col xl={12}>
+              Email 2: <br />
+              <Input
+                value={vendorEmail2}
+                onChange={(e) => setVendorEmail2(e.target.value)}
+                placeholder="Enter Email Here"></Input>
+            </Col>
+
+            <Col xl={12}>
+              Address:{" "}
+              <Input
+                value={vendorAddress}
+                onChange={(e) => setVendorAddress(e.target.value)}
+                placeholder="Enter Address Here"></Input>
+            </Col>
+          </Row>
+
+          <Row style={{ marginBlock: "1rem" }} gutter={[16, 16]}>
+            <Col xl={12}>
+              Phone 1:<span style={{ color: "red" }}>*</span>
+              <br />
+              <Input
+                value={phone1}
+                onChange={(e) => setPhone1(e.target.value)}
+                placeholder="Enter Phone Number Here"
+                required></Input>
+            </Col>
+
+            <Col xl={12}>
+              Phone 2:
+              <br />
+              <Input
+                value={phone2}
+                onChange={(e) => setPhone2(e.target.value)}
+                placeholder="Enter Phone Number Here"
+                required></Input>
+            </Col>
+          </Row>
+
+          <Row style={{ marginBlock: "1rem" }} gutter={[16, 16]}>
+            <Col xl={12}>
+              Contact Person:{" "}
+              <Input
+                value={personOfContact}
+                onChange={(e) => setPersonOfContact(e.target.value)}
+                placeholder="Enter Person of Contact Here"></Input>
+            </Col>
+
+            <Col xl={12}>
+              GSTIN:{" "}
+              <Input
+                value={GSTIN}
+                onChange={(e) => setGSTIN(e.target.value)}
+                placeholder="Enter GSTIN Here"></Input>
+            </Col>
+          </Row>
+        </Card>
+      </AsyncModal>
     </div>
   );
 };

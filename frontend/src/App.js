@@ -29,9 +29,12 @@ import IngredientPurchase from "./procurement_inventory/inventory/IngredientPurc
 import ResetPassword from "./auth/ResetPasswor";
 import Report from "./admin/reports/Report";
 import Orders from "./orders/Orders";
+import { ToastContainer } from "react-toastify";
+
 function App() {
   return (
     <AuthContextProvider>
+      <ToastContainer />
       <Routes>
         {/*  ------------------------------- Admin Route ---------------------------  */}
         <Route path="/" element={<Login />} />

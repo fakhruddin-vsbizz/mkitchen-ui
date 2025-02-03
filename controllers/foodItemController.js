@@ -75,6 +75,7 @@ const getFoodItemList = expressAsyncHandler(async (req, res) => {
       throw new Error("Error getting the user");
     }
   }
+
   if (type === "get_food_ingridients") {
     const foodItem = await FoodItem.findOne({ _id: food_id });
 
@@ -110,7 +111,9 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
       { new: true }
     );
     if (updateIngridient) {
-      return res.status(200).json({ message: "ingridient list updated successfully" });
+      return res
+        .status(200)
+        .json({ message: "ingridient list updated successfully" });
     }
   }
 
@@ -128,35 +131,45 @@ const updateIngridientList = expressAsyncHandler(async (req, res) => {
     );
 
     if (updatePipeline && updatePipelineStatus) {
-      return res.status(200).json({ message: "pipeline  updated successfully" });
+      return res
+        .status(200)
+        .json({ message: "pipeline  updated successfully" });
     }
   }
 
   if (type === "update_operation_pipeline_reorder_logs") {
-
     try {
-      
-          const updatePipeline = await OperationPipeLine.findOne(
-            { _id: Object(operationId._id) }
-          );
-      
-          const ingredientLs = updatePipeline.ingridient_list;
-      
-          const filteredLog = reorder_logs.filter(item => item.foodId === req.body.foodId && item.inventory_id === req.body.inventory_id)
-      
-          ingredientLs.forEach((item)=> {
-            if (item.inventory_item_id === req.body?.inventory_id && item.foodId === req.body?.foodId) {
-              item.reorders = filteredLog;
-            }
-          })
-      
-          await updatePipeline.updateOne({ reorder_logs: reorder_logs, ingridient_list: ingredientLs });
-      
-      
-          if (updatePipeline) {
-            return res.status(200).json({ message: "pipeline  updated successfully" });
-          }
-      
+      const updatePipeline = await OperationPipeLine.findOne({
+        _id: Object(operationId._id),
+      });
+
+      const ingredientLs = updatePipeline.ingridient_list;
+
+      const filteredLog = reorder_logs.filter(
+        (item) =>
+          item.foodId === req.body.foodId &&
+          item.inventory_id === req.body.inventory_id
+      );
+
+      ingredientLs.forEach((item) => {
+        if (
+          item.inventory_item_id === req.body?.inventory_id &&
+          item.foodId === req.body?.foodId
+        ) {
+          item.reorders = filteredLog;
+        }
+      });
+
+      await updatePipeline.updateOne({
+        reorder_logs: reorder_logs,
+        ingridient_list: ingredientLs,
+      });
+
+      if (updatePipeline) {
+        return res
+          .status(200)
+          .json({ message: "pipeline  updated successfully" });
+      }
     } catch (error) {
       console.log(error);
     }

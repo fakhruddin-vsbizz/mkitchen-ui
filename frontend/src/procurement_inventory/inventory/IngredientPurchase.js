@@ -19,14 +19,20 @@ import Header from "../../components/navigation/Header";
 import Sidebar from "../../components/navigation/SideNav";
 import DeshboardBg from "../../res/img/DeshboardBg.png";
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { colorBackgroundColor, colorBlack, colorGreen, colorNavBackgroundColor, valueShadowBox } from "../../colors";
+import {
+  colorBackgroundColor,
+  colorBlack,
+  colorGreen,
+  colorNavBackgroundColor,
+  valueShadowBox,
+} from "../../colors";
 import { baseURL } from "../../constants";
 
 const IngredientPurchase = () => {
   const [itemPurchase, setItemPurchase] = useState();
   const [vendors, setVendors] = useState([]);
   const [filteredPurchases, setFilteredPurchases] = useState([]);
-	const [filterByName, setFilterByName] = useState("");
+  const [filterByName, setFilterByName] = useState("");
   const [filterByDate, setFilterByDate] = useState(null);
   const [filterByStatus, setFilterByStatus] = useState(null);
   const [inventoryItems, setInventoryItems] = useState([]);
@@ -82,9 +88,9 @@ const IngredientPurchase = () => {
         const res = await data.json();
         if (res) {
           if (res) {
-            let purchaseData = res.length !== 0 && res.filter(
-              (item, index) => item.inventory_id === id
-            );
+            let purchaseData =
+              res.length !== 0 &&
+              res.filter((item, index) => item.inventory_id === id);
             setItemPurchase(purchaseData);
             setFilteredPurchases(purchaseData);
             console.log(purchaseData);
@@ -95,45 +101,64 @@ const IngredientPurchase = () => {
     getInventory();
   }, [id, paidStatusUpdated]);
 
-
-
   useEffect(() => {
-		const filterList = () => {
+    const filterList = () => {
       if (filterByName && filterByStatus !== null && filterByDate !== null) {
-				return itemPurchase.filter(item =>
-					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else if (filterByName && filterByStatus !== null) {
-				return itemPurchase.filter(item =>
-					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && item.paid === filterByStatus
-				);
-			} else 
-      if (filterByName && filterByDate !== null) {
-				return itemPurchase.filter(item =>
-					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()) && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else 
-      if (filterByStatus !== null && filterByDate !== null) {
-				return itemPurchase.filter(item =>
-					item.paid === filterByStatus && new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString()
-				);
-			} else 
-      if (filterByName) {
-				return itemPurchase.filter(item =>
-					getVendor(item.vendor_id).toLowerCase().includes(filterByName.toLowerCase()))
-			} else if (filterByDate !== null) {
-				return itemPurchase.filter(item => new Date(item.createdAt).toDateString() === new Date(filterByDate).toDateString())
-			} 
-      else if (filterByStatus !== null) {
-				return itemPurchase.filter(item => item.paid === filterByStatus
-				);
-			}
-			return itemPurchase
-		};
-		const filteredList = filterList();
-		setFilteredPurchases(filteredList);
-	}, [filterByName, itemPurchase, filterByDate, filterByStatus]);
-
+        return itemPurchase.filter(
+          (item) =>
+            getVendor(item.vendor_id)
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            item.paid === filterByStatus &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName && filterByStatus !== null) {
+        return itemPurchase.filter(
+          (item) =>
+            getVendor(item.vendor_id)
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            item.paid === filterByStatus
+        );
+      } else if (filterByName && filterByDate !== null) {
+        return itemPurchase.filter(
+          (item) =>
+            getVendor(item.vendor_id)
+              .toLowerCase()
+              .includes(filterByName.toLowerCase()) &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByStatus !== null && filterByDate !== null) {
+        return itemPurchase.filter(
+          (item) =>
+            item.paid === filterByStatus &&
+            new Date(item.createdAt).toDateString() ===
+              new Date(filterByDate).toDateString()
+        );
+      } else if (filterByName) {
+        return itemPurchase.filter((item) =>
+          getVendor(item.vendor_id)
+            .toLowerCase()
+            .includes(filterByName.toLowerCase())
+        );
+      } else if (filterByDate !== null) {
+        return itemPurchase.filter(
+          (item) =>
+            new Date(item.createdAt).toDateString() ===
+            new Date(filterByDate).toDateString()
+        );
+      } else if (filterByStatus === false) {
+        return itemPurchase.filter((item) => !item?.paid);
+      } else if (filterByStatus !== null) {
+        return itemPurchase.filter((item) => item.paid === filterByStatus);
+      }
+      return itemPurchase;
+    };
+    const filteredList = filterList();
+    setFilteredPurchases(filteredList);
+  }, [filterByName, itemPurchase, filterByDate, filterByStatus]);
 
   // const vendorPurchaseList = [
   //   {
@@ -177,8 +202,9 @@ const IngredientPurchase = () => {
   };
 
   const getVendor = (vendor_id) => {
-    return vendors.filter((itemNew) => itemNew._id === vendor_id)[0]?.vendor_name
-  }
+    return vendors.filter((itemNew) => itemNew._id === vendor_id)[0]
+      ?.vendor_name;
+  };
 
   const paymentDone = (id) => {
     fetch("/api/purchase/payment_done", {
@@ -187,38 +213,41 @@ const IngredientPurchase = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id
+        id: id,
       }),
-    }).then(res => res.json()).then(data => setPaidStatusUpdated(prev => !prev))
-   
-  }
+    })
+      .then((res) => res.json())
+      .then((data) => setPaidStatusUpdated((prev) => !prev));
+  };
 
   return (
-    <div
-      style={{ margin: 0, padding: 0}}
-    >
+    <div style={{ margin: 0, padding: 0 }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
           },
-        }}
-      >
-        <div style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
-        {localStorage.getItem("type") === "mk superadmin" ? <Sidebar k="9" userType="superadmin" /> :
-          <Sidebar k="1" userType="pai" />}
+        }}>
+        <div
+          style={{ display: "flex", backgroundColor: colorNavBackgroundColor }}>
+          {localStorage.getItem("type") === "mk superadmin" ? (
+            <Sidebar k="9" userType="superadmin" />
+          ) : (
+            <Sidebar k="1" userType="pai" />
+          )}
 
           <div style={{ width: "100%", backgroundColor: colorBackgroundColor }}>
             <Header
-              title={<p>
-                <Link
-                  to="/pai/inventory"
-                  style={{ color: "white", textDecoration: "none" }}
-                >
-                  <ArrowLeftOutlined />
-                </Link>{" "}
-                Purchase Inventory
-              </p>}
+              title={
+                <p>
+                  <Link
+                    to="/pai/inventory"
+                    style={{ color: "white", textDecoration: "none" }}>
+                    <ArrowLeftOutlined />
+                  </Link>{" "}
+                  Purchase Inventory
+                </p>
+              }
             />
             <div style={{ padding: 0 }}>
               <center>
@@ -227,35 +256,35 @@ const IngredientPurchase = () => {
                     width: "95%",
                     textAlign: "left",
                     backgroundColor: "transparent",
-                  }}
-                >
+                  }}>
                   <Row style={{ width: "100%" }}>
                     <Col xs={12} xl={6}>
                       Filter by vendor name: <br />
                       <Input
-                      value={filterByName}
-                      onChange={e => setFilterByName(e.target.value)}
+                        value={filterByName}
+                        onChange={(e) => setFilterByName(e.target.value)}
                         placeholder="Filter by ingredients. Eg: Chicken meat, Goat meat"
-                        style={{ width: "70%" }}
-                      ></Input>
+                        style={{ width: "70%" }}></Input>
                     </Col>
                     <Col xs={12} xl={6}>
                       Date of Purchase: <br />
-                      <DatePicker onChange={value => setFilterByDate(value)}></DatePicker>
+                      <DatePicker
+                        onChange={(value) =>
+                          setFilterByDate(value)
+                        }></DatePicker>
                     </Col>
                     <Col xs={12} xl={6}>
                       Payment status: <br />
                       <Select
                         defaultValue={null}
                         value={filterByStatus}
-                        onChange={value => setFilterByStatus(value)}
+                        onChange={(value) => setFilterByStatus(value)}
                         style={{ width: "70%" }}
                         options={[
                           { value: true, label: "PAID" },
                           { value: false, label: "UNPAID" },
                           { value: null, label: "ALL" },
-                        ]}
-                      ></Select>
+                        ]}></Select>
                     </Col>
                     {/* <Col xs={12} xl={6}>
                       Price Range: <br />
@@ -306,16 +335,18 @@ const IngredientPurchase = () => {
                           // borderBottom: "2px solid orange",
                           boxShadow: valueShadowBox,
                           width: "98%",
-                        }}
-                      >
-                        <Row style={{ width: "100%", textAlign: "left", alignItems: 'center' }}>
+                        }}>
+                        <Row
+                          style={{
+                            width: "100%",
+                            textAlign: "left",
+                            alignItems: "center",
+                          }}>
                           <Col
                             xs={24}
                             xl={5}
-                            style={{ fontSize: "150%", color: colorGreen }}
-                          >
-                            {vendors &&
-                              getVendor(item.vendor_id)}
+                            style={{ fontSize: "150%", color: colorGreen }}>
+                            {vendors && getVendor(item.vendor_id)}
                           </Col>
                           <Col xs={8} xl={5}>
                             Ordered quantity:&nbsp;
@@ -325,20 +356,21 @@ const IngredientPurchase = () => {
                             Price: ₹{item.quantity_loaded * item.rate_per_unit}
                           </Col>
                           <Col xs={8} xl={5}>
-                            Date of purchase:&nbsp;<br />
+                            Date of purchase:&nbsp;
+                            <br />
                             {new Date(item.createdAt).toDateString()}
                           </Col>
                           <Col xs={10} xl={5}>
-                            {item?.paid === true ? <Tag color="green">
-                              PAID
-                            </Tag>: <div>
-                            <Tag color="red">
-                              UNPAID
-                            </Tag>
-                            <Button onClick={() => paymentDone(item._id)}>
-                              Payment Done
-                            </Button>
-                            </div>}
+                            {item?.paid === true ? (
+                              <Tag color="green">PAID</Tag>
+                            ) : (
+                              <div>
+                                <Tag color="red">UNPAID</Tag>
+                                <Button onClick={() => paymentDone(item._id)}>
+                                  Payment Done
+                                </Button>
+                              </div>
+                            )}
                           </Col>
                         </Row>
                       </List.Item>

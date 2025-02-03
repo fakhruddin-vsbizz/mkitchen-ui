@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import './login.css'
+import "./login.css";
 import {
   Row,
   Col,
@@ -60,14 +60,13 @@ const Login = () => {
     },
   ];
 
-  useEffect(()=>{
+  useEffect(() => {
     const unset = setTimeout(() => {
-      setError(false)
+      setError(false);
     }, 3000);
 
-    return () => clearTimeout(unset)
-
-  },[error])
+    return () => clearTimeout(unset);
+  }, [error]);
 
   /**************Restricting Admin Route************************* */
 
@@ -183,30 +182,29 @@ const Login = () => {
         height: "100vh",
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",
-        backgroundImage: bgGradient
-      }}
-    >
+        backgroundImage: bgGradient,
+      }}>
       <ConfigProvider
         theme={{
           token: {
             colorPrimary: colorGreen,
             colorDanger: "",
           },
-        }}
-      >
+        }}>
         <Modal
-          title={<h3>
-            <CheckCircleFilled
-              style={{ color: "green", fontSize: 28, marginRight: 10 }}
-            />
-            Reset Password
-          </h3>}
+          title={
+            <h3>
+              <CheckCircleFilled
+                style={{ color: "green", fontSize: 28, marginRight: 10 }}
+              />
+              Reset Password
+            </h3>
+          }
           open={open}
           okText="Reset Password"
           onOk={handlePasswordReset}
           confirmLoading={confirmLoading}
-          onCancel={(e) => setOpen(false)}
-        >
+          onCancel={(e) => setOpen(false)}>
           <Input
             value={passwordResetEmail}
             style={{ width: "24vw" }}
@@ -246,7 +244,7 @@ const Login = () => {
             </tr>
           )}
         </Modal>
-        <Row style={{ height: "100vh", flexDirection: 'column' }}>
+        <Row style={{ height: "100vh", flexDirection: "column" }}>
           {/* <Col xs={24} xl={6}>
               <Image width="40%" preview={false} src={logo} />
               <Divider
@@ -274,7 +272,15 @@ const Login = () => {
             </Radio.Group> 
 
           </Col> */}
-          <Col xs={24} xl={24} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+          <Col
+            xs={24}
+            xl={24}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
             {linkSent && (
               <h3>
                 <CheckCircleFilled
@@ -285,46 +291,60 @@ const Login = () => {
             )}
             <Card
               bordered={true}
-              bodyStyle={{padding: "0 0 24px"}}
+              bodyStyle={{ padding: "0 0 24px" }}
               style={{
                 width: "50%",
-                maxWidth: '650px',
+                maxWidth: "650px",
                 // border: "2px solid darkred",
                 boxShadow: valueShadowBox,
-                backgroundColor: '#fff',
+                backgroundColor: "#fff",
                 // marginTop: 50,
               }}
-              className="dongle-font-class"
-            >
+              className="dongle-font-class">
               {/* <label style={{ fontSize: "200%" }}>
               Login using respective credentials:
             </label>
             <Divider style={{ backgroundColor: "#000" }}></Divider> */}
               <table
                 style={{ width: "100%", minHeight: "38vh", fontSize: "150%" }}
-                className="dongle-font-class"
-              >
+                className="dongle-font-class">
                 {/* <Image width={"50%"} preview={false} src={logo} /> */}
-                <center>
+                <div style={{ display: "flex", justifyContent: "center" }}>
                   <Image
                     width="35%"
                     preview={false}
                     src={logo}
                     style={{ margin: "0" }}
                   />
-                </center>
-                <center style={{ width: "100%", marginBottom: -10 }}>
+                </div>
+                <div
+                  style={{
+                    textAlign: "-webkit-center",
+                    width: "100%",
+                    marginBottom: -10,
+                  }}>
                   <tr
                     style={{
                       textAlign: "left",
-                      height: "6vh"
-                    }}
-                  >
-                    <td style={{ width: "65px",fontSize: '2rem', verticalAlign: 'bottom' }}>Email:</td>
+                      height: "6vh",
+                    }}>
+                    <td
+                      style={{
+                        width: "65px",
+                        fontSize: "2rem",
+                        verticalAlign: "bottom",
+                      }}>
+                      Email:
+                    </td>
                     <td>
                       <Input
                         value={email}
-                        style={{ width: "24vw", height: '2.4rem', border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
+                        style={{
+                          width: "24vw",
+                          height: "2.4rem",
+                          border: `1px solid ${colorBlack}`,
+                          borderRadius: "5px",
+                        }}
                         onChange={(e) => setUserEmail(e.target.value)}
                         placeholder="your email here...."
                         allowClear
@@ -336,13 +356,24 @@ const Login = () => {
                       textAlign: "left",
                       height: "6vh",
                       marginBottom: 10,
-                    }}
-                  >
-                    <td style={{fontSize: '2rem', paddingRight: '1rem', verticalAlign: 'bottom'}}>Password:</td>
+                    }}>
+                    <td
+                      style={{
+                        fontSize: "2rem",
+                        paddingRight: "1rem",
+                        verticalAlign: "bottom",
+                      }}>
+                      Password:
+                    </td>
                     <td style={{ width: "8vw" }}>
                       <Input.Password
                         value={password}
-                        style={{ width: "24vw", height: '2.4rem', border: `1px solid ${colorBlack}`, borderRadius: '5px' }}
+                        style={{
+                          width: "24vw",
+                          height: "2.4rem",
+                          border: `1px solid ${colorBlack}`,
+                          borderRadius: "5px",
+                        }}
                         onChange={(e) => setUserPassword(e.target.value)}
                         placeholder="input password"
                       />
@@ -353,8 +384,7 @@ const Login = () => {
                       textAlign: "left",
                       height: "3vh",
                       paddingTop: 30,
-                    }}
-                  >
+                    }}>
                     <td colSpan={2}>
                       <Button
                         onClick={handleLogin}
@@ -364,32 +394,39 @@ const Login = () => {
                           marginTop: "2%",
                           // backgroundColor: "#801801",
                           fontSize: "1.8rem",
-                          height: '45px'
+                          height: "45px",
                         }}
-                        block
-                      >
+                        block>
                         Authenticate
                       </Button>
                     </td>
                   </tr>
-                  <Link style={{color: colorGreen, fontSize: '1.5rem'}} onClick={(e) => setOpen(true)}>
+                  <Link
+                    style={{ color: colorGreen, fontSize: "1.5rem" }}
+                    onClick={(e) => setOpen(true)}>
                     Forget Password
                   </Link>
-                </center>
+                </div>
               </table>
             </Card>
             {error && (
-              <div style={{width: '100%', display: "flex", alignItems: 'center', justifyContent: "center"}}>
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}>
                 <Alert
                   onClose={() => setError(false)}
-                  style={{ margin: "1rem 0.5rem 0.5rem", width: '16%' }}
+                  style={{ margin: "1rem 0.5rem 0.5rem", width: "16%" }}
                   message="Validation Error"
                   description="Invalid Email Or Password"
                   type="error"
                   closable
                 />
               </div>
-              )}
+            )}
           </Col>
         </Row>
       </ConfigProvider>
